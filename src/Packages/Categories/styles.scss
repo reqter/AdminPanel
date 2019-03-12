@@ -1,0 +1,167 @@
+.c-wrapper {
+  flex: 1;
+  margin: 3% 3% 1%;
+  display: flex;
+  flex-direction: column;
+  .c-header {
+    height: 80px;
+    display: flex;
+    .c-header-left {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      flex: 1;
+      .c-header-title {
+        font-size: 25px;
+        font-weight: 500;
+      }
+      .c-header-description {
+        font-size: 11px;
+        color: gray;
+      }
+    }
+    .c-header-right {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .c-content {
+    flex: 1;
+    display: flex;
+    .c-content-left {
+      //   background-color: white;
+      //   box-shadow: 0 0 3px lightgray;
+      overflow: auto;
+      flex: 1;
+      border-radius: 4px;
+    }
+    .c-content-right {
+      margin-left: 20px;
+      flex: 1;
+      background-color: white;
+      box-shadow: 0 0 3px lightgray;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+
+      .c-content-right-header {
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // border-bottom: 1px solid whitesmoke;
+        padding: 0 5%;
+        .c-right-header-title {
+          font-size: 16px;
+          font-weight: 500;
+        }
+        .c-right-header-description {
+          font-size: 12px;
+          color: gray;
+        }
+      }
+      .c-content-right-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .fieldsContent {
+          flex: 1;
+          overflow: auto;
+          .fieldItem {
+            display: flex;
+            padding: 3px;
+            margin: 2% 3%;
+            box-shadow: 0 0 5px lightgray;
+            align-items: center;
+            height: 50px;
+            border-radius: 4px;
+            .fieldItem-icon {
+              padding: 0 10px;
+            }
+            .fieldItem-name {
+              font-weight: 500;
+              font-size: 14px;
+            }
+            .fieldItem-title {
+              flex: 1;
+              font-size: 13px;
+              color: gray;
+              text-align: center;
+            }
+            .fieldItem-type {
+              border: 1px solid rgb(56, 132, 255);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: rgb(56, 132, 255);
+              padding: 5px;
+              border-radius: 4px;
+              margin: 0 10px;
+              font-size: 20px;
+            }
+            .fieldItem-actions {
+              display: flex;
+              flex-direction: row-reverse;
+            }
+          }
+        }
+        .btnNewFieldContent {
+          height: 70px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-top: 1px solid lightgray;
+          .icon-plus {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
+.c-category-modal-body {
+  padding-top: 20px;
+}
+.treeItem {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  .btnCategoryCollapse {
+    margin-right: 10px;
+    font-size: 10px;
+    width: 30px;
+    height: 30px;
+  }
+  .btnCategoryLeaf {
+    width: 30px;
+    height: 25px;
+    font-size: 6px;
+    margin-right: 10px;
+  }
+  .treeItem-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .treeItem-name {
+    font-weight: 600;
+  }
+  .treeItem-desc {
+    font-size: 10px;
+  }
+  .treeItem-action {
+    margin-left: 5px;
+    display: flex;
+  }
+  .hoverAction {
+    display: none;
+  }
+}
+.treeItemParent {
+  cursor: pointer;
+  &:hover .hoverAction {
+    display: flex;
+  }
+}

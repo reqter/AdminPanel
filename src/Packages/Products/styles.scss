@@ -1,0 +1,97 @@
+.p-wrapper {
+  flex: 1;
+  margin: 3% 3% 1%;
+  display: flex;
+  flex-direction: column;
+  .p-header {
+    height: 80px;
+    display: flex;
+    .p-header-left {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      flex: 1;
+      .p-header-title {
+        font-size: 25px;
+        font-weight: 500;
+      }
+      .p-header-description {
+        font-size: 11px;
+        color: gray;
+      }
+    }
+    .p-header-right {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .p-content {
+    flex: 1;
+    display: flex;
+    .p-content-left {
+      //   background-color: white;
+      //   box-shadow: 0 0 3px lightgray;
+      overflow: auto;
+      margin-right: 20px;
+      flex: 0.7;
+      border-radius: 4px;
+    }
+    .p-content-right {
+      flex: 1;
+      background-color: white;
+      box-shadow: 0 0 3px lightgray;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      .p-content-right-header {
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // border-bottom: 1px solid whitesmoke;
+        padding: 0 5%;
+        .p-right-header-title {
+          font-size: 16px;
+          font-weight: 500;
+        }
+        .p-right-header-description {
+          font-size: 12px;
+          color: gray;
+        }
+      }
+      .p-content-right-body {
+        flex: 1;
+        overflow: auto;
+      }
+    }
+  }
+}
+
+.p-category-modal-body {
+  padding-top: 20px;
+}
+.treeItem {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  .btnCategoryCollapse {
+    margin-right: 10px;
+    font-size: 18px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .treeItem-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .treeItem-name {
+    font-weight: 600;
+  }
+  .treeItem-desc {
+    font-size: 10px;
+  }
+}
