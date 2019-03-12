@@ -44,23 +44,24 @@ let data = [
 
 const AddNewField = props => {
   const category = props.selectedCategory;
-  const [allData, setData] = useState(data);
-  let items = props.itemTypes;
+  let items = props.itemTypes ? props.itemTypes : [];
+  const [allData, setData] = useState(makeData());
   const [isOpen, toggleModal] = useState(true);
-  useEffect(() => {
-    let d = [];
+  function makeData() {
+    let d = data.slice();
     for (let j = 0; j < items.length; j++) {
-      for (let i = 0; i < allData.length; i++) {
-        if (items[j].id === allData[i].id) {
-          allData[i].selected = true;
+      for (let i = 0; i < d.length; i++) {
+        if (items[j].id === d[i].id) {
+          d[i].selected = true;
           break;
         }
       }
     }
-    d = [...allData];
-    setData(d);
+    return d;
+  }
+  useEffect(() => {
     return () => {
-      d = undefined;
+      data.map(d => delete d.selected);
       if (!props.isOpen) toggleModal(false);
     };
   });
@@ -82,14 +83,35 @@ const AddNewField = props => {
       </ModalHeader>
       <ModalBody>
         {allData.map(item => (
-          <div key={item.id}>
-            {item.name}
-            <input
-              type="checkbox"
-              onChange={e => handleChooseItem(e, item)}
-              checked={item.selected}
-            />
-          </div>
+          <label key={item.id} for={item.id} className="itemTypeModal">
+            <div className="itemTypeModal-left">
+              <div className="itemType-icon">
+                <i className="icon-item-type" />
+              </div>
+              <div className="itemType-center">
+                <span className="itemType-title">{item.name}</span>
+                <span className="itemType-description">{item.description}</span>
+              </div>
+            </div>
+            <div className="itemTypeModal-right">
+              <label className="switch ">
+                <input
+                  type="checkbox"
+                  className="primary"
+                  onChange={e => handleChooseItem(e, item)}
+                  checked={item.selected}
+                  id={item.id}
+                />
+                <span className="slider" />
+              </label>
+              {/* <input
+                id={item.id}
+                type="checkbox"
+                onChange={e => handleChooseItem(e, item)}
+                checked={item.selected}
+              /> */}
+            </div>
+          </label>
         ))}
       </ModalBody>
     </Modal>

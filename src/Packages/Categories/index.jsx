@@ -199,7 +199,6 @@ const Categories = props => {
     setManageCategory(true);
   }
   function upsertCategory() {
-    debugger;
     if (isManageCategory) {
       if (!updateMode) {
         const obj = {
@@ -260,6 +259,7 @@ const Categories = props => {
     updateCategoryItemTypes(items);
   }
   function addNewItemType() {
+    console.log(itemTypes)
     toggleUpsertItemTypeModal(prevModal => !prevModal);
   }
   function updateCategoryItemTypes(items) {
