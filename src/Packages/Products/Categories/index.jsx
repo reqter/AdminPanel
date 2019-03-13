@@ -1,9 +1,19 @@
 import React, { Component } from "react";
 import { ListGroup, ListGroupItem, Collapse } from "reactstrap";
-import { languageManager } from "../../services";
+import { languageManager } from "../../../services";
 
 class Tree extends Component {
-  state = {};
+  state = {
+    selected: {}
+  };
+  static getDerivedStateFromProps(props, current_state) {
+    if (!props.leftContent) {
+      return {
+        selected: {}
+      };
+    }
+    return null;
+  }
   toggle = event => {
     const id = event.target.getAttribute("id");
     this.setState(state => ({ [id]: !state[id] }));
@@ -18,7 +28,12 @@ class Tree extends Component {
         <>
           <ListGroupItem
             key={index}
-            style={{ zIndex: 0, padding: 10 }}
+            style={{
+              zIndex: 0,
+              padding: 10,
+              background:
+                this.state.selected.id === node.id ? "lightgray" : "white"
+            }}
             className={`treeItemParent ${
               parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
             }`}
@@ -43,9 +58,13 @@ class Tree extends Component {
                       <i className="icon-caret-right" onClick={this.toggle} />
                     )}
                   </button>
+                ) : node.type === "category" ? (
+                  <button className="btnCategoryLeaf btn btn-primary btn-sm">
+                    <i className="icon-circle-o" />
+                  </button>
                 ) : (
-                  <button className="btnCategoryCollapse btn btn-dark btn-sm">
-                    <i className="icon-caret-circle" />
+                  <button className="btnCategoryLeaf btn btn-dark btn-sm">
+                    <i className="icon-circle-o" />
                   </button>
                 )}
                 <div className="treeItem-text">
@@ -57,7 +76,14 @@ class Tree extends Component {
                 </div>
                 {(node.children === undefined ||
                   node.children.length === 0) && (
-                  <button className="btn btn-light treeItem-action" size="xs">
+                  <button
+                    className="btn btn-light treeItem-action"
+                    size="xs"
+                    onClick={() => {
+                      this.setState(state => ({ selected: node }));
+                      this.props.onContentSelect(node);
+                    }}
+                  >
                     <span style={{ fontSize: 12 }}>
                       {languageManager.translate("ITEMS_CATEGORIES_CONTENT")}
                     </span>

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import "./styles/app.scss";
-import "animate.css"
+import "animate.css";
 
 import Routes from "./routes";
 
@@ -59,3 +59,50 @@ class App extends Component {
 }
 
 export default App;
+
+// function makeData(len = 10) {
+//   return range(len).map(d => {
+//     return {
+//       ...newProduct(),
+//       children: range(10).map(newProduct)
+//     };
+//   });
+// }
+
+// function newProduct() {
+//   return {
+//     thumbnail:
+//       "https://myresources1195.blob.core.windows.net/images/banana.jpg",
+//     name: "موز ممتاز",
+//     description: "محصولات وارداتی از افریقا",
+//     price: "2500 $",
+//     brand: "Banana"
+//   };
+// }
+// function range(len) {
+//   const arr = [];
+//   for (let i = 0; i < len; i++) {
+//     arr.push(i);
+//   }
+//   return arr;
+// }
+//   function createTree(list) {
+//     var map = {},
+//       node,
+//       roots = [],
+//       i;
+//     for (i = 0; i < list.length; i += 1) {
+//       map[list[i].id] = i; // initialize the map
+//       list[i].children = []; // initis
+//     }
+//     for (i = 0; i < list.length; i += 1) {
+//       node = list[i];
+//       if (node.parentId) {
+//         // if you have dangling branches check that map[node.parentId] exists
+//         list[map[node.parentId]].children.push(node);
+//       } else {
+//         roots.push(node);
+//       }
+//     }
+//     return roots;
+//   }

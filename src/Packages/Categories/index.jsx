@@ -20,30 +20,35 @@ let data = [
     id: "1",
     name: "Sport",
     description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "category",
     children: [
       {
         id: "2",
         parentId: "1",
         name: "Football",
         description: "Lorem ipsum dolor sit amet, consectetur",
+        type: "category",
         children: [
           {
             id: "3",
             parentId: "2",
             name: "Football",
-            description: "Lorem ipsum dolor sit amet, consectetur"
+            description: "Lorem ipsum dolor sit amet, consectetur",
+            type: "category"
           },
           {
             id: "4",
             parentId: "2",
             name: "Beach",
-            description: "Lorem ipsum dolor sit amet, consectetur"
+            description: "Lorem ipsum dolor sit amet, consectetur",
+            type: "category"
           },
           {
             id: "5",
             parentId: "2",
             name: "Footsall",
-            description: "Lorem ipsum dolor sit amet, consectetur"
+            description: "Lorem ipsum dolor sit amet, consectetur",
+            type: "category"
           }
         ]
       },
@@ -51,7 +56,8 @@ let data = [
         id: "6",
         parentId: "1",
         name: "Wresling",
-        description: "Lorem ipsum dolor sit amet, consectetur"
+        description: "Lorem ipsum dolor sit amet, consectetur",
+        type: "category"
       }
     ]
   },
@@ -59,24 +65,36 @@ let data = [
   {
     id: "7",
     name: "Economic",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "category"
   },
   {
     id: "8",
     name: "Political",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "category"
   },
   {
     id: "9",
     name: "Accidents",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "category"
   },
   {
     id: "10",
     name: "Others",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "category"
   }
 ];
+
+function useInput(defaultValue = "") {
+  const [input, setInput] = useState(defaultValue);
+  function onChange(value) {
+    setInput(value);
+  }
+  return [input, onChange];
+}
 
 const Categories = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
@@ -86,8 +104,8 @@ const Categories = props => {
   const [upsertCategoryModal, setModal] = useState(false);
   const [upsertItemTypeModal, toggleUpsertItemTypeModal] = useState(false);
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, handleNameChanged] = useInput("");
+  const [description, handleDesciptionChanged] = useInput("");
 
   const [treeData, setTreeData] = useState([]);
 
@@ -104,8 +122,8 @@ const Categories = props => {
   });
 
   function initModalForm() {
-    setName("");
-    setDescription("");
+    handleNameChanged("");
+    handleDesciptionChanged("");
   }
   function toggleModal() {
     setModalHeader(
@@ -118,34 +136,9 @@ const Categories = props => {
     initModalForm();
   }
 
-  //   function createTree(list) {
-  //     var map = {},
-  //       node,
-  //       roots = [],
-  //       i;
-  //     for (i = 0; i < list.length; i += 1) {
-  //       map[list[i].id] = i; // initialize the map
-  //       list[i].children = []; // initis
-  //     }
-  //     for (i = 0; i < list.length; i += 1) {
-  //       node = list[i];
-  //       if (node.parentId) {
-  //         // if you have dangling branches check that map[node.parentId] exists
-  //         list[map[node.parentId]].children.push(node);
-  //       } else {
-  //         roots.push(node);
-  //       }
-  //     }
-  //     return roots;
-  //   }
-  function handleNameChanged(e) {
-    setName(e.target.value);
-  }
-  function handleDesciptionChanged(e) {
-    setDescription(e.target.value);
-  }
+ 
+
   function closeAddCategoryModal() {
-    debugger;
     toggleModal();
     setManageCategory(false);
   }
@@ -188,8 +181,10 @@ const Categories = props => {
     setModal(prevModal => !prevModal);
     setSelectedCategory(item);
     setUpdateMode(true);
-    setName(item.name);
-    setDescription(item.description);
+
+    handleNameChanged(item.name);
+    handleDesciptionChanged(item.description);
+
     setModalHeader(
       languageManager.translate("CATEGORIES_MODAL_HEADER_TITLE_EDIT")
     );
@@ -213,8 +208,9 @@ const Categories = props => {
         selectedCategory.children.push(obj);
         const d = [...data];
         setTreeData(d);
-        setName("");
-        setDescription("");
+
+        handleNameChanged("");
+        handleDesciptionChanged("");
       } else {
         let newCategory = {};
         for (const key in selectedCategory) {
@@ -259,7 +255,7 @@ const Categories = props => {
     updateCategoryItemTypes(items);
   }
   function addNewItemType() {
-    console.log(itemTypes)
+    console.log(itemTypes);
     toggleUpsertItemTypeModal(prevModal => !prevModal);
   }
   function updateCategoryItemTypes(items) {
@@ -374,7 +370,7 @@ const Categories = props => {
                   )}
                   value={name}
                   required
-                  onChange={handleNameChanged}
+                  onChange={e => handleNameChanged(e.target.value)}
                 />
                 <small className="form-text text-muted">
                   {languageManager.translate(
@@ -392,7 +388,7 @@ const Categories = props => {
                     "CATEGORIES_MODAL_DESCRIPTION_PLACEHOLDER"
                   )}
                   value={description}
-                  onChange={handleDesciptionChanged}
+                  onChange={e => handleDesciptionChanged(e.target.value)}
                 />
                 {/* <small id="emailHelp" className="form-text text-muted">
                   {languageManager.translate(

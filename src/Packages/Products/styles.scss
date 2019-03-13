@@ -10,7 +10,6 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
-      flex: 1;
       .p-header-title {
         font-size: 25px;
         font-weight: 500;
@@ -23,6 +22,14 @@
     .p-header-right {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
+      flex: 1;
+      .btn {
+        margin-left: 10px;
+      }
+      .input-group {
+        max-width: 400px;
+      }
     }
   }
   .p-content {
@@ -31,37 +38,101 @@
     .p-content-left {
       //   background-color: white;
       //   box-shadow: 0 0 3px lightgray;
-      overflow: auto;
       margin-right: 20px;
-      flex: 0.7;
+      overflow: auto;
+      flex: 1;
+      min-width: 300px;
       border-radius: 4px;
     }
     .p-content-right {
-      flex: 1;
+      flex: 2.2;
       background-color: white;
       box-shadow: 0 0 3px lightgray;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
+      overflow-x: auto;
       .p-content-right-header {
-        height: 100px;
+        height: 50px;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        // border-bottom: 1px solid whitesmoke;
-        padding: 0 5%;
-        .p-right-header-title {
-          font-size: 16px;
+        align-items: center;
+        padding: 0 2%;
+        .p-content-header-title {
+          font-size: 18px;
+          flex: 1;
           font-weight: 500;
+          span {
+            margin-left: 10px;
+            font-size: 13px;
+          }
         }
-        .p-right-header-description {
-          font-size: 12px;
-          color: gray;
+        .input-group {
+          max-width: 400px;
         }
       }
       .p-content-right-body {
         flex: 1;
-        overflow: auto;
+        overflow: auto !important;
+        .p-number {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .p-number-value {
+          width: 30px;
+          height: 30px;
+          border-radius: 4px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: black;
+          background: whitesmoke;
+          border: 0.5px solid lightgray;
+        }
+
+        .p-image {
+          width: 80px;
+          height: 70px;
+          border: 1px solid whitesmoke;
+          padding: 5px;
+        }
+        .p-image-value {
+          width: 100%;
+          height: 100%;
+        }
+        .p-name {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          font-weight: bold;
+        }
+        .p-price {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          font-size: 15px;
+        }
+        .p-description {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          font-size: 13px;
+        }
+        .p-actions {
+          height: 100%;
+          display: flex;
+          flex-direction: row-reverse;
+          align-items: center;
+          .btn {
+            margin-left: 10px;
+          }
+        }
+        .p-string {
+          height: 100%;
+          display: flex;
+          align-items: center;
+        }
       }
     }
   }
@@ -69,29 +140,4 @@
 
 .p-category-modal-body {
   padding-top: 20px;
-}
-.treeItem {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  .btnCategoryCollapse {
-    margin-right: 10px;
-    font-size: 18px;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .treeItem-text {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .treeItem-name {
-    font-weight: 600;
-  }
-  .treeItem-desc {
-    font-size: 10px;
-  }
 }

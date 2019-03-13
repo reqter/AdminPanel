@@ -19,28 +19,33 @@ let data = [
   {
     id: "1",
     name: "Car",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "contentType"
   },
 
   {
     id: "7",
     name: "Home",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "contentType"
   },
   {
     id: "8",
     name: "Football",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "contentType"
   },
   {
     id: "9",
     name: "Appliance",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "contentType"
   },
   {
     id: "10",
     name: "Flower",
-    description: "Lorem ipsum dolor sit amet, consectetur"
+    description: "Lorem ipsum dolor sit amet, consectetur",
+    type: "contentType"
   }
 ];
 
@@ -104,6 +109,7 @@ let baseFields = [
     isBase: true
   }
 ];
+
 const ItemTypes = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
   // variables and handlers
@@ -303,7 +309,7 @@ const ItemTypes = props => {
                                 : field.type === "boolean"
                                 ? "icon-boolean"
                                 : "icon-file-text"
-                            } 
+                            }
                           />
                         </div>
                         <div className="fieldItem-name">{field.name}</div>

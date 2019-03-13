@@ -37,6 +37,7 @@ const Home = props => {
       desc: translate("HOME_SIDE_NAV_PRODUCTS_DESC"),
       component: Products
     },
+
     {
       name: translate("HOME_SIDE_NAV_REQUESTS"),
       icon: "request",
@@ -65,6 +66,7 @@ const Home = props => {
       <main className="main">
         {links.map(link => (
           <Route
+            exact
             key={link.path}
             path={link.path}
             render={props => {

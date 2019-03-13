@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'icomoon';
-  src: url("./../assets/fonts/icomoon.eot?kl95gl");
+   src: url("./../assets/fonts/icomoon.eot?kl95gl");
   src: url("./../assets/fonts/icomoon.eot?kl95gl#iefix")
       format("embedded-opentype"),
     url("./../assets/fonts/icomoon.ttf?kl95gl") format("truetype"),
@@ -94,6 +94,9 @@
 .icon-file-text:before {
   content: "\e926";
 }
+.icon-folder:before {
+  content: "\e92f";
+}
 .icon-location:before {
   content: "\e947";
 }
@@ -133,6 +136,24 @@
 .icon-cross:before {
   content: "\ea0f";
 }
+.icon-loop2:before {
+  content: "\ea2e";
+}
+.icon-arrow-right2:before {
+  content: "\ea3c";
+}
+.icon-arrow-left2:before {
+  content: "\ea40";
+}
+.icon-circle-right:before {
+  content: "\ea42";
+}
+.icon-circle-left:before {
+  content: "\ea44";
+}
 .icon-circle:before {
   content: "\ea56";
+}
+.icon-filter:before {
+  content: "\ea5b";
 }

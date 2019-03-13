@@ -42,6 +42,7 @@ let data = [
   }
 ];
 
+
 const AddNewField = props => {
   const category = props.selectedCategory;
   let items = props.itemTypes ? props.itemTypes : [];

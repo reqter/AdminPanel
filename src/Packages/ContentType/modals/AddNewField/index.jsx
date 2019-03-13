@@ -264,7 +264,8 @@ const AddNewField = props => {
         undefined
       )}
     </Modal>
-  );
+
+);
 };
 
 export default AddNewField;
