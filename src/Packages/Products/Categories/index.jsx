@@ -4,7 +4,8 @@ import { languageManager } from "../../../services";
 
 class Tree extends Component {
   state = {
-    selected: {}
+    selected: {},
+    hasContentType: false
   };
   static getDerivedStateFromProps(props, current_state) {
     if (!props.leftContent) {
@@ -74,21 +75,40 @@ class Tree extends Component {
                       "Lorem ipsum dolor sit amet, consectetur"}
                   </span>
                 </div>
-                {(node.children === undefined ||
-                  node.children.length === 0) && (
-                  <button
-                    className="btn btn-light treeItem-action"
-                    size="xs"
-                    onClick={() => {
-                      this.setState(state => ({ selected: node }));
-                      this.props.onContentSelect(node);
-                    }}
-                  >
-                    <span style={{ fontSize: 12 }}>
-                      {languageManager.translate("ITEMS_CATEGORIES_CONTENT")}
-                    </span>
-                  </button>
-                )}
+                {this.props.hasContentType
+                  ? node.type === "contentType" && (
+                      <button
+                        className="btn btn-light treeItem-action"
+                        size="xs"
+                        onClick={() => {
+                          this.setState(state => ({ selected: node }));
+                          this.props.onContentSelect(node);
+                        }}
+                      >
+                        <span style={{ fontSize: 12 }}>
+                          {languageManager.translate(
+                            "ITEMS_CATEGORIES_CONTENT"
+                          )}
+                        </span>
+                      </button>
+                    )
+                  : (node.children === undefined ||
+                      node.children.length === 0) && (
+                      <button
+                        className="btn btn-light treeItem-action"
+                        size="xs"
+                        onClick={() => {
+                          this.setState(state => ({ selected: node }));
+                          this.props.onContentSelect(node);
+                        }}
+                      >
+                        <span style={{ fontSize: 12 }}>
+                          {languageManager.translate(
+                            "ITEMS_CATEGORIES_CONTENT"
+                          )}
+                        </span>
+                      </button>
+                    )}
               </div>
             }
           </ListGroupItem>

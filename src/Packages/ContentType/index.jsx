@@ -99,18 +99,11 @@ let baseFields = [
     description: "",
     type: "richText",
     isBase: true
-  },
-  {
-    id: Math.random().toString(),
-    name: "price",
-    title: "Price",
-    description: "",
-    type: "number",
-    isBase: true
   }
 ];
 
 const ItemTypes = props => {
+
   const { name: pageTitle, desc: pageDescription } = props.component;
   // variables and handlers
   const addItem_nameInput = useRef(null);

@@ -15,68 +15,39 @@ import Tree from "./tree";
 let categories_data = [
   {
     id: "1",
-    name: "Sport",
+    name: "Transportation",
     description: "Lorem ipsum dolor sit amet, consectetur",
     type: "category",
     children: [
       {
         id: "2",
         parentId: "1",
-        name: "Football",
+        name: "Vehicles",
         description: "Lorem ipsum dolor sit amet, consectetur",
         type: "category",
         children: [
           {
-            id: "3",
-            parentId: "2",
-            name: "Football",
+            categoryId: "2",
+            id: "111",
+            name: "Trucks",
             description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category",
-            children: [
+            type: "contentType",
+            fields: [
               {
-                id: "111",
-                name: "Car",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "contentType",
-                fields: [
-                  {
-                    id: "34443",
-                    name: "brand",
-                    title: "Brand",
-                    type: "string",
-                    description: "Lorem ipsum dolor sit amet, consectetur"
-                  }
-                ]
-              },
-
-              {
-                id: "711",
-                name: "Home",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "contentType"
+                id: "34443",
+                name: "brand",
+                title: "Brand",
+                type: "string",
+                description: "Lorem ipsum dolor sit amet, consectetur"
               }
             ]
-          },
-          {
-            id: "4",
-            parentId: "2",
-            name: "Beach",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category"
-          },
-          {
-            id: "5",
-            parentId: "2",
-            name: "Footsall",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category"
           }
         ]
       },
       {
         id: "6",
         parentId: "1",
-        name: "Wresling",
+        name: "Car",
         description: "Lorem ipsum dolor sit amet, consectetur",
         type: "category"
       }
@@ -108,29 +79,25 @@ let categories_data = [
     type: "category"
   }
 ];
+
 const Categories = props => {
-  // variables
-  const [name, setName] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDecription] = useState("");
-  function handleNameChanged(e) {}
-  function handleTitleChanged(e) {}
-  function handleDescriptionChanged(e) {}
-  function handleSelectCategory(selected) {}
+  function handleRowSelect(selected) {
+    props.onCloseModal(selected);
+  }
 
   function closeModal(params) {
-    props.onCloseModal();
+    props.onCloseModal(undefined);
   }
   return (
     <Modal isOpen={true} toggle={closeModal}>
-      <ModalHeader toggle={closeModal} >
-        Choose a category
-      </ModalHeader>
+      <ModalHeader toggle={closeModal}>Choose a category</ModalHeader>
       <ModalBody className="up-categories">
-        
-        <Tree data={categories_data} onSelectCategory={selected => handleSelectCategory(selected)}/>
+        <Tree
+          data={categories_data}
+          hasContentType={props.hasContentType}
+          onRowSelect={selected => handleRowSelect(selected)}
+        />
       </ModalBody>
-      <ModalFooter />
     </Modal>
   );
 };

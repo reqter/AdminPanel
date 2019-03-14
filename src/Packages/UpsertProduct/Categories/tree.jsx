@@ -4,7 +4,8 @@ import { languageManager } from "../../../services";
 
 class Tree extends Component {
   state = {
-    selected: {}
+    selected: {},
+    hasContentType: false
   };
   static getDerivedStateFromProps(props, current_state) {
     if (!props.leftContent) {
@@ -36,7 +37,7 @@ class Tree extends Component {
             }}
             className={`treeItemParent ${
               parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
-            }`}
+              }`}
           >
             {
               <div
@@ -55,18 +56,18 @@ class Tree extends Component {
                     {this.state[id] ? (
                       <i className="icon-caret-down" onClick={this.toggle} />
                     ) : (
-                      <i className="icon-caret-right" onClick={this.toggle} />
-                    )}
+                        <i className="icon-caret-right" onClick={this.toggle} />
+                      )}
                   </button>
                 ) : node.type === "category" ? (
                   <button className="btnCategoryLeaf btn btn-primary btn-sm">
                     <i className="icon-circle-o" />
                   </button>
                 ) : (
-                  <button className="btnCategoryLeaf btn btn-dark btn-sm">
-                    <i className="icon-circle-o" />
-                  </button>
-                )}
+                      <button className="btnCategoryLeaf btn btn-dark btn-sm">
+                        <i className="icon-circle-o" />
+                      </button>
+                    )}
                 <div className="treeItem-text">
                   <span className="treeItem-name">{node.name}</span>
                   <span className="treeItem-desc">
@@ -74,21 +75,40 @@ class Tree extends Component {
                       "Lorem ipsum dolor sit amet, consectetur"}
                   </span>
                 </div>
-                {(node.children === undefined ||
-                  node.children.length === 0) && (
-                  <button
-                    className="btn btn-light treeItem-action"
-                    size="xs"
-                    onClick={() => {
-                      this.setState(state => ({ selected: node }));
-                      this.props.onContentSelect(node);
-                    }}
-                  >
-                    <span style={{ fontSize: 12 }}>
-                      {languageManager.translate("ITEMS_CATEGORIES_CONTENT")}
-                    </span>
-                  </button>
-                )}
+                {this.props.hasContentType
+                  ? node.type === "contentType" && (
+                    <button
+                      className="btn btn-light treeItem-action"
+                      size="xs"
+                      onClick={() => {
+                        this.setState(state => ({ selected: node }));
+                        this.props.onRowSelect(node);
+                      }}
+                    >
+                      <span style={{ fontSize: 12 }}>
+                        {languageManager.translate(
+                          "ITEMS_CATEGORIES_CONTENT"
+                        )}
+                      </span>
+                    </button>
+                  )
+                  : (node.children === undefined ||
+                    node.children.length === 0) && (
+                    <button
+                      className="btn btn-light treeItem-action"
+                      size="xs"
+                      onClick={() => {
+                        this.setState(state => ({ selected: node }));
+                        this.props.onRowSelect(node);
+                      }}
+                    >
+                      <span style={{ fontSize: 12 }}>
+                        {languageManager.translate(
+                          "Select"
+                        )}
+                      </span>
+                    </button>
+                  )}
               </div>
             }
           </ListGroupItem>

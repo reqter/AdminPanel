@@ -8,68 +8,39 @@ import Tree from "./Categories";
 let categories_data = [
   {
     id: "1",
-    name: "Sport",
+    name: "Transportation",
     description: "Lorem ipsum dolor sit amet, consectetur",
     type: "category",
     children: [
       {
         id: "2",
         parentId: "1",
-        name: "Football",
+        name: "Vehicles",
         description: "Lorem ipsum dolor sit amet, consectetur",
         type: "category",
         children: [
           {
-            id: "3",
-            parentId: "2",
-            name: "Football",
+            categoryId: "2",
+            id: "111",
+            name: "Trucks",
             description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category",
-            children: [
+            type: "contentType",
+            fields: [
               {
-                id: "111",
-                name: "Car",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "contentType",
-                fields: [
-                  {
-                    id: "34443",
-                    name: "brand",
-                    title: "Brand",
-                    type: "string",
-                    description: "Lorem ipsum dolor sit amet, consectetur"
-                  }
-                ]
-              },
-
-              {
-                id: "711",
-                name: "Home",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "contentType"
+                id: "34443",
+                name: "brand",
+                title: "Brand",
+                type: "string",
+                description: "Lorem ipsum dolor sit amet, consectetur"
               }
             ]
-          },
-          {
-            id: "4",
-            parentId: "2",
-            name: "Beach",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category"
-          },
-          {
-            id: "5",
-            parentId: "2",
-            name: "Footsall",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category"
           }
         ]
       },
       {
         id: "6",
         parentId: "1",
-        name: "Wresling",
+        name: "Car",
         description: "Lorem ipsum dolor sit amet, consectetur",
         type: "category"
       }
@@ -225,15 +196,6 @@ const Products = props => {
       Cell: props => <div className="p-name">{props.value}</div>
     },
     {
-      Header: "Price",
-      //show: false,
-      headerStyle: {
-        display: "none"
-      },
-      accessor: "price",
-      Cell: props => <div className="p-price">{props.value}</div>
-    },
-    {
       Header: "Description",
       //show: false,
       headerStyle: {
@@ -272,19 +234,30 @@ const Products = props => {
   const tableBox = useRef(null);
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [treeData, setTreeData] = useState(categories_data);
+  const [hasContentType, setCategoryContentTypeStatus] = useState(
+    checkContentType(categories_data)
+  );
   const [gridData, setGridData] = useState(table_data);
 
   const [listContent, toggleListContent] = useState(true);
   const [leftContent, toggleLeftContent] = useState(false);
-  const [tableHeaderTitle, setTableHeaderTitle] = useState("");
+  const [tableHeaderTitle, setTableHeaderTitle] = useState(false);
 
-  const [selectedCategory, setSelectedGategory] = useState();
+  const [selectedNode, setSelectedNode] = useState();
   const [columnsVisibility, toggleColumns] = useState(false);
 
   const [columns, setColumns] = useState(baseFieldColumnsConfig.slice());
 
   // methods
 
+  function checkContentType(data) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].type === "contentType") {
+        return true;
+      }
+      if (data[i].children) return checkContentType(data[i].children);
+    }
+  }
   function initColumns() {
     if (columnsVisibility) {
       const cols = baseFieldColumnsConfig.map(col => {
@@ -301,20 +274,23 @@ const Products = props => {
     toggleLeftContent(prevState => !prevState);
   }
   function openNewItemBox() {
-    props.history.push("/addNew");
+    props.history.push({
+      pathname: "/addNew",
+      // search: "?sort=name",
+      //hash: "#the-hash",
+      params: { selectedNode, hasContentType }
+    });
   }
   function makeTableFieldView(type, props) {
     switch (type) {
       case "string":
         return <div className="p-string">{props.value}</div>;
-        break;
       default:
         return <div className="p-string">{props.value}</div>;
-        break;
     }
   }
   function handleClickCategoryContent(selected) {
-    setSelectedGategory(selected);
+    setSelectedNode(selected);
     setTableHeaderTitle(selected.name);
     // if (selected.type === "category") {
     //   initColumns();
@@ -397,6 +373,7 @@ const Products = props => {
                   <Tree
                     leftContent={leftContent}
                     data={treeData}
+                    hasContentType={hasContentType}
                     onContentSelect={selected =>
                       handleClickCategoryContent(selected)
                     }

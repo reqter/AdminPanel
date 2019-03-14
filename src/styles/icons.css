@@ -43,6 +43,9 @@
 .icon-more-h:before {
   content: "\e902";
 }
+.icon-camera:before {
+  content: "\e915";
+}
 .icon-combo-box:before {
   content: "\e914";
 }
