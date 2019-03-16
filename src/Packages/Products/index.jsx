@@ -27,11 +27,75 @@ let categories_data = [
             type: "contentType",
             fields: [
               {
+                id: "3333",
+                index: 1,
+                name: "name",
+                title: "Name",
+                description: "Name of product",
+                type: "string",
+                isBase: true
+              },
+              {
+                id: "4444",
+                name: "thumbnail",
+                title: "Thumbnail",
+                description: "Lorem ipsum dolor sit amet, consectetur",
+                type: "media",
+                mediaType: "image",
+                isList: false,
+                isBase: true,
+                index: 4
+              },
+              {
+                id: "5555",
+                name: "images",
+                title: "Images",
+                description: "Lorem ipsum dolor sit amet, consectetur",
+                type: "media",
+                isBase: true,
+                isList: true,
+                index: 5
+              },
+              {
+                id: "6666",
+                name: "shortDesc",
+                title: "Short Description",
+                description: "",
+                type: "string",
+                isBase: true,
+                index: 2,
+                isMultiLne: true
+              },
+              {
+                id: "7777",
+                name: "longDesc",
+                title: "Long Description",
+                description: "",
+                type: "richText",
+                isBase: true,
+                index: 6
+              },
+              {
                 id: "34443",
                 name: "brand",
                 title: "Brand",
-                type: "string",
-                description: "Lorem ipsum dolor sit amet, consectetur"
+                type: "keyvalue",
+                description: "Lorem ipsum dolor sit amet, consectetur",
+                index: 3,
+                options: [
+                  {
+                    key: 0,
+                    value: "BMW"
+                  },
+                  {
+                    key: 1,
+                    value: "Mercedes Benz"
+                  },
+                  {
+                    key: 2,
+                    value: "KIA"
+                  }
+                ]
               }
             ]
           }
