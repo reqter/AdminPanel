@@ -1,51 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalFooter,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input
-} from "reactstrap";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { languageManager } from "../../../../services";
 import "./styles.scss";
-
-let data = [
-  {
-    id: "1",
-    name: "Car",
-    description: "Lorem ipsum dolor sit amet, consectetur"
-  },
-
-  {
-    id: "7",
-    name: "Home",
-    description: "Lorem ipsum dolor sit amet, consectetur"
-  },
-  {
-    id: "8",
-    name: "Football",
-    description: "Lorem ipsum dolor sit amet, consectetur"
-  },
-  {
-    id: "9",
-    name: "Appliance",
-    description: "Lorem ipsum dolor sit amet, consectetur"
-  },
-  {
-    id: "10",
-    name: "Flower",
-    description: "Lorem ipsum dolor sit amet, consectetur"
-  }
-];
-
 
 const AddNewField = props => {
   const category = props.selectedCategory;
   let items = props.itemTypes ? props.itemTypes : [];
+  let data = props.data;
   const [allData, setData] = useState(makeData());
   const [isOpen, toggleModal] = useState(true);
   function makeData() {
@@ -90,7 +51,7 @@ const AddNewField = props => {
                 <i className="icon-item-type" />
               </div>
               <div className="itemType-center">
-                <span className="itemType-title">{item.name}</span>
+                <span className="itemType-title">{item.title}</span>
                 <span className="itemType-description">{item.description}</span>
               </div>
             </div>

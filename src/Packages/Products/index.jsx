@@ -1,141 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-
+import { useGlobalState } from "./../../services";
 import "./styles.scss";
 import Tree from "./Categories";
-
-let categories_data = [
-  {
-    id: "1",
-    name: "Transportation",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category",
-    children: [
-      {
-        id: "2",
-        parentId: "1",
-        name: "Vehicles",
-        description: "Lorem ipsum dolor sit amet, consectetur",
-        type: "category",
-        children: [
-          {
-            categoryId: "2",
-            id: "111",
-            name: "Trucks",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "contentType",
-            fields: [
-              {
-                id: "3333",
-                index: 1,
-                name: "name",
-                title: "Name",
-                description: "Name of product",
-                type: "string",
-                isBase: true
-              },
-              {
-                id: "4444",
-                name: "thumbnail",
-                title: "Thumbnail",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "media",
-                mediaType: "image",
-                isList: false,
-                isBase: true,
-                index: 4
-              },
-              {
-                id: "5555",
-                name: "images",
-                title: "Images",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "media",
-                isBase: true,
-                isList: true,
-                index: 5
-              },
-              {
-                id: "6666",
-                name: "shortDesc",
-                title: "Short Description",
-                description: "",
-                type: "string",
-                isBase: true,
-                index: 2,
-                isMultiLne: true
-              },
-              {
-                id: "7777",
-                name: "longDesc",
-                title: "Long Description",
-                description: "",
-                type: "richText",
-                isBase: true,
-                index: 6
-              },
-              {
-                id: "34443",
-                name: "brand",
-                title: "Brand",
-                type: "keyvalue",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                index: 3,
-                options: [
-                  {
-                    key: 0,
-                    value: "BMW"
-                  },
-                  {
-                    key: 1,
-                    value: "Mercedes Benz"
-                  },
-                  {
-                    key: 2,
-                    value: "KIA"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        id: "6",
-        parentId: "1",
-        name: "Car",
-        description: "Lorem ipsum dolor sit amet, consectetur",
-        type: "category"
-      }
-    ]
-  },
-
-  {
-    id: "7",
-    name: "Economic",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "8",
-    name: "Political",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "9",
-    name: "Accidents",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "10",
-    name: "Others",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  }
-];
 
 const table_data = [
   {
@@ -295,6 +163,8 @@ const Products = props => {
   ];
 
   // variables
+  const [{ categories: categories_data }, disptch] = useGlobalState();
+
   const tableBox = useRef(null);
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [treeData, setTreeData] = useState(categories_data);

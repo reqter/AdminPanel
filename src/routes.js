@@ -1,7 +1,21 @@
+import { languageManager } from "./services";
+
 import Login from "./Packages/Login";
 import Signup from "./Packages/Signup";
 import Home from "./Packages/Home";
+import Categories from "./Packages/Categories";
+import ContentType from "./Packages/ContentType";
+import ManageUsers from "./Packages/ManageUsers";
+import Products from "./Packages/Products";
+import Requests from "./Packages/Requests";
+import Quotes from "./Packages/Quotes";
 import UpsertProduct from "./Packages/UpsertProduct";
+
+
+function translate(key) {
+  return languageManager.translate(key);
+}
+
 const routes = [
   {
     path: "/login",
@@ -13,7 +27,53 @@ const routes = [
   },
   {
     path: "/home",
-    component: Home
+    component: Home,
+    routes:[
+      {
+        name: translate("HOME_SIDE_NAV_CONTENT_TYPE"),
+        icon: "item-type",
+        path: "/home/contentType",
+        desc: translate("HOME_SIDE_NAV_CONTENT_TYPE_DEC"),
+        component: ContentType
+      },
+      {
+        name: translate("HOME_SIDE_NAV_CATEGRIES"),
+        icon: "category",
+        path: "/home/categories",
+        desc: translate("HOME_SIDE_NAV_CATEGORIES_DEC"),
+        component: Categories
+      },
+      {
+        name: translate("HOME_SIDE_NAV_PRODUCTS"),
+        icon: "product",
+        path: "/home/products",
+        desc: translate("HOME_SIDE_NAV_PRODUCTS_DESC"),
+        component: Products
+      },
+
+      {
+        name: translate("HOME_SIDE_NAV_REQUESTS"),
+        icon: "request",
+        path: "/home/requests",
+        desc: translate("HOME_SIDE_NAV_REQUESTS_DESC"),
+        component: Requests
+      },
+      {
+        name: translate("HOME_SIDE_NAV_QUOTES"),
+        icon: "quote",
+        path: "/home/quotes",
+        desc: translate("HOME_SIDE_NAV_QUOTES_DESC"),
+        component: Quotes
+      },
+      {
+        name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
+        icon: "users",
+        path: "/home/manageUsers",
+        desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC"),
+        component: ManageUsers
+      }
+    ]
+ 
   },
   {
     path: "/addNew",

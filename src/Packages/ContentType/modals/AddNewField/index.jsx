@@ -55,6 +55,12 @@ const fields = [
     description: languageManager.translate("FIELD_TYPE_KEY_VALUE_INFO"),
     icon: "icon-combo-box"
   },
+  {
+    name: "richText",
+    title: languageManager.translate("FIELD_TYPE_RICH_TEXT"),
+    description: languageManager.translate("FIELD_TYPE_RICH_TEXT_INFO"),
+    icon: "icon-file-text"
+  }
   // {
   //   name: "jsonObject",
   //   title: languageManager.translate("FIELD_TYPE_OBJECT"),
@@ -68,7 +74,9 @@ const fields = [
   //   icon: "icon-reference"
   // }
 ];
+
 const AddNewField = props => {
+  console.log('list')
   const category = props.selectedCategory;
 
   const [isOpen, toggleModal] = useState(true);
@@ -201,6 +209,7 @@ const AddNewField = props => {
                     )}
                   </small>
                 </FormGroup>
+            
               </div>
               <div className="formTab-row">
                 <FormGroup>
@@ -239,7 +248,9 @@ const AddNewField = props => {
                 : true
             }
           >
-            {languageManager.translate("CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_BTN")}
+            {languageManager.translate(
+              "CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_BTN"
+            )}
           </Button>
           {/* <Button
             color="primary"
@@ -264,8 +275,7 @@ const AddNewField = props => {
         undefined
       )}
     </Modal>
-
-);
+  );
 };
 
 export default AddNewField;

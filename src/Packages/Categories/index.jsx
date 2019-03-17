@@ -13,80 +13,7 @@ import {
 import "./styles.scss";
 import Tree from "./tree";
 import AddNewItemType from "./modals/AddItemType";
-import { languageManager } from "../../services";
-
-let data = [
-  {
-    id: "1",
-    name: "Sport",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category",
-    children: [
-      {
-        id: "2",
-        parentId: "1",
-        name: "Football",
-        description: "Lorem ipsum dolor sit amet, consectetur",
-        type: "category",
-        children: [
-          {
-            id: "3",
-            parentId: "2",
-            name: "Football",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category"
-          },
-          {
-            id: "4",
-            parentId: "2",
-            name: "Beach",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category"
-          },
-          {
-            id: "5",
-            parentId: "2",
-            name: "Footsall",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "category"
-          }
-        ]
-      },
-      {
-        id: "6",
-        parentId: "1",
-        name: "Wresling",
-        description: "Lorem ipsum dolor sit amet, consectetur",
-        type: "category"
-      }
-    ]
-  },
-
-  {
-    id: "7",
-    name: "Economic",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "8",
-    name: "Political",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "9",
-    name: "Accidents",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "10",
-    name: "Others",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  }
-];
+import { languageManager, useGlobalState } from "../../services";
 
 function useInput(defaultValue = "") {
   const [input, setInput] = useState(defaultValue);
@@ -97,6 +24,8 @@ function useInput(defaultValue = "") {
 }
 
 const Categories = props => {
+  const [{ categories, contentTypes }, dispatch] = useGlobalState();
+
   const { name: pageTitle, desc: pageDescription } = props.component;
 
   // variables and handlers
@@ -107,8 +36,6 @@ const Categories = props => {
   const [name, handleNameChanged] = useInput("");
   const [description, handleDesciptionChanged] = useInput("");
 
-  const [treeData, setTreeData] = useState([]);
-
   const [selectedCategory, setSelectedCategory] = useState();
   const [itemTypes, setItemTypes] = useState([]);
   const [updateMode, setUpdateMode] = useState();
@@ -116,10 +43,6 @@ const Categories = props => {
   const [modalUpsertBtn, setModalUpsertBtnText] = useState("");
   const [rightContent, toggleRightContent] = useState(false);
   const [isManageCategory, setManageCategory] = useState(false);
-
-  useEffect(() => {
-    setTreeData(data);
-  });
 
   function initModalForm() {
     handleNameChanged("");
@@ -135,8 +58,6 @@ const Categories = props => {
     setModal(prevModal => !prevModal);
     initModalForm();
   }
-
- 
 
   function closeAddCategoryModal() {
     toggleModal();
@@ -206,8 +127,11 @@ const Categories = props => {
 
         if (!selectedCategory.children) selectedCategory.children = [];
         selectedCategory.children.push(obj);
-        const d = [...data];
-        setTreeData(d);
+        const d = [...categories];
+        dispatch({
+          type: "SET_CATEGORIES",
+          value: d
+        });
 
         handleNameChanged("");
         handleDesciptionChanged("");
@@ -218,8 +142,11 @@ const Categories = props => {
         }
         newCategory["name"] = name;
         newCategory["description"] = description;
-        updateNodeInList(data, selectedCategory, newCategory);
-        setTreeData(data);
+        updateNodeInList(categories, selectedCategory, newCategory);
+        dispatch({
+          type: "SET_CATEGORIES",
+          value: categories
+        });
         closeAddCategoryModal();
       }
     } else {
@@ -229,16 +156,23 @@ const Categories = props => {
         description: description,
         type: "category"
       };
+      let data = [...categories];
       data.push(obj);
-      setTreeData(data);
+      dispatch({
+        type: "SET_CATEGORIES",
+        value: data
+      });
       initModalForm();
     }
   }
 
   function removeCategoryItem(selected) {
-    deleteNodeInList(data, selected);
-    const d = [...data];
-    setTreeData(d);
+    deleteNodeInList(categories, selected);
+    const data = [...categories];
+    dispatch({
+      type: "SET_CATEGORIES",
+      value: data
+    });
   }
 
   // field
@@ -255,7 +189,6 @@ const Categories = props => {
     updateCategoryItemTypes(items);
   }
   function addNewItemType() {
-    console.log(itemTypes);
     toggleUpsertItemTypeModal(prevModal => !prevModal);
   }
   function updateCategoryItemTypes(items) {
@@ -263,13 +196,21 @@ const Categories = props => {
     if (selectedCategory.itemTypes === undefined)
       selectedCategory.itemTypes = [];
     selectedCategory.itemTypes = items;
-    updateNodeInList(data, selectedCategory, selectedCategory); //
+    updateNodeInList(categories, selectedCategory, selectedCategory); //
+    dispatch({
+      type: "SET_CATEGORIES",
+      value: categories
+    });
   }
   function handleRemoveItemType(itemType) {
     const m = itemTypes.filter(item => item.id !== itemType.id);
     setItemTypes(m);
     selectedCategory.itemTypes = m;
-    updateNodeInList(data, selectedCategory, selectedCategory); //
+    updateNodeInList(categories, selectedCategory, selectedCategory); //
+    dispatch({
+      type: "SET_CATEGORIES",
+      value: categories
+    });
   }
   return (
     <>
@@ -289,7 +230,7 @@ const Categories = props => {
           <div className="c-content-left">
             <Tree
               rightContent={rightContent}
-              data={treeData}
+              data={categories}
               handleNewCategory={selected => newChildCategory(selected)}
               handleEditCategory={selected => editCategory(selected)}
               handleDeleteCategory={selected => removeCategoryItem(selected)}
@@ -415,6 +356,7 @@ const Categories = props => {
       </Modal>
       {upsertItemTypeModal && (
         <AddNewItemType
+          data={contentTypes}
           itemTypes={itemTypes}
           selectedCategory={selectedCategory}
           isOpen={upsertItemTypeModal}

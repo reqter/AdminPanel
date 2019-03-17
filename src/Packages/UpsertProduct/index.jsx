@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./styles.scss";
-import { Form, Input, FormGroup, Label } from "reactstrap";
-import { languageManager } from "./../../services";
+import { useGlobalState } from "./../../services";
 import CategoriesModal from "./Categories";
 import {
   String,
@@ -45,173 +44,33 @@ const baseFields = [
     isList: false,
     isBase: true,
     index: 3
-  },
-  {
-    id: "5555",
-    name: "images",
-    title: "Images",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "media",
-    isBase: true,
-    isList: true,
-    mediaType: "image",
-    index: 4
-  },
-
-  {
-    id: "7777",
-    name: "longDesc",
-    title: "Long Description",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "richText",
-    isBase: true,
-    index: 5
   }
-];
-let categories_data = [
-  {
-    id: "1",
-    name: "Transportation",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category",
-    children: [
-      {
-        id: "2",
-        parentId: "1",
-        name: "Vehicles",
-        description: "Lorem ipsum dolor sit amet, consectetur",
-        type: "category",
-        children: [
-          {
-            categoryId: "2",
-            id: "111",
-            name: "Trucks",
-            description: "Lorem ipsum dolor sit amet, consectetur",
-            type: "contentType",
-            fields: [
-              {
-                id: "3333",
-                index: 1,
-                name: "name",
-                title: "Name",
-                description: "Name of product",
-                type: "string",
-                isBase: true,
-                isRequired: true
-              },
-              {
-                id: "4444",
-                name: "thumbnail",
-                title: "Thumbnail",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "media",
-                mediaType: "image",
-                isList: false,
-                isBase: true,
-                index: 5
-              },
-              {
-                id: "5555",
-                name: "images",
-                title: "Images",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                type: "media",
-                isBase: true,
-                isList: true,
-                index: 6
-              },
-              {
-                id: "6666",
-                name: "shortDesc",
-                title: "Short Description",
-                description: "",
-                type: "string",
-                isBase: true,
-                index: 2,
-                isMultiLine: true
-              },
-              {
-                id: "7777",
-                name: "longDesc",
-                title: "Long Description",
-                description: "",
-                type: "richText",
-                isBase: true,
-                index: 7
-              },
-              {
-                id: "34443",
-                name: "brand",
-                title: "Brand",
-                type: "keyvalue",
-                description: "Lorem ipsum dolor sit amet, consectetur",
-                index: 3,
-                appearance: "radioGroup",
-                options: [
-                  {
-                    key: 0,
-                    value: "BMW"
-                  },
-                  {
-                    key: 1,
-                    value: "Mercedes Benz"
-                  },
-                  {
-                    key: 2,
-                    value: "KIA"
-                  }
-                ]
-              },
-              {
-                id: "7777",
-                name: "hasDiscount",
-                title: "It has discount",
-                description: "",
-                type: "boolean",
-                index: 4,
-                appearance: "checkbox"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        id: "6",
-        parentId: "1",
-        name: "Car",
-        description: "Lorem ipsum dolor sit amet, consectetur",
-        type: "category"
-      }
-    ]
-  },
+  //   {
+  //     id: "5555",
+  //     name: "images",
+  //     title: "Images",
+  //     description: "Lorem ipsum dolor sit amet, consectetur",
+  //     type: "media",
+  //     isBase: true,
+  //     isList: true,
+  //     mediaType: "image",
+  //     index: 4
+  //   },
 
-  {
-    id: "7",
-    name: "Economic",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "8",
-    name: "Political",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "9",
-    name: "Accidents",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  },
-  {
-    id: "10",
-    name: "Others",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "category"
-  }
+  //   {
+  //     id: "7777",
+  //     name: "longDesc",
+  //     title: "Long Description",
+  //     description: "Lorem ipsum dolor sit amet, consectetur",
+  //     type: "richText",
+  //     isBase: true,
+  //     index: 5
+  //   }
 ];
 
 const UpsertProduct = props => {
+  const [{ categories: categories_data }, dispatch] = useGlobalState();
+
   let hasContentType = props.location.params
     ? props.location.params.hasContentType
     : checkCategoryHasContentType(categories_data);
@@ -238,12 +97,10 @@ const UpsertProduct = props => {
     }));
   }
   function handleOnChangeValue(key, value, isValid) {
-    debugger;
     // add value to form
     let f = { ...form };
     f[key] = value;
     setForm(f);
-
     // check validation
     let obj = { ...formValidation };
     if (isValid && obj) {
@@ -297,7 +154,7 @@ const UpsertProduct = props => {
       setSelectedNode(selected);
       setCategoryBoxTitle(selected.name);
       const f = selected ? selected.fields : undefined;
-      setFields(f.sort((a, b) => a.index - b.index));
+      setFields(f ? f.sort((a, b) => a.index - b.index) : [...baseFields]);
     }
     toggleCategoryModal(false);
   }

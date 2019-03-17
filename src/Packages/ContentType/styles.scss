@@ -10,14 +10,15 @@
   color: black;
   transition-duration: 0.2s;
 }
-.label-nonEditable{
-  margin-right: 15px
+.label-nonEditable {
+  margin-right: 15px;
 }
 .ct-wrapper {
   flex: 1;
   margin: 3% 3% 1%;
   display: flex;
   flex-direction: column;
+
   .ct-header {
     height: 80px;
     display: flex;
@@ -58,6 +59,7 @@
       border-radius: 4px;
       display: flex;
       flex-direction: column;
+
       .ct-content-right-header {
         position: relative;
         height: 100px;
@@ -82,6 +84,14 @@
         .fieldsContent {
           flex: 1;
           overflow: auto;
+          ul {
+            padding: 0 !important;
+            list-style-type: none;
+            li {
+              background: white !important;
+              display: flex !important;
+            }
+          }
           .fieldItem {
             display: flex;
             padding: 3px;

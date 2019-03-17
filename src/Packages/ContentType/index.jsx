@@ -1,53 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalFooter,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input
-} from "reactstrap";
 import "./styles.scss";
 import List from "./list";
 import AddNewField from "./modals/AddNewField";
-import { languageManager } from "../../services";
-
-let data = [
-  {
-    id: "1",
-    name: "Car",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "contentType"
-  },
-
-  {
-    id: "7",
-    name: "Home",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "contentType"
-  },
-  {
-    id: "8",
-    name: "Football",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "contentType"
-  },
-  {
-    id: "9",
-    name: "Appliance",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "contentType"
-  },
-  {
-    id: "10",
-    name: "Flower",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "contentType"
-  }
-];
+import AddNewItemType from "./modals/AddNewItemType";
+import { languageManager, useGlobalState } from "../../services";
 
 let baseFields = [
   {
@@ -57,32 +13,6 @@ let baseFields = [
     description: "name of each product",
     type: "string",
     isBase: true
-  },
-
-  // {
-  //   id: Math.random().toString(),
-  //   name: "code",
-  //   title: "Code",
-  //   description: "",
-  //   type: "number",
-  //   isBase: true
-  // },
-  {
-    id: Math.random().toString(),
-    name: "thumbnail",
-    title: "Thumbnail",
-    description: "",
-    type: "media",
-    isBase: true
-  },
-  {
-    id: Math.random().toString(),
-    name: "images",
-    title: "Images",
-    description: "",
-    type: "media",
-    isBase: true,
-    isList: true
   },
   {
     id: Math.random().toString(),
@@ -94,54 +24,60 @@ let baseFields = [
   },
   {
     id: Math.random().toString(),
-    name: "longDesc",
-    title: "Long Description",
+    name: "thumbnail",
+    title: "Thumbnail",
     description: "",
-    type: "richText",
+    type: "media",
     isBase: true
   }
+  // {
+  //   id: Math.random().toString(),
+  //   name: "code",
+  //   title: "Code",
+  //   description: "",
+  //   type: "number",
+  //   isBase: true
+  // },
+  // {
+  //   id: Math.random().toString(),
+  //   name: "images",
+  //   title: "Images",
+  //   description: "",
+  //   type: "media",
+  //   isBase: true,
+  //   isList: true
+  // },
+  // {
+  //   id: Math.random().toString(),
+  //   name: "longDesc",
+  //   title: "Long Description",
+  //   description: "",
+  //   type: "richText",
+  //   isBase: true
+  // }
 ];
 
 const ItemTypes = props => {
+  const [{ contentTypes }, dispatch] = useGlobalState();
 
   const { name: pageTitle, desc: pageDescription } = props.component;
   // variables and handlers
-  const addItem_nameInput = useRef(null);
-  const [upsertItemTypeModal, setModal] = useState(false);
   const [upsertFieldModal, toggleUpsertFieldModal] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [itemTypesData, setData] = useState([]);
+  const [upsertItemTypeModal, toggleUpserItemTypeModal] = useState(false);
   const [selectedItemType, setItemType] = useState({});
   const [fields, setFields] = useState([]);
   const [updateMode, setUpdateMode] = useState();
-  const [modalHeaderTitle, setModalHeader] = useState("");
-  const [modalUpsertBtn, setModalUpsertBtnText] = useState("");
+
   const [rightContent, toggleRightContent] = useState(false);
 
-  useEffect(() => {
-    setData(data);
-  });
+  function openAddItemTypeModal() {
+    setUpdateMode(false);
+    toggleUpserItemTypeModal(true);
+  }
 
-  function initModalForm() {
-    setName("");
-    setDescription("");
-  }
-  function toggleModal() {
-    setModalHeader(
-      languageManager.translate("CONTENT_TYPE_MODAL_HEADER_TITLE_NEW")
-    );
-    setModalUpsertBtnText(
-      languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
-    );
-    setModal(prevModal => !prevModal);
-    initModalForm();
-  }
-  function handleNameChanged(e) {
-    setName(e.target.value);
-  }
-  function handleDesciptionChanged(e) {
-    setDescription(e.target.value);
+  function closeAddItemTypeModal(item) {
+    if (item === undefined) toggleUpserItemTypeModal(false);
+    else upsertItemType(item);
   }
 
   function updateNodeInList(list, node, newValue) {
@@ -163,57 +99,65 @@ const ItemTypes = props => {
   }
 
   function editItemType(item) {
-    setModal(prevModal => !prevModal);
     setItemType(item);
     setUpdateMode(true);
-    setName(item.name);
-    setDescription(item.description);
-    setModalHeader(
-      languageManager.translate("CONTENT_TYPE_MODAL_HEADER_TITLE_EDIT")
-    );
-    setModalUpsertBtnText(
-      languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_EDIT")
-    );
+    toggleUpserItemTypeModal(true);
   }
-  function upsertItemType() {
+
+  function upsertItemType(item) {
     if (updateMode) {
       let obj = {};
       for (const key in selectedItemType) {
         obj[key] = selectedItemType[key];
       }
-      obj["name"] = name;
-      obj["description"] = description;
-      updateNodeInList(data, selectedItemType, obj);
-      setData(data);
-      toggleModal();
+      obj["name"] = item.name;
+      obj["title"] = item.title;
+      obj["description"] = item.description;
+      updateNodeInList(contentTypes, selectedItemType, obj);
+      dispatch({
+        type: "SET_CONTENT_TYPES",
+        value: contentTypes
+      });
+      toggleUpserItemTypeModal(false);
     } else {
-      const obj = {
+      let obj = {
         id: Math.random(),
-        name: name,
-        description: description,
-        type: "contentType"
+        name: item.name,
+        title: item.title,
+        description: item.description,
+        fields: [...baseFields, ...item.selectedTemplate.fields],
+        type: "contentType",
+        template: item.selectedTemplate.name,
+        allowCustomFields: item.selectedTemplate.allowCustomFields
       };
+      let data = [...contentTypes];
       data.push(obj);
-      setData(data);
-      initModalForm();
+      dispatch({
+        type: "SET_CONTENT_TYPES",
+        value: data
+      });
+      toggleUpserItemTypeModal(false);
+      console.log(contentTypes);
     }
   }
   function removeItemType(selected) {
-    deleteNodeInList(data, selected);
-    const d = [...data];
-    setData(d);
+    deleteNodeInList(contentTypes, selected);
+    const data = [...contentTypes];
+    dispatch({
+      type: "SET_CONTENT_TYPES",
+      value: data
+    });
     toggleRightContent(false);
   }
   function closeRightContent() {
     toggleRightContent();
   }
+
   // field
   function showFields(item) {
     if (!rightContent) toggleRightContent(true);
     setItemType(item);
-    let m = baseFields;
-    if (item.fields !== undefined) m = [...baseFields, ...item.fields];
-    setFields(m);
+    setFields(item.fields);
   }
   function closeAddFieldModal() {
     toggleUpsertFieldModal(false);
@@ -222,19 +166,26 @@ const ItemTypes = props => {
     toggleUpsertFieldModal(prevModal => !prevModal);
   }
   function handleAddField(field) {
-    debugger;
     if (selectedItemType.fields === undefined) selectedItemType.fields = [];
     const m = [...fields];
     m.push(field);
     setFields(m);
     selectedItemType.fields.push(field);
-    updateNodeInList(data, selectedItemType, selectedItemType); //
+    updateNodeInList(contentTypes, selectedItemType, selectedItemType); //
+    dispatch({
+      type: "SET_CONTENT_TYPES",
+      value: contentTypes
+    });
   }
   function handleRemoveField(field) {
     const m = fields.filter(item => item.id !== field.id);
     setFields(m);
     selectedItemType.fields = m;
-    updateNodeInList(data, selectedItemType, selectedItemType); //
+    updateNodeInList(contentTypes, selectedItemType, selectedItemType); //
+    dispatch({
+      type: "SET_CONTENT_TYPES",
+      value: contentTypes
+    });
   }
   return (
     <>
@@ -245,7 +196,7 @@ const ItemTypes = props => {
             <span className="ct-header-description">{pageDescription}</span>
           </div>
           <div className="ct-header-right">
-            <button className="btn btn-primary" onClick={toggleModal}>
+            <button className="btn btn-primary" onClick={openAddItemTypeModal}>
               {languageManager.translate("CONTENT_TYPE_NEW_ITEM_BTN")}
             </button>
           </div>
@@ -254,7 +205,7 @@ const ItemTypes = props => {
           <div className="ct-content-left">
             <List
               rightContent={rightContent}
-              data={itemTypesData}
+              data={contentTypes}
               handleEditType={selected => editItemType(selected)}
               handleDeleteType={selected => removeItemType(selected)}
               handleShowFields={selected => showFields(selected)}
@@ -276,9 +227,28 @@ const ItemTypes = props => {
               </div>
               <div className="ct-content-right-body">
                 <div className="fieldsContent">
+                  {/* <SortableContainer onSortEnd={onSortEnd}>
+                    {fields.map((value, index) => (
+                      <SortableItem
+                        key={`item-${index}`}
+                        index={index}
+                        field={value}
+                      />
+                    ))}
+                  </SortableContainer> */}
                   {fields &&
                     fields.map(field => (
-                      <div className="fieldItem" key={field.id}>
+                      <div
+                        className="fieldItem"
+                        key={field.id}
+                        // style={{
+                        //   display: !selectedItemType.allowCustomFields
+                        //     ? field.isBase
+                        //       ? "none"
+                        //       : "flex"
+                        //     : "flex"
+                        // }}
+                      >
                         <div className="fieldItem-icon">
                           <i className="icon-more-h" />
                         </div>
@@ -323,80 +293,35 @@ const ItemTypes = props => {
                               </button>
                             </>
                           ) : (
-                            <span className="badge badge-danger label-nonEditable">
-                              Non-editable
-                            </span>
+                            // <span className="badge badge-danger label-nonEditable">
+                            //   Non-editable
+                            // </span>
+                            <div />
                           )}
                         </div>
                       </div>
                     ))}
                 </div>
                 <div className="btnNewFieldContent">
-                  <button className="btn btn-primary" onClick={addNewField}>
-                    <i className="icon-plus" />
-                  </button>
+                  {selectedItemType.allowCustomFields && (
+                    <button className="btn btn-primary" onClick={addNewField}>
+                      <i className="icon-plus" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
-      <Modal isOpen={upsertItemTypeModal} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>{modalHeaderTitle}</ModalHeader>
-        <ModalBody>
-          <div className="ct-category-modal-body">
-            <Form>
-              <div className="form-group">
-                <label>
-                  {languageManager.translate("CONTENT_TYPE_MODAL_NAME")}
-                </label>
-                <input
-                  ref={addItem_nameInput}
-                  type="text"
-                  className="form-control"
-                  placeholder={languageManager.translate(
-                    "CONTENT_TYPE_MODAL_NAME_PLACEHOLDER"
-                  )}
-                  value={name}
-                  required
-                  onChange={handleNameChanged}
-                />
-                <small className="form-text text-muted">
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODAL_NAME_DESCRIPTION"
-                  )}
-                </small>
-              </div>
-              <FormGroup>
-                <Label for="exampleEmail">
-                  {languageManager.translate("CONTENT_TYPE_MODAL_DESCRIPTION")}
-                </Label>
-                <Input
-                  type="string"
-                  placeholder={languageManager.translate(
-                    "CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER"
-                  )}
-                  value={description}
-                  onChange={handleDesciptionChanged}
-                />
-              </FormGroup>
-            </Form>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            type="submit"
-            color="primary"
-            onClick={() => upsertItemType(selectedItemType)}
-            disabled={name.length > 0 ? false : true}
-          >
-            {modalUpsertBtn}
-          </Button>
-          <Button color="secondary" onClick={toggleModal}>
-            {languageManager.translate("CANCEL")}
-          </Button>
-        </ModalFooter>
-      </Modal>
+      {upsertItemTypeModal && (
+        <AddNewItemType
+          selectedItemType={selectedItemType}
+          updateMode={updateMode}
+          isOpen={upsertFieldModal}
+          onCloseModal={closeAddItemTypeModal}
+        />
+      )}
       {upsertFieldModal && (
         <AddNewField
           selectedItemType={selectedItemType}

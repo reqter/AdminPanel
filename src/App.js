@@ -1,39 +1,17 @@
-import React, { Component } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
+
+import StateProvider from "./services/stateManager/stateProvider";
 import "./styles/app.scss";
 import "animate.css";
 
 import Routes from "./routes";
 
-class App extends Component {
-  state = {
-    loading: true
-  };
-  componentDidMount() {
-    this.setState({
-      loading: false
-    });
-  }
-  render() {
-    return (
-      <>
-        {this.state.loading ? (
-          <div className="loaderContainer">
-            <div className="loader">
-              <div className="text">Loading</div>
-              <div className="dots">
-                <div />
-                <div />
-                <div />
-                <div />
-              </div>
-            </div>
-          </div>
-        ) : (
-          undefined
-        )}
-
+const App = () => {
+  return (
+    <StateProvider>
+      <BrowserRouter>
         <div>
           <Switch>
             {Routes.map(route => (
@@ -42,7 +20,29 @@ class App extends Component {
                 path={route.path}
                 render={props => {
                   const Component = route.component;
-                  return <Component {...props} />;
+                  let nestedRoutes;
+                  if (route.routes) {
+                    nestedRoutes = (
+                      <>
+                        {route.routes.map(nestedRoute => (
+                          <Route
+                            exact
+                            key={nestedRoute.path}
+                            path={nestedRoute.path}
+                            render={props => {
+                              const NestedComponent = nestedRoute.component;
+                              const p = {
+                                ...props,
+                                component: nestedRoute
+                              };
+                              return <NestedComponent {...p} />;
+                            }}
+                          />
+                        ))}
+                      </>
+                    );
+                  }
+                  return <Component {...props} routes={nestedRoutes} />;
                 }}
               />
             ))}
@@ -53,10 +53,10 @@ class App extends Component {
             {/* <Redirect to="/not-found"/> */}
           </Switch>
         </div>
-      </>
-    );
-  }
-}
+      </BrowserRouter>
+    </StateProvider>
+  );
+};
 
 export default App;
 

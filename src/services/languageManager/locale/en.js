@@ -87,6 +87,8 @@ export default {
   CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_CONFIG_BTN: "Create and configure",
   CONTENT_TYPE_ADD_FIELD_MODAL_CHNAGE_FIELD_BTN: "Change Field Type",
   CONTENT_TYPE_ADD_FIELD_CHOOSEN: "New",
+  FIELD_TYPE_RICH_TEXT: "Rich Text",
+  FIELD_TYPE_RICH_TEXT_INFO: "Descriptive content ,for example blog post",
   FIELD_TYPE_TEXT: "Text",
   FIELD_TYPE_TEXT_INFO: "Titles, names, paragraphs, list of names",
   FIELD_TYPE_NUMBER: "Number",

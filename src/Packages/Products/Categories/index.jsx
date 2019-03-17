@@ -46,7 +46,8 @@ class Tree extends Component {
                   paddingLeft: `${15 * lvl}px`
                 }}
               >
-                {node.children && node.children.length > 0 ? (
+                {(node.children && node.children.length > 0) ||
+                (node.itemTypes && node.itemTypes.length > 0) ? (
                   <button
                     className="btnCategoryCollapse btn btn-primary btn-sm"
                     id={id}
@@ -69,7 +70,7 @@ class Tree extends Component {
                   </button>
                 )}
                 <div className="treeItem-text">
-                  <span className="treeItem-name">{node.name}</span>
+                  <span className="treeItem-name">{node.title}</span>
                   <span className="treeItem-desc">
                     {node.description ||
                       "Lorem ipsum dolor sit amet, consectetur"}
@@ -93,7 +94,9 @@ class Tree extends Component {
                       </button>
                     )
                   : (node.children === undefined ||
-                      node.children.length === 0) && (
+                      node.children.length === 0 ||
+                      (node.itemTypes === undefined ||
+                        node.itemTypes.length === 0)) && (
                       <button
                         className="btn btn-light treeItem-action"
                         size="xs"
@@ -112,9 +115,9 @@ class Tree extends Component {
               </div>
             }
           </ListGroupItem>
-          {node.children && (
+          {(node.children || node.itemTypes) && (
             <Collapse isOpen={this.state[id]}>
-              {this.mapper(node.children, id, (lvl || 0) + 1)}
+              {this.mapper(node.children || node.itemTypes, id, (lvl || 0) + 1)}
             </Collapse>
           )}
         </>
