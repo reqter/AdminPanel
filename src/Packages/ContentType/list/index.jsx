@@ -3,7 +3,7 @@ import { ListGroup, ListGroupItem } from "reactstrap";
 import { languageManager } from "../../../services";
 
 const List = props => {
-  console.log('list')
+  const currentLang = languageManager.getCurrentLanguage().name;
   const [selected, setSelected] = useState({});
   useEffect(() => {
     if (!props.rightContent) {
@@ -31,9 +31,11 @@ const List = props => {
                 <i className="icon-item-type" />
               </button>
               <div className="treeItem-text">
-                <span className="treeItem-name">{listItem.title}</span>
+                <span className="treeItem-name">
+                  {listItem.title[currentLang]}
+                </span>
                 <span className="treeItem-desc">
-                  {listItem.description ||
+                  {listItem.description[currentLang] ||
                     "Lorem ipsum dolor sit amet, consectetur"}
                 </span>
               </div>

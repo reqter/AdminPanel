@@ -10,7 +10,8 @@ import {
   Label,
   Input
 } from "reactstrap";
-import { languageManager } from "../../../../services";
+import { languageManager, utility } from "../../../../services";
+import { CheckBox } from "./../../../../components";
 import "./styles.scss";
 const fields = [
   {
@@ -76,7 +77,6 @@ const fields = [
 ];
 
 const AddNewField = props => {
-  console.log('list')
   const category = props.selectedCategory;
 
   const [isOpen, toggleModal] = useState(true);
@@ -89,6 +89,7 @@ const AddNewField = props => {
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [translation, toggleTranslation] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -127,13 +128,15 @@ const AddNewField = props => {
     setTitle("");
     setDescription("");
   }
+
   function addField() {
     const obj = {
       id: Math.random().toString(),
       name: name,
-      title: title,
-      description: description,
-      type: selectedField.name
+      title: utility.applyeLangs(title),
+      description: utility.applyeLangs(description),
+      type: selectedField.name,
+      isTranslate: translation
     };
     props.onAddField(obj);
     resetForm();
@@ -209,7 +212,6 @@ const AddNewField = props => {
                     )}
                   </small>
                 </FormGroup>
-            
               </div>
               <div className="formTab-row">
                 <FormGroup>
@@ -232,6 +234,11 @@ const AddNewField = props => {
                     )}
                   </small>
                 </FormGroup>
+
+                <CheckBox
+                  title="Translatable"
+                  onChange={e => toggleTranslation(e.target.checked)}
+                />
               </div>
             </Form>
           )}

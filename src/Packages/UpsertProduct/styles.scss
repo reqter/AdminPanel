@@ -18,6 +18,23 @@
         margin-right: 10px;
       }
     }
+    .tabItems{
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .item{
+            cursor: pointer;
+            font-size: 14px;
+            margin:  0 10px;
+            color: gray;
+            &.active{
+                font-size: 15px;
+                color: black;
+                font-weight: 600
+            }
+        }
+    }
   }
   .up-content {
     padding-top: 80px;
@@ -25,6 +42,17 @@
     main {
       width: 768px;
       margin: auto;
+      .up-content-itemTypes {
+        background: white;
+        min-height: 300px;
+        padding: 20px;
+        box-shadow: 0 0 3px lightgray;
+        border-radius: 4px;
+        .listGroupItem{
+            border-bottom: 1px solid whitesmoke;
+            padding: 10px 0
+        }
+      }
       .up-content-title {
         font-size: 25px;
         font-weight: 500;
@@ -54,7 +82,7 @@
         .rowItem {
           margin: 20px 0;
         }
-    
+
         .actions {
           display: flex;
           flex-direction: row-reverse;

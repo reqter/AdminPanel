@@ -1,25 +1,27 @@
 import React, { useState } from "react";
 import "./styles.scss";
+import { languageManager } from "../../../../services";
 
 const KeyValueInput = props => {
+    const currentLang = languageManager.getCurrentLanguage().name;
   const { field } = props;
   if (field.appearance === "combo") {
     return (
       <div className="form-group">
-        <label>{field.title}</label>
+        <label>{field.title[currentLang]}</label>
         <select className="form-control">
           {field.options &&
             field.options.map(option => (
               <option value={option.key}>{option.value}</option>
             ))}
         </select>
-        <small className="form-text text-muted">{field.description}</small>
+        <small className="form-text text-muted">{field.description[currentLang]}</small>
       </div>
     );
   } else if (field.appearance === "radioGroup") {
     return (
       <>
-        <label>{field.title}</label>
+        <label>{field.title[currentLang]}</label>
         <div className="up-form-keyvalue-radio">
           {field.options.map(option => (
             <div class="form-check">
@@ -41,14 +43,14 @@ const KeyValueInput = props => {
   } else {
     return (
       <div className="form-group">
-        <label>{field.title}</label>
+        <label>{field.title[currentLang]}</label>
         <select className="form-control">
           {field.options &&
             field.options.map(option => (
               <option value={option.key}>{option.value}</option>
             ))}
         </select>
-        <small className="form-text text-muted">{field.description}</small>
+        <small className="form-text text-muted">{field.description[currentLang]}</small>
       </div>
     );
   }

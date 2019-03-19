@@ -1,6 +1,7 @@
 // import themeManager from "./lib/themeManager";
 import languageManager from "./languageManager";
 import useGlobalState from "./stateManager";
+import utility from "./utility";
 // import navManager from "./lib/navManager";
 //import useGlobalState from "./stateManager";
 // import authManager from "./lib/authManager";
@@ -9,7 +10,8 @@ import useGlobalState from "./stateManager";
 export {
   // themeManager,
   languageManager,
-  useGlobalState
+  useGlobalState,
+  utility
   // storageManager,
   // navManager,
   // stateManager,

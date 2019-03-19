@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles.scss";
-import { useGlobalState } from "./../../services";
+import { useGlobalState, languageManager } from "./../../services";
 import CategoriesModal from "./Categories";
 import {
   String,
@@ -69,26 +69,22 @@ const baseFields = [
 ];
 
 const UpsertProduct = props => {
-  const [{ categories: categories_data }, dispatch] = useGlobalState();
-
-  let hasContentType = props.location.params
-    ? props.location.params.hasContentType
-    : checkCategoryHasContentType(categories_data);
+  const currentLang = languageManager.getCurrentLanguage().name;
+  const [{ categories, contentTypes, contents }, dispatch] = useGlobalState();
 
   // variables
+  const [tab, toggleTab] = useState(props.location.params ? 2 : 1);
   const [categoryModal, toggleCategoryModal] = useState(false);
-  const [categoryBoxTitle, setCategoryBoxTitle] = useState(
-    checkPropsToSetCategoryBoxTitle()
+  const [category, setCategory] = useState();
+  const [contentType, setContentType] = useState(
+    props.location.params
+      ? { title: "Generic Item" }
+      : //? props.location.params.selectedItem.contentType
+        undefined
   );
-  const [selectedNode, setSelectedNode] = useState(
-    props.location.params ? props.location.params.selectedNode : undefined
-  );
-  const f = selectedNode ? selectedNode.fields : undefined;
-  const [fields, setFields] = f
-    ? useState(f.sort((a, b) => a.index - b.index))
-    : useState(baseFields);
+  const [fields, setFields] = useState();
 
-  const [form, setForm] = useState({});
+  const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState({});
   function setNameToFormValidation(name) {
     setFormValidation(prevFormValidation => ({
@@ -98,9 +94,9 @@ const UpsertProduct = props => {
   }
   function handleOnChangeValue(key, value, isValid) {
     // add value to form
-    let f = { ...form };
+    let f = { ...formData };
     f[key] = value;
-    setForm(f);
+    setFormData(f);
     // check validation
     let obj = { ...formValidation };
     if (isValid && obj) {
@@ -118,43 +114,14 @@ const UpsertProduct = props => {
       setFormValidation(obj);
     }
   }
-  function checkPropsToSetCategoryBoxTitle() {
-    const selectedNode =
-      props !== undefined
-        ? props.location !== undefined
-          ? props.location.params !== undefined
-            ? props.location.params.selectedNode
-            : undefined
-          : undefined
-        : undefined;
-    if (selectedNode === undefined) {
-      if (hasContentType !== undefined && hasContentType)
-        return "Choose an item type";
-      return "Choose a category";
-    } else {
-      if (selectedNode.itemType) return selectedNode.itemType.name;
-      return selectedNode.name;
-    }
-  }
-  function checkCategoryHasContentType(data) {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].type === "contentType") {
-        return true;
-      }
-      if (data[i].children)
-        return checkCategoryHasContentType(data[i].children);
-    }
-  }
+
   // methods
   function showCatgoryModal() {
     toggleCategoryModal(true);
   }
   function onCloseModel(selected) {
     if (selected !== undefined) {
-      setSelectedNode(selected);
-      setCategoryBoxTitle(selected.name);
-      const f = selected ? selected.fields : undefined;
-      setFields(f ? f.sort((a, b) => a.index - b.index) : [...baseFields]);
+      setCategory(selected);
     }
     toggleCategoryModal(false);
   }
@@ -176,7 +143,13 @@ const UpsertProduct = props => {
       case "location":
         return <Location field={field} />;
       case "media":
-        return <Media field={field} />;
+        return (
+          <Media
+            field={field}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
       case "boolean":
         return <Boolean field={field} />;
       case "keyvalue":
@@ -187,52 +160,159 @@ const UpsertProduct = props => {
         break;
     }
   }
-
+  function backToProducts() {
+    props.history.push("/home/products");
+  }
+  function changeTab(tab) {
+    if (tab === 2) {
+      if (contentType !== undefined) {
+        toggleTab(2);
+        const f = contentType.fields;
+        setFields(f.sort((a, b) => a.index - b.index));
+      }
+    } else {
+      toggleTab(1);
+    }
+  }
+  function handleSelectContentType(contentType) {
+    changeTab(2);
+    setContentType(contentType);
+  }
+  function upsertItem() {
+    const obj = {
+      sys: {
+        id: Math.random().toString(),
+        issuer: {
+          id: "1",
+          fullName: "Saeed Padyab",
+          image: ""
+        },
+        issueDate: "19/01/2019 20:18"
+      },
+      //contentType: contentType.id,
+      contentType: {
+        id: contentType.id,
+        name: contentType.name,
+        title: contentType.title
+      },
+      //category:category.id,
+      category: {
+        id: category.id,
+        name: category.name
+      },
+      fields: formData
+    };
+    let d = [...contents];
+    d.push(obj);
+    dispatch({
+      type: "SET_CONTENTS",
+      value: d
+    });
+  }
   return (
     <div className="up-wrapper">
       <div className="up-header">
-        <button className="btn btn-light">
+        <button className="btn btn-light" onClick={backToProducts}>
           <i className="icon-arrow-left2" />
           Back
         </button>
+        <div className="tabItems">
+          <div
+            className={["item", tab === 1 ? "active" : ""].join(" ")}
+            onClick={() => changeTab(1)}
+          >
+            1.Choosing Item Type
+          </div>
+          <div
+            className={["item", tab === 2 ? "active" : ""].join(" ")}
+            onClick={() => changeTab(2)}
+          >
+            2.Complete Form
+          </div>
+        </div>
       </div>
       <div className="up-content">
         <main>
-          <div className="up-content-title">Add New Product</div>
-          <div className="up-categoryBox">
-            <span>{categoryBoxTitle}</span>
-            <button className="btn btn-link" onClick={showCatgoryModal}>
-              {hasContentType ? "Change item" : "Change category"}
-            </button>
-          </div>
-          <div className="up-formInputs">
-            {fields &&
-              fields.map(field => (
-                <div key={field.id} className="rowItem">
-                  {getFieldItem(field)}
+          {tab === 1 && (
+            <>
+              <div className="up-content-title">Choose an item type</div>
+              <div className="up-content-itemTypes animated fadeIn ">
+                {contentTypes.map(c => (
+                  <div key={c.id} className="listGroupItem">
+                    <div className="treeItem">
+                      <button
+                        className="btn btn-primary btn-sm"
+                        color="primary"
+                        style={{ marginRight: 15 }}
+                      >
+                        <i className="icon-item-type" />
+                      </button>
+                      <div className="treeItem-text">
+                        <span className="treeItem-name">
+                          {c.title[currentLang]}
+                        </span>
+                        <span className="treeItem-desc">
+                          {c.description[currentLang] ||
+                            "Lorem ipsum dolor sit amet, consectetur"}
+                        </span>
+                      </div>
+                      <button
+                        className="btn btn-light treeItem-action"
+                        size="xs"
+                        onClick={() => handleSelectContentType(c)}
+                      >
+                        <span style={{ fontSize: 12 }}>
+                          {languageManager.translate("Choose")}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          {tab === 2 && (
+            <>
+              <div className="up-content-title">
+                Add New {contentType.title[currentLang]}
+              </div>
+              <div className="up-categoryBox">
+                <span>
+                  {category ? category.name[currentLang] : "Choose a category"}
+                </span>
+                <button className="btn btn-link" onClick={showCatgoryModal}>
+                  Change category
+                </button>
+              </div>
+              <div className="up-formInputs">
+                {fields &&
+                  fields.map(field => (
+                    <div key={field.id} className="rowItem">
+                      {getFieldItem(field)}
+                    </div>
+                  ))}
+                <div className="actions">
+                  <button
+                    className="btn btn-primary "
+                    onClick={upsertItem}
+                    disabled={
+                      Object.keys(formData).length > 0 &&
+                      formValidation === undefined &&
+                      category !== undefined
+                        ? false
+                        : true
+                    }
+                  >
+                    Add Item
+                  </button>
                 </div>
-              ))}
-            <div className="actions">
-              <button
-                className="btn btn-primary "
-                disabled={
-                  Object.keys(form).length > 0 && formValidation === undefined
-                    ? false
-                    : true
-                }
-              >
-                Add Item
-              </button>
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </main>
       </div>
       {categoryModal && (
-        <CategoriesModal
-          categoriesData={categories_data}
-          hasContentType={hasContentType}
-          onCloseModal={onCloseModel}
-        />
+        <CategoriesModal categories={categories} onCloseModal={onCloseModel} />
       )}
     </div>
   );

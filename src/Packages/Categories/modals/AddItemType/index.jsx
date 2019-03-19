@@ -4,6 +4,7 @@ import { languageManager } from "../../../../services";
 import "./styles.scss";
 
 const AddNewField = props => {
+  const currentLang = languageManager.getCurrentLanguage().name;
   const category = props.selectedCategory;
   let items = props.itemTypes ? props.itemTypes : [];
   let data = props.data;
@@ -51,8 +52,12 @@ const AddNewField = props => {
                 <i className="icon-item-type" />
               </div>
               <div className="itemType-center">
-                <span className="itemType-title">{item.title}</span>
-                <span className="itemType-description">{item.description}</span>
+                <span className="itemType-title">
+                  {item.title[currentLang]}
+                </span>
+                <span className="itemType-description">
+                  {item.description[currentLang]}
+                </span>
               </div>
             </div>
             <div className="itemTypeModal-right">

@@ -13,7 +13,7 @@ import {
 import "./styles.scss";
 import Tree from "./tree";
 import AddNewItemType from "./modals/AddItemType";
-import { languageManager, useGlobalState } from "../../services";
+import { languageManager, useGlobalState, utility } from "../../services";
 
 function useInput(defaultValue = "") {
   const [input, setInput] = useState(defaultValue);
@@ -24,6 +24,7 @@ function useInput(defaultValue = "") {
 }
 
 const Categories = props => {
+  const currentLang = languageManager.getCurrentLanguage().name;
   const [{ categories, contentTypes }, dispatch] = useGlobalState();
 
   const { name: pageTitle, desc: pageDescription } = props.component;
@@ -103,8 +104,8 @@ const Categories = props => {
     setSelectedCategory(item);
     setUpdateMode(true);
 
-    handleNameChanged(item.name);
-    handleDesciptionChanged(item.description);
+    handleNameChanged(item.name[currentLang]);
+    handleDesciptionChanged(item.description[currentLang]);
 
     setModalHeader(
       languageManager.translate("CATEGORIES_MODAL_HEADER_TITLE_EDIT")
@@ -120,8 +121,8 @@ const Categories = props => {
         const obj = {
           parentId: selectedCategory.id,
           id: Math.random().toString(),
-          name: name,
-          description: description,
+          name: utility.applyeLangs(name),
+          description: utility.applyeLangs(description),
           type: "category"
         };
 
@@ -140,8 +141,8 @@ const Categories = props => {
         for (const key in selectedCategory) {
           newCategory[key] = selectedCategory[key];
         }
-        newCategory["name"] = name;
-        newCategory["description"] = description;
+        newCategory["name"] = utility.applyeLangs(name);
+        newCategory["description"] = utility.applyeLangs(description);
         updateNodeInList(categories, selectedCategory, newCategory);
         dispatch({
           type: "SET_CATEGORIES",
@@ -152,8 +153,8 @@ const Categories = props => {
     } else {
       const obj = {
         id: Math.random(),
-        name: name,
-        description: description,
+        name: utility.applyeLangs(name),
+        description: utility.applyeLangs(description),
         type: "category"
       };
       let data = [...categories];
@@ -266,9 +267,11 @@ const Categories = props => {
                         <div className="fieldItem-type">
                           <i className="icon-item-type" />
                         </div>
-                        <div className="fieldItem-name">{item.name}</div>
+                        <div className="fieldItem-name">
+                          {item.title[currentLang]}
+                        </div>
                         <div className="fieldItem-title">
-                          {item.description}
+                          {item.description[currentLang]}
                         </div>
                         <div
                           className="fieldItem-actions"

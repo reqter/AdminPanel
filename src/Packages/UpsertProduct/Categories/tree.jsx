@@ -5,7 +5,8 @@ import { languageManager } from "../../../services";
 class Tree extends Component {
   state = {
     selected: {},
-    hasContentType: false
+    hasContentType: false,
+    currentLang: languageManager.getCurrentLanguage().name
   };
   static getDerivedStateFromProps(props, current_state) {
     if (!props.leftContent) {
@@ -21,78 +22,64 @@ class Tree extends Component {
   };
   mapper = (nodes, parentId, lvl) => {
     return nodes.map((node, index) => {
-      const id = `${node.id}-${parentId ? parentId : "top"}`.replace(
-        /[^a-zA-Z0-9-_]/g,
-        ""
-      );
-      return (
-        <>
-          <ListGroupItem
-            key={index}
-            style={{
-              zIndex: 0,
-              padding: 10,
-              background:
-                this.state.selected.id === node.id ? "lightgray" : "white"
-            }}
-            className={`treeItemParent ${
-              parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
+      if (node.type === "category") {
+        const id = `${node.id}-${parentId ? parentId : "top"}`.replace(
+          /[^a-zA-Z0-9-_]/g,
+          ""
+        );
+        return (
+          <>
+            <ListGroupItem
+              key={index}
+              style={{
+                zIndex: 0,
+                padding: 10,
+                background:
+                  this.state.selected.id === node.id ? "lightgray" : "white"
+              }}
+              className={`treeItemParent ${
+                parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
               }`}
-          >
-            {
-              <div
-                className="treeItem"
-                style={{
-                  paddingLeft: `${15 * lvl}px`
-                }}
-              >
-                {node.children && node.children.length > 0 ? (
-                  <button
-                    className="btnCategoryCollapse btn btn-primary btn-sm"
-                    id={id}
-                    color="primary"
-                    onClick={this.toggle}
-                  >
-                    {this.state[id] ? (
-                      <i className="icon-caret-down" onClick={this.toggle} />
-                    ) : (
+            >
+              {
+                <div
+                  className="treeItem"
+                  style={{
+                    paddingLeft: `${15 * lvl}px`
+                  }}
+                >
+                  {node.children && node.children.length > 0 ? (
+                    <button
+                      className="btnCategoryCollapse btn btn-primary btn-sm"
+                      id={id}
+                      color="primary"
+                      onClick={this.toggle}
+                    >
+                      {this.state[id] ? (
+                        <i className="icon-caret-down" onClick={this.toggle} />
+                      ) : (
                         <i className="icon-caret-right" onClick={this.toggle} />
                       )}
-                  </button>
-                ) : node.type === "category" ? (
-                  <button className="btnCategoryLeaf btn btn-primary btn-sm">
-                    <i className="icon-circle-o" />
-                  </button>
-                ) : (
-                      <button className="btnCategoryLeaf btn btn-dark btn-sm">
-                        <i className="icon-circle-o" />
-                      </button>
-                    )}
-                <div className="treeItem-text">
-                  <span className="treeItem-name">{node.name}</span>
-                  <span className="treeItem-desc">
-                    {node.description ||
-                      "Lorem ipsum dolor sit amet, consectetur"}
-                  </span>
-                </div>
-                {this.props.hasContentType
-                  ? node.type === "contentType" && (
-                    <button
-                      className="btn btn-light treeItem-action"
-                      size="xs"
-                      onClick={() => {
-                        this.setState(state => ({ selected: node }));
-                        this.props.onRowSelect(node);
-                      }}
-                    >
-                      <span style={{ fontSize: 12 }}>
-                        {languageManager.translate(
-                          "ITEMS_CATEGORIES_CONTENT"
-                        )}
-                      </span>
                     </button>
-                  )
-                  : (node.children === undefined ||
+                  ) : node.type === "category" ? (
+                    <button className="btnCategoryLeaf btn btn-primary btn-sm">
+                      <i className="icon-circle-o" />
+                    </button>
+                  ) : (
+                    <button className="btnCategoryLeaf btn btn-dark btn-sm">
+                      <i className="icon-circle-o" />
+                    </button>
+                  )}
+                  <div className="treeItem-text">
+                    <span className="treeItem-name">
+                      {node.name[this.state.currentLang]}
+                    </span>
+                    <span className="treeItem-desc">
+                      {node.description[this.state.currentLang] ||
+                        "Lorem ipsum dolor sit amet, consectetur"}
+                    </span>
+                  </div>
+                  {(node.children === undefined ||
                     node.children.length === 0) && (
                     <button
                       className="btn btn-light treeItem-action"
@@ -103,22 +90,23 @@ class Tree extends Component {
                       }}
                     >
                       <span style={{ fontSize: 12 }}>
-                        {languageManager.translate(
-                          "Select"
-                        )}
+                        {languageManager.translate("Select")}
                       </span>
                     </button>
                   )}
-              </div>
-            }
-          </ListGroupItem>
-          {node.children && (
-            <Collapse isOpen={this.state[id]}>
-              {this.mapper(node.children, id, (lvl || 0) + 1)}
-            </Collapse>
-          )}
-        </>
-      );
+                </div>
+              }
+            </ListGroupItem>
+            {node.children && (
+              <Collapse isOpen={this.state[id]}>
+                {this.mapper(node.children, id, (lvl || 0) + 1)}
+              </Collapse>
+            )}
+          </>
+        );
+      } else {
+        return <></>;
+      }
     });
   };
 

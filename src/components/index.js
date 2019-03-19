@@ -1,4 +1,3 @@
 import Divider from "./Divider";
-export  {
-  Divider
-};
+import CheckBox from "./CheckBox";
+export { Divider, CheckBox };

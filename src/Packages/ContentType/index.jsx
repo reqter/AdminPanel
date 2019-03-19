@@ -5,59 +5,9 @@ import AddNewField from "./modals/AddNewField";
 import AddNewItemType from "./modals/AddNewItemType";
 import { languageManager, useGlobalState } from "../../services";
 
-let baseFields = [
-  {
-    id: Math.random().toString(),
-    name: "name",
-    title: "Name",
-    description: "name of each product",
-    type: "string",
-    isBase: true
-  },
-  {
-    id: Math.random().toString(),
-    name: "shortDesc",
-    title: "Short Description",
-    description: "",
-    type: "string",
-    isBase: true
-  },
-  {
-    id: Math.random().toString(),
-    name: "thumbnail",
-    title: "Thumbnail",
-    description: "",
-    type: "media",
-    isBase: true
-  }
-  // {
-  //   id: Math.random().toString(),
-  //   name: "code",
-  //   title: "Code",
-  //   description: "",
-  //   type: "number",
-  //   isBase: true
-  // },
-  // {
-  //   id: Math.random().toString(),
-  //   name: "images",
-  //   title: "Images",
-  //   description: "",
-  //   type: "media",
-  //   isBase: true,
-  //   isList: true
-  // },
-  // {
-  //   id: Math.random().toString(),
-  //   name: "longDesc",
-  //   title: "Long Description",
-  //   description: "",
-  //   type: "richText",
-  //   isBase: true
-  // }
-];
-
 const ItemTypes = props => {
+  const currentLang = languageManager.getCurrentLanguage().name;
+
   const [{ contentTypes }, dispatch] = useGlobalState();
 
   const { name: pageTitle, desc: pageDescription } = props.component;
@@ -125,7 +75,7 @@ const ItemTypes = props => {
         name: item.name,
         title: item.title,
         description: item.description,
-        fields: [...baseFields, ...item.selectedTemplate.fields],
+        fields: item.selectedTemplate.fields,
         type: "contentType",
         template: item.selectedTemplate.name,
         allowCustomFields: item.selectedTemplate.allowCustomFields
@@ -276,7 +226,9 @@ const ItemTypes = props => {
                           />
                         </div>
                         <div className="fieldItem-name">{field.name}</div>
-                        <div className="fieldItem-title">{field.title}</div>
+                        <div className="fieldItem-title">
+                          {field.title[currentLang]}
+                        </div>
 
                         <div className="fieldItem-actions">
                           {field.isBase === undefined || !field.isBase ? (

@@ -1,92 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { useGlobalState } from "./../../services";
+import { useGlobalState, languageManager } from "./../../services";
 import "./styles.scss";
-import Tree from "./Categories";
 
-const table_data = [
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  },
-  {
-    thumbnail:
-      "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-    name: "موز ممتاز",
-    description: "محصولات وارداتی از افریقا",
-    price: "2500 $",
-    brand: "Banana"
-  }
-];
+import ContentTypes from "./FilterBox/contentTypes";
+import Tree from "./FilterBox/categories";
+
 const Products = props => {
   let baseFieldColumnsConfig = [
     {
@@ -111,10 +31,18 @@ const Products = props => {
       headerStyle: {
         display: "none"
       },
-      accessor: "thumbnail",
+      accessor: "fields.thumbnail",
       Cell: props => (
         <div className="p-image">
-          <img className="p-image-value" src={props.value} alt="" />
+          <img
+            className="p-image-value"
+            src={
+              props.value
+                ? props.value[languageManager.getCurrentLanguage().name]
+                : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png"
+            }
+            alt=""
+          />
         </div>
       )
     },
@@ -124,8 +52,14 @@ const Products = props => {
       headerStyle: {
         display: "none"
       },
-      accessor: "name",
-      Cell: props => <div className="p-name">{props.value}</div>
+      accessor: "fields.name",
+      Cell: props => (
+        <div className="p-name">
+          {props.value
+            ? props.value[languageManager.getCurrentLanguage().name]
+            : ""}
+        </div>
+      )
     },
     {
       Header: "Description",
@@ -133,8 +67,14 @@ const Products = props => {
       headerStyle: {
         display: "none"
       },
-      accessor: "description",
-      Cell: props => <div className="p-description">{props.value}</div>
+      accessor: "fields.description",
+      Cell: props => (
+        <div className="p-description">
+          {props.value
+            ? props.value[languageManager.getCurrentLanguage().name]
+            : ""}
+        </div>
+      )
     },
 
     {
@@ -147,13 +87,13 @@ const Products = props => {
         <div className="p-actions">
           <button
             className="btn btn-light"
-            onClick={() => handleDeleteRow(props)}
+            onClick={() => handleEditRow(props)}
           >
             Edit
           </button>
           <button
             className="btn btn-light"
-            onClick={() => handleEditRow(props)}
+            onClick={() => handleDeleteRow(props)}
           >
             <i className="icon-bin" />
           </button>
@@ -163,35 +103,22 @@ const Products = props => {
   ];
 
   // variables
-  const [{ categories: categories_data }, disptch] = useGlobalState();
+  const [{ contents, categories, contentTypes }, dispatch] = useGlobalState();
 
   const tableBox = useRef(null);
   const { name: pageTitle, desc: pageDescription } = props.component;
-  const [treeData, setTreeData] = useState(categories_data);
-  const [hasContentType, setCategoryContentTypeStatus] = useState(
-    checkContentType(categories_data)
-  );
-  const [gridData, setGridData] = useState(table_data);
 
   const [listContent, toggleListContent] = useState(true);
   const [leftContent, toggleLeftContent] = useState(false);
-  const [tableHeaderTitle, setTableHeaderTitle] = useState(false);
 
   const [selectedNode, setSelectedNode] = useState();
+  const [selectedContentType, setSelectedContentType] = useState();
   const [columnsVisibility, toggleColumns] = useState(false);
 
   const [columns, setColumns] = useState(baseFieldColumnsConfig.slice());
+  const [dataFilters, setFilters] = useState([]);
 
   // methods
-
-  function checkContentType(data) {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].type === "contentType") {
-        return true;
-      }
-      if (data[i].children) return checkContentType(data[i].children);
-    }
-  }
   function initColumns() {
     if (columnsVisibility) {
       const cols = baseFieldColumnsConfig.map(col => {
@@ -207,12 +134,12 @@ const Products = props => {
   function toggleFilterBox() {
     toggleLeftContent(prevState => !prevState);
   }
-  function openNewItemBox() {
+  function openNewItemBox(contentType) {
     props.history.push({
-      pathname: "/addNew",
+      pathname: "/addNew"
       // search: "?sort=name",
       //hash: "#the-hash",
-      params: { selectedNode, hasContentType }
+      //params: { contentType, hasContentType }
     });
   }
   function makeTableFieldView(type, props) {
@@ -223,9 +150,22 @@ const Products = props => {
         return <div className="p-string">{props.value}</div>;
     }
   }
+
+  function removeFilter(filter) {
+    let f = dataFilters.filter(item => item.id !== filter.id);
+    setFilters(f);
+  }
+  function handleContentTypeSelect(selected) {
+    setSelectedContentType(selected);
+    let f = [...dataFilters].filter(item => item.type !== "contentType");
+    f.push(selected);
+    setFilters(f);
+  }
   function handleClickCategoryContent(selected) {
     setSelectedNode(selected);
-    setTableHeaderTitle(selected.name);
+    let f = [...dataFilters].filter(item => item.type !== "category");
+    f.push(selected);
+    setFilters(f);
     // if (selected.type === "category") {
     //   initColumns();
     // } else {
@@ -261,10 +201,20 @@ const Products = props => {
     // }
   }
   function handleDeleteRow(row) {
-    console.log(row);
+    const item = row.original;
+    const d = [...contents].filter(c => c.sys.id !== item.sys.id);
+    dispatch({
+      type: "SET_CONTENTS",
+      value: d
+    });
   }
   function handleEditRow(row) {
-    console.log(row);
+    props.history.push({
+      pathname: "/editItem",
+      // search: "?sort=name",
+      //hash: "#the-hash",
+      params: { selectedItem: row.original }
+    });
   }
   return (
     <>
@@ -277,7 +227,9 @@ const Products = props => {
           <div className="p-header-right">
             <div className="input-group">
               <div className="input-group-prepend">
-                <span className="input-group-text">@</span>
+                <span className="input-group-text">
+                  <i className="icon-search" />
+                </span>
               </div>
               <input
                 type="text"
@@ -285,12 +237,12 @@ const Products = props => {
                 placeholder="Search in all data"
               />
             </div>
-            <button className="btn btn-primary">
+            {/* <button className="btn btn-primary">
               <i className="icon-folder" />
             </button>
             <button className="btn btn-primary">
               <i className="icon-list" />
-            </button>
+            </button> */}
             <button className="btn btn-primary" onClick={toggleFilterBox}>
               <i className="icon-filter" />
             </button>
@@ -303,33 +255,53 @@ const Products = props => {
           {listContent && (
             <>
               {leftContent && (
-                <div className="p-content-left animated zoomIn faster">
-                  <Tree
-                    leftContent={leftContent}
-                    data={treeData}
-                    hasContentType={hasContentType}
-                    onContentSelect={selected =>
-                      handleClickCategoryContent(selected)
-                    }
-                  />
-                </div>
+                <>
+                  <div className="p-content-left animated fadeIn faster">
+                    <div className="filterBox">
+                      <div className="filter-header">Selected Filters</div>
+                      <div className="filter-body">
+                        <div className="selectedFilters">
+                          {dataFilters.map(filter => (
+                            <div key={filter.id} className="filterItem">
+                              <span className="filterText">
+                                {filter.title || filter.name}
+                              </span>
+                              <span
+                                className="icon-cross icon"
+                                onClick={() => removeFilter(filter)}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <ContentTypes
+                      leftContent={leftContent}
+                      data={contentTypes}
+                      onContentTypeSelect={selected =>
+                        handleContentTypeSelect(selected)
+                      }
+                    />
+                    <Tree
+                      leftContent={leftContent}
+                      data={categories}
+                      onCategorySelect={selected =>
+                        handleClickCategoryContent(selected)
+                      }
+                    />
+                  </div>
+                </>
               )}
               <div className="p-content-right" ref={tableBox}>
                 <div className="p-content-right-header">
-                  <div className="p-content-header-title">
-                    All Data
-                    {tableHeaderTitle.length > 0 ? (
-                      <span>({tableHeaderTitle})</span>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                  <div className="p-content-header-title">All Data</div>
                 </div>
                 <div className="p-content-right-body">
                   <ReactTable
-                    data={gridData}
+                    data={contents}
                     defaultPageSize={10}
-                    minRows={3}
+                    minRows={0}
                     columns={columns}
                     showPaginationTop={false}
                     showPaginationBottom={false}

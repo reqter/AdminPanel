@@ -10,7 +10,7 @@ import {
   Label,
   Input
 } from "reactstrap";
-import { languageManager } from "../../../../services";
+import { languageManager, utility } from "../../../../services";
 import "./styles.scss";
 const templates = [
   {
@@ -19,7 +19,55 @@ const templates = [
     title: "Data Collection",
     description: "Create an item type with custom fields",
     icon: "",
-    fields: [],
+    fields: [
+      {
+        id: "1",
+        name: "name",
+        title: {
+          en: "Name",
+          fa: "Name"
+        },
+        description: {
+          fa: "name of each product",
+          en: "name of each product"
+        },
+        type: "string",
+        isBase: true,
+        isTranslate: true,
+        isRequired: true
+      },
+      {
+        id: "2",
+        name: "shortDesc",
+        title: {
+          fa: "Short Description",
+          en: "Short Description"
+        },
+        description: {
+          fa: "",
+          en: ""
+        },
+        type: "string",
+        isBase: true,
+        isTranslate: true
+      },
+      {
+        id: "3",
+        name: "thumbnail",
+        title: {
+          fa: "Thumbnail",
+          en: "Thumbnail"
+        },
+        description: {
+          fa: "",
+          en: ""
+        },
+        type: "media",
+        isBase: true,
+        isTranslate: true,
+        isRequired: true
+      }
+    ],
     allowCustomFields: true
   },
   {
@@ -29,6 +77,53 @@ const templates = [
     description: "it does not allow you to have custom fields",
     icon: "",
     fields: [
+      {
+        id: "1",
+        name: "name",
+        title: {
+          en: "Name",
+          fa: "Name"
+        },
+        description: {
+          fa: "name of each product",
+          en: "name of each product"
+        },
+        type: "string",
+        isBase: true,
+        isTranslate: true,
+        isRequired: true
+      },
+      {
+        id: "2",
+        name: "shortDesc",
+        title: {
+          fa: "Short Description",
+          en: "Short Description"
+        },
+        description: {
+          fa: "",
+          en: ""
+        },
+        type: "string",
+        isBase: true,
+        isTranslate: true
+      },
+      {
+        id: "3",
+        name: "thumbnail",
+        title: {
+          fa: "Thumbnail",
+          en: "Thumbnail"
+        },
+        description: {
+          fa: "",
+          en: ""
+        },
+        type: "media",
+        isBase: true,
+        isTranslate: true,
+        isRequired: true
+      },
       {
         id: Math.random(),
         name: "body",
@@ -47,6 +142,53 @@ const templates = [
     description: "Making custom gallery data",
     icon: "icon-images",
     fields: [
+      {
+        id: "1",
+        name: "name",
+        title: {
+          en: "Name",
+          fa: "Name"
+        },
+        description: {
+          fa: "name of each product",
+          en: "name of each product"
+        },
+        type: "string",
+        isBase: true,
+        isTranslate: true,
+        isRequired: true
+      },
+      {
+        id: "2",
+        name: "shortDesc",
+        title: {
+          fa: "Short Description",
+          en: "Short Description"
+        },
+        description: {
+          fa: "",
+          en: ""
+        },
+        type: "string",
+        isBase: true,
+        isTranslate: true
+      },
+      {
+        id: "3",
+        name: "thumbnail",
+        title: {
+          fa: "Thumbnail",
+          en: "Thumbnail"
+        },
+        description: {
+          fa: "",
+          en: ""
+        },
+        type: "media",
+        isBase: true,
+        isTranslate: true,
+        isRequired: true
+      },
       {
         id: Math.random(),
         name: "images",
@@ -128,8 +270,8 @@ const UpsertTemplate = props => {
     const obj = {
       selectedTemplate: selectedTemplate,
       name: name,
-      title: title,
-      description: description
+      title: utility.applyeLangs(title),
+      description: utility.applyeLangs(description)
     };
     props.onCloseModal(obj);
   }

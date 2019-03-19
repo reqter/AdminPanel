@@ -43,6 +43,92 @@
       flex: 1;
       min-width: 300px;
       border-radius: 4px;
+      .filterBox {
+        background: white;
+        box-shadow: 0 0 10px lightgray;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        .filter-header {
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          font-size: 17px;
+          font-weight: 500;
+          // background: rgb(253, 253, 253);
+          border-bottom: 2px solid whitesmoke;
+        }
+        .filter-body {
+          padding: 10px;
+          .selectedFilters {
+            display: flex;
+            padding: 10px 0;
+            .filterItem {
+              min-width: 70px;
+              align-items: center;
+              background: whitesmoke;
+              margin-right: 10px;
+              display: flex;
+              justify-content: space-between;
+              padding: 5px;
+              border-radius: 4px;
+              .filterText {
+                margin-right: 10px;
+                font-size: 14px;
+                font-weight: 500;
+              }
+              .icon {
+                cursor: pointer;
+                font-size: 9px;
+              }
+            }
+          }
+          .filter-list-item {
+            display: flex;
+            align-items: center;
+            height: 30px;
+            margin: 5px 0;
+            .item-checkbox {
+              width: 20px;
+              height: 20px;
+              border-radius: 4px;
+              background-color: whitesmoke;
+              margin-right: 10px;
+              border: 0.5px solid lightgray;
+            }
+            .item-name {
+              font-weight: 400;
+              font-size: 14px;
+              cursor: pointer;
+            }
+          }
+          .listGroup {
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 0;
+            .listGroupItem {
+              padding: 10px 0 !important;
+              border: 0;
+              display: flex;
+              align-items: center;
+              height: 30px;
+              .icon {
+                font-size: 9px;
+              }
+              input {
+                width: 15px;
+                height: 15px;
+                background: whitesmoke!important
+              }
+              label{
+                margin-left: 10px;
+
+              }
+            }
+          }
+        }
+      }
     }
     .p-content-right {
       flex: 2.2;
@@ -59,11 +145,34 @@
         padding: 0 2%;
         .p-content-header-title {
           font-size: 18px;
-          flex: 1;
           font-weight: 500;
+          margin-right: 15px;
           span {
             margin-left: 10px;
             font-size: 13px;
+          }
+        }
+        .p-content-header-filters {
+          display: flex;
+          .filterItem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: whitesmoke;
+            min-width: 70px;
+            height: 25px;
+            padding: 0 10px;
+            margin: 0 5px;
+            border-radius: 3px;
+            .filterText {
+              font-size: 13px;
+              font-weight: 500;
+              margin-right: 10px;
+            }
+            .icon {
+              font-size: 9px;
+              cursor: pointer;
+            }
           }
         }
         .input-group {
@@ -71,7 +180,6 @@
         }
       }
       .p-content-right-body {
-        flex: 1;
         overflow: auto !important;
         .p-number {
           height: 100%;

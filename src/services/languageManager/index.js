@@ -32,12 +32,13 @@ let translate = {
 //   name: "fa",
 //   description: "جمهوری اسلامی ایران"
 // };
-  
+
 let currentLanguage = {
   title: "English",
   name: "en",
   direction: "ltr",
-  description: "United Kingdom"
+  description: "United Kingdom",
+  allowEmptyValues: false
 };
 
 const languageManager = {

@@ -4,7 +4,8 @@ import { languageManager } from "../../services";
 
 class Tree extends Component {
   state = {
-    selected: {}
+    selected: {},
+    currentLang: languageManager.getCurrentLanguage().name
   };
   static getDerivedStateFromProps(props, current_state) {
     if (!props.rightContent) {
@@ -65,9 +66,11 @@ class Tree extends Component {
                   </button>
                 )}
                 <div className="treeItem-text">
-                  <span className="treeItem-name">{node.name}</span>
+                  <span className="treeItem-name">
+                    {node.name[this.state.currentLang]}
+                  </span>
                   <span className="treeItem-desc">
-                    {node.description ||
+                    {node.description[this.state.currentLang] ||
                       "Lorem ipsum dolor sit amet, consectetur"}
                   </span>
                 </div>
@@ -103,14 +106,16 @@ class Tree extends Component {
                     </span>
                   </button>
                 )}
-
-                <button
-                  className="btn btn-light treeItem-action"
-                  size="xs"
-                  onClick={() => this.props.handleNewCategory(node)}
-                >
-                  <i className="icon-plus" style={{ fontWeight: "bold" }} />
-                </button>
+                {(node.itemTypes === undefined ||
+                  node.itemTypes.length === 0) && (
+                  <button
+                    className="btn btn-light treeItem-action"
+                    size="xs"
+                    onClick={() => this.props.handleNewCategory(node)}
+                  >
+                    <i className="icon-plus" style={{ fontWeight: "bold" }} />
+                  </button>
+                )}
               </div>
             }
           </ListGroupItem>

@@ -16,8 +16,7 @@ const Categories = props => {
       <ModalHeader toggle={closeModal}>Choose a category</ModalHeader>
       <ModalBody className="up-categories">
         <Tree
-          data={props.categoriesData}
-          hasContentType={props.hasContentType}
+          data={props.categories}
           onRowSelect={selected => handleRowSelect(selected)}
         />
       </ModalBody>
