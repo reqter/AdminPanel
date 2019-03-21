@@ -203,6 +203,7 @@ const templates = [
   }
 ];
 const UpsertTemplate = props => {
+  const currentLang = languageManager.getCurrentLanguage().name;
   const { updateMode } = props;
   const submitBtnText = !updateMode
     ? languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
@@ -228,10 +229,10 @@ const UpsertTemplate = props => {
     selectedItemType ? selectedItemType.name : ""
   );
   const [title, setTitle] = useState(
-    selectedItemType ? selectedItemType.title : ""
+    selectedItemType ? selectedItemType.title[currentLang] : ""
   );
   const [description, setDescription] = useState(
-    selectedItemType ? selectedItemType.description : ""
+    selectedItemType ? selectedItemType.description[currentLang] : ""
   );
 
   useEffect(() => {

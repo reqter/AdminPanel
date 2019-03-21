@@ -80,7 +80,7 @@ const routes = [
     component: UpsertProduct
   },
   {
-    path: "/editItem",
+    path: "/editItem/:id",
     component: UpsertProduct
   }
 ];

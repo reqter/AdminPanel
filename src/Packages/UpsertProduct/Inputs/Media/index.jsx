@@ -4,12 +4,27 @@ import { languageManager, utility } from "../../../../services";
 
 const MediaInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const { field } = props;
+  const { field, formData } = props;
   const [images, setImages] = useState([]);
 
   useEffect(() => {
     if (props.init && field.isRequired !== undefined && field.isRequired) {
-      props.init(field.name);
+      if (formData[field.name] === undefined) props.init(field.name);
+    }
+    if (formData[field.name]) {
+      if (field.isList) {
+        setImages(formData[field.name]);
+      } else {
+        if (field.isTranslate) {
+          let imgs = [];
+          imgs.push({ url: formData[field.name][currentLang] });
+          setImages(imgs);
+        } else {
+          let imgs = [];
+          imgs.push({ url: formData[field.name][currentLang] });
+          setImages(imgs);
+        }
+      }
     }
   }, []);
 

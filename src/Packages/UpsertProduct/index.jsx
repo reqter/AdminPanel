@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { useGlobalState, languageManager } from "./../../services";
 import CategoriesModal from "./Categories";
@@ -13,79 +13,55 @@ import {
   RichText
 } from "./Inputs";
 
-const baseFields = [
-  {
-    id: "3333",
-    index: 1,
-    name: "name",
-    title: "Name",
-    description: "Name of product",
-    type: "string",
-    isBase: true,
-    isRequired: true
-  },
-  {
-    id: "6666",
-    name: "shortDesc",
-    title: "Short Description",
-    description: "",
-    type: "string",
-    isBase: true,
-    index: 2,
-    isMultiLine: true
-  },
-  {
-    id: "4444",
-    name: "thumbnail",
-    title: "Thumbnail",
-    description: "Lorem ipsum dolor sit amet, consectetur",
-    type: "media",
-    mediaType: "image",
-    isList: false,
-    isBase: true,
-    index: 3
-  }
-  //   {
-  //     id: "5555",
-  //     name: "images",
-  //     title: "Images",
-  //     description: "Lorem ipsum dolor sit amet, consectetur",
-  //     type: "media",
-  //     isBase: true,
-  //     isList: true,
-  //     mediaType: "image",
-  //     index: 4
-  //   },
-
-  //   {
-  //     id: "7777",
-  //     name: "longDesc",
-  //     title: "Long Description",
-  //     description: "Lorem ipsum dolor sit amet, consectetur",
-  //     type: "richText",
-  //     isBase: true,
-  //     index: 5
-  //   }
-];
-
 const UpsertProduct = props => {
+  let selectedItem;
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ categories, contentTypes, contents }, dispatch] = useGlobalState();
 
   // variables
-  const [tab, toggleTab] = useState(props.location.params ? 2 : 1);
+  const [updateMode, toggleUpdateMode] = useState(
+    props.match.params.id ? true : false
+  );
+  const [tab, toggleTab] = useState();
   const [categoryModal, toggleCategoryModal] = useState(false);
   const [category, setCategory] = useState();
-  const [contentType, setContentType] = useState(
-    props.location.params
-      ? { title: "Generic Item" }
-      : //? props.location.params.selectedItem.contentType
-        undefined
-  );
+  const [contentType, setContentType] = useState();
   const [fields, setFields] = useState();
 
   const [formData, setFormData] = useState({});
-  const [formValidation, setFormValidation] = useState({});
+  const [formValidation, setFormValidation] = useState();
+
+  useEffect(() => {
+    if (updateMode) {
+      if (props.match.params.id !== undefined) {
+        if (props.match.params.id.length > 0) {
+          toggleUpdateMode(true);
+          getItemById(props.match.params.id);
+        } else {
+          toggleTab(3);
+        }
+      } else {
+        toggleTab(1);
+      }
+    } else toggleTab(1);
+  }, [props.match.params.id]);
+
+  // methods
+  function getItemById(id) {
+    selectedItem = contents.find(item => item.sys.id === id);
+    if (selectedItem) {
+      if (tab !== 2) toggleTab(2);
+      setFormData(selectedItem.fields);
+      setContentType(selectedItem.contentType);
+      const c = contentTypes.find(
+        item => item.id === selectedItem.contentType.id
+      );
+      setFields(c.fields.sort((a, b) => a.index - b.index));
+      setCategory(selectedItem.category);
+    } else {
+      toggleTab(3);
+    }
+  }
   function setNameToFormValidation(name) {
     setFormValidation(prevFormValidation => ({
       [name]: null,
@@ -114,8 +90,6 @@ const UpsertProduct = props => {
       setFormValidation(obj);
     }
   }
-
-  // methods
   function showCatgoryModal() {
     toggleCategoryModal(true);
   }
@@ -132,30 +106,74 @@ const UpsertProduct = props => {
         return (
           <String
             field={field}
+            formData={formData}
             init={setNameToFormValidation}
             onChangeValue={handleOnChangeValue}
           />
         );
       case "number":
-        return <Number field={field} />;
+        return (
+          <Number
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
       case "datetime":
-        return <DateTime field={field} />;
+        return (
+          <DateTime
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
       case "location":
-        return <Location field={field} />;
+        return (
+          <Location
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
       case "media":
         return (
           <Media
+            formData={formData}
             field={field}
             init={setNameToFormValidation}
             onChangeValue={handleOnChangeValue}
           />
         );
       case "boolean":
-        return <Boolean field={field} />;
+        return (
+          <Boolean
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
       case "keyvalue":
-        return <KeyValue field={field} />;
+        return (
+          <KeyValue
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
       case "richtext":
-        return <RichText field={field} />;
+        return (
+          <RichText
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
       default:
         break;
     }
@@ -175,13 +193,13 @@ const UpsertProduct = props => {
     }
   }
   function handleSelectContentType(contentType) {
-    changeTab(2);
     setContentType(contentType);
+    changeTab(2);
   }
-  function upsertItem() {
+  function upsertItem(closePage) {
     const obj = {
       sys: {
-        id: Math.random().toString(),
+        id: updateMode ? props.match.params.id : Math.random().toString(),
         issuer: {
           id: "1",
           fullName: "Saeed Padyab",
@@ -202,12 +220,21 @@ const UpsertProduct = props => {
       },
       fields: formData
     };
-    let d = [...contents];
-    d.push(obj);
-    dispatch({
-      type: "SET_CONTENTS",
-      value: d
-    });
+
+    if (updateMode) {
+      dispatch({
+        type: "UPDATE_ITEM",
+        value: obj
+      });
+    } else {
+      dispatch({
+        type: "ADD_ITEM_TO_CONTENTS",
+        value: obj
+      });
+    }
+    if (closePage) {
+      backToProducts();
+    }
   }
   return (
     <div className="up-wrapper">
@@ -217,18 +244,24 @@ const UpsertProduct = props => {
           Back
         </button>
         <div className="tabItems">
-          <div
-            className={["item", tab === 1 ? "active" : ""].join(" ")}
-            onClick={() => changeTab(1)}
-          >
-            1.Choosing Item Type
-          </div>
-          <div
-            className={["item", tab === 2 ? "active" : ""].join(" ")}
-            onClick={() => changeTab(2)}
-          >
-            2.Complete Form
-          </div>
+          {updateMode ? (
+            <div className="item active">Update Mode</div>
+          ) : (
+            <>
+              <div
+                className={["item", tab === 1 ? "active" : ""].join(" ")}
+                onClick={() => changeTab(1)}
+              >
+                1.Choosing Item Type
+              </div>
+              <div
+                className={["item", tab === 2 ? "active" : ""].join(" ")}
+                onClick={() => changeTab(2)}
+              >
+                2.Complete Form
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className="up-content">
@@ -274,9 +307,10 @@ const UpsertProduct = props => {
           {tab === 2 && (
             <>
               <div className="up-content-title">
-                Add New {contentType.title[currentLang]}
+                {updateMode ? "Edit " : "Add New "}
+                {contentType && contentType.title[currentLang]}
               </div>
-              <div className="up-categoryBox">
+              <div className="up-categoryBox animated fadeIn">
                 <span>
                   {category ? category.name[currentLang] : "Choose a category"}
                 </span>
@@ -284,7 +318,7 @@ const UpsertProduct = props => {
                   Change category
                 </button>
               </div>
-              <div className="up-formInputs">
+              <div className="up-formInputs animated fadeIn">
                 {fields &&
                   fields.map(field => (
                     <div key={field.id} className="rowItem">
@@ -292,9 +326,24 @@ const UpsertProduct = props => {
                     </div>
                   ))}
                 <div className="actions">
+                  {!updateMode && (
+                    <button
+                      className="btn btn-primary "
+                      onClick={() => upsertItem(false)}
+                      disabled={
+                        Object.keys(formData).length > 0 &&
+                        formValidation === undefined &&
+                        category !== undefined
+                          ? false
+                          : true
+                      }
+                    >
+                      Save & New
+                    </button>
+                  )}
                   <button
                     className="btn btn-primary "
-                    onClick={upsertItem}
+                    onClick={() => upsertItem(true)}
                     disabled={
                       Object.keys(formData).length > 0 &&
                       formValidation === undefined &&
@@ -303,10 +352,16 @@ const UpsertProduct = props => {
                         : true
                     }
                   >
-                    Add Item
+                    {updateMode ? "Update & Close" : "Save & Close"}
                   </button>
                 </div>
               </div>
+            </>
+          )}
+          {tab === 3 && (
+            <>
+              <div className="up-content-title">Error has occurred</div>
+              <div className="up-error-section" />
             </>
           )}
         </main>

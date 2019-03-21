@@ -24,9 +24,9 @@ const SideBar = props => {
           </a>
         </div>
       </div>
-      <span className="copyRight">
+      {/* <span className="copyRight">
         {languageManager.translate("HOME_COPY_RIGHT")}
-      </span>
+      </span> */}
     </div>
   );
 };

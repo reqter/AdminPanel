@@ -14,7 +14,7 @@ const Products = props => {
       //show: false,
       width: 70,
       headerStyle: {
-        display: "none"
+        display: "block"
       },
       Cell: props => {
         return (
@@ -26,10 +26,10 @@ const Products = props => {
     },
     {
       width: 100,
-      Header: "Image",
+      Header: () => <div className="p-header-td">Image</div>,
       //show: false,
       headerStyle: {
-        display: "none"
+        display: "block"
       },
       accessor: "fields.thumbnail",
       Cell: props => (
@@ -47,10 +47,10 @@ const Products = props => {
       )
     },
     {
-      Header: "Name",
+      Header: () => <div className="p-header-td">Name</div>,
       //show: false,
       headerStyle: {
-        display: "none"
+        display: "block"
       },
       accessor: "fields.name",
       Cell: props => (
@@ -62,12 +62,12 @@ const Products = props => {
       )
     },
     {
-      Header: "Description",
+      Header: () => <div className="p-header-td">Description</div>,
       //show: false,
       headerStyle: {
-        display: "none"
+        display: "block"
       },
-      accessor: "fields.description",
+      accessor: "fields.shortDesc",
       Cell: props => (
         <div className="p-description">
           {props.value
@@ -76,12 +76,29 @@ const Products = props => {
         </div>
       )
     },
-
+    {
+      Header: () => <div className="p-header-td">Issuer</div>,
+      //show: false,
+      headerStyle: {
+        display: "block"
+      },
+      accessor: "sys.issuer.fullName",
+      Cell: props => <div className="p-issuer">{props.value}</div>
+    },
+    {
+      Header: () => <div className="p-header-td">Issue Date</div>,
+      //show: false,
+      headerStyle: {
+        display: "block"
+      },
+      accessor: "sys.issueDate",
+      Cell: props => <div className="p-date">{props.value}</div>
+    },
     {
       Header: "Actions",
       //show: false,
       headerStyle: {
-        display: "none"
+        display: "block"
       },
       Cell: props => (
         <div className="p-actions">
@@ -201,19 +218,17 @@ const Products = props => {
     // }
   }
   function handleDeleteRow(row) {
-    const item = row.original;
-    const d = [...contents].filter(c => c.sys.id !== item.sys.id);
     dispatch({
-      type: "SET_CONTENTS",
-      value: d
+      type: "DELETE_ITEM",
+      value: row.original
     });
   }
   function handleEditRow(row) {
     props.history.push({
-      pathname: "/editItem",
+      pathname: `/editItem/${row.original.sys.id}`
       // search: "?sort=name",
       //hash: "#the-hash",
-      params: { selectedItem: row.original }
+      //  params: { selectedItem: row.original }
     });
   }
   return (
@@ -306,7 +321,8 @@ const Products = props => {
                     showPaginationTop={false}
                     showPaginationBottom={false}
                     style={{
-                      overflowX: "auto",
+                      border:"none",
+                      overflow: "auto",
                       height: "100%" // This will force the table body to overflow and scroll, since there is not enough room
                     }}
                   />

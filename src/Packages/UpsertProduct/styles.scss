@@ -18,22 +18,22 @@
         margin-right: 10px;
       }
     }
-    .tabItems{
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .item{
-            cursor: pointer;
-            font-size: 14px;
-            margin:  0 10px;
-            color: gray;
-            &.active{
-                font-size: 15px;
-                color: black;
-                font-weight: 600
-            }
+    .tabItems {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .item {
+        cursor: pointer;
+        font-size: 14px;
+        margin: 0 10px;
+        color: gray;
+        &.active {
+          font-size: 15px;
+          color: black;
+          font-weight: 600;
         }
+      }
     }
   }
   .up-content {
@@ -48,9 +48,9 @@
         padding: 20px;
         box-shadow: 0 0 3px lightgray;
         border-radius: 4px;
-        .listGroupItem{
-            border-bottom: 1px solid whitesmoke;
-            padding: 10px 0
+        .listGroupItem {
+          border-bottom: 1px solid whitesmoke;
+          padding: 10px 0;
         }
       }
       .up-content-title {
@@ -86,6 +86,9 @@
         .actions {
           display: flex;
           flex-direction: row-reverse;
+          .btn {
+            margin-left: 10px;
+          }
         }
         .shortDesc textarea {
           min-height: 100px;
@@ -93,6 +96,12 @@
         .longDesc textarea {
           min-height: 200px;
         }
+      }
+      .up-error-section {
+        min-height: 250px;
+        background: white;
+        box-shadow: 0 0 3px lightgray;
+        border-radius: 3px;
       }
     }
   }

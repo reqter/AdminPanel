@@ -117,7 +117,7 @@ const Provider = props => {
             en: "Banana",
             fa: "موز ممتاز"
           },
-          description: {
+          shortDesc: {
             en: "Imported product from africa",
             fa: "محصولات وارداتی از افریقا"
           },
@@ -148,6 +148,30 @@ const Provider = props => {
         return {
           ...state,
           contents: action.value
+        };
+      case "ADD_ITEM_TO_CONTENTS":
+        return {
+          ...state,
+          contents: [...state.contents, action.value]
+        };
+      case "UPDATE_ITEM":
+        const updatedItems = state.contents.map(item => {
+          if (item.sys.id === action.value.sys.id) {
+            return { ...item, ...action.value };
+          }
+          return item;
+        });
+        return {
+          ...state,
+          contents: updatedItems
+        };
+      case "DELETE_ITEM":
+        const Items = state.contents.filter(
+          item => item.sys.id !== action.value.sys.id
+        );
+        return {
+          ...state,
+          contents: Items
         };
       default:
         return state;
