@@ -128,6 +128,7 @@ const Products = props => {
   const [listContent, toggleListContent] = useState(true);
   const [leftContent, toggleLeftContent] = useState(false);
 
+  const [searchText, setSearchText] = useState("");
   const [selectedNode, setSelectedNode] = useState();
   const [selectedContentType, setSelectedContentType] = useState();
   const [columnsVisibility, toggleColumns] = useState(false);
@@ -169,7 +170,15 @@ const Products = props => {
   }
 
   function removeFilter(filter) {
-    let f = dataFilters.filter(item => item.id !== filter.id);
+    let f = dataFilters.filter(item => item.type !== filter.type);
+    setFilters(f);
+    if (filter.type === "text") {
+      setSearchText("");
+    }
+  }
+  function handleSearchChanged() {
+    let f = [...dataFilters].filter(item => item.type !== "text");
+    f.push({ type: "text", title: searchText });
     setFilters(f);
   }
   function handleContentTypeSelect(selected) {
@@ -178,7 +187,7 @@ const Products = props => {
     f.push(selected);
     setFilters(f);
   }
-  function handleClickCategoryContent(selected) {
+  function handleClickCategory(selected) {
     setSelectedNode(selected);
     let f = [...dataFilters].filter(item => item.type !== "category");
     f.push(selected);
@@ -241,15 +250,18 @@ const Products = props => {
           </div>
           <div className="p-header-right">
             <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text">
-                  <i className="icon-search" />
-                </span>
+              <div
+                className="input-group-prepend"
+                onClick={handleSearchChanged}
+              >
+                <span className="input-group-text">Search</span>
               </div>
               <input
                 type="text"
                 className="form-control"
                 placeholder="Search in all data"
+                value={searchText}
+                onChange={e => setSearchText(e.target.value)}
               />
             </div>
             {/* <button className="btn btn-primary">
@@ -276,10 +288,22 @@ const Products = props => {
                       <div className="filter-header">Selected Filters</div>
                       <div className="filter-body">
                         <div className="selectedFilters">
+                          {dataFilters.length === 0 && (
+                            <div className="empty-dataFilter">
+                              There is no selected filter
+                            </div>
+                          )}
                           {dataFilters.map(filter => (
                             <div key={filter.id} className="filterItem">
                               <span className="filterText">
-                                {filter.title || filter.name}
+                                {(filter.title && filter.title.en
+                                  ? filter.title[
+                                      languageManager.getCurrentLanguage().name
+                                    ]
+                                  : filter.title) ||
+                                  filter.name[
+                                    languageManager.getCurrentLanguage().name
+                                  ]}
                               </span>
                               <span
                                 className="icon-cross icon"
@@ -292,6 +316,7 @@ const Products = props => {
                     </div>
 
                     <ContentTypes
+                      filters={dataFilters}
                       leftContent={leftContent}
                       data={contentTypes}
                       onContentTypeSelect={selected =>
@@ -299,10 +324,11 @@ const Products = props => {
                       }
                     />
                     <Tree
+                      filters={dataFilters}
                       leftContent={leftContent}
                       data={categories}
                       onCategorySelect={selected =>
-                        handleClickCategoryContent(selected)
+                        handleClickCategory(selected)
                       }
                     />
                   </div>
@@ -321,7 +347,7 @@ const Products = props => {
                     showPaginationTop={false}
                     showPaginationBottom={false}
                     style={{
-                      border:"none",
+                      border: "none",
                       overflow: "auto",
                       height: "100%" // This will force the table body to overflow and scroll, since there is not enough room
                     }}

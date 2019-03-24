@@ -1,99 +1,89 @@
-import React, { Component } from "react";
-import { ListGroup, ListGroupItem, Collapse } from "reactstrap";
+import React, { useState, useEffect } from "react";
 import { languageManager } from "../../../../services";
 
-class Tree extends Component {
-  state = {
-    selected: {},
-    hasContentType: false,
-    currentLang :languageManager.getCurrentLanguage().name
-  };
-  static getDerivedStateFromProps(props, current_state) {
-    if (!props.leftContent) {
-      return {
-        selected: {}
-      };
-    }
-    return null;
-  }
-  toggle = event => {
-    const id = event.target.getAttribute("id");
-    this.setState(state => ({ [id]: !state[id] }));
-  };
-  mapper = (nodes, parentId, lvl) => {
-    return nodes.map((node, index) => {
-      const id = `${node.id}-${parentId ? parentId : "top"}`.replace(
-        /[^a-zA-Z0-9-_]/g,
-        ""
-      );
-      return (
-        <>
-          <ListGroupItem
-            key={id}
-            style={{
-              zIndex: 0,
-              padding: 10,
-              background:
-                this.state.selected.id === node.id ? "lightgray" : "white"
-            }}
-            className={`listGroupItem ${
-              parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
-            }`}
-          >
-            {
-              <div className="treeItem">
-                {node.children && node.children.length > 0 ? (
-                  <div id={id} onClick={this.toggle}>
-                    {this.state[id] ? (
-                      <i className="icon-caret-down" />
-                    ) : (
-                      <i className="icon-caret-right" />
-                    )}
-                    <label className="form-check-label">{node.name[this.state.currentLang]}</label>
-                  </div>
-                ) : (
-                  <>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value=""
-                        id={"chk" + id}
-                      />
-                      <label className="form-check-label" for={"chk" + id}>
-                        {node.name[this.state.currentLang]}
-                      </label>
-                    </div>
-                  </>
-                )}
-                {/* <div className="treeItem-text">
-                  <span className="treeItem-name">{node.name}</span>
-                </div> */}
-              </div>
-            }
-          </ListGroupItem>
-          {node.children && (
-            <Collapse isOpen={this.state[id]}>
-              {this.mapper(node.children, id, (lvl || 0) + 1)}
-            </Collapse>
-          )}
-        </>
-      );
-    });
-  };
+const Tree = props => {
+  const currentLang = languageManager.getCurrentLanguage().name;
+  const [selected, setSelected] = useState({});
+  const [idState, setId] = useState({});
 
-  render() {
-    return (
-      <div className="filterBox">
-        <div className="filter-header">Categories</div>
-        <div className="filter-body">
-          <ListGroup className="listGroup">
-            {this.mapper(this.props.data)}
-          </ListGroup>
-        </div>
-      </div>
-    );
+  useEffect(() => {
+    if (Object.keys(selected).length > 0) {
+      const c = props.filters.find(item => item.type === "category");
+      if (!c) {
+        setSelected({});
+      }
+    }
+  }, [props.filters]);
+  function toggle(event, node) {
+    const id = event.target.getAttribute("id");
+    let n_s = { ...idState };
+    n_s[id] = !idState[id];
+    setId(n_s);
+    if (node && node.id !== selected.id) {
+      setSelected(node);
+      props.onCategorySelect(node);
+    }
   }
-}
+  function mapper(nodes, parentId, lvl) {
+    return nodes.map((node, index) => {
+      if (node.type !== "contentType") {
+        const id = `${node.id}-${parentId ? parentId : "top"}`.replace(
+          /[^a-zA-Z0-9-_]/g,
+          ""
+        );
+        return (
+          <li
+            key={id}
+            className="animated fadeIn faster"
+            style={{
+              color: selected.id === node.id ? "rgb(56,132,255)" : "gray"
+            }}
+          >
+            {node.children ? (
+              <>
+                {idState[id] ? (
+                  <i
+                    className="icon-down-chevron chevron"
+                    onClick={toggle}
+                    id={id}
+                  />
+                ) : (
+                  <i
+                    className="icon-right-chevron chevron"
+                    onClick={toggle}
+                    id={id}
+                  />
+                )}
+                {node.name[currentLang]}
+                <ul style={{ display: idState[id] ? "block" : "none" }}>
+                  {mapper(node.children, id, (lvl || 0) + 1)}
+                </ul>
+              </>
+            ) : (
+              <span onClick={e => toggle(e, node)} id={id}>
+                {node.name[currentLang]}
+              </span>
+            )}
+          </li>
+        );
+      }
+    });
+  }
+
+  return (
+    <div className="filterBox">
+      <div className="filter-header">Categories</div>
+      <div className="filter-body">
+        <ul>
+          <li className="root">
+            <i className="icon-right-chevron chevron" />
+            All Categories
+          </li>
+          {mapper(props.data)}
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 export default Tree;

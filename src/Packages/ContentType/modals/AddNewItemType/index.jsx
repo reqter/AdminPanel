@@ -204,12 +204,13 @@ const templates = [
 ];
 const UpsertTemplate = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
+
   const { updateMode } = props;
   const submitBtnText = !updateMode
     ? languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
     : languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_EDIT");
-  const selectedItemType = updateMode ? props.selectedItemType : undefined;
 
+  const selectedItemType = updateMode ? props.selectedItemType : undefined;
   const [isOpen, toggleModal] = useState(true);
 
   const [modalHeaderTitle, setModalHeader] = useState(
