@@ -11,7 +11,7 @@ import {
   Boolean,
   KeyValue,
   RichText
-} from "./Inputs";
+} from "./../../components";
 
 const UpsertProduct = props => {
   let selectedItem;

@@ -26,24 +26,31 @@ const NavLinks = props => {
       desc: translate("HOME_SIDE_NAV_PRODUCTS_DESC")
     },
 
-    {
-      name: translate("HOME_SIDE_NAV_REQUESTS"),
-      icon: "request",
-      path: "/home/requests",
-      desc: translate("HOME_SIDE_NAV_REQUESTS_DESC")
-    },
-    {
-      name: translate("HOME_SIDE_NAV_QUOTES"),
-      icon: "quote",
-      path: "/home/quotes",
-      desc: translate("HOME_SIDE_NAV_QUOTES_DESC")
-    },
+    // {
+    //   name: translate("HOME_SIDE_NAV_REQUESTS"),
+    //   icon: "request",
+    //   path: "/home/requests",
+    //   desc: translate("HOME_SIDE_NAV_REQUESTS_DESC")
+    // },
+    // {
+    //   name: translate("HOME_SIDE_NAV_QUOTES"),
+    //   icon: "quote",
+    //   path: "/home/quotes",
+    //   desc: translate("HOME_SIDE_NAV_QUOTES_DESC")
+    // },
     {
       name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
       icon: "users",
       path: "/home/manageUsers",
       desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC")
-    }
+    },
+    {
+      name: translate("HOME_SIDE_NAV_ASSETS_MANAGER"),
+      icon: "images",
+      path: "/home/assets",
+      desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC"),
+    } 
+
   ];
 
   return (

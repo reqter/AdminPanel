@@ -36,6 +36,11 @@ export default {
   HOME_SIDE_NAV_REQUESTS_DESC: "View and approve incoming requests",
   HOME_SIDE_NAV_QUOTES: "Quotes",
   HOME_SIDE_NAV_QUOTES_DESC: "View and approve offers from vendors",
+  HOME_SIDE_NAV_ASSETS_MANAGER: "Media",
+  HOME_SIDE_NAV_ASSETS_MANAGER_DESC: "Manage your files, images, videos etc",
+  HOME_SIDE_NAV_ASSETS_MANAGER_UPLOAD: "Upload file",
+  HOME_SIDE_NAV_ASSETS_MANAGER_DESC_UPLOAD:
+    "Upload file, for example image, video, pdf , etc",
   HOME_SIDEAR_ABOUT: "About",
   HOME_SIDEBAR_BLOG: "Blog",
   HOME_SIDEBAR_DOCUMENT: "Document",
@@ -57,7 +62,7 @@ export default {
   CATEGROES_CONTENT_TYPES: "Item Types",
   CATEGORIES_ITEM_TYPES_HEADER_TITLE: "Manage Item Types",
   CATEGORIES_ITEM_TYPES_HEADER_DESC: "Lorem ipsum dolor sit amet, consectetur",
-  CATEGORY_ITEM_TYPE_MODAL_HEADER_TITLE:"Add item types to category",
+  CATEGORY_ITEM_TYPE_MODAL_HEADER_TITLE: "Add item types to category",
 
   // CONTENT TYPE
   CONTENT_TYPE_MODAL_HEADER_TITLE_NEW: "Add New Item Type",

@@ -30,6 +30,9 @@
       .input-group {
         max-width: 400px;
       }
+      .searchBtn {
+        cursor: pointer;
+      }
     }
   }
   .p-content {
@@ -229,7 +232,6 @@
       }
       .p-content-right-body {
         overflow: auto !important;
-
         .ReactTable .rt-thead.-header {
           box-shadow: 0 0 4px lightgray;
         }

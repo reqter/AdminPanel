@@ -118,10 +118,11 @@ const Products = props => {
       )
     }
   ];
+  const currentLang = languageManager.getCurrentLanguage().name;
 
   // variables
   const [{ contents, categories, contentTypes }, dispatch] = useGlobalState();
-
+  const [tableData, setTableData] = useState([]);
   const tableBox = useRef(null);
   const { name: pageTitle, desc: pageDescription } = props.component;
 
@@ -136,6 +137,9 @@ const Products = props => {
   const [columns, setColumns] = useState(baseFieldColumnsConfig.slice());
   const [dataFilters, setFilters] = useState([]);
 
+  useEffect(() => {
+    doFiltersOnData();
+  }, [dataFilters]);
   // methods
   function initColumns() {
     if (columnsVisibility) {
@@ -169,29 +173,69 @@ const Products = props => {
     }
   }
 
+  function doFiltersOnData() {
+    if (dataFilters.length > 0) {
+      const data = contents.filter(item => {
+        for (let i = 0; i < dataFilters.length; i++) {
+          const filter = dataFilters[i];
+          if (filter.type === "text") {
+            if (
+              !item.fields.name[currentLang]
+                .toLowerCase()
+                .includes(filter.title)
+            )
+              return false;
+          }
+          if (filter.type === "contentType") {
+            if (item.contentType.id !== filter.id) return false;
+          }
+          if (filter.type === "category") {
+            if (item.category.id !== filter.id) return false;
+          }
+        }
+
+        return true;
+      });
+      setTableData(data);
+    } else {
+      setTableData([...contents]);
+    }
+  }
   function removeFilter(filter) {
     let f = dataFilters.filter(item => item.type !== filter.type);
     setFilters(f);
-    if (filter.type === "text") {
-      setSearchText("");
-    }
+    if (filter.type === "text") setSearchText("");
+    doFiltersOnData();
+    //  getContentByFilter(dataFilters);
   }
   function handleSearchChanged() {
-    let f = [...dataFilters].filter(item => item.type !== "text");
-    f.push({ type: "text", title: searchText });
-    setFilters(f);
+    if (searchText.length === 0) {
+      let f = [...dataFilters].filter(item => item.type !== "text");
+      setFilters(f);
+    } else {
+      let f = [...dataFilters].filter(item => item.type !== "text");
+      f.push({ type: "text", title: searchText });
+      setFilters(f);
+    }
+    doFiltersOnData();
+    //getContentByFilter(dataFilters);
   }
   function handleContentTypeSelect(selected) {
     setSelectedContentType(selected);
     let f = [...dataFilters].filter(item => item.type !== "contentType");
     f.push(selected);
     setFilters(f);
+    doFiltersOnData();
+    //getContentByFilter(dataFilters);
   }
   function handleClickCategory(selected) {
     setSelectedNode(selected);
     let f = [...dataFilters].filter(item => item.type !== "category");
     f.push(selected);
     setFilters(f);
+    doFiltersOnData();
+    //getContentByFilter(dataFilters);
+
     // if (selected.type === "category") {
     //   initColumns();
     // } else {
@@ -254,7 +298,7 @@ const Products = props => {
                 className="input-group-prepend"
                 onClick={handleSearchChanged}
               >
-                <span className="input-group-text">Search</span>
+                <span className="input-group-text searchBtn">Search</span>
               </div>
               <input
                 type="text"
@@ -296,14 +340,11 @@ const Products = props => {
                           {dataFilters.map(filter => (
                             <div key={filter.id} className="filterItem">
                               <span className="filterText">
-                                {(filter.title && filter.title.en
-                                  ? filter.title[
-                                      languageManager.getCurrentLanguage().name
-                                    ]
-                                  : filter.title) ||
-                                  filter.name[
-                                    languageManager.getCurrentLanguage().name
-                                  ]}
+                                {filter.title !== undefined
+                                  ? filter.title.en !== undefined
+                                    ? filter.title[currentLang]
+                                    : filter.title
+                                  : filter.name[currentLang]}
                               </span>
                               <span
                                 className="icon-cross icon"
@@ -340,7 +381,7 @@ const Products = props => {
                 </div>
                 <div className="p-content-right-body">
                   <ReactTable
-                    data={contents}
+                    data={tableData}
                     defaultPageSize={10}
                     minRows={0}
                     columns={columns}

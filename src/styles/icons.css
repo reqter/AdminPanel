@@ -43,6 +43,21 @@
 .icon-more-h:before {
   content: "\e902";
 }
+.icon-file-plus-o:before {
+  content: "\e91c";
+}
+.icon-audio:before {
+  content: "\e918";
+}
+.icon-pdf:before {
+  content: "\e919";
+}
+.icon-spreadsheet:before {
+  content: "\e91a";
+}
+.icon-video:before {
+  content: "\e91b";
+}
 .icon-down-chevron:before {
   content: "\e916";
 }

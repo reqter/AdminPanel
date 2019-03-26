@@ -7,10 +7,11 @@ import Categories from "./Packages/Categories";
 import ContentType from "./Packages/ContentType";
 import ManageUsers from "./Packages/ManageUsers";
 import Products from "./Packages/Products";
-import Requests from "./Packages/Requests";
-import Quotes from "./Packages/Quotes";
+// import Requests from "./Packages/Requests";
+// import Quotes from "./Packages/Quotes";
 import UpsertProduct from "./Packages/UpsertProduct";
-
+import Assets from "./Packages/Assets";
+import UploadFile from "./Packages/upsertFile";
 
 function translate(key) {
   return languageManager.translate(key);
@@ -28,7 +29,7 @@ const routes = [
   {
     path: "/home",
     component: Home,
-    routes:[
+    routes: [
       {
         name: translate("HOME_SIDE_NAV_CONTENT_TYPE"),
         icon: "item-type",
@@ -51,29 +52,35 @@ const routes = [
         component: Products
       },
 
-      {
-        name: translate("HOME_SIDE_NAV_REQUESTS"),
-        icon: "request",
-        path: "/home/requests",
-        desc: translate("HOME_SIDE_NAV_REQUESTS_DESC"),
-        component: Requests
-      },
-      {
-        name: translate("HOME_SIDE_NAV_QUOTES"),
-        icon: "quote",
-        path: "/home/quotes",
-        desc: translate("HOME_SIDE_NAV_QUOTES_DESC"),
-        component: Quotes
-      },
+      // {
+      //   name: translate("HOME_SIDE_NAV_REQUESTS"),
+      //   icon: "request",
+      //   path: "/home/requests",
+      //   desc: translate("HOME_SIDE_NAV_REQUESTS_DESC"),
+      //   component: Requests
+      // },
+      // {
+      //   name: translate("HOME_SIDE_NAV_QUOTES"),
+      //   icon: "quote",
+      //   path: "/home/quotes",
+      //   desc: translate("HOME_SIDE_NAV_QUOTES_DESC"),
+      //   component: Quotes
+      // },
       {
         name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
         icon: "users",
         path: "/home/manageUsers",
         desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC"),
         component: ManageUsers
+      },
+      {
+        name: translate("HOME_SIDE_NAV_ASSETS_MANAGER"),
+        icon: "images",
+        path: "/home/assets",
+        desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC"),
+        component: Assets
       }
     ]
- 
   },
   {
     path: "/addNew",
@@ -82,6 +89,13 @@ const routes = [
   {
     path: "/editItem/:id",
     component: UpsertProduct
+  },
+  {
+    name: translate("HOME_SIDE_NAV_ASSETS_MANAGER_UPLOAD"),
+    icon: "folder",
+    path: "/uploadfile",
+    desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC_UPLOAD"),
+    component: UploadFile
   }
 ];
 export default routes;
