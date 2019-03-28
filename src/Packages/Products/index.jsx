@@ -2,6 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { useGlobalState, languageManager } from "./../../services";
+import {
+  getContents,
+  filterContents,
+  deleteContent
+} from "./../../Api/content-api";
 import "./styles.scss";
 
 import ContentTypes from "./FilterBox/contentTypes";
@@ -119,27 +124,34 @@ const Products = props => {
     }
   ];
   const currentLang = languageManager.getCurrentLanguage().name;
+  const { name: pageTitle, desc: pageDescription } = props.component;
 
   // variables
   const [{ contents, categories, contentTypes }, dispatch] = useGlobalState();
-  const [tableData, setTableData] = useState([]);
-  const tableBox = useRef(null);
-  const { name: pageTitle, desc: pageDescription } = props.component;
 
-  const [listContent, toggleListContent] = useState(true);
+  const tableBox = useRef(null);
+
   const [leftContent, toggleLeftContent] = useState(false);
 
   const [searchText, setSearchText] = useState("");
-  const [selectedNode, setSelectedNode] = useState();
-  const [selectedContentType, setSelectedContentType] = useState();
+  const [selectedNode, setSelectedNode] = useState({});
+  const [selectedContentType, setSelectedContentType] = useState({});
   const [columnsVisibility, toggleColumns] = useState(false);
 
   const [columns, setColumns] = useState(baseFieldColumnsConfig.slice());
   const [dataFilters, setFilters] = useState([]);
 
   useEffect(() => {
-    doFiltersOnData();
-  }, [dataFilters]);
+    getContents()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENTS",
+          value: result
+        });
+      })
+      .call();
+    // doFiltersOnData();
+  }, []);
   // methods
   function initColumns() {
     if (columnsVisibility) {
@@ -173,67 +185,64 @@ const Products = props => {
     }
   }
 
-  function doFiltersOnData() {
-    if (dataFilters.length > 0) {
-      const data = contents.filter(item => {
-        for (let i = 0; i < dataFilters.length; i++) {
-          const filter = dataFilters[i];
-          if (filter.type === "text") {
-            if (
-              !item.fields.name[currentLang]
-                .toLowerCase()
-                .includes(filter.title)
-            )
-              return false;
-          }
-          if (filter.type === "contentType") {
-            if (item.contentType.id !== filter.id) return false;
-          }
-          if (filter.type === "category") {
-            if (item.category.id !== filter.id) return false;
-          }
-        }
-
-        return true;
-      });
-      setTableData(data);
-    } else {
-      setTableData([...contents]);
-    }
-  }
   function removeFilter(filter) {
     let f = dataFilters.filter(item => item.type !== filter.type);
     setFilters(f);
     if (filter.type === "text") setSearchText("");
-    doFiltersOnData();
+    // doFiltersOnData();
     //  getContentByFilter(dataFilters);
   }
   function handleSearchChanged() {
-    if (searchText.length === 0) {
-      let f = [...dataFilters].filter(item => item.type !== "text");
-      setFilters(f);
-    } else {
-      let f = [...dataFilters].filter(item => item.type !== "text");
-      f.push({ type: "text", title: searchText });
-      setFilters(f);
-    }
-    doFiltersOnData();
+    filterContents()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENTS",
+          value: result
+        });
+      })
+      .call(searchText, selectedContentType.id, selectedNode.id);
+
+    // if (searchText.length === 0) {
+    //   let f = [...dataFilters].filter(item => item.type !== "text");
+    //   setFilters(f);
+    // } else {
+    //   let f = [...dataFilters].filter(item => item.type !== "text");
+    //   f.push({ type: "text", title: searchText });
+    //setFilters(f);
+    //}
+    // doFiltersOnData();
     //getContentByFilter(dataFilters);
   }
   function handleContentTypeSelect(selected) {
     setSelectedContentType(selected);
-    let f = [...dataFilters].filter(item => item.type !== "contentType");
-    f.push(selected);
-    setFilters(f);
-    doFiltersOnData();
+    filterContents()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENTS",
+          value: result
+        });
+      })
+      .call(searchText, selected.id, selectedNode.id);
+    // let f = [...dataFilters].filter(item => item.type !== "contentType");
+    // f.push(selected);
+    // setFilters(f);
+    // doFiltersOnData();
     //getContentByFilter(dataFilters);
   }
   function handleClickCategory(selected) {
     setSelectedNode(selected);
-    let f = [...dataFilters].filter(item => item.type !== "category");
-    f.push(selected);
-    setFilters(f);
-    doFiltersOnData();
+    filterContents()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENTS",
+          value: result
+        });
+      })
+      .call(searchText, selectedContentType.id, selected.id);
+    // let f = [...dataFilters].filter(item => item.type !== "category");
+    // f.push(selected);
+    // setFilters(f);
+    // doFiltersOnData();
     //getContentByFilter(dataFilters);
 
     // if (selected.type === "category") {
@@ -271,10 +280,18 @@ const Products = props => {
     // }
   }
   function handleDeleteRow(row) {
-    dispatch({
-      type: "DELETE_ITEM",
-      value: row.original
-    });
+    deleteContent()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENTS",
+          value: result
+        });
+      })
+      .call(row.original);
+    // dispatch({
+    //   type: "DELETE_ITEM",
+    //   value: row.original
+    // });
   }
   function handleEditRow(row) {
     props.history.push({
@@ -323,80 +340,72 @@ const Products = props => {
           </div>
         </div>
         <div className="p-content">
-          {listContent && (
-            <>
-              {leftContent && (
-                <>
-                  <div className="p-content-left animated fadeIn faster">
-                    <div className="filterBox">
-                      <div className="filter-header">Selected Filters</div>
-                      <div className="filter-body">
-                        <div className="selectedFilters">
-                          {dataFilters.length === 0 && (
-                            <div className="empty-dataFilter">
-                              There is no selected filter
-                            </div>
-                          )}
-                          {dataFilters.map(filter => (
-                            <div key={filter.id} className="filterItem">
-                              <span className="filterText">
-                                {filter.title !== undefined
-                                  ? filter.title.en !== undefined
-                                    ? filter.title[currentLang]
-                                    : filter.title
-                                  : filter.name[currentLang]}
-                              </span>
-                              <span
-                                className="icon-cross icon"
-                                onClick={() => removeFilter(filter)}
-                              />
-                            </div>
-                          ))}
-                        </div>
+          {leftContent && (
+            <div className="p-content-left animated fadeIn faster">
+              <div className="filterBox">
+                <div className="filter-header">Selected Filters</div>
+                <div className="filter-body">
+                  <div className="selectedFilters">
+                    {dataFilters.length === 0 && (
+                      <div className="empty-dataFilter">
+                        There is no selected filter
                       </div>
-                    </div>
-
-                    <ContentTypes
-                      filters={dataFilters}
-                      leftContent={leftContent}
-                      data={contentTypes}
-                      onContentTypeSelect={selected =>
-                        handleContentTypeSelect(selected)
-                      }
-                    />
-                    <Tree
-                      filters={dataFilters}
-                      leftContent={leftContent}
-                      data={categories}
-                      onCategorySelect={selected =>
-                        handleClickCategory(selected)
-                      }
-                    />
+                    )}
+                    {dataFilters.map(filter => (
+                      <div key={filter.id} className="filterItem">
+                        <span className="filterText">
+                          {filter.title !== undefined
+                            ? filter.title.en !== undefined
+                              ? filter.title[currentLang]
+                              : filter.title
+                            : filter.name[currentLang]}
+                        </span>
+                        <span
+                          className="icon-cross icon"
+                          onClick={() => removeFilter(filter)}
+                        />
+                      </div>
+                    ))}
                   </div>
-                </>
-              )}
-              <div className="p-content-right" ref={tableBox}>
-                <div className="p-content-right-header">
-                  <div className="p-content-header-title">All Data</div>
-                </div>
-                <div className="p-content-right-body">
-                  <ReactTable
-                    data={tableData}
-                    defaultPageSize={10}
-                    minRows={0}
-                    columns={columns}
-                    showPaginationTop={false}
-                    showPaginationBottom={false}
-                    style={{
-                      border: "none",
-                      overflow: "auto",
-                      height: "100%" // This will force the table body to overflow and scroll, since there is not enough room
-                    }}
-                  />
                 </div>
               </div>
-            </>
+
+              <ContentTypes
+                filters={dataFilters}
+                leftContent={leftContent}
+                data={contentTypes}
+                onContentTypeSelect={selected =>
+                  handleContentTypeSelect(selected)
+                }
+              />
+              <Tree
+                filters={dataFilters}
+                leftContent={leftContent}
+                data={categories}
+                onCategorySelect={selected => handleClickCategory(selected)}
+              />
+            </div>
           )}
+          <div className="p-content-right" ref={tableBox}>
+            <div className="p-content-right-header">
+              <div className="p-content-header-title">All Data</div>
+            </div>
+            <div className="p-content-right-body">
+              <ReactTable
+                data={contents}
+                defaultPageSize={10}
+                minRows={2}
+                columns={columns}
+                showPaginationTop={false}
+                showPaginationBottom={false}
+                style={{
+                  border: "none",
+                  overflow: "auto",
+                  height: "100%" // This will force the table body to overflow and scroll, since there is not enough room
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>

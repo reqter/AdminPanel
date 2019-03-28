@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { useGlobalState, languageManager } from "./../../services";
+import {
+  addContent,
+  updateContent,
+  getContentById
+} from "./../../Api/content-api";
 import CategoriesModal from "./Categories";
 import {
   String,
@@ -48,19 +53,22 @@ const UpsertProduct = props => {
 
   // methods
   function getItemById(id) {
-    selectedItem = contents.find(item => item.sys.id === id);
-    if (selectedItem) {
-      if (tab !== 2) toggleTab(2);
-      setFormData(selectedItem.fields);
-      setContentType(selectedItem.contentType);
-      const c = contentTypes.find(
-        item => item.id === selectedItem.contentType.id
-      );
-      setFields(c.fields.sort((a, b) => a.index - b.index));
-      setCategory(selectedItem.category);
-    } else {
-      toggleTab(3);
-    }
+    getContentById()
+      .onOk(result => {
+        if (result) {
+          if (tab !== 2) toggleTab(2);
+          setFormData(result.fields);
+          setContentType(result.contentType);
+          const c = contentTypes.find(
+            item => item.id === result.contentType.id
+          );
+          setFields(c.fields.sort((a, b) => a.index - b.index));
+          setCategory(result.category);
+        } else {
+          toggleTab(3);
+        }
+      })
+      .call(id);
   }
   function setNameToFormValidation(name) {
     setFormValidation(prevFormValidation => ({
@@ -222,18 +230,21 @@ const UpsertProduct = props => {
     };
 
     if (updateMode) {
-      dispatch({
-        type: "UPDATE_ITEM",
-        value: obj
-      });
+      updateContent()
+        .onOk(result => {
+          if (closePage) {
+            backToProducts();
+          }
+        })
+        .call(obj);
     } else {
-      dispatch({
-        type: "ADD_ITEM_TO_CONTENTS",
-        value: obj
-      });
-    }
-    if (closePage) {
-      backToProducts();
+      addContent()
+        .onOk(result => {
+          if (closePage) {
+            backToProducts();
+          }
+        })
+        .call(obj);
     }
   }
   return (

@@ -10,8 +10,9 @@ import {
   Label,
   Input
 } from "reactstrap";
-import { languageManager, utility } from "../../../../services";
+import { languageManager, utility, useGlobalState } from "../../../../services";
 import { CheckBox } from "./../../../../components";
+import { addFieldToContentType } from "./../../../../Api/contentType-api";
 import "./styles.scss";
 const fields = [
   {
@@ -60,7 +61,7 @@ const fields = [
     name: "richText",
     title: languageManager.translate("FIELD_TYPE_RICH_TEXT"),
     description: languageManager.translate("FIELD_TYPE_RICH_TEXT_INFO"),
-    icon: "icon-file-text"
+    icon: "icon-file-text-o"
   }
   // {
   //   name: "jsonObject",
@@ -77,7 +78,8 @@ const fields = [
 ];
 
 const AddNewField = props => {
-  const category = props.selectedCategory;
+  const [{}, dispatch] = useGlobalState();
+  const { selectedContentType } = props;
 
   const [isOpen, toggleModal] = useState(true);
   const nameInput = useRef(null); //  ref is defined here
@@ -138,8 +140,15 @@ const AddNewField = props => {
       type: selectedField.name,
       isTranslate: translation
     };
-    props.onAddField(obj);
-    resetForm();
+    addFieldToContentType()
+      .onOk(result => {
+        // dispatch({
+        //   type: "SET_CONTENT_TYPES",
+        //   value: result
+        // });
+        props.onCloseModal(obj);
+      })
+      .call(selectedContentType.sys.id, obj);
   }
   function addField_configure() {}
   return (
@@ -236,7 +245,7 @@ const AddNewField = props => {
                 </FormGroup>
 
                 <CheckBox
-                  title="Translatable"
+                  title="Enable Local Translation"
                   onChange={e => toggleTranslation(e.target.checked)}
                 />
               </div>

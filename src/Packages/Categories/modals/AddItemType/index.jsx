@@ -1,42 +1,57 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { languageManager } from "../../../../services";
+import { getContentTypes } from "./../../../../Api/contentType-api";
+import {
+  addContentTypeToCategory,
+  removeContentTypeFromCategory
+} from "./../../../../Api/category-api";
 import "./styles.scss";
 
 const AddNewField = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const category = props.selectedCategory;
+  const { selectedCategory } = props;
   let items = props.itemTypes ? props.itemTypes : [];
   let data = props.data;
-  const [allData, setData] = useState(makeData());
+  const [allData, setData] = useState([]);
   const [isOpen, toggleModal] = useState(true);
-  function makeData() {
-    let d = data.slice();
-    for (let j = 0; j < items.length; j++) {
-      for (let i = 0; i < d.length; i++) {
-        if (items[j].id === d[i].id) {
-          d[i].selected = true;
-          break;
-        }
-      }
-    }
-    return d;
-  }
   useEffect(() => {
+    getContentTypes()
+      .onOk(result => {
+        let d = result.slice();
+        for (let j = 0; j < items.length; j++) {
+          for (let i = 0; i < d.length; i++) {
+            if (items[j].id === d[i].id) {
+              d[i].selected = true;
+              break;
+            }
+          }
+        }
+        setData(d);
+      })
+      .call();
+
     return () => {
-      data.map(d => delete d.selected);
+      allData.map(d => delete d.selected);
       if (!props.isOpen) toggleModal(false);
     };
-  });
+  }, []);
   function closeModal(params) {
     props.onCloseModal(items);
   }
   function handleChooseItem(event, item) {
     if (event.target.checked) {
-      items.push(item);
+      addContentTypeToCategory()
+        .onOk(result => {
+          props.onAddContentType(result, item);
+        })
+        .call(selectedCategory.sys.id, item);
     } else {
-      const arr = items.filter(i => i.id !== item.id);
-      items = arr;
+      removeContentTypeFromCategory()
+        .onOk(result => {
+          props.onRemoveContentType(result, item);
+        })
+        .call(selectedCategory.sys.id, item.sys.id);
     }
   }
   return (

@@ -16,10 +16,16 @@ const StringInput = props => {
   );
 
   useEffect(() => {
-    if (props.init && field.isRequired !== undefined && field.isRequired) {
+    if (
+      props.init &&
+      field.isRequired !== undefined &&
+      field.isRequired &&
+      !props.reset
+    ) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
-  }, []);
+    if (props.reset) setInput("");
+  }, [props.reset]);
   function handleOnChange(e) {
     setInput(e.target.value);
 

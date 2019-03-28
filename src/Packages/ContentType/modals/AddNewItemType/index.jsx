@@ -10,8 +10,13 @@ import {
   Label,
   Input
 } from "reactstrap";
-import { languageManager, utility } from "../../../../services";
+import { languageManager, utility, useGlobalState } from "../../../../services";
+import {
+  addContentType,
+  updateContentType
+} from "./../../../../Api/contentType-api";
 import "./styles.scss";
+
 const templates = [
   {
     id: "1",
@@ -202,15 +207,16 @@ const templates = [
     allowCustomFields: true
   }
 ];
+
 const UpsertTemplate = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-
+  const [{}, dispatch] = useGlobalState();
   const { updateMode } = props;
   const submitBtnText = !updateMode
     ? languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
     : languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_EDIT");
 
-  const selectedItemType = updateMode ? props.selectedItemType : undefined;
+  const selectedContentType = updateMode ? props.selectedContentType : undefined;
   const [isOpen, toggleModal] = useState(true);
 
   const [modalHeaderTitle, setModalHeader] = useState(
@@ -227,13 +233,13 @@ const UpsertTemplate = props => {
     updateMode ? props.selectedTemplate : {}
   );
   const [name, setName] = useState(
-    selectedItemType ? selectedItemType.name : ""
+    selectedContentType ? selectedContentType.name : ""
   );
   const [title, setTitle] = useState(
-    selectedItemType ? selectedItemType.title[currentLang] : ""
+    selectedContentType ? selectedContentType.title[currentLang] : ""
   );
   const [description, setDescription] = useState(
-    selectedItemType ? selectedItemType.description[currentLang] : ""
+    selectedContentType ? selectedContentType.description[currentLang] : ""
   );
 
   useEffect(() => {
@@ -268,14 +274,61 @@ const UpsertTemplate = props => {
   function handleDescriptionChanged(e) {
     setDescription(e.target.value);
   }
+
   function upsertItemType() {
-    const obj = {
-      selectedTemplate: selectedTemplate,
-      name: name,
-      title: utility.applyeLangs(title),
-      description: utility.applyeLangs(description)
-    };
-    props.onCloseModal(obj);
+    if (updateMode) {
+      let obj = {};
+      for (const key in selectedContentType) {
+        obj[key] = selectedContentType[key];
+      }
+      obj["name"] = name;
+      obj["title"] = utility.applyeLangs(title);
+      obj["description"] = utility.applyeLangs(description);
+
+      updateContentType()
+        .onOk(result => {
+          dispatch({
+            type: "SET_CONTENT_TYPES",
+            value: result
+          });
+          props.onCloseModal(obj);
+        })
+        .call(obj);
+    } else {
+      let obj = {
+        sys: {
+          id: Math.random(),
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
+        name: name,
+        title: utility.applyeLangs(title),
+        description: utility.applyeLangs(description),
+        fields: selectedTemplate.fields,
+        type: "contentType",
+        template: selectedTemplate.name,
+        allowCustomFields: selectedTemplate.allowCustomFields
+      };
+      addContentType()
+        .onOk(result => {
+          dispatch({
+            type: "SET_CONTENT_TYPES",
+            value: result
+          });
+          props.onCloseModal(obj);
+        })
+        .call(obj);
+    }
+
+    // const obj = {
+    //   selectedTemplate: selectedTemplate,
+    //   name: name,
+    //   title: utility.applyeLangs(title),
+    //   description: utility.applyeLangs(description)
+    // };
   }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
@@ -294,8 +347,8 @@ const UpsertTemplate = props => {
                     className="add-field-icon"
                     style={{
                       backgroundColor:
-                        selectedItemType &&
-                        selectedItemType.template === tmp.name
+                        selectedContentType &&
+                        selectedContentType.template === tmp.name
                           ? "lightgray"
                           : "whitesmoke"
                     }}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
+import { getAssets, deleteAsset } from "./../../Api/asset-api";
 
 const filters = [
   {
@@ -38,22 +39,39 @@ const Assets = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ assets }, dispatch] = useGlobalState();
 
+  useEffect(() => {
+    getAssets()
+      .onOk(result => {
+        dispatch({
+          type: "SET_ASSETS",
+          value: result
+        });
+      })
+      .call();
+  }, []);
+
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
 
   function handleFilterClick(selected) {
     setSelectedFilter(selected);
-    
   }
 
-  function navigateToUploader() {
-    props.history.push("/uploadfile");
+  function openUploader() {
+    props.history.push("/addAsset");
+  }
+  function openUploaderForEdit(file) {
+    props.history.push(`/editAsset/${file.sys.id}`);
   }
   function removeAsset(item) {
-    dispatch({
-      type: "DELETE_ASSET",
-      value: item
-    });
+    deleteAsset()
+      .onOk(result => {
+        dispatch({
+          type: "SET_ASSETS",
+          value: result
+        });
+      })
+      .call(item);
   }
   return (
     <>
@@ -69,7 +87,7 @@ const Assets = props => {
           <div className="as-content-left">
             <div className="left-text">Filter & Upload New File</div>
             <div className="left-btnContent">
-              <button className="btn btn-primary" onClick={navigateToUploader}>
+              <button className="btn btn-primary" onClick={openUploader}>
                 Upload New File
               </button>
             </div>
@@ -123,7 +141,7 @@ const Assets = props => {
                         </div>
                       </td>
                       <td>
-                        {file.type.toLowerCase().includes("image") ? (
+                        {file.fileType.toLowerCase().includes("image") ? (
                           <div className="as-table-image">
                             <img src={file.url[currentLang]} alt="" />
                           </div>
@@ -155,13 +173,17 @@ const Assets = props => {
                         </div>
                       </td>
                       <td>
-                        <div className="as-table-type">{file.type}</div>
+                        <div className="as-table-type">{file.fileType}</div>
                       </td>
                       <td>
-                        <div className="as-table-date">{file.updated}</div>
+                        <div className="as-table-date">
+                          {file.sys.issueDate}
+                        </div>
                       </td>
                       <td>
-                        <div className="as-table-by">{file.by}</div>
+                        <div className="as-table-by">
+                          {file.sys.issuer.fullName}
+                        </div>
                       </td>
                       <td>
                         <button
@@ -169,6 +191,12 @@ const Assets = props => {
                           onClick={() => removeAsset(file)}
                         >
                           <i className="icon-bin" />
+                        </button>
+                        <button
+                          className="btn btn-light"
+                          onClick={() => openUploaderForEdit(file)}
+                        >
+                          <i className="icon-pencil" />
                         </button>
                       </td>
                     </tr>

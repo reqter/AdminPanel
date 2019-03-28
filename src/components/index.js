@@ -9,6 +9,7 @@ import Media from "./Media";
 import Number from "./Number";
 import RichText from "./RichText";
 import String from "./String";
+import FileUploader from "./FileUploader";
 
 export {
   Divider,
@@ -20,5 +21,6 @@ export {
   Media,
   Number,
   RichText,
-  String
+  String,
+  FileUploader
 };

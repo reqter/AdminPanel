@@ -1,0 +1,168 @@
+{
+  "projectInfo": { "name": "REQTER" },
+  "contentTypes": [
+    {
+      "sys": {
+        "id": "1",
+        "issuer": {
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "19/01/2019 20:18"
+      },
+      "name": "generic",
+      "title": {
+        "en": "Generic Item",
+        "fa": "آیتم عمومی"
+      },
+      "description": {
+        "en": "Lorem ipsum dolor sit amet, consectetur",
+        "fa": "Lorem ipsum dolor sit amet, consectetur"
+      },
+      "type": "contentType",
+      "template": "generic",
+      "allowCustomFields": true,
+      "fields": [
+        {
+          "id": "1",
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true
+        },
+        {
+          "id": "2",
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true
+        },
+        {
+          "id": "3",
+          "name": "thumbnail",
+          "title": {
+            "fa": "Thumbnail",
+            "en": "Thumbnail"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "mediaType": "image",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true
+        }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "sys": {
+        "id": "1",
+        "issuer": {
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "19/01/2019 20:18"
+      },
+      "name": { "fa": "اخبار", "en": "News" },
+      "description": {
+        "fa": "",
+        "en": ""
+      },
+      "type": "category"
+    }
+  ],
+  "contents": [
+    {
+      "sys": {
+        "id": "1",
+        "issuer": {
+          "id": "1",
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "19/01/2019 20:18"
+      },
+      "contentType": {
+        "id": "1",
+        "name": "fruits",
+        "title": {
+          "en": "Fruits",
+          "fa": "میوه"
+        }
+      },
+      "category": {
+        "id": "1",
+        "name": {
+          "en": "Products",
+          "fa": "محصولات"
+        }
+      },
+      "fields": {
+        "thumbnail": {
+          "en": "https://myresources1195.blob.core.windows.net/images/banana.jpg",
+          "fa": "https://myresources1195.blob.core.windows.net/images/banana.jpg"
+        },
+        "name": {
+          "en": "Banana",
+          "fa": "موز ممتاز"
+        },
+        "shortDesc": {
+          "en": "Imported product from africa",
+          "fa": "محصولات وارداتی از افریقا"
+        },
+        "price": "2500",
+        "brand": {
+          "en": "Chicita",
+          "fa": "چیکیتا"
+        }
+      }
+    }
+  ],
+  "assets": [
+    {
+      "sys": {
+        "id": "1",
+        "issuer": {
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "19/01/2019 20:18"
+      },
+      "name": {
+        "en": "Image1",
+        "fa": "Image1"
+      },
+      "description": {
+        "en": "",
+        "fa": ""
+      },
+      "status": {},
+      "url": {
+        "en": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+        "fa": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+      },
+      "fileType": "Image jpeg"
+    }
+  ]
+}

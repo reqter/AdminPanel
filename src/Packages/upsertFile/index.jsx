@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { useGlobalState, languageManager } from "./../../services";
+import { getAssetById, addAsset, updateAsset } from "./../../Api/asset-api";
 import {
   String,
   Number,
@@ -9,7 +10,8 @@ import {
   Media,
   Boolean,
   KeyValue,
-  RichText
+  RichText,
+  FileUploader
 } from "./../../components";
 
 const fields = [
@@ -55,7 +57,7 @@ const fields = [
       fa: "",
       en: "Click on file selector top choose your file"
     },
-    type: "media",
+    type: "fileUploader",
     mediaType: "file",
     isBase: true,
     isTranslate: true,
@@ -63,17 +65,14 @@ const fields = [
   }
 ];
 const UpsertFile = props => {
-  let selectedItem;
-  const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ assets }, dispatch] = useGlobalState();
   // variables
   const [updateMode, toggleUpdateMode] = useState(
     props.match.params.id ? true : false
   );
-  const [category, setCategory] = useState();
 
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
+  const [resetForm, setResetForm] = useState(false);
 
   useEffect(() => {
     if (updateMode) {
@@ -87,7 +86,13 @@ const UpsertFile = props => {
   }, [props.match.params.id]);
 
   // methods
-  function getAssetItemById(id) {}
+  function getAssetItemById(id) {
+    getAssetById()
+      .onOk(result => {
+        setFormData(result);
+      })
+      .call(id);
+  }
   function setNameToFormValidation(name) {
     setFormValidation(prevFormValidation => ({
       [name]: null,
@@ -97,8 +102,15 @@ const UpsertFile = props => {
   function handleOnChangeValue(key, value, isValid) {
     // add value to form
     let f = { ...formData };
-    f[key] = value;
+    if (key === "url") {
+      f[key] = {
+        en: value["en"],
+        fa: value["fa"]
+      };
+      f.fileType = value.fileType;
+    } else f[key] = value;
     setFormData(f);
+
     // check validation
     let obj = { ...formValidation };
     if (isValid && obj) {
@@ -122,6 +134,7 @@ const UpsertFile = props => {
       case "string":
         return (
           <String
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -131,6 +144,7 @@ const UpsertFile = props => {
       case "number":
         return (
           <Number
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -140,6 +154,7 @@ const UpsertFile = props => {
       case "datetime":
         return (
           <DateTime
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -149,6 +164,7 @@ const UpsertFile = props => {
       case "location":
         return (
           <Location
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -158,6 +174,17 @@ const UpsertFile = props => {
       case "media":
         return (
           <Media
+            reset={resetForm}
+            formData={formData}
+            field={field}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
+      case "fileuploader":
+        return (
+          <Media
+            reset={resetForm}
             formData={formData}
             field={field}
             init={setNameToFormValidation}
@@ -167,6 +194,7 @@ const UpsertFile = props => {
       case "boolean":
         return (
           <Boolean
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -176,6 +204,7 @@ const UpsertFile = props => {
       case "keyvalue":
         return (
           <KeyValue
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -185,6 +214,7 @@ const UpsertFile = props => {
       case "richtext":
         return (
           <RichText
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -200,21 +230,46 @@ const UpsertFile = props => {
   }
 
   function upsertItem(closePage) {
-    if (!updateMode) {
-      const obj = {
-        id: Math.random.toString(),
-        name: formData.name,
-        url: formData.url,
-        dimention: "312 * 215 px",
-        type: formData.type,
-        updated: "just now",
-        by: "Me",
-        mediaType: "image"
-      };
-      dispatch({
-        type: "ADD_ITEM_TO_ASSETS",
-        value: obj
-      });
+    const obj = {
+      sys: {
+        id: Math.random().toString(),
+        issuer: {
+          fullName: "Saeed Padyab",
+          image: ""
+        },
+        issueDate: "19/01/2019 20:18"
+      },
+      name: formData.name,
+      shorDesc: formData.shortDesc,
+      status: {},
+      url: formData.url,
+      fileType: formData.fileType
+    };
+
+    if (updateMode) {
+      updateAsset()
+        .onOk(result => {
+          if (closePage) {
+            backToAssets();
+          } else {
+            setResetForm(true);
+            setFormData({});
+            setFormValidation();
+          }
+        })
+        .call(obj);
+    } else {
+      addAsset()
+        .onOk(result => {
+          if (closePage) {
+            backToAssets();
+          } else {
+            setResetForm(true);
+            setFormData({});
+            setFormValidation();
+          }
+        })
+        .call(obj);
     }
   }
   return (
@@ -234,12 +289,11 @@ const UpsertFile = props => {
             {updateMode ? "Edit " : "Upload new file"}
           </div>
           <div className="up-formInputs animated fadeIn">
-            {fields &&
-              fields.map(field => (
-                <div key={field.id} className="rowItem">
-                  {getFieldItem(field)}
-                </div>
-              ))}
+            {fields.map(field => (
+              <div key={field.id} className="rowItem">
+                {getFieldItem(field)}
+              </div>
+            ))}
             <div className="actions">
               {!updateMode && (
                 <button

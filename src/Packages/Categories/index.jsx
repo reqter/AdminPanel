@@ -14,6 +14,13 @@ import "./styles.scss";
 import Tree from "./tree";
 import AddNewItemType from "./modals/AddItemType";
 import { languageManager, useGlobalState, utility } from "../../services";
+import {
+  getCategories,
+  deleteCategory,
+  addCategory,
+  updateCategory,
+  removeContentTypeFromCategory
+} from "./../../Api/category-api";
 
 function useInput(defaultValue = "") {
   const [input, setInput] = useState(defaultValue);
@@ -24,10 +31,20 @@ function useInput(defaultValue = "") {
 }
 
 const Categories = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ categories, contentTypes }, dispatch] = useGlobalState();
-
   const { name: pageTitle, desc: pageDescription } = props.component;
+  const currentLang = languageManager.getCurrentLanguage().name;
+  const [{ categories }, dispatch] = useGlobalState();
+
+  useEffect(() => {
+    getCategories()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CATEGORIES",
+          value: result
+        });
+      })
+      .call();
+  }, []);
 
   // variables and handlers
   const newCategoryNameInput = useRef(null);
@@ -67,23 +84,7 @@ const Categories = props => {
   function closeRightContent() {
     toggleRightContent(false);
   }
-  function updateNodeInList(list, node, newValue) {
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].id === node.id) {
-        list[i] = newValue;
-      }
-      if (list[i].children) updateNodeInList(list[i].children, node, newValue);
-    }
-  }
-  function deleteNodeInList(list, node) {
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].id === node.id) {
-        list.splice(i, 1);
-        return;
-      }
-      if (list[i].children) deleteNodeInList(list[i].children, node);
-    }
-  }
+
   function newChildCategory(item) {
     setModal(prevModal => !prevModal);
     setSelectedCategory(item);
@@ -119,21 +120,27 @@ const Categories = props => {
     if (isManageCategory) {
       if (!updateMode) {
         const obj = {
-          parentId: selectedCategory.id,
-          id: Math.random().toString(),
+          sys: {
+            id: Math.random(),
+            issuer: {
+              fullName: "Saeed Padyab",
+              image: ""
+            },
+            issueDate: "19/01/2019 20:18"
+          },
+          parentId: selectedCategory.sys.id,
           name: utility.applyeLangs(name),
           description: utility.applyeLangs(description),
           type: "category"
         };
-
-        if (!selectedCategory.children) selectedCategory.children = [];
-        selectedCategory.children.push(obj);
-        const d = [...categories];
-        dispatch({
-          type: "SET_CATEGORIES",
-          value: d
-        });
-
+        addCategory()
+          .onOk(result => {
+            dispatch({
+              type: "SET_CATEGORIES",
+              value: result
+            });
+          })
+          .call(obj);
         handleNameChanged("");
         handleDesciptionChanged("");
       } else {
@@ -143,37 +150,51 @@ const Categories = props => {
         }
         newCategory["name"] = utility.applyeLangs(name);
         newCategory["description"] = utility.applyeLangs(description);
-        updateNodeInList(categories, selectedCategory, newCategory);
-        dispatch({
-          type: "SET_CATEGORIES",
-          value: categories
-        });
-        closeAddCategoryModal();
+        updateCategory()
+          .onOk(result => {
+            dispatch({
+              type: "SET_CATEGORIES",
+              value: result
+            });
+            closeAddCategoryModal();
+          })
+          .call(newCategory);
       }
     } else {
       const obj = {
-        id: Math.random(),
+        sys: {
+          id: Math.random(),
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: utility.applyeLangs(name),
         description: utility.applyeLangs(description),
         type: "category"
       };
-      let data = [...categories];
-      data.push(obj);
-      dispatch({
-        type: "SET_CATEGORIES",
-        value: data
-      });
+      addCategory()
+        .onOk(result => {
+          dispatch({
+            type: "SET_CATEGORIES",
+            value: result
+          });
+        })
+        .call(obj);
       initModalForm();
     }
   }
 
   function removeCategoryItem(selected) {
-    deleteNodeInList(categories, selected);
-    const data = [...categories];
-    dispatch({
-      type: "SET_CATEGORIES",
-      value: data
-    });
+    deleteCategory()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CATEGORIES",
+          value: result
+        });
+      })
+      .call(selected);
   }
 
   // field
@@ -185,32 +206,34 @@ const Categories = props => {
     setItemTypes(m);
     setManageCategory(false);
   }
-  function closeAddItemTypeModal(items) {
+  function closeAddItemTypeModal() {
     toggleUpsertItemTypeModal(false);
-    updateCategoryItemTypes(items);
   }
   function addNewItemType() {
     toggleUpsertItemTypeModal(prevModal => !prevModal);
   }
-  function updateCategoryItemTypes(items) {
-    setItemTypes(items);
-    if (selectedCategory.itemTypes === undefined)
-      selectedCategory.itemTypes = [];
-    selectedCategory.itemTypes = items;
-    updateNodeInList(categories, selectedCategory, selectedCategory); //
+  function removeContentType(item) {
+    removeContentTypeFromCategory()
+      .onOk(result => {
+        handleRemoveContenType(result, item);
+      })
+      .call(selectedCategory.sys.id, item.sys.id);
+  }
+  function handleRemoveContenType(result, itemType) {
+    const m = itemTypes.filter(item => item.sys.id !== itemType.sys.id);
+    setItemTypes(m);
     dispatch({
       type: "SET_CATEGORIES",
-      value: categories
+      value: result
     });
   }
-  function handleRemoveItemType(itemType) {
-    const m = itemTypes.filter(item => item.id !== itemType.id);
+  function handleAddContenType(result, itemType) {
+    let m = [...itemTypes];
+    m.push(itemType);
     setItemTypes(m);
-    selectedCategory.itemTypes = m;
-    updateNodeInList(categories, selectedCategory, selectedCategory); //
     dispatch({
       type: "SET_CATEGORIES",
-      value: categories
+      value: result
     });
   }
   return (
@@ -260,7 +283,7 @@ const Categories = props => {
                 <div className="fieldsContent">
                   {itemTypes &&
                     itemTypes.map(item => (
-                      <div className="fieldItem" key={item.id}>
+                      <div className="fieldItem" key={item.sys.id}>
                         <div className="fieldItem-icon">
                           <i className="icon-more-h" />
                         </div>
@@ -275,7 +298,7 @@ const Categories = props => {
                         </div>
                         <div
                           className="fieldItem-actions"
-                          onClick={() => handleRemoveItemType(item)}
+                          onClick={() => removeContentType(item)}
                         >
                           <button className="btn btn-link" size="xs">
                             <i className="icon-bin" />
@@ -359,11 +382,12 @@ const Categories = props => {
       </Modal>
       {upsertItemTypeModal && (
         <AddNewItemType
-          data={contentTypes}
-          itemTypes={itemTypes}
           selectedCategory={selectedCategory}
+          itemTypes={itemTypes}
           isOpen={upsertItemTypeModal}
-          onCloseModal={items => closeAddItemTypeModal(items)}
+          onCloseModal={closeAddItemTypeModal}
+          onAddContentType={handleAddContenType}
+          onRemoveContentType={handleRemoveContenType}
         />
       )}
     </>

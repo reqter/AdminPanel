@@ -231,6 +231,7 @@
         }
       }
       .p-content-right-body {
+        min-height: 50px;
         overflow: auto !important;
         .ReactTable .rt-thead.-header {
           box-shadow: 0 0 4px lightgray;

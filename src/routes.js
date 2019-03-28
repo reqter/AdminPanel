@@ -93,8 +93,12 @@ const routes = [
   {
     name: translate("HOME_SIDE_NAV_ASSETS_MANAGER_UPLOAD"),
     icon: "folder",
-    path: "/uploadfile",
+    path: "/addAsset",
     desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC_UPLOAD"),
+    component: UploadFile
+  },
+  {
+    path: "/editAsset/:id",
     component: UploadFile
   }
 ];

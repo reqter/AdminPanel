@@ -22,19 +22,21 @@ class Tree extends Component {
   };
   mapper = (nodes, parentId, lvl) => {
     return nodes.map((node, index) => {
-      const id = `${node.id}-${parentId ? parentId : "top"}`.replace(
+      const id = `${node.sys.id}-${parentId ? parentId : "top"}`.replace(
         /[^a-zA-Z0-9-_]/g,
         ""
       );
       return (
         <>
           <ListGroupItem
-            key={index}
             style={{
               zIndex: 0,
               padding: 10,
-              background:
-                this.state.selected.id === node.id ? "lightgray" : "white"
+              background: this.state.selected.sys
+                ? this.state.selected.sys.id === node.sys.id
+                  ? "lightgray"
+                  : "white"
+                : "white"
             }}
             className={`treeItemParent ${
               parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""

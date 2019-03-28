@@ -4,17 +4,34 @@ import List from "./list";
 import AddNewField from "./modals/AddNewField";
 import AddNewItemType from "./modals/AddNewItemType";
 import { languageManager, useGlobalState } from "../../services";
+import {
+  getContentTypes,
+  deleteContentType,
+  removeContentTypeField
+} from "./../../Api/contentType-api";
 
 const ItemTypes = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
   const [{ contentTypes }, dispatch] = useGlobalState();
 
+  useEffect(() => {
+    getContentTypes()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENT_TYPES",
+          value: result
+        });
+      })
+      .call();
+  }, []);
+
   const { name: pageTitle, desc: pageDescription } = props.component;
   // variables and handlers
   const [upsertFieldModal, toggleUpsertFieldModal] = useState(false);
   const [upsertItemTypeModal, toggleUpserItemTypeModal] = useState(false);
-  const [selectedItemType, setItemType] = useState({});
+  const [selectedContentType, setItemType] = useState({});
+  debugger
   const [fields, setFields] = useState([]);
   const [updateMode, setUpdateMode] = useState();
 
@@ -25,117 +42,60 @@ const ItemTypes = props => {
     toggleUpserItemTypeModal(true);
   }
 
-  function closeAddItemTypeModal(item) {
-    if (item === undefined) toggleUpserItemTypeModal(false);
-    else upsertItemType(item);
-  }
-
-  function updateNodeInList(list, node, newValue) {
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].id === node.id) {
-        list[i] = newValue;
-        break;
-      }
-    }
-  }
-
-  function deleteNodeInList(list, node) {
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].id === node.id) {
-        list.splice(i, 1);
-        return;
-      }
-    }
-  }
-
   function editItemType(item) {
     setItemType(item);
     setUpdateMode(true);
     toggleUpserItemTypeModal(true);
   }
 
-  function upsertItemType(item) {
-    if (updateMode) {
-      let obj = {};
-      for (const key in selectedItemType) {
-        obj[key] = selectedItemType[key];
-      }
-      obj["name"] = item.name;
-      obj["title"] = item.title;
-      obj["description"] = item.description;
-      updateNodeInList(contentTypes, selectedItemType, obj);
-      dispatch({
-        type: "SET_CONTENT_TYPES",
-        value: contentTypes
-      });
-      toggleUpserItemTypeModal(false);
-    } else {
-      let obj = {
-        id: Math.random(),
-        name: item.name,
-        title: item.title,
-        description: item.description,
-        fields: item.selectedTemplate.fields,
-        type: "contentType",
-        template: item.selectedTemplate.name,
-        allowCustomFields: item.selectedTemplate.allowCustomFields
-      };
-      let data = [...contentTypes];
-      data.push(obj);
-      dispatch({
-        type: "SET_CONTENT_TYPES",
-        value: data
-      });
-      toggleUpserItemTypeModal(false);
-      console.log(contentTypes);
-    }
-  }
   function removeItemType(selected) {
-    deleteNodeInList(contentTypes, selected);
-    const data = [...contentTypes];
-    dispatch({
-      type: "SET_CONTENT_TYPES",
-      value: data
-    });
-    toggleRightContent(false);
+    deleteContentType()
+      .onOk(result => {
+        if (selected.sys.id === selectedContentType.sys.id)
+          toggleRightContent(false);
+        dispatch({
+          type: "SET_CONTENT_TYPES",
+          value: result
+        });
+      })
+      .call(selected);
   }
   function closeRightContent() {
     toggleRightContent();
   }
 
-  // field
+  /////////////////////////////// fields
   function showFields(item) {
     if (!rightContent) toggleRightContent(true);
     setItemType(item);
     setFields(item.fields);
   }
-  function closeAddFieldModal() {
+  function closeAddFieldModal(field) {
+    if (field) {
+      const f = [...fields];
+      f.push(field);
+      setFields(f);
+    }
+    // dispatch({
+    //   type: "SET_CONTENT_TYPES",
+    //   value: result
+    // });
     toggleUpsertFieldModal(false);
   }
   function addNewField() {
     toggleUpsertFieldModal(prevModal => !prevModal);
   }
-  function handleAddField(field) {
-    if (selectedItemType.fields === undefined) selectedItemType.fields = [];
-    const m = [...fields];
-    m.push(field);
-    setFields(m);
-    selectedItemType.fields.push(field);
-    updateNodeInList(contentTypes, selectedItemType, selectedItemType); //
-    dispatch({
-      type: "SET_CONTENT_TYPES",
-      value: contentTypes
-    });
-  }
   function handleRemoveField(field) {
-    const m = fields.filter(item => item.id !== field.id);
-    setFields(m);
-    selectedItemType.fields = m;
-    updateNodeInList(contentTypes, selectedItemType, selectedItemType); //
-    dispatch({
-      type: "SET_CONTENT_TYPES",
-      value: contentTypes
-    });
+    removeContentTypeField()
+      .onOk(result => {
+        const f = [...fields].filter(item => item.id !== field.id);
+        setFields(f);
+        // dispatch({
+        //   type: "SET_CONTENT_TYPES",
+        //   value: result
+        // });
+      })
+      .call(selectedContentType.sys.id, field.id);
   }
   return (
     <>
@@ -192,7 +152,7 @@ const ItemTypes = props => {
                         className="fieldItem"
                         key={field.id}
                         // style={{
-                        //   display: !selectedItemType.allowCustomFields
+                        //   display: !selectedContentType.allowCustomFields
                         //     ? field.isBase
                         //       ? "none"
                         //       : "flex"
@@ -255,7 +215,7 @@ const ItemTypes = props => {
                     ))}
                 </div>
                 <div className="btnNewFieldContent">
-                  {selectedItemType.allowCustomFields && (
+                  {selectedContentType.allowCustomFields && (
                     <button className="btn btn-primary" onClick={addNewField}>
                       <i className="icon-plus" />
                     </button>
@@ -268,18 +228,17 @@ const ItemTypes = props => {
       </div>
       {upsertItemTypeModal && (
         <AddNewItemType
-          selectedItemType={selectedItemType}
+          selectedContentType={selectedContentType}
           updateMode={updateMode}
           isOpen={upsertFieldModal}
-          onCloseModal={closeAddItemTypeModal}
+          onCloseModal={() => toggleUpserItemTypeModal(false)}
         />
       )}
       {upsertFieldModal && (
         <AddNewField
-          selectedItemType={selectedItemType}
+          selectedContentType={selectedContentType}
           isOpen={upsertFieldModal}
           onCloseModal={closeAddFieldModal}
-          onAddField={field => handleAddField(field)}
         />
       )}
     </>
