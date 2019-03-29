@@ -34,10 +34,10 @@
       width: 300px;
       border-radius: 4px;
       margin-right: 20px;
-      margin-top: 10px;
       display: flex;
       flex-direction: column;
       padding: 20px;
+      max-height: 100%;
       .left-text {
         font-size: 13px;
         text-align: justify;
@@ -52,39 +52,48 @@
           width: 100%;
         }
       }
-      .left-filters {
-        padding: 20px 0;
-        .title {
-          font-size: 13px;
-          padding-bottom: 10px;
+      .filterContent {
+        flex: 1;
+        overflow: hidden;
+        &:hover {
+          overflow: auto;
         }
-        .filter {
-          cursor: pointer;
-          display: flex;
-          border-bottom: 0.5px solid lightgray;
-          align-items: center;
-          padding: 10px 0;
-          transition-duration: 0.2s;
-          &:hover {
-            color: rgb(56, 132, 255);
-            transition-duration: 0.2s;
-          }
-          .icon {
-            margin-right: 15px;
-          }
-          .name {
+        .left-filters {
+          padding: 20px 0;
+          margin-right: 5px;
+          .title {
             font-size: 13px;
-            flex: 1;
+            padding-bottom: 10px;
+            font-weight: 500;
           }
-          .iconSelected {
-            color: rgb(56, 132, 255);
-            font-size: 11px;
+          .filter {
+            cursor: pointer;
+            display: flex;
+            border-bottom: 0.5px solid lightgray;
+            align-items: center;
+            padding: 10px 0;
+            transition-duration: 0.2s;
+            &:hover {
+              color: rgb(56, 132, 255);
+              transition-duration: 0.2s;
+            }
+            .icon {
+              margin-right: 15px;
+            }
+            .name {
+              font-size: 13px;
+              flex: 1;
+            }
+            .iconSelected {
+              color: rgb(56, 132, 255);
+              font-size: 11px;
+            }
           }
         }
       }
     }
     .as-content-right {
-      margin-top: 10px;
+      margin-top: 0px;
       flex: 1;
       background-color: white;
       box-shadow: 0 0 3px lightgray;
@@ -123,6 +132,10 @@
           display: block; /* Needed for IE */
           flex: 1;
         }
+        tr th:first-child,
+        tr td:first-child {
+          flex: 0.5;
+        }
 
         thead tr {
           /*overflow-y: scroll;*/
@@ -137,6 +150,9 @@
           padding: 10px;
           display: flex;
           align-items: center;
+          .btn {
+            margin-left: 5px;
+          }
           .as-table-number {
             width: 30px;
             height: 30px;
@@ -172,11 +188,21 @@
           .as-table-type {
             font-size: 12px;
           }
-          .as-table-date {
-            font-size: 10px;
-          }
+
           .as-table-by {
             font-size: 11px;
+            display: flex;
+            flex-direction: column;
+          }
+          .as-table-status {
+            font-size: 10px;
+            display: flex;
+            justify-content: center;
+            flex: 1;
+            span {
+              padding: 5px 15px;
+              border-radius: 3px;
+            }
           }
         }
         th {

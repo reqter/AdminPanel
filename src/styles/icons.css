@@ -43,6 +43,18 @@
 .icon-more-h:before {
   content: "\e902";
 }
+.icon-archive:before {
+  content: "\e91d";
+}
+.icon-draft:before {
+  content: "\e91e";
+}
+.icon-publish:before {
+  content: "\e91f";
+}
+.icon-refresh:before {
+  content: "\e920";
+}
 .icon-file-plus-o:before {
   content: "\e91c";
 }

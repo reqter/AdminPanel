@@ -6,7 +6,33 @@ const Provider = props => {
     contentTypes: [],
     categories: [],
     contents: [],
-    assets: []
+    assets: [],
+    status: [
+      {
+        id: "0",
+        name: "draft",
+        title: "Draft",
+        icon: "icon-draft"
+      },
+      {
+        id: "1",
+        name: "archvied",
+        title: "Archived",
+        icon: "icon-archive"
+      },
+      {
+        id: "2",
+        name: "changed",
+        title: "Changed",
+        icon: "icon-refresh"
+      },
+      {
+        id: "3",
+        name: "published",
+        title: "Published",
+        icon: "icon-publish"
+      }
+    ]
   };
 
   const reducer = (state, action) => {

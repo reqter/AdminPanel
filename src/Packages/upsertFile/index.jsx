@@ -66,22 +66,23 @@ const fields = [
 ];
 const UpsertFile = props => {
   // variables
-  const [updateMode, toggleUpdateMode] = useState(
-    props.match.params.id ? true : false
-  );
-
+  const [updateMode, toggleUpdateMode] = useState();
+  const [tab, changeTab] = useState(); // tab1 ; form , tab2 : errors
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
   const [resetForm, setResetForm] = useState(false);
 
   useEffect(() => {
-    if (updateMode) {
-      if (props.match.params.id !== undefined) {
-        if (props.match.params.id.length > 0) {
-          toggleUpdateMode(true);
-          getAssetItemById(props.match.params.id);
-        }
+    if (props.match.params.id !== undefined) {
+      if (props.match.params.id.length > 0) {
+        getAssetItemById(props.match.params.id);
+        toggleUpdateMode(true);
+      } else {
+        changeTab(2);
       }
+    } else {
+      toggleUpdateMode(false);
+      changeTab(1);
     }
   }, [props.match.params.id]);
 
@@ -89,15 +90,21 @@ const UpsertFile = props => {
   function getAssetItemById(id) {
     getAssetById()
       .onOk(result => {
+        changeTab(1);
         setFormData(result);
+      })
+      .notFound(result => {
+        changeTab(2);
       })
       .call(id);
   }
   function setNameToFormValidation(name) {
-    setFormValidation(prevFormValidation => ({
-      [name]: null,
-      ...prevFormValidation
-    }));
+    if (!formValidation || formValidation[name] !== null) {
+      setFormValidation(prevFormValidation => ({
+        [name]: null,
+        ...prevFormValidation
+      }));
+    }
   }
   function handleOnChangeValue(key, value, isValid) {
     // add value to form
@@ -183,7 +190,7 @@ const UpsertFile = props => {
         );
       case "fileuploader":
         return (
-          <Media
+          <FileUploader
             reset={resetForm}
             formData={formData}
             field={field}
@@ -230,22 +237,6 @@ const UpsertFile = props => {
   }
 
   function upsertItem(closePage) {
-    const obj = {
-      sys: {
-        id: Math.random().toString(),
-        issuer: {
-          fullName: "Saeed Padyab",
-          image: ""
-        },
-        issueDate: "19/01/2019 20:18"
-      },
-      name: formData.name,
-      shorDesc: formData.shortDesc,
-      status: {},
-      url: formData.url,
-      fileType: formData.fileType
-    };
-
     if (updateMode) {
       updateAsset()
         .onOk(result => {
@@ -257,8 +248,23 @@ const UpsertFile = props => {
             setFormValidation();
           }
         })
-        .call(obj);
+        .call(formData);
     } else {
+      const obj = {
+        sys: {
+          id: Math.random().toString(),
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
+        name: formData.name,
+        shorDesc: formData.shortDesc,
+        status: {},
+        url: formData.url,
+        fileType: formData.fileType
+      };
       addAsset()
         .onOk(result => {
           if (closePage) {
@@ -285,44 +291,49 @@ const UpsertFile = props => {
       </div>
       <div className="up-content">
         <main>
-          <div className="up-content-title">
-            {updateMode ? "Edit " : "Upload new file"}
-          </div>
-          <div className="up-formInputs animated fadeIn">
-            {fields.map(field => (
-              <div key={field.id} className="rowItem">
-                {getFieldItem(field)}
+          {tab === 1 && (
+            <>
+              <div className="up-content-title">
+                {updateMode ? "Edit " : "Upload new file"}
               </div>
-            ))}
-            <div className="actions">
-              {!updateMode && (
-                <button
-                  className="btn btn-primary"
-                  onClick={() => upsertItem(false)}
-                  disabled={
-                    Object.keys(formData).length > 0 &&
-                    formValidation === undefined
-                      ? false
-                      : true
-                  }
-                >
-                  Save & New
-                </button>
-              )}
-              <button
-                className="btn btn-primary "
-                onClick={() => upsertItem(true)}
-                disabled={
-                  Object.keys(formData).length > 0 &&
-                  formValidation === undefined
-                    ? false
-                    : true
-                }
-              >
-                {updateMode ? "Update & Close" : "Save & Close"}
-              </button>
-            </div>
-          </div>
+              <div className="up-formInputs animated fadeIn">
+                {fields.map(field => (
+                  <div key={field.id} className="rowItem">
+                    {getFieldItem(field)}
+                  </div>
+                ))}
+                <div className="actions">
+                  {!updateMode && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => upsertItem(false)}
+                      disabled={
+                        !(
+                          Object.keys(formData).length > 0 &&
+                          formValidation === undefined
+                        )
+                      }
+                    >
+                      Save & New
+                    </button>
+                  )}
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => upsertItem(true)}
+                    disabled={
+                      !(
+                        Object.keys(formData).length > 0 &&
+                        formValidation === undefined
+                      )
+                    }
+                  >
+                    {updateMode ? "Update & Close" : "Save & Close"}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+          {tab === 2 && <div className="up-formInputs animated fadeIn" />}
         </main>
       </div>
     </div>

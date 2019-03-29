@@ -11,6 +11,7 @@ import "./styles.scss";
 
 import ContentTypes from "./FilterBox/contentTypes";
 import Tree from "./FilterBox/categories";
+import Status from "./FilterBox/status";
 
 const Products = props => {
   let baseFieldColumnsConfig = [
@@ -229,6 +230,7 @@ const Products = props => {
     // doFiltersOnData();
     //getContentByFilter(dataFilters);
   }
+  function handleStatusSelect(selected) {}
   function handleClickCategory(selected) {
     setSelectedNode(selected);
     filterContents()
@@ -383,6 +385,11 @@ const Products = props => {
                 leftContent={leftContent}
                 data={categories}
                 onCategorySelect={selected => handleClickCategory(selected)}
+              />
+              <Status
+                filters={dataFilters}
+                leftContent={leftContent}
+                onStatusSelect={selected => handleStatusSelect(selected)}
               />
             </div>
           )}

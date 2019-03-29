@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, utility } from "../../services";
 
-const MediaInput = props => {
+const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
   const [files, setFiles] = useState(() => {
@@ -24,22 +24,41 @@ const MediaInput = props => {
     return [];
   });
 
-  useEffect(() => {
-    if (
-      props.init &&
-      field.isRequired !== undefined &&
-      field.isRequired &&
-      !props.reset
-    ) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
+  if (
+    props.init &&
+    field.isRequired !== undefined &&
+    field.isRequired &&
+    !props.reset
+  ) {
+    if (formData[field.name] === undefined) props.init(field.name);
+  }
 
-    if (props.reset) {
+  useEffect(() => {
+    if (formData[field.name]) {
+      if (field.isList) {
+        setFiles(formData[field.name]);
+      } else {
+        if (field.isTranslate) {
+          let fs = [];
+          fs.push({
+            url: formData[field.name][currentLang],
+            fileType: formData["fileType"]
+          });
+          setFiles(fs);
+        } else {
+          let fs = [];
+          fs.push({ url: formData[field.name] });
+          setFiles(fs);
+        }
+      }
+    }
+    if (props.reset && files.length > 0) {
       setFiles([]);
     }
-  }, [props.reset]);
+  }, [props.reset, formData]);
 
   function handleChange(event) {
+    debugger
     const obj = {
       id: Math.random(),
       url: URL.createObjectURL(event.target.files[0]),
@@ -100,17 +119,21 @@ const MediaInput = props => {
             >
               <i className="icon-bin" />
             </div>
-            {field.mediaType === "file" ? (
-              <div className="updatedFileType">
-                <i className="icon-file-plus-o" />
-              </div>
-            ) : field.mediaType === "image" ? (
-              <img src={file.url} alt="" />
-            ) : (
-              <div className="updatedFileType">
-                <i className="icon-file-plus-o" />
-              </div>
-            )}
+            <div className="updatedFileType">
+              {file.fileType.toLowerCase().includes("image") ? (
+                <img src={file.url} alt="" />
+              ) : file.fileType.toLowerCase().includes("video") ? (
+                <i className="icon-video" />
+              ) : file.fileType.toLowerCase().includes("audio") ? (
+                <i className="icon-audio" />
+              ) : file.fileType.toLowerCase().includes("pdf") ? (
+                <i className="icon-pdf" />
+              ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
+                <i className="icon-spreadsheet" />
+              ) : (
+                <i className="icon-folder" />
+              )}
+            </div>
           </div>
         ))}
         <div className="files-input">
@@ -128,4 +151,4 @@ const MediaInput = props => {
   );
 };
 
-export default MediaInput;
+export default FileUploaderInput;

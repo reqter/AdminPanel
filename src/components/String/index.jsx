@@ -7,25 +7,29 @@ const StringInput = props => {
 
   const { field, formData } = props;
   // چک کن ببین فرم دیتا با این اسم فیلد مقدار داره یا نه . الان فقط رو یه اینپوت ست کردم باید رو تک تک اینپوت های زبان ها ست بشه
-  const [input, setInput] = useState(
-    props.formData[field.name]
-      ? field.isTranslate
-        ? props.formData[field.name][currentLang]
-        : props.formData[field.name]
-      : ""
-  );
+  const value = props.formData[field.name]
+    ? field.isTranslate
+      ? props.formData[field.name][currentLang]
+      : props.formData[field.name]
+    : "";
+  const [input, setInput] = useState(value);
+  if (
+    props.init &&
+    field.isRequired !== undefined &&
+    field.isRequired &&
+    !props.reset
+  ) {
+    if (formData[field.name] === undefined) props.init(field.name);
+  }
 
   useEffect(() => {
-    if (
-      props.init &&
-      field.isRequired !== undefined &&
-      field.isRequired &&
-      !props.reset
-    ) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-    if (props.reset) setInput("");
-  }, [props.reset]);
+    props.formData[field.name]
+      ? field.isTranslate
+        ? setInput(props.formData[field.name][currentLang])
+        : setInput(props.formData[field.name])
+      : setInput("");
+    if (props.reset && input.length > 0) setInput("");
+  }, [props.reset, formData]);
   function handleOnChange(e) {
     setInput(e.target.value);
 

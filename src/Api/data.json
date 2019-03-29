@@ -147,13 +147,13 @@
           "fullName": "Saeed Padyab",
           "image": ""
         },
-        "issueDate": "19/01/2019 20:18"
+        "issueDate": "2 days ago"
       },
       "name": {
         "en": "Image1",
         "fa": "Image1"
       },
-      "description": {
+      "shortDesc": {
         "en": "",
         "fa": ""
       },
@@ -162,7 +162,7 @@
         "en": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
         "fa": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
       },
-      "fileType": "Image jpeg"
+      "fileType": "image/jpeg"
     }
   ]
 }

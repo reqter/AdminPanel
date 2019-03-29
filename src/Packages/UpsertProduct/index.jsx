@@ -71,10 +71,12 @@ const UpsertProduct = props => {
       .call(id);
   }
   function setNameToFormValidation(name) {
-    setFormValidation(prevFormValidation => ({
-      [name]: null,
-      ...prevFormValidation
-    }));
+    if (!formValidation || formValidation[name] !== null) {
+      setFormValidation(prevFormValidation => ({
+        [name]: null,
+        ...prevFormValidation
+      }));
+    }
   }
   function handleOnChangeValue(key, value, isValid) {
     // add value to form

@@ -1,43 +1,50 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
-import { getAssets, deleteAsset } from "./../../Api/asset-api";
+import { getAssets, deleteAsset, filterAssets } from "./../../Api/asset-api";
 
 const filters = [
   {
     id: "0",
-    name: "All Files",
+    name: "all",
+    title: "All Files",
     icon: "icon-folder"
   },
   {
     id: "1",
-    name: "Image",
+    name: "image",
+    title: "Image",
     icon: "icon-images"
   },
   {
     id: "2",
-    name: "Video",
+    name: "video",
+    title: "Video",
     icon: "icon-video"
   },
   {
     id: "3",
-    name: "Audio",
+    name: "audio",
+    title: "Audio",
     icon: "icon-audio"
   },
   {
     id: "4",
-    name: "PDF",
+    name: "pdf",
+    title: "PDF",
     icon: "icon-pdf"
   },
   {
     id: "5",
-    name: "Spreadsheet",
+    name: "spreadsheet",
+    title: "Spreadsheet",
     icon: "icon-spreadsheet"
   }
 ];
+
 const Assets = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ assets }, dispatch] = useGlobalState();
+  const [{ assets, status }, dispatch] = useGlobalState();
 
   useEffect(() => {
     getAssets()
@@ -51,12 +58,31 @@ const Assets = props => {
   }, []);
 
   const { name: pageTitle, desc: pageDescription } = props.component;
-  const [selectedFilter, setSelectedFilter] = useState(filters[0]);
+  const [selectedFileType, setFileType] = useState(filters[0]);
+  const [selectedStatus, setStatus] = useState({});
 
-  function handleFilterClick(selected) {
-    setSelectedFilter(selected);
+  function handleFileTypeClick(selected) {
+    setFileType(selected);
+    filterAssets()
+      .onOk(result => {
+        dispatch({
+          type: "SET_ASSETS",
+          value: result
+        });
+      })
+      .call(selected.name, selectedStatus.name);
   }
-
+  function handleStatusClick(selected) {
+    setStatus(selected);
+    filterAssets()
+      .onOk(result => {
+        dispatch({
+          type: "SET_ASSETS",
+          value: result
+        });
+      })
+      .call(selectedFileType.name, selected.name);
+  }
   function openUploader() {
     props.history.push("/addAsset");
   }
@@ -91,28 +117,55 @@ const Assets = props => {
                 Upload New File
               </button>
             </div>
-            <div className="left-filters">
-              <div className="title">Filter Files by Extenstion</div>
-              {filters.map(f => (
-                <div
-                  className="filter"
-                  key={f.id}
-                  onClick={() => handleFilterClick(f)}
-                  style={{
-                    color:
-                      f.id === selectedFilter.id ? "rgb(56,132,255)" : "black"
-                  }}
-                >
-                  <i className={["icon", f.icon].join(" ")} />
-                  <span className="name">{f.name}</span>
-                  <span
-                    className="icon-circle-o iconSelected"
+            <div className="filterContent">
+              <div className="left-filters">
+                <div className="title">Filter Files by Extenstion</div>
+                {filters.map(f => (
+                  <div
+                    className="filter"
+                    key={f.id}
+                    onClick={() => handleFileTypeClick(f)}
                     style={{
-                      display: f.id === selectedFilter.id ? "block" : "none"
+                      color:
+                        f.id === selectedFileType.id
+                          ? "rgb(56,132,255)"
+                          : "black"
                     }}
-                  />
-                </div>
-              ))}
+                  >
+                    <i className={["icon", f.icon].join(" ")} />
+                    <span className="name">{f.title}</span>
+                    <span
+                      className="icon-circle-o iconSelected"
+                      style={{
+                        display: f.id === selectedFileType.id ? "block" : "none"
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="left-filters">
+                <div className="title">Filter Files By Status</div>
+                {status.map(f => (
+                  <div
+                    className="filter"
+                    key={f.id}
+                    onClick={() => handleStatusClick(f)}
+                    style={{
+                      color:
+                        f.id === selectedStatus.id ? "rgb(56,132,255)" : "black"
+                    }}
+                  >
+                    <i className={["icon", f.icon].join(" ")} />
+                    <span className="name">{f.title}</span>
+                    <span
+                      className="icon-circle-o iconSelected"
+                      style={{
+                        display: f.id === selectedStatus.id ? "block" : "none"
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="as-content-right">
@@ -125,8 +178,8 @@ const Assets = props => {
                     <th>Preview</th>
                     <th>Name</th>
                     <th>Type</th>
-                    <th>Updated</th>
                     <th>By</th>
+                    <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -145,19 +198,21 @@ const Assets = props => {
                           <div className="as-table-image">
                             <img src={file.url[currentLang]} alt="" />
                           </div>
-                        ) : file.type.toLowerCase().includes("video") ? (
+                        ) : file.fileType.toLowerCase().includes("video") ? (
                           <div className="as-table-image">
                             <i className="icon-video" />
                           </div>
-                        ) : file.type.toLowerCase().includes("audio") ? (
+                        ) : file.fileType.toLowerCase().includes("audio") ? (
                           <div className="as-table-image">
                             <i className="icon-audio" />
                           </div>
-                        ) : file.type.toLowerCase().includes("pdf") ? (
+                        ) : file.fileType.toLowerCase().includes("pdf") ? (
                           <div className="as-table-image">
                             <i className="icon-pdf" />
                           </div>
-                        ) : file.type.toLowerCase().includes("spreadsheet") ? (
+                        ) : file.fileType
+                            .toLowerCase()
+                            .includes("spreadsheet") ? (
                           <div className="as-table-image">
                             <i className="icon-spreadsheet" />
                           </div>
@@ -176,13 +231,14 @@ const Assets = props => {
                         <div className="as-table-type">{file.fileType}</div>
                       </td>
                       <td>
-                        <div className="as-table-date">
-                          {file.sys.issueDate}
+                        <div className="as-table-by">
+                          <span>{file.sys.issuer.fullName}</span>
+                          <span>{file.sys.issueDate}</span>
                         </div>
                       </td>
                       <td>
-                        <div className="as-table-by">
-                          {file.sys.issuer.fullName}
+                        <div className="as-table-status">
+                          <span className="adge badge-primary">Draft</span>
                         </div>
                       </td>
                       <td>

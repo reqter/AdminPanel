@@ -38,10 +38,32 @@ export function filterAssets() {
     }
   }
   function _call(type) {
-    const f_data = data.assets.filter(item => {
-      return true;
-    });
-    _onOk(f_data);
+    let result;
+    if (type==="all") {
+      result = data.assets;
+    }
+    else  
+    result = [...data.assets].filter(item => item.fileType.toLowerCase().includes(type));
+      const status = 200;
+    switch (status) {
+      case 200:
+        _onOk(result);
+        break;
+      case 400:
+        _onBadRequest();
+        break;
+      case 401:
+        _unAuthorized();
+        break;
+      case 404:
+        _notFound();
+        break;
+      case 500:
+        _onServerError();
+        break;
+      default:
+        break;
+    }
   }
 
   return {
@@ -501,7 +523,10 @@ export function getAssetById() {
     //
 
     const result = data.assets.find(item => item.sys.id === id);
-    const status = 200;
+    debugger
+    let status = 200;
+    if (!result) 
+    status = 404;
     switch (status) {
       case 200:
         _onOk(result);
