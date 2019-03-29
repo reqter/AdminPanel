@@ -58,7 +58,6 @@ const FileUploaderInput = props => {
   }, [props.reset, formData]);
 
   function handleChange(event) {
-    debugger
     const obj = {
       id: Math.random(),
       url: URL.createObjectURL(event.target.files[0]),
@@ -120,19 +119,20 @@ const FileUploaderInput = props => {
               <i className="icon-bin" />
             </div>
             <div className="updatedFileType">
-              {file.fileType.toLowerCase().includes("image") ? (
-                <img src={file.url} alt="" />
-              ) : file.fileType.toLowerCase().includes("video") ? (
-                <i className="icon-video" />
-              ) : file.fileType.toLowerCase().includes("audio") ? (
-                <i className="icon-audio" />
-              ) : file.fileType.toLowerCase().includes("pdf") ? (
-                <i className="icon-pdf" />
-              ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
-                <i className="icon-spreadsheet" />
-              ) : (
-                <i className="icon-folder" />
-              )}
+              {file.fileType &&
+                (file.fileType.toLowerCase().includes("image") ? (
+                  <img src={file.url} alt="" />
+                ) : file.fileType.toLowerCase().includes("video") ? (
+                  <i className="icon-video" />
+                ) : file.fileType.toLowerCase().includes("audio") ? (
+                  <i className="icon-audio" />
+                ) : file.fileType.toLowerCase().includes("pdf") ? (
+                  <i className="icon-pdf" />
+                ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
+                  <i className="icon-spreadsheet" />
+                ) : (
+                  <i className="icon-folder" />
+                ))}
             </div>
           </div>
         ))}

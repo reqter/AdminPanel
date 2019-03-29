@@ -68,6 +68,7 @@ const UpsertFile = props => {
   // variables
   const [updateMode, toggleUpdateMode] = useState();
   const [tab, changeTab] = useState(); // tab1 ; form , tab2 : errors
+  const [error, setError] = useState();
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
   const [resetForm, setResetForm] = useState(false);
@@ -78,9 +79,16 @@ const UpsertFile = props => {
         getAssetItemById(props.match.params.id);
         toggleUpdateMode(true);
       } else {
+        const obj = {
+          type: "wrongUrl",
+          message: languageManager.translate("UPSERT_ASSET_WRONG_URL")
+        };
+        // url is wrong
         changeTab(2);
+        setError(obj);
       }
     } else {
+      // creation mode
       toggleUpdateMode(false);
       changeTab(1);
     }
@@ -94,7 +102,12 @@ const UpsertFile = props => {
         setFormData(result);
       })
       .notFound(result => {
+        const obj = {
+          type: "NOT_FOUND",
+          message: languageManager.translate("UPSERT_ASSET_NOT_FOUND")
+        };
         changeTab(2);
+        setError(obj);
       })
       .call(id);
   }
@@ -283,10 +296,18 @@ const UpsertFile = props => {
       <div className="up-header">
         <button className="btn btn-light" onClick={backToAssets}>
           <i className="icon-arrow-left2" />
-          Back
+          {languageManager.translate("BACK")}
         </button>
         <div className="tabItems">
-          <div className="item active">1.Upload new file</div>
+          <div className="item active">
+            {updateMode
+              ? `1.${languageManager.translate(
+                  "UPSERT_ASSET_HEADER_EDIT_TITLE"
+                )}`
+              : `1.${languageManager.translate(
+                  "UPSERT_ASSET_HEADER_ADD_TITLE"
+                )}`}
+          </div>
         </div>
       </div>
       <div className="up-content">
@@ -294,7 +315,9 @@ const UpsertFile = props => {
           {tab === 1 && (
             <>
               <div className="up-content-title">
-                {updateMode ? "Edit " : "Upload new file"}
+                {updateMode
+                  ? languageManager.translate("UPSERT_ASSET_HEADER_EDIT_TITLE")
+                  : languageManager.translate("UPSERT_ASSET_HEADER_ADD_TITLE")}
               </div>
               <div className="up-formInputs animated fadeIn">
                 {fields.map(field => (
@@ -333,7 +356,11 @@ const UpsertFile = props => {
               </div>
             </>
           )}
-          {tab === 2 && <div className="up-formInputs animated fadeIn" />}
+          {tab === 2 && (
+            <div className="up-formInputs animated fadeIn errorsBox">
+              <div className="alert alert-danger">{error.message}</div>
+            </div>
+          )}
         </main>
       </div>
     </div>

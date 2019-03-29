@@ -1,4 +1,6 @@
 export default {
+  //COMMON
+  BACK: "Back",
   LOGIN_TITLE: "SignIn Reqter",
   LOGIN_EMAIL_INPUT_TITLE: "Email Address",
   LOGIN_EMAIL_INPUT_PLACEHOLDER: "Enter email",
@@ -117,5 +119,11 @@ export default {
   // ITEM TYPES
   ITEM_TYPES_FIELDS: "Fields",
   // items
-  ITEMS_CATEGORIES_CONTENT: "Content"
+  ITEMS_CATEGORIES_CONTENT: "Content",
+  //assets
+  UPSERT_ASSET_WRONG_URL: "You have entered wrong url",
+  UPSERT_ASSET_NOT_FOUND:
+    "Your asset not found . it probebly has been removed or maybe you have entered wrong id of the asset",
+  UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",
+  UPSERT_ASSET_HEADER_EDIT_TITLE: "Edit a file "
 };
