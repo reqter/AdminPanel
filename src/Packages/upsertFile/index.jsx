@@ -274,7 +274,7 @@ const UpsertFile = props => {
         },
         name: formData.name,
         shorDesc: formData.shortDesc,
-        status: {},
+        status: "draft",
         url: formData.url,
         fileType: formData.fileType
       };

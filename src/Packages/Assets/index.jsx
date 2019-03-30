@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
-import { getAssets, deleteAsset, filterAssets } from "./../../Api/asset-api";
+import {
+  getAssets,
+  deleteAsset,
+  filterAssets,
+  publish,
+  unPublish,
+  archive,
+  unArchive
+} from "./../../Api/asset-api";
 
 const filters = [
   {
@@ -54,6 +62,10 @@ const Assets = props => {
           value: result
         });
       })
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .notFound(result => {})
       .call();
   }, []);
 
@@ -70,6 +82,10 @@ const Assets = props => {
           value: result
         });
       })
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .notFound(result => {})
       .call(selected.name, selectedStatus.name);
   }
   function handleStatusClick(selected) {
@@ -98,6 +114,42 @@ const Assets = props => {
         });
       })
       .call(item);
+  }
+  function archive(file) {
+    archive()
+      .onOk(result => {})
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .notFound(result => {})
+      .call(file.id);
+  }
+  function unArchive(file) {
+    unArchive()
+      .onOk(result => {})
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .notFound(result => {})
+      .call(file.id);
+  }
+  function publish(file) {
+    publish()
+      .onOk(result => {})
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .notFound(result => {})
+      .call(file.id);
+  }
+  function unPublish(file) {
+    unPublish()
+      .onOk(result => {})
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .notFound(result => {})
+      .call(file.id);
   }
   return (
     <>
@@ -177,7 +229,6 @@ const Assets = props => {
                     <th>#</th>
                     <th>Preview</th>
                     <th>Name</th>
-                    <th>Type</th>
                     <th>By</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -224,11 +275,9 @@ const Assets = props => {
                       </td>
                       <td>
                         <div className="as-table-name">
-                          {file.name[currentLang]}
+                          <span className="name">{file.name[currentLang]}</span>
+                          <span>{file.fileType}</span>
                         </div>
-                      </td>
-                      <td>
-                        <div className="as-table-type">{file.fileType}</div>
                       </td>
                       <td>
                         <div className="as-table-by">
@@ -238,10 +287,23 @@ const Assets = props => {
                       </td>
                       <td>
                         <div className="as-table-status">
-                          <span className="adge badge-primary">Draft</span>
+                          <span className="adge badge-primary">
+                            {languageManager.translate(file.status)}
+                          </span>
                         </div>
                       </td>
                       <td>
+                        {file.status === "draft" ? (
+                          <button className="btn btn-light">Archive</button>
+                        ) : file.status === "changed" ? (
+                          <button className="btn btn-light">Publish</button>
+                        ) : file.status === "archived" ? (
+                          <button className="btn btn-light">UnArchive</button>
+                        ) : file.status === "published" ? (
+                          <button className="btn btn-light">UnPublish</button>
+                        ) : (
+                          ""
+                        )}
                         <button
                           className="btn btn-light"
                           onClick={() => removeAsset(file)}

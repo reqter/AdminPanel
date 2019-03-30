@@ -1,6 +1,11 @@
 export default {
   //COMMON
   BACK: "Back",
+  draft: "Draft",
+  archived: "Archive",
+  changed: "Changed",
+  published: "Published",
+  // login
   LOGIN_TITLE: "SignIn Reqter",
   LOGIN_EMAIL_INPUT_TITLE: "Email Address",
   LOGIN_EMAIL_INPUT_PLACEHOLDER: "Enter email",

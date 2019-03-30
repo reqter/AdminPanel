@@ -4,6 +4,7 @@ const Provider = props => {
   const initialState = {
     projectInfo: { name: "REQTER" },
     contentTypes: [],
+    fields: [],
     categories: [],
     contents: [],
     assets: [],
@@ -43,6 +44,12 @@ const Provider = props => {
           contentTypes: action.value
         };
         return s;
+      case "SET_FIELDS":
+        const f = {
+          ...state,
+          fields: action.value
+        };
+        return f;
       case "SET_CATEGORIES":
         return {
           ...state,

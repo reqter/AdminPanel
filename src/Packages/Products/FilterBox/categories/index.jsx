@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { languageManager } from "../../../../services";
+import { getCategories } from "./../../../../Api/category-api";
 
 const Tree = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const [selected, setSelected] = useState({});
   const [idState, setId] = useState({});
+  const [data,setData] = useState(getCategories().on)
 
   useEffect(() => {
     if (Object.keys(selected).length > 0) {
@@ -79,7 +81,7 @@ const Tree = props => {
             <i className="icon-right-chevron chevron" />
             All Categories
           </li>
-          {mapper(props.data)}
+          {mapper(data)}
         </ul>
       </div>
     </div>

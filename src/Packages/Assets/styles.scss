@@ -41,7 +41,7 @@
       .left-text {
         font-size: 13px;
         text-align: justify;
-        padding-bottom: 15px;
+        padding-bottom: 5px;
       }
       .left-btnContent {
         display: flex;
@@ -136,13 +136,12 @@
         tr td:first-child {
           flex: 0.5;
         }
-
-        thead tr {
-          /*overflow-y: scroll;*/
+        tr th:last-child,
+        tr td:last-child {
+          flex: 2;
+          text-align: center;
+          justify-content: center;
         }
-
-        /* Table styles */
-
         table {
           border-collapse: collapse;
         }
@@ -150,6 +149,7 @@
           padding: 10px;
           display: flex;
           align-items: center;
+          flex: 1;
           .btn {
             margin-left: 5px;
           }
@@ -182,8 +182,13 @@
             }
           }
           .as-table-name {
-            font-weight: 500;
-            font-size: 13px;
+            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            .name {
+              font-weight: 500;
+              font-size: 13px;
+            }
           }
           .as-table-type {
             font-size: 12px;
@@ -197,7 +202,6 @@
           .as-table-status {
             font-size: 10px;
             display: flex;
-            justify-content: center;
             flex: 1;
             span {
               padding: 5px 15px;

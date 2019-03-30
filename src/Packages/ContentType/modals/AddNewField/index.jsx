@@ -142,10 +142,10 @@ const AddNewField = props => {
     };
     addFieldToContentType()
       .onOk(result => {
-        // dispatch({
-        //   type: "SET_CONTENT_TYPES",
-        //   value: result
-        // });
+        dispatch({
+          type: "SET_CONTENT_TYPES",
+          value: result
+        });
         props.onCloseModal(obj);
       })
       .call(selectedContentType.sys.id, obj);

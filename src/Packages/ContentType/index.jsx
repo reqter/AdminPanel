@@ -9,11 +9,10 @@ import {
   deleteContentType,
   removeContentTypeField
 } from "./../../Api/contentType-api";
-
 const ItemTypes = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
-  const [{ contentTypes }, dispatch] = useGlobalState();
+  const [{ contentTypes, fields }, dispatch] = useGlobalState();
 
   useEffect(() => {
     getContentTypes()
@@ -31,8 +30,6 @@ const ItemTypes = props => {
   const [upsertFieldModal, toggleUpsertFieldModal] = useState(false);
   const [upsertItemTypeModal, toggleUpserItemTypeModal] = useState(false);
   const [selectedContentType, setItemType] = useState({});
-  debugger
-  const [fields, setFields] = useState([]);
   const [updateMode, setUpdateMode] = useState();
 
   const [rightContent, toggleRightContent] = useState(false);
@@ -68,13 +65,13 @@ const ItemTypes = props => {
   function showFields(item) {
     if (!rightContent) toggleRightContent(true);
     setItemType(item);
-    setFields(item.fields);
+    dispatch({ type: "SET_FIELDS", value: [...item.fields] });
   }
   function closeAddFieldModal(field) {
     if (field) {
-      const f = [...fields];
+      const f = fields;
       f.push(field);
-      setFields(f);
+      dispatch({ type: "SET_FIELDS", value: f });
     }
     // dispatch({
     //   type: "SET_CONTENT_TYPES",
@@ -89,11 +86,11 @@ const ItemTypes = props => {
     removeContentTypeField()
       .onOk(result => {
         const f = [...fields].filter(item => item.id !== field.id);
-        setFields(f);
-        // dispatch({
-        //   type: "SET_CONTENT_TYPES",
-        //   value: result
-        // });
+        dispatch({ type: "SET_FIELDS", value: f });
+        dispatch({
+          type: "SET_CONTENT_TYPES",
+          value: result
+        });
       })
       .call(selectedContentType.sys.id, field.id);
   }

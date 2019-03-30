@@ -427,7 +427,7 @@ export function addFieldToContentType() {
     //
     const result = data.contentTypes.map(item => {
       if (item.sys.id === contentTypeId) {
-        let newItem = item;
+        let newItem = {...item};
         if (newItem.fields === undefined) {
           newItem.fields = [];
         }
