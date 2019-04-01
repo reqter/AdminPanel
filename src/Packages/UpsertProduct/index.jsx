@@ -81,7 +81,9 @@ const UpsertProduct = props => {
   function handleOnChangeValue(key, value, isValid) {
     // add value to form
     let f = { ...formData };
-    f[key] = value;
+    if (key === "thumbnail") {
+      f[key] = value["url"];
+    } else f[key] = value;
     setFormData(f);
     // check validation
     let obj = { ...formValidation };

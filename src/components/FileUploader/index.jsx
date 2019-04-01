@@ -5,6 +5,7 @@ import { languageManager, utility } from "../../services";
 const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
+  const [resetInputLocaly, setResetLocaly] = useState(true);
   const [files, setFiles] = useState(() => {
     if (formData[field.name]) {
       if (field.isList) {
@@ -41,6 +42,7 @@ const FileUploaderInput = props => {
         if (field.isTranslate) {
           let fs = [];
           fs.push({
+            id: Math.random(),
             url: formData[field.name][currentLang],
             fileType: formData["fileType"]
           });
@@ -51,15 +53,21 @@ const FileUploaderInput = props => {
           setFiles(fs);
         }
       }
+    } else {
+      if (files.length > 0) {
+        setFiles([]);
+      }
     }
-    if (props.reset && files.length > 0) {
+
+    if (props.reset && resetInputLocaly) {
+      setResetLocaly(false);
       setFiles([]);
     }
   }, [props.reset, formData]);
 
   function handleChange(event) {
-    const obj = {
-      id: Math.random(),
+    let obj = {
+      id: Math.random().toString(),
       url: URL.createObjectURL(event.target.files[0]),
       name: event.target.files[0].name,
       fileType: event.target.files[0].type
@@ -68,10 +76,10 @@ const FileUploaderInput = props => {
       let fs = [...files];
       fs.push(obj);
       setFiles(fs);
-      props.onChangeValue(field.name, fs, true);
+      props.onChangeValue(field, fs, true);
     } else {
-      let fs = [...files];
-      fs[0] = obj;
+      let fs = [];
+      fs.push(obj);
       setFiles(fs);
 
       let f, l;
@@ -79,7 +87,7 @@ const FileUploaderInput = props => {
         l = utility.applyeLangs(fs[0].url);
         f = { ...fs[0], ...l };
       }
-      props.onChangeValue(field.name, f, true);
+      props.onChangeValue(field, f, true);
     }
   }
 
@@ -90,14 +98,12 @@ const FileUploaderInput = props => {
     if (field.isRequired) {
       if (field.isList !== undefined && field.isList) {
         if (fs.length === 0) props.onChangeValue(field.name, fs, false);
-        else props.onChangeValue(field.name, fs, true);
+        else props.onChangeValue(field, fs, true);
       } else {
         if (fs.length === 0) {
-          let img;
           if (field.isTranslate) {
-            img = utility.applyeLangs("");
-            props.onChangeValue(field.name, img, false);
-          } else props.onChangeValue(field.name, "", false);
+            props.onChangeValue(field, undefined, false);
+          } else props.onChangeValue(field, undefined, false);
         }
       }
     } else {

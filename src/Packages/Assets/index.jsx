@@ -62,7 +62,9 @@ const Assets = props => {
           value: result
         });
       })
-      .onServerError(result => {})
+      .onServerError(result => {
+        
+      })
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(result => {})

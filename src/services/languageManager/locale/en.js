@@ -130,5 +130,7 @@ export default {
   UPSERT_ASSET_NOT_FOUND:
     "Your asset not found . it probebly has been removed or maybe you have entered wrong id of the asset",
   UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",
-  UPSERT_ASSET_HEADER_EDIT_TITLE: "Edit a file "
+  UPSERT_ASSET_HEADER_EDIT_TITLE: "Edit a file ",
+  //COMPONENTS
+  COMPONENTS_ASSET_BROWSER_HEADER:"Choose your asset"
 };

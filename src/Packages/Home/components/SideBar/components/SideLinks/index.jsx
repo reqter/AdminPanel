@@ -38,12 +38,12 @@ const NavLinks = props => {
     //   path: "/home/quotes",
     //   desc: translate("HOME_SIDE_NAV_QUOTES_DESC")
     // },
-    {
-      name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
-      icon: "users",
-      path: "/home/manageUsers",
-      desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC")
-    },
+    // {
+    //   name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
+    //   icon: "users",
+    //   path: "/home/manageUsers",
+    //   desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC")
+    // },
     {
       name: translate("HOME_SIDE_NAV_ASSETS_MANAGER"),
       icon: "images",

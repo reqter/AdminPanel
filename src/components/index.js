@@ -10,6 +10,7 @@ import Number from "./Number";
 import RichText from "./RichText";
 import String from "./String";
 import FileUploader from "./FileUploader";
+import AssetBrowser from "./AssetBrowser";
 
 export {
   Divider,
@@ -22,5 +23,6 @@ export {
   Number,
   RichText,
   String,
-  FileUploader
+  FileUploader,
+  AssetBrowser
 };

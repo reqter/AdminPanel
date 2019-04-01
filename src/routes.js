@@ -66,13 +66,13 @@ const routes = [
       //   desc: translate("HOME_SIDE_NAV_QUOTES_DESC"),
       //   component: Quotes
       // },
-      {
-        name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
-        icon: "users",
-        path: "/home/manageUsers",
-        desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC"),
-        component: ManageUsers
-      },
+      // {
+      //   name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
+      //   icon: "users",
+      //   path: "/home/manageUsers",
+      //   desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC"),
+      //   component: ManageUsers
+      // },
       {
         name: translate("HOME_SIDE_NAV_ASSETS_MANAGER"),
         icon: "images",

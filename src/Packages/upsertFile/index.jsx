@@ -64,6 +64,7 @@ const fields = [
     isRequired: true
   }
 ];
+
 const UpsertFile = props => {
   // variables
   const [updateMode, toggleUpdateMode] = useState();
@@ -119,16 +120,22 @@ const UpsertFile = props => {
       }));
     }
   }
-  function handleOnChangeValue(key, value, isValid) {
+  function handleOnChangeValue(field, value, isValid) {
     // add value to form
     let f = { ...formData };
-    if (key === "url") {
-      f[key] = {
-        en: value["en"],
-        fa: value["fa"]
-      };
-      f.fileType = value.fileType;
-    } else f[key] = value;
+    const { name: key } = field;
+    if (value === undefined) {
+      delete f[key];
+      if (key === "url" && field.isBase) delete f["fileType"];
+    } else {
+      if (key === "url" && field.isBase) {
+        f[key] = {
+          en: value["en"],
+          fa: value["fa"]
+        };
+        f.fileType = value.fileType;
+      } else f[key] = value;
+    }
     setFormData(f);
 
     // check validation
@@ -283,6 +290,7 @@ const UpsertFile = props => {
           if (closePage) {
             backToAssets();
           } else {
+            setResetForm(false);
             setResetForm(true);
             setFormData({});
             setFormValidation();

@@ -62,8 +62,8 @@
             "en": "Thumbnail"
           },
           "description": {
-            "fa": "",
-            "en": ""
+            "fa": "برای آیتم خود یک نمایه عکس انتخاب کنید",
+            "en": "Choose an image as thumbnail of your item"
           },
           "type": "media",
           "mediaType": "image",

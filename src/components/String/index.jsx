@@ -6,6 +6,7 @@ const StringInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
   const { field, formData } = props;
+  const [resetInputLocaly, setResetLocaly] = useState(true);
   // چک کن ببین فرم دیتا با این اسم فیلد مقدار داره یا نه . الان فقط رو یه اینپوت ست کردم باید رو تک تک اینپوت های زبان ها ست بشه
   const value = props.formData[field.name]
     ? field.isTranslate
@@ -28,7 +29,11 @@ const StringInput = props => {
         ? setInput(props.formData[field.name][currentLang])
         : setInput(props.formData[field.name])
       : setInput("");
-    if (props.reset && input.length > 0) setInput("");
+
+    if (props.reset && resetInputLocaly) {
+      setResetLocaly(false);
+      setInput("");
+    }
   }, [props.reset, formData]);
   function handleOnChange(e) {
     setInput(e.target.value);
@@ -42,8 +47,8 @@ const StringInput = props => {
       if (e.target.value.length > 0) {
         isValid = true;
       }
-      props.onChangeValue(field.name, value, isValid);
-    } else props.onChangeValue(field.name, value, true);
+      props.onChangeValue(field, value, isValid);
+    } else props.onChangeValue(field, value, true);
   }
   if (field.isMultiLine !== undefined && field.isMultiLine) {
     return (

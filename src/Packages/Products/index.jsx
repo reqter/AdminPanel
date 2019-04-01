@@ -14,6 +14,7 @@ import Tree from "./FilterBox/categories";
 import Status from "./FilterBox/status";
 
 const Products = props => {
+  const currentLang = languageManager.getCurrentLanguage().name;
   let baseFieldColumnsConfig = [
     {
       Header: "#",
@@ -44,7 +45,7 @@ const Products = props => {
             className="p-image-value"
             src={
               props.value
-                ? props.value[languageManager.getCurrentLanguage().name]
+                ? props.value[currentLang]
                 : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png"
             }
             alt=""
@@ -61,9 +62,7 @@ const Products = props => {
       accessor: "fields.name",
       Cell: props => (
         <div className="p-name">
-          {props.value
-            ? props.value[languageManager.getCurrentLanguage().name]
-            : ""}
+          {props.value ? props.value[currentLang] : ""}
         </div>
       )
     },
@@ -76,9 +75,7 @@ const Products = props => {
       accessor: "fields.shortDesc",
       Cell: props => (
         <div className="p-description">
-          {props.value
-            ? props.value[languageManager.getCurrentLanguage().name]
-            : ""}
+          {props.value ? props.value[currentLang] : ""}
         </div>
       )
     },
@@ -124,7 +121,6 @@ const Products = props => {
       )
     }
   ];
-  const currentLang = languageManager.getCurrentLanguage().name;
   const { name: pageTitle, desc: pageDescription } = props.component;
 
   // variables

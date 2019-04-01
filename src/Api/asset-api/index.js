@@ -533,8 +533,6 @@ export function getAssetById() {
     //const status = rawResponse.status;
     //const result = await rawResponse.json();
 
-    //
-
     const result = data.assets.find(item => item.sys.id === id);
     let status = 200;
     if (!result) status = 404;
