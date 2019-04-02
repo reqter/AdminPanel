@@ -1,8 +1,8 @@
 @import "./icons.css";
 @import "./colors.scss";
 @import "./variables.scss";
-body{
-  overflow-x: hidden
+body {
+  overflow-x: hidden;
 }
 *::-webkit-scrollbar,
 div::-webkit-scrollbar,
@@ -67,115 +67,3 @@ div::-moz-scrollbar-thumb:hover {
   transition-duration: 0.3s;
 }
 
-// loading
-.loaderContainer {
-  position: fixed;
-  z-index: 100;
-  width: 100%;
-  height: 100%;
-  background-color: whitesmoke;
-}
-.loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2em;
-  height: 100%;
-
-  .dots {
-    display: flex;
-    position: relative;
-    top: 20px;
-    left: -10px;
-
-    width: 100px;
-
-    animation: dots 4s ease infinite 1s;
-    div {
-      position: relative;
-
-      width: 10px;
-      height: 10px;
-      margin-right: 10px;
-      border-radius: 100%;
-
-      background-color: black;
-      &:nth-child(1) {
-        width: 0px;
-        height: 0px;
-        margin: 5px;
-        margin-right: 15px;
-        animation: show-dot 4s ease-out infinite 1s;
-      }
-      &:nth-child(4) {
-        background-color: transparent;
-
-        animation: dot-fall-left 4s linear infinite 1s;
-
-        &:before {
-          position: absolute;
-
-          width: 10px;
-          height: 10px;
-          margin-right: 10px;
-          border-radius: 100%;
-
-          background-color: black;
-
-          content: "";
-
-          animation: dot-fall-top 4s cubic-bezier(0.46, 0.02, 0.94, 0.54)
-            infinite 1s;
-        }
-      }
-    }
-  }
-}
-
-@keyframes dots {
-  0% {
-    left: -10px;
-  }
-  20%,
-  100% {
-    left: 10px;
-  }
-}
-
-@keyframes show-dot {
-  0%,
-  20% {
-    width: 0px;
-    height: 0px;
-    margin: 5px;
-    margin-right: 15px;
-  }
-  30%,
-  100% {
-    width: 10px;
-    height: 10px;
-    margin: 0px;
-    margin-right: 10px;
-  }
-}
-
-@keyframes dot-fall-left {
-  0%,
-  5% {
-    left: 0px;
-  }
-  100% {
-    left: 200px;
-  }
-}
-
-@keyframes dot-fall-top {
-  0%,
-  5% {
-    top: 0px;
-  }
-  30%,
-  100% {
-    top: 50vh;
-  }
-}

@@ -121,16 +121,84 @@ export default {
   FIELD_TYPE_REFERENCE_INFO:
     "For example, a blog post can reference its author(s)",
 
-  // ITEM TYPES
+  // CONTENT TYPES
   ITEM_TYPES_FIELDS: "Fields",
+  CONTENT_TYPE_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  CONTENT_TYPE_ON_BAD_REQUEST: "Bad request",
+  CONTENT_TYPE_UN_AUTHORIZED: "You have not authorized.login to get new token",
+  CONTENT_TYPE_REMOVE_ON_OK: "Item type is deleted successfully.",
+  CONTENT_TYPE_REMOVE_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  CONTENT_TYPE_REMOVE_ON_BAD_REQUEST: "Bad request",
+  CONTENT_TYPE_REMOVE_UN_AUTHORIZED:
+    "You have not authorized.login to get new token",
+  CONTENT_TYPE_REMOVE__NOT_FOUND: "Item type not found",
+  CONTENT_TYPE_REMOVE_FIELD_ON_OK: "The field is deleted successfully",
+  CONTENT_TYPE_REMOVE_FIELD_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  CONTENT_TYPE_REMOVE_FIELD_ON_BAD_REQUEST: "Bad request",
+  CONTENT_TYPE_REMOVE_FIELD_UN_AUTHORIZED:
+    "You have not authorized.login to get new token",
+  CONTENT_TYPE_REMOVE_FIELD_NOT_FOUND: "Field not found",
+  CONTENT_TYPE_UPDATE_ON_OK: "Item type is updated successfully.",
+  CONTENT_TYPE_UPDATE_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  CONTENT_TYPE_UPDATE_ON_BAD_REQUEST: "Bad request",
+  CONTENT_TYPE_UPDATE_UN_AUTHORIZED:
+    "You have not authorized.login to get new token",
+  CONTENT_TYPE_UPDATE_NOT_FOUND: "Item type not found",
+  CONTENT_TYPE_ADD_ON_OK: "Item type is created successfully.",
+  CONTENT_TYPE_ADD_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  CONTENT_TYPE_ADD_ON_BAD_REQUEST: "Bad request",
+  CONTENT_TYPE_ADD_UN_AUTHORIZED:
+    "You have not authorized.login to get new token",
+  CONTENT_TYPE_ADD_FIELD_ON_OK: "New field is created successfully.",
+  CONTENT_TYPE_ADD_FIELD_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  CONTENT_TYPE_ADD_FIELD_ON_BAD_REQUEST: "Bad request",
+  CONTENT_TYPE_ADD_FIELD_UN_AUTHORIZED:
+    "You have not authorized.login to get new token",
   // items
   ITEMS_CATEGORIES_CONTENT: "Content",
   //assets
   UPSERT_ASSET_WRONG_URL: "You have entered wrong url",
-  UPSERT_ASSET_NOT_FOUND:
-    "Your asset not found . it probebly has been removed or maybe you have entered wrong id of the asset",
   UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",
   UPSERT_ASSET_HEADER_EDIT_TITLE: "Edit a file ",
+  // ASSETS-API-GET
+  ASSET_GET_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  ASSET_GET_ON_BAD_REQUEST:
+    "Error in request assets.report this to aministarator",
+  ASSET_GET_UN_AUTHORIZED: "You have not authorized.login to get new token",
+  // ASSETS-API-GET
+  ASSET_DELETE_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  ASSET_DELETE_ON_BAD_REQUEST:
+    "Error in request assets.report this to aministarator",
+  ASSET_DELETE_UN_AUTHORIZED: "You have not authorized.login to get new token",
+  ASSET_DELETE_NOT_FOUND: "File not found.make sure to choose item ",
+  UPSERT_ASSET_UPDATE_ON_OK: "the asset is updated successfully",
+  UPSERT_ASSET_UPDATE_ON_SERVER_ERROR:
+    "nternal server error . please make a call with adminstrator ",
+  UPSERT_ASSET_UPDATE_ON_BAD_REQUEST: "",
+  UPSERT_ASSET_UPDATE_UN_AUTHORIZED: "",
+  UPSERT_ASSET_UPDATE_NOT_FOUND: "ll",
+  UPSERT_ASSET_ADD_ON_OK: "New asset is added successfully",
+  UPSERT_ASSET_ADD_ON_SERVER_ERROR:
+    "nternal server error . please make a call with adminstrator ",
+  UPSERT_ASSET_ADD_ON_BAD_REQUEST: "",
+  UPSERT_ASSET_ADD_UN_AUTHORIZED: "",
+  UPSERT_ASSET_ADD_NOT_FOUND: "",
+  UPSERT_ASSET_GET_BY_ID_ON_SERVER_ERROR:
+    "Internal server error . please make a call with adminstrator ",
+  UPSERT_ASSET_GET_BY_ID_ON_BAD_REQUEST: "",
+  UPSERT_ASSET_GET_BY_ID_UN_AUTHORIZED: "",
+  UPSERT_ASSET_GET_BY_ID_NOT_FOUND:
+    "Your asset not found . it probebly has been removed or maybe you have entered wrong id of the asset",
+  UPSERT_ASSET_ERROR_BOX_MEDIA_BTN: "Media",
+  UPSERT_ASSET_ERROR_BOX_REFRESH_BTN: "Refresh",
   //COMPONENTS
-  COMPONENTS_ASSET_BROWSER_HEADER:"Choose your asset"
+  COMPONENTS_ASSET_BROWSER_HEADER: "Choose your asset"
 };

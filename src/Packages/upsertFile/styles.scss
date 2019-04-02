@@ -82,7 +82,7 @@
         .rowItem {
           margin: 20px 0;
         }
-        
+
         .actions {
           display: flex;
           flex-direction: row-reverse;
@@ -98,8 +98,15 @@
         }
       }
       .errorsBox {
-          height: 300px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        .actions {
+          flex: 1;
+          display: flex;
+          align-items: flex-end
         }
+      }
       .up-error-section {
         min-height: 250px;
         background: white;

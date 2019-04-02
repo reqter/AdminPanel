@@ -216,7 +216,9 @@ const UpsertTemplate = props => {
     ? languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
     : languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_EDIT");
 
-  const selectedContentType = updateMode ? props.selectedContentType : undefined;
+  const selectedContentType = updateMode
+    ? props.selectedContentType
+    : undefined;
   const [isOpen, toggleModal] = useState(true);
 
   const [modalHeaderTitle, setModalHeader] = useState(
@@ -288,10 +290,61 @@ const UpsertTemplate = props => {
       updateContentType()
         .onOk(result => {
           dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("CONTENT_TYPE_UPDATE_ON_OK")
+            }
+          });
+          dispatch({
             type: "SET_CONTENT_TYPES",
             value: result
           });
           props.onCloseModal(obj);
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_NOT_FOUND"
+              )
+            }
+          });
         })
         .call(obj);
     } else {
@@ -315,10 +368,50 @@ const UpsertTemplate = props => {
       addContentType()
         .onOk(result => {
           dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("CONTENT_TYPE_ADD_ON_OK")
+            }
+          });
+          dispatch({
             type: "SET_CONTENT_TYPES",
             value: result
           });
           props.onCloseModal(obj);
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ADD_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ADD_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ADD_UN_AUTHORIZED"
+              )
+            }
+          });
         })
         .call(obj);
     }

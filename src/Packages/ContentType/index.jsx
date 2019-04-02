@@ -22,6 +22,33 @@ const ItemTypes = props => {
           value: result
         });
       })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED")
+          }
+        });
+      })
       .call();
   }, []);
 
@@ -48,11 +75,63 @@ const ItemTypes = props => {
   function removeItemType(selected) {
     deleteContentType()
       .onOk(result => {
-        if (selected.sys.id === selectedContentType.sys.id)
+        if (
+          selectedContentType.sys &&
+          selected.sys.id === selectedContentType.sys.id
+        )
           toggleRightContent(false);
         dispatch({
           type: "SET_CONTENT_TYPES",
           value: result
+        });
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("CONTENT_TYPE_REMOVE_ON_OK")
+          }
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_ON_SERVER_ERROR"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_UN_AUTHORIZED"
+            )
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENT_TYPE_REMOVE__NOT_FOUND")
+          }
         });
       })
       .call(selected);
@@ -85,11 +164,64 @@ const ItemTypes = props => {
   function handleRemoveField(field) {
     removeContentTypeField()
       .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_FIELD_ON_OK"
+            )
+          }
+        });
         const f = [...fields].filter(item => item.id !== field.id);
         dispatch({ type: "SET_FIELDS", value: f });
         dispatch({
           type: "SET_CONTENT_TYPES",
           value: result
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_FIELD_ON_SERVER_ERROR"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_FIELD_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_FIELD_UN_AUTHORIZED"
+            )
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_REMOVE_FIELD_NOT_FOUND"
+            )
+          }
         });
       })
       .call(selectedContentType.sys.id, field.id);

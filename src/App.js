@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import StateProvider from "./services/stateManager/stateProvider";
 import "./styles/app.scss";
 import "animate.css";
+import Notifies from "./components/Notifies";
 
 import Routes from "./routes";
 
@@ -54,6 +55,7 @@ const App = () => {
           </Switch>
         </div>
       </BrowserRouter>
+      <Notifies />
     </StateProvider>
   );
 };

@@ -62,19 +62,19 @@ const fields = [
     title: languageManager.translate("FIELD_TYPE_RICH_TEXT"),
     description: languageManager.translate("FIELD_TYPE_RICH_TEXT_INFO"),
     icon: "icon-file-text-o"
-  }
+  },
   // {
   //   name: "jsonObject",
   //   title: languageManager.translate("FIELD_TYPE_OBJECT"),
   //   description: languageManager.translate("FIELD_TYPE_OBJECT_INFO"),
   //   icon: "icon-json-file"
   // },
-  // {
-  //   name: "reference",
-  //   title: languageManager.translate("FIELD_TYPE_REFERENCE"),
-  //   description: languageManager.translate("FIELD_TYPE_REFERENCE_INFO"),
-  //   icon: "icon-reference"
-  // }
+  {
+    name: "reference",
+    title: languageManager.translate("FIELD_TYPE_REFERENCE"),
+    description: languageManager.translate("FIELD_TYPE_REFERENCE_INFO"),
+    icon: "icon-reference"
+  }
 ];
 
 const AddNewField = props => {
@@ -143,10 +143,50 @@ const AddNewField = props => {
     addFieldToContentType()
       .onOk(result => {
         dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("CONTENT_TYPE_ADD_FIELD_ON_OK")
+          }
+        });
+        dispatch({
           type: "SET_CONTENT_TYPES",
           value: result
         });
         props.onCloseModal(obj);
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_ADD_FIELD_ON_SERVER_ERROR"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_ADD_FIELD_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "CONTENT_TYPE_ADD_FIELD_UN_AUTHORIZED"
+            )
+          }
+        });
       })
       .call(selectedContentType.sys.id, obj);
   }

@@ -66,6 +66,7 @@ const fields = [
 ];
 
 const UpsertFile = props => {
+  const [{}, dispatch] = useGlobalState();
   // variables
   const [updateMode, toggleUpdateMode] = useState();
   const [tab, changeTab] = useState(); // tab1 ; form , tab2 : errors
@@ -102,10 +103,42 @@ const UpsertFile = props => {
         changeTab(1);
         setFormData(result);
       })
+      .onServerError(result => {
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          message: languageManager.translate(
+            "UPSERT_ASSET_GET_BY_ID_ON_SERVER_ERROR"
+          )
+        };
+        changeTab(2);
+        setError(obj);
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "UPSERT_ASSET_GET_BY_ID_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "UPSERT_ASSET_GET_BY_ID_UN_AUTHORIZED"
+            )
+          }
+        });
+      })
       .notFound(result => {
         const obj = {
           type: "NOT_FOUND",
-          message: languageManager.translate("UPSERT_ASSET_NOT_FOUND")
+          message: languageManager.translate("UPSERT_ASSET_GET_BY_ID_NOT_FOUND")
         };
         changeTab(2);
         setError(obj);
@@ -260,6 +293,13 @@ const UpsertFile = props => {
     if (updateMode) {
       updateAsset()
         .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ASSET_UPDATE_ON_OK")
+            }
+          });
           if (closePage) {
             backToAssets();
           } else {
@@ -267,6 +307,50 @@ const UpsertFile = props => {
             setFormData({});
             setFormValidation();
           }
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ASSET_UPDATE_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ASSET_UPDATE_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ASSET_UPDATE_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ASSET_UPDATE_NOT_FOUND"
+              )
+            }
+          });
         })
         .call(formData);
     } else {
@@ -287,6 +371,13 @@ const UpsertFile = props => {
       };
       addAsset()
         .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ASSET_ADD_ON_OK")
+            }
+          });
           if (closePage) {
             backToAssets();
           } else {
@@ -296,8 +387,53 @@ const UpsertFile = props => {
             setFormValidation();
           }
         })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND")
+            }
+          });
+        })
         .call(obj);
     }
+  }
+  function refreshCurrentPage() {
+    window.location.reload();
   }
   return (
     <div className="up-wrapper">
@@ -367,6 +503,18 @@ const UpsertFile = props => {
           {tab === 2 && (
             <div className="up-formInputs animated fadeIn errorsBox">
               <div className="alert alert-danger">{error.message}</div>
+              <div className="actions">
+                <button className="btn btn-light" onClick={refreshCurrentPage}>
+                  {languageManager.translate(
+                    "UPSERT_ASSET_ERROR_BOX_REFRESH_BTN"
+                  )}
+                </button>
+                <button className="btn btn-light" onClick={backToAssets}>
+                  {languageManager.translate(
+                    "UPSERT_ASSET_ERROR_BOX_MEDIA_BTN"
+                  )}
+                </button>
+              </div>
             </div>
           )}
         </main>

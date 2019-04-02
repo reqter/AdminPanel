@@ -63,10 +63,32 @@ const Assets = props => {
         });
       })
       .onServerError(result => {
-        
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
+          }
+        });
       })
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
+          }
+        });
+      })
       .notFound(result => {})
       .call();
   }, []);
@@ -84,9 +106,33 @@ const Assets = props => {
           value: result
         });
       })
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
+          }
+        });
+      })
       .notFound(result => {})
       .call(selected.name, selectedStatus.name);
   }
@@ -99,6 +145,34 @@ const Assets = props => {
           value: result
         });
       })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
+          }
+        });
+      })
+      .notFound(result => {})
       .call(selectedFileType.name, selected.name);
   }
   function openUploader() {
@@ -113,6 +187,42 @@ const Assets = props => {
         dispatch({
           type: "SET_ASSETS",
           value: result
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_DELETE_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_DELETE_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("ASSET_DELETE_UN_AUTHORIZED")
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("ASSET_DELETE_NOT_FOUND")
+          }
         });
       })
       .call(item);

@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'icomoon';
+  font-family: "icomoon";
   src: url("./../assets/fonts/icomoon.eot?kl95gl");
   src: url("./../assets/fonts/icomoon.eot?kl95gl#iefix")
       format("embedded-opentype"),
@@ -10,9 +10,10 @@
   font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
+  font-family: "icomoon" !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -160,11 +161,17 @@
 .icon-bin:before {
   content: "\e9ac";
 }
+.icon-shield:before {
+  content: "\e9b4";
+}
 .icon-list:before {
   content: "\e9bb";
 }
 .icon-category:before {
   content: "\e9bc";
+}
+.icon-warning:before {
+  content: "\ea07";
 }
 .icon-plus-o:before {
   content: "\ea0a";
@@ -174,6 +181,9 @@
 }
 .icon-cross:before {
   content: "\ea0f";
+}
+.icon-checkmark:before {
+  content: "\ea10";
 }
 .icon-loop2:before {
   content: "\ea2e";

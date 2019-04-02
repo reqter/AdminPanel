@@ -33,7 +33,8 @@ const Provider = props => {
         title: "Published",
         icon: "icon-publish"
       }
-    ]
+    ],
+    notifies: []
   };
 
   const reducer = (state, action) => {
@@ -64,6 +65,23 @@ const Provider = props => {
         return {
           ...state,
           assets: action.value
+        };
+      case "ADD_NOTIFY":
+        let newItem = { ...action.value };
+        newItem.id = Math.random();
+        let items_n = [...state.notifies];
+        items_n.unshift(newItem);
+        return {
+          ...state,
+          notifies: items_n
+        };
+      case "REMOVE_NOTIFY":
+        const items = state.notifies.filter(
+          item => item.id !== action.value.id
+        );
+        return {
+          ...state,
+          notifies: items
         };
       default:
         return state;

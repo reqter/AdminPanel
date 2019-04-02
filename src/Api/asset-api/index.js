@@ -435,14 +435,14 @@ export function deleteAsset() {
   }
   function _call(obj) {
     //const status = rawResponse.status;
-    //const result = await rawResponse.json();
+    //const result = await 500Response.json();
 
     //
 
     const result = data.assets.filter(item => item.sys.id !== obj.sys.id);
     data.assets = result;
 
-    const status = 200;
+    const status = 400;
     switch (status) {
       case 200:
         _onOk(result);
