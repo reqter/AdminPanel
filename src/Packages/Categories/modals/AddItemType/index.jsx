@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import { languageManager } from "../../../../services";
-import { getContentTypes } from "./../../../../Api/contentType-api";
+import { languageManager, useGlobalState } from "../../../../services";
 import {
   addContentTypeToCategory,
-  removeContentTypeFromCategory
+  removeContentTypeFromCategory,
+  getContentTypes
 } from "./../../../../Api/category-api";
 import "./styles.scss";
 
-const AddNewField = props => {
+const AddContentType = props => {
+  const [{}, dispatch] = useGlobalState();
   const currentLang = languageManager.getCurrentLanguage().name;
   const { selectedCategory } = props;
   let items = props.itemTypes ? props.itemTypes : [];
@@ -45,11 +46,99 @@ const AddNewField = props => {
         .onOk(result => {
           props.onAddContentType(result, item);
         })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CATEGORY_ADD_CONTENT_TYPE_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CATEGORY_ADD_CONTENT_TYPE_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CATEGORY_ADD_CONTENT_TYPE_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CATEGORY_ADD_CONTENT_TYPE_NOT_FOUND"
+              )
+            }
+          });
+        })
         .call(selectedCategory.sys.id, item);
     } else {
       removeContentTypeFromCategory()
         .onOk(result => {
           props.onRemoveContentType(result, item);
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"
+              )
+            }
+          });
         })
         .call(selectedCategory.sys.id, item.sys.id);
     }
@@ -100,4 +189,4 @@ const AddNewField = props => {
   );
 };
 
-export default AddNewField;
+export default AddContentType;

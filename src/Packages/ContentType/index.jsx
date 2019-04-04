@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import List from "./list";
 import AddNewField from "./modals/AddNewField";
+import FieldConfig from "./modals/FieldConfig";
 import AddNewItemType from "./modals/AddNewItemType";
 import { languageManager, useGlobalState } from "../../services";
 import {
@@ -9,10 +10,11 @@ import {
   deleteContentType,
   removeContentTypeField
 } from "./../../Api/contentType-api";
+
 const ItemTypes = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
-  const [{ contentTypes, fields }, dispatch] = useGlobalState();
+  const [{ contentTypes }, dispatch] = useGlobalState();
 
   useEffect(() => {
     getContentTypes()
@@ -54,11 +56,13 @@ const ItemTypes = props => {
 
   const { name: pageTitle, desc: pageDescription } = props.component;
   // variables and handlers
+  const [showFieldConfig, toggleShowFieldConfig] = useState(false);
   const [upsertFieldModal, toggleUpsertFieldModal] = useState(false);
   const [upsertItemTypeModal, toggleUpserItemTypeModal] = useState(false);
   const [selectedContentType, setItemType] = useState({});
   const [updateMode, setUpdateMode] = useState();
-
+  const [fields, setFields] = useState([]);
+  const [selectedField, setSelectedField] = useState();
   const [rightContent, toggleRightContent] = useState(false);
 
   function openAddItemTypeModal() {
@@ -144,19 +148,21 @@ const ItemTypes = props => {
   function showFields(item) {
     if (!rightContent) toggleRightContent(true);
     setItemType(item);
-    dispatch({ type: "SET_FIELDS", value: [...item.fields] });
+    setFields([...item.fields]);
+    //dispatch({ type: "SET_FIELDS", value: [...item.fields] });
   }
-  function closeAddFieldModal(field) {
-    if (field) {
-      const f = fields;
-      f.push(field);
-      dispatch({ type: "SET_FIELDS", value: f });
-    }
-    // dispatch({
-    //   type: "SET_CONTENT_TYPES",
-    //   value: result
-    // });
+  function closeAddFieldModal(result) {
     toggleUpsertFieldModal(false);
+    if (result) {
+      const f = fields;
+      f.push(result.field);
+      setFields(f);
+      //dispatch({ type: "SET_FIELDS", value: f });
+      if (result.showConfig) {
+        setSelectedField(result.field);
+        toggleShowFieldConfig(true);
+      }
+    }
   }
   function addNewField() {
     toggleUpsertFieldModal(prevModal => !prevModal);
@@ -174,7 +180,8 @@ const ItemTypes = props => {
           }
         });
         const f = [...fields].filter(item => item.id !== field.id);
-        dispatch({ type: "SET_FIELDS", value: f });
+        setFields(f);
+        //dispatch({ type: "SET_FIELDS", value: f });
         dispatch({
           type: "SET_CONTENT_TYPES",
           value: result
@@ -225,6 +232,13 @@ const ItemTypes = props => {
         });
       })
       .call(selectedContentType.sys.id, field.id);
+  }
+  function closeFieldConfigModal(field) {
+    toggleShowFieldConfig(false);
+  }
+  function showAdvanceConfig(field) {
+    setSelectedField(field);
+    toggleShowFieldConfig(true);
   }
   return (
     <>
@@ -329,7 +343,11 @@ const ItemTypes = props => {
                               >
                                 <i className="icon-bin" />
                               </button>
-                              <button className="btn btn-link" size="xs">
+                              <button
+                                className="btn btn-link"
+                                size="xs"
+                                onClick={() => showAdvanceConfig(field)}
+                              >
                                 Settings
                               </button>
                             </>
@@ -367,7 +385,14 @@ const ItemTypes = props => {
         <AddNewField
           selectedContentType={selectedContentType}
           isOpen={upsertFieldModal}
-          onCloseModal={closeAddFieldModal}
+          onCloseModal={result => closeAddFieldModal(result)}
+        />
+      )}
+      {showFieldConfig && (
+        <FieldConfig
+          selectedField={selectedField}
+          isOpen={showFieldConfig}
+          onCloseModal={closeFieldConfigModal}
         />
       )}
     </>

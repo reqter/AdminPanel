@@ -67,3 +67,101 @@ div::-moz-scrollbar-thumb:hover {
   transition-duration: 0.3s;
 }
 
+.custom_checkbox {
+  margin-top: 20px;
+  display: flex;
+  .left {
+    padding-right: 5px;
+    .radio {
+      display: block;
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-size: 20px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Hide the browser's default radio button */
+    .radio input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Create a custom radio button */
+    .checkround {
+      position: absolute;
+      top: 6px;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      background-color: #fff;
+      border-color: rgb(56, 132, 255);
+      border-style: solid;
+      border-width: 2px;
+      border-radius: 50%;
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .radio input:checked ~ .checkround {
+      background-color: #fff;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkround:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .radio input:checked ~ .checkround:after {
+      display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .radio .checkround:after {
+      left: 2px;
+      top: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgb(56, 132, 255);
+    }
+
+    /* The check */
+    .check {
+      display: block;
+      position: relative;
+      padding-left: 25px;
+      margin-bottom: 12px;
+      padding-right: 15px;
+      cursor: pointer;
+      font-size: 18px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .check input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+  .right {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    & label:first-child {
+      cursor: pointer;
+      font-size: 14px;
+    }
+  }
+}

@@ -67,7 +67,6 @@
           },
           "type": "media",
           "mediaType": "image",
-          "isBase": true,
           "isTranslate": true,
           "isRequired": true
         }

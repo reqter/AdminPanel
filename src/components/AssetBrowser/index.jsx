@@ -173,7 +173,7 @@ const AssetBrowser = props => {
 
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
-      <div className="header_tab">
+      <div className="modal_header_tab">
         <div className="left">
           <div
             className="tabItem"
@@ -198,6 +198,7 @@ const AssetBrowser = props => {
           <i className="icon-cross" />
         </div>
       </div>
+      
       <div className="asset_browser">
         {tab === 1 && (
           <div className="firstTab animated fadeIn">

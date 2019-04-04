@@ -423,20 +423,18 @@ export function addFieldToContentType() {
   function _call(contentTypeId, field) {
     //const status = rawResponse.status;
     //const result = await rawResponse.json();
-
-    //
-    const result = data.contentTypes.map(item => {
+    for (let i = 0; i < data.contentTypes.length; i++) {
+      let item = data.contentTypes[i];
       if (item.sys.id === contentTypeId) {
-        let newItem = { ...item };
-        if (newItem.fields === undefined) {
-          newItem.fields = [];
+        if (item.fields === undefined) {
+          item.fields = [];
         }
-        newItem.fields.push(field);
-        return newItem;
+        item.fields.push(field);
+        break;
       }
-      return item;
-    });
-    data.contentTypes = result;
+    }
+
+    const result = data.contentTypes;
 
     const status = 200;
     switch (status) {

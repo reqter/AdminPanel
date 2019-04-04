@@ -127,6 +127,7 @@ const MediaInput = props => {
           </div>
         </div>
       </div>
+     
       {assetBrowser && (
         <AssetBrowser
           isOpen={assetBrowser}

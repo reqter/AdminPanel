@@ -5,7 +5,6 @@ import {
   ModalHeader,
   ModalFooter,
   Button,
-  Form,
   FormGroup,
   Label,
   Input
@@ -15,6 +14,7 @@ import {
   addContentType,
   updateContentType
 } from "./../../../../Api/contentType-api";
+import AssetBrowser from "./../../../../components/AssetBrowser";
 import "./styles.scss";
 
 const templates = [
@@ -243,6 +243,17 @@ const UpsertTemplate = props => {
   const [description, setDescription] = useState(
     selectedContentType ? selectedContentType.description[currentLang] : ""
   );
+  const [images, setImages] = useState(
+    selectedContentType
+      ? selectedContentType.images
+        ? makeImages(selectedContentType.images)
+        : []
+      : []
+  );
+  const [assetBrowser, toggleAssetBrowser] = useState(false);
+  const [translation, toggleTranslation] = useState(
+    selectedContentType ? selectedContentType.isTranslate : false
+  );
 
   useEffect(() => {
     return () => {
@@ -277,6 +288,15 @@ const UpsertTemplate = props => {
     setDescription(e.target.value);
   }
 
+  function makeImages(imgs) {
+    let result = [...imgs];
+    const newArr = result.map(img => {
+      let item = { ...img };
+      item.id = Math.random();
+      return item;
+    });
+    return newArr;
+  }
   function upsertItemType() {
     if (updateMode) {
       let obj = {};
@@ -286,6 +306,8 @@ const UpsertTemplate = props => {
       obj["name"] = name;
       obj["title"] = utility.applyeLangs(title);
       obj["description"] = utility.applyeLangs(description);
+      obj["images"] = images;
+      obj["isTranslate"] = translation;
 
       updateContentType()
         .onOk(result => {
@@ -360,10 +382,12 @@ const UpsertTemplate = props => {
         name: name,
         title: utility.applyeLangs(title),
         description: utility.applyeLangs(description),
-        fields: selectedTemplate.fields,
+        images: images,
+        fields: [...selectedTemplate.fields],
         type: "contentType",
         template: selectedTemplate.name,
-        allowCustomFields: selectedTemplate.allowCustomFields
+        allowCustomFields: selectedTemplate.allowCustomFields,
+        isTranslate: translation
       };
       addContentType()
         .onOk(result => {
@@ -423,6 +447,23 @@ const UpsertTemplate = props => {
     //   description: utility.applyeLangs(description)
     // };
   }
+  function removeFile(image) {
+    const imgs = images.filter(item => item.id !== image.id);
+    setImages(imgs);
+  }
+  function openAssetBrowser() {
+    toggleAssetBrowser(true);
+  }
+  function handleChooseAsset(asset) {
+    toggleAssetBrowser(false);
+    let imgs = [...images];
+    const obj = { ...asset.url, id: Math.random() };
+    imgs.push(obj);
+    setImages(imgs);
+  }
+  function handleChangeTranslation(e) {
+    toggleTranslation(e.target.checked);
+  }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
       <ModalHeader toggle={closeModal}>{modalHeaderTitle}</ModalHeader>
@@ -454,7 +495,7 @@ const UpsertTemplate = props => {
               ))}
             </div>
           ) : (
-            <Form>
+            <div style={{ padding: "2%", paddingBottom: 0 }}>
               <div className="row">
                 <div className="form-group col">
                   <label>
@@ -512,7 +553,54 @@ const UpsertTemplate = props => {
                   onChange={handleDescriptionChanged}
                 />
               </FormGroup>
-            </Form>
+              <div className="custom_checkbox">
+                <div className="left">
+                  <label className="checkBox">
+                    <input
+                      type="checkbox"
+                      id="localization"
+                      checked={translation}
+                      onChange={handleChangeTranslation}
+                    />
+                    <span className="checkmark" />
+                  </label>
+                </div>
+                <div className="right">
+                  <label for="localization">
+                    Enable localization of this field
+                  </label>
+                  <label>
+                    All the content can be translated to English (United States)
+                    and Persian (Farsi)
+                  </label>
+                </div>
+              </div>
+              <div className="up-uploader">
+                <span className="title">
+                  {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
+                </span>
+                <span className="description">
+                  {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_DESC")}
+                </span>
+
+                <div className="files">
+                  {images.map((url, index) => (
+                    <div key={index} className="files-uploaded">
+                      <div
+                        className="files-uploaded-icon"
+                        onClick={() => removeFile(url)}
+                      >
+                        <i className="icon-bin" />
+                      </div>
+                      <img src={url[currentLang]} alt="" />
+                    </div>
+                  ))}
+                  <div className="files-input" onClick={openAssetBrowser}>
+                    <i className="icon-camera" />
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </ModalBody>
@@ -532,12 +620,20 @@ const UpsertTemplate = props => {
           </Button>
           {!updateMode && (
             <Button color="secondary" onClick={backToTemplates}>
-              Templates
+              {languageManager.translate("CONTENT_TYPE_MODAL_TEMPLATE_BTN")}
             </Button>
           )}
         </ModalFooter>
       ) : (
         undefined
+      )}
+
+      {assetBrowser && (
+        <AssetBrowser
+          isOpen={assetBrowser}
+          onCloseModal={handleChooseAsset}
+          mediaType={"image"}
+        />
       )}
     </Modal>
   );

@@ -21,6 +21,7 @@ import {
   updateCategory,
   removeContentTypeFromCategory
 } from "./../../Api/category-api";
+import AssetBrowser from "./../../components/AssetBrowser";
 
 function useInput(defaultValue = "") {
   const [input, setInput] = useState(defaultValue);
@@ -43,6 +44,33 @@ const Categories = props => {
           value: result
         });
       })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CATEGORY_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CATEGORY_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("CATEGORY_UN_AUTHORIZED")
+          }
+        });
+      })
       .call();
   }, []);
 
@@ -61,6 +89,8 @@ const Categories = props => {
   const [modalUpsertBtn, setModalUpsertBtnText] = useState("");
   const [rightContent, toggleRightContent] = useState(false);
   const [isManageCategory, setManageCategory] = useState(false);
+  const [image, setImage] = useState();
+  const [assetBrowser, toggleAssetBrowser] = useState(false);
 
   function initModalForm() {
     handleNameChanged("");
@@ -103,6 +133,7 @@ const Categories = props => {
   function editCategory(item) {
     setModal(prevModal => !prevModal);
     setSelectedCategory(item);
+    setImage(item.image);
     setUpdateMode(true);
 
     handleNameChanged(item.name[currentLang]);
@@ -128,6 +159,7 @@ const Categories = props => {
             },
             issueDate: "19/01/2019 20:18"
           },
+          image: image,
           parentId: selectedCategory.sys.id,
           name: utility.applyeLangs(name),
           description: utility.applyeLangs(description),
@@ -136,13 +168,61 @@ const Categories = props => {
         addCategory()
           .onOk(result => {
             dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("CATEGORY_ADD_ON_OK")
+              }
+            });
+            handleNameChanged("");
+            handleDesciptionChanged("");
+            setImage();
+            dispatch({
               type: "SET_CATEGORIES",
               value: result
             });
           })
+          .onServerError(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_ADD_ON_SERVER_ERROR"
+                )
+              }
+            });
+          })
+          .onBadRequest(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_ADD_ON_BAD_REQUEST"
+                )
+              }
+            });
+          })
+          .unAuthorized(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate("CATEGORY_ADD_UN_AUTHORIZED")
+              }
+            });
+          })
+          .notFound(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate("CATEGORY_ADD_NOT_FOUND")
+              }
+            });
+          })
           .call(obj);
-        handleNameChanged("");
-        handleDesciptionChanged("");
       } else {
         let newCategory = {};
         for (const key in selectedCategory) {
@@ -150,13 +230,63 @@ const Categories = props => {
         }
         newCategory["name"] = utility.applyeLangs(name);
         newCategory["description"] = utility.applyeLangs(description);
+        newCategory["image"] = image;
         updateCategory()
           .onOk(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("CATEGORY_UPDATE_ON_OK")
+              }
+            });
             dispatch({
               type: "SET_CATEGORIES",
               value: result
             });
             closeAddCategoryModal();
+          })
+          .onServerError(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_UPDATE_ON_SERVER_ERROR"
+                )
+              }
+            });
+          })
+          .onBadRequest(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_UPDATE_ON_BAD_REQUEST"
+                )
+              }
+            });
+          })
+          .unAuthorized(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "CATEGORY_UPDATE_UN_AUTHORIZED"
+                )
+              }
+            });
+          })
+          .notFound(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate("CATEGORY_UPDATE_NOT_FOUND")
+              }
+            });
           })
           .call(newCategory);
       }
@@ -170,15 +300,60 @@ const Categories = props => {
           },
           issueDate: "19/01/2019 20:18"
         },
+        image: image,
         name: utility.applyeLangs(name),
         description: utility.applyeLangs(description),
         type: "category"
       };
       addCategory()
         .onOk(result => {
+          setImage();
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("CATEGORY_ADD_ON_OK")
+            }
+          });
           dispatch({
             type: "SET_CATEGORIES",
             value: result
+          });
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CATEGORY_ADD_ON_SERVER_ERROR")
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CATEGORY_ADD_ON_BAD_REQUEST")
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("CATEGORY_ADD_UN_AUTHORIZED")
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CATEGORY_ADD_NOT_FOUND")
+            }
           });
         })
         .call(obj);
@@ -190,8 +365,53 @@ const Categories = props => {
     deleteCategory()
       .onOk(result => {
         dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("CATEGORY_REMOVE_ON_OK")
+          }
+        });
+        dispatch({
           type: "SET_CATEGORIES",
           value: result
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CATEGORY_REMOVE_ON_SERVER_ERROR"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CATEGORY_REMOVE_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("CATEGORY_REMOVE_UN_AUTHORIZED")
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CATEGORY_REMOVE_NOT_FOUND")
+          }
         });
       })
       .call(selected);
@@ -215,7 +435,60 @@ const Categories = props => {
   function removeContentType(item) {
     removeContentTypeFromCategory()
       .onOk(result => {
+          dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate(
+              "CATEGORY_REMOVE_CONTENT_TYPE_ON_OK"
+            )
+          }
+        });
         handleRemoveContenType(result, item);
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"
+            )
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"
+            )
+          }
+        });
       })
       .call(selectedCategory.sys.id, item.sys.id);
   }
@@ -235,6 +508,16 @@ const Categories = props => {
       type: "SET_CATEGORIES",
       value: result
     });
+  }
+  function removeImage() {
+    setImage();
+  }
+  function openAssetBrowser() {
+    toggleAssetBrowser(true);
+  }
+  function handleChooseAsset(asset) {
+    toggleAssetBrowser(false);
+    setImage(asset.url);
   }
   return (
     <>
@@ -364,6 +647,28 @@ const Categories = props => {
                 </small> */}
               </FormGroup>
             </Form>
+            <div className="up-uploader">
+              <span className="title">
+                {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
+              </span>
+              <span className="description">
+                {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_DESC")}
+              </span>
+
+              <div className="files">
+                {image && (
+                  <div className="files-uploaded">
+                    <div className="files-uploaded-icon" onClick={removeImage}>
+                      <i className="icon-bin" />
+                    </div>
+                    <img src={image[currentLang]} alt="" />
+                  </div>
+                )}
+                <div className="files-input" onClick={openAssetBrowser}>
+                  <i className="icon-camera" />
+                </div>
+              </div>
+            </div>
           </div>
         </ModalBody>
         <ModalFooter>
@@ -388,6 +693,13 @@ const Categories = props => {
           onCloseModal={closeAddItemTypeModal}
           onAddContentType={handleAddContenType}
           onRemoveContentType={handleRemoveContenType}
+        />
+      )}
+      {assetBrowser && (
+        <AssetBrowser
+          isOpen={assetBrowser}
+          onCloseModal={handleChooseAsset}
+          mediaType={"image"}
         />
       )}
     </>

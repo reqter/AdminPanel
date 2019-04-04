@@ -53,6 +53,7 @@ const App = () => {
             {/* اگه هیچی نزد یا چرت و پرت زد برو اون روتی که نات فاند هست */}
             {/* <Redirect to="/not-found"/> */}
           </Switch>
+          
         </div>
       </BrowserRouter>
       <Notifies />
@@ -108,3 +109,5 @@ export default App;
 //     }
 //     return roots;
 //   }
+
+

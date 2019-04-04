@@ -185,6 +185,13 @@ const Assets = props => {
     deleteAsset()
       .onOk(result => {
         dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("ASSET_DELETE_ON_OK")
+          }
+        });
+        dispatch({
           type: "SET_ASSETS",
           value: result
         });

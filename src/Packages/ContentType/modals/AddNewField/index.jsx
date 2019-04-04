@@ -131,7 +131,7 @@ const AddNewField = props => {
     setDescription("");
   }
 
-  function addField() {
+  function addField(e, showConfig) {
     const obj = {
       id: Math.random().toString(),
       name: name,
@@ -153,7 +153,7 @@ const AddNewField = props => {
           type: "SET_CONTENT_TYPES",
           value: result
         });
-        props.onCloseModal(obj);
+        props.onCloseModal({ field: obj, showConfig: showConfig });
       })
       .onServerError(result => {
         dispatch({
@@ -190,7 +190,9 @@ const AddNewField = props => {
       })
       .call(selectedContentType.sys.id, obj);
   }
-  function addField_configure() {}
+  function addField_configure() {
+    addField(undefined, true);
+  }
   return (
     <Modal isOpen={isOpen} toggle={closeAddFieldModal} size="lg">
       <ModalHeader toggle={closeAddFieldModal}>
@@ -262,6 +264,7 @@ const AddNewField = props => {
                   </small>
                 </FormGroup>
               </div>
+
               <div className="formTab-row">
                 <FormGroup>
                   <Label>
@@ -308,7 +311,7 @@ const AddNewField = props => {
               "CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_BTN"
             )}
           </Button>
-          {/* <Button
+          <Button
             color="primary"
             onClick={addField_configure}
             disabled={
@@ -320,7 +323,7 @@ const AddNewField = props => {
             {languageManager.translate(
               "CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_CONFIG_BTN"
             )}
-          </Button> */}
+          </Button>
           <Button color="secondary" onClick={backToFields}>
             {languageManager.translate(
               "CONTENT_TYPE_ADD_FIELD_MODAL_CHNAGE_FIELD_BTN"
