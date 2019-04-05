@@ -30,6 +30,33 @@ const AddContentType = props => {
         }
         setData(d);
       })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED")
+          }
+        });
+      })
       .call();
 
     return () => {

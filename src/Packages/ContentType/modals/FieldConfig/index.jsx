@@ -412,7 +412,7 @@ const FieldConfig = props => {
                   </label>
                 </div>
                 <div className="right">
-                  <label for="isRequired">Required field</label>
+                  <label for="isRequired">Required</label>
                   <label>
                     You won't be able to publish an entry if this field is empty
                   </label>

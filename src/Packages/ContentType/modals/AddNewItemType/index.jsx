@@ -23,7 +23,7 @@ const templates = [
     name: "dataCollection",
     title: "Data Collection",
     description: "Create an item type with custom fields",
-    icon: "",
+    icon: "icon-database",
     fields: [
       {
         sys: {
@@ -69,29 +69,6 @@ const templates = [
         type: "string",
         isBase: true,
         isTranslate: true
-      },
-      {
-        sys: {
-          id: "3",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "thumbnail",
-        title: {
-          fa: "Thumbnail",
-          en: "Thumbnail"
-        },
-        description: {
-          fa: "",
-          en: ""
-        },
-        type: "media",
-        isBase: true,
-        isTranslate: true,
-        isRequired: true
       }
     ],
     allowCustomFields: true
@@ -100,8 +77,8 @@ const templates = [
     id: "2",
     name: "content",
     title: "Content",
-    description: "it does not allow you to have custom fields",
-    icon: "",
+    description: "It contains a body field",
+    icon: "icon-drawer2",
     fields: [
       {
         sys: {
@@ -168,6 +145,7 @@ const templates = [
         },
         type: "media",
         isBase: true,
+        mediaType: "all",
         isTranslate: true,
         isRequired: true
       },
@@ -185,7 +163,7 @@ const templates = [
           en: "Body",
           fa: "محتوا"
         },
-        description:  {
+        description: {
           en: "",
           fa: ""
         },
@@ -199,7 +177,7 @@ const templates = [
     id: "3",
     name: "gallery",
     title: "Gallery",
-    description: "Making custom gallery data",
+    description: "Making custom gallery collection",
     icon: "icon-images",
     fields: [
       {
@@ -266,9 +244,10 @@ const templates = [
           en: ""
         },
         type: "media",
-        isBase: true,
         isTranslate: true,
-        isRequired: true
+        isRequired: true,
+        isList: false,
+        isBase: true
       },
       {
         sys: {
@@ -279,16 +258,17 @@ const templates = [
           },
           issueDate: "19/01/2019 20:18"
         },
-        name: "images",
+        name: "gallery",
         title: {
-          en: "Images",
-          fa: "عکس ها"
+          en: "Gallery",
+          fa: "گالری"
         },
         description: {
           en: "",
           fa: ""
         },
         type: "media",
+        mediaType: "all",
         isList: true,
         isBase: true
       }
@@ -340,8 +320,8 @@ const UpsertTemplate = props => {
       : []
   );
   const [assetBrowser, toggleAssetBrowser] = useState(false);
-  const [translation, toggleTranslation] = useState(
-    selectedContentType ? selectedContentType.isTranslate : false
+  const [versioning, toggleVersioning] = useState(
+    selectedContentType ? selectedContentType.enableVersioning : false
   );
 
   useEffect(() => {
@@ -396,7 +376,7 @@ const UpsertTemplate = props => {
       obj["title"] = utility.applyeLangs(title);
       obj["description"] = utility.applyeLangs(description);
       obj["images"] = images;
-      obj["isTranslate"] = translation;
+      obj["enableVersioning"] = versioning;
 
       updateContentType()
         .onOk(result => {
@@ -476,7 +456,7 @@ const UpsertTemplate = props => {
         type: "contentType",
         template: selectedTemplate.name,
         allowCustomFields: selectedTemplate.allowCustomFields,
-        isTranslate: translation
+        enableVersioning: versioning
       };
       addContentType()
         .onOk(result => {
@@ -545,13 +525,15 @@ const UpsertTemplate = props => {
   }
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
-    let imgs = [...images];
-    const obj = { ...asset.url, id: Math.random() };
-    imgs.push(obj);
-    setImages(imgs);
+    if (asset) {
+      let imgs = [...images];
+      const obj = { ...asset.url, id: Math.random() };
+      imgs.push(obj);
+      setImages(imgs);
+    }
   }
-  function handleChangeTranslation(e) {
-    toggleTranslation(e.target.checked);
+  function handleChangeVersion(e) {
+    toggleVersioning(e.target.checked);
   }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
@@ -647,21 +629,18 @@ const UpsertTemplate = props => {
                   <label className="checkBox">
                     <input
                       type="checkbox"
-                      id="localization"
-                      checked={translation}
-                      onChange={handleChangeTranslation}
+                      id="version"
+                      checked={versioning}
+                      onChange={handleChangeVersion}
                     />
                     <span className="checkmark" />
                   </label>
                 </div>
                 <div className="right">
-                  <label for="localization">
-                    Enable localization of this item type
+                  <label for="version">
+                    Enable versioning of this item type
                   </label>
-                  <label>
-                    All the content can be translated to English (United States)
-                    and Persian (Farsi)
-                  </label>
+                  <label>A content will be a version after updating</label>
                 </div>
               </div>
               <div className="up-uploader">

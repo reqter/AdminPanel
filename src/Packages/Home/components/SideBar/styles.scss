@@ -4,10 +4,11 @@
 .sideBar {
   width: var(--sideBar-width);
   background-color: white;
-  @include boxShadow(2.3px 0 5px -2px #888);
+  //@include boxShadow(.5px 0 5px -2px #888);
   padding: 0 20px 10px 20px;
   display: flex;
   flex-direction: column;
+  border-right: 1px solid lightgray;
   .top {
     padding: 20px 0;
     border-bottom: 1px solid whitesmoke;

@@ -342,6 +342,13 @@ const ItemTypes = props => {
                         </div>
 
                         <div className="fieldItem-actions">
+                          <button
+                            className="btn btn-link"
+                            size="xs"
+                            onClick={() => showAdvanceConfig(field)}
+                          >
+                            Settings
+                          </button>
                           {field.isBase === undefined || !field.isBase ? (
                             <>
                               <button
@@ -351,13 +358,6 @@ const ItemTypes = props => {
                               >
                                 <i className="icon-bin" />
                               </button>
-                              <button
-                                className="btn btn-link"
-                                size="xs"
-                                onClick={() => showAdvanceConfig(field)}
-                              >
-                                Settings
-                              </button>
                             </>
                           ) : (
                             // <span className="badge badge-danger label-nonEditable">
@@ -365,6 +365,7 @@ const ItemTypes = props => {
                             // </span>
                             <div />
                           )}
+                      
                         </div>
                       </div>
                     ))}

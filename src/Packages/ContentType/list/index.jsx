@@ -26,13 +26,17 @@ const List = props => {
             }}
           >
             <div className="treeItem">
-              <button
-                className="btn btn-primary btn-sm"
-                color="primary"
-                style={{ marginRight: 15 }}
-              >
-                <i className="icon-item-type" />
-              </button>
+              {listItem.images === undefined || listItem.images.length === 0 ? (
+                <div className="treeItem-icon">
+                  <div className="contentIcon">
+                    <i className="icon-item-type" />
+                  </div>
+                </div>
+              ) : (
+                <div className="treeItem-img">
+                  <img src={listItem.images[0][currentLang]} alt="" />
+                </div>
+              )}
               <div className="treeItem-text">
                 <span className="treeItem-name">
                   {listItem.title[currentLang]}

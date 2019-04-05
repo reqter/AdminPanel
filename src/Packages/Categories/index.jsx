@@ -110,6 +110,7 @@ const Categories = props => {
   function closeAddCategoryModal() {
     toggleModal();
     setManageCategory(false);
+    setImage();
   }
   function closeRightContent() {
     toggleRightContent(false);
@@ -245,6 +246,7 @@ const Categories = props => {
               value: result
             });
             closeAddCategoryModal();
+            setImage();
           })
           .onServerError(result => {
             dispatch({
@@ -435,7 +437,7 @@ const Categories = props => {
   function removeContentType(item) {
     removeContentTypeFromCategory()
       .onOk(result => {
-          dispatch({
+        dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "success",
@@ -517,7 +519,9 @@ const Categories = props => {
   }
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
-    setImage(asset.url);
+    if (asset) {
+      setImage(asset.url);
+    }
   }
   return (
     <>

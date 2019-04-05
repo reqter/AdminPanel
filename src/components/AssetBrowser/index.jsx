@@ -95,7 +95,7 @@ const AssetBrowser = props => {
   function chooseFile(file) {
     props.onCloseModal(file);
   }
-  function upsertItem() {
+  function upsertItem(choose) {
     const obj = {
       sys: {
         id: Math.random().toString(),
@@ -113,10 +113,54 @@ const AssetBrowser = props => {
     };
     addAsset()
       .onOk(result => {
-        setResetForm(false);
-        setResetForm(true);
-        setFormData({});
-        setFormValidation();
+        if (choose) {
+          chooseFile(obj);
+        } else {
+          setResetForm(false);
+          setResetForm(true);
+          setFormData({});
+          setFormValidation();
+        }
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("UPSERT_ASSET_ADD_UN_AUTHORIZED")
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND")
+          }
+        });
       })
       .call(obj);
   }
@@ -198,7 +242,7 @@ const AssetBrowser = props => {
           <i className="icon-cross" />
         </div>
       </div>
-      
+
       <div className="asset_browser">
         {tab === 1 && (
           <div className="firstTab animated fadeIn">
@@ -268,6 +312,18 @@ const AssetBrowser = props => {
                 }
               >
                 Save & New
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => upsertItem(true)}
+                disabled={
+                  !(
+                    Object.keys(formData).length > 0 &&
+                    formValidation === undefined
+                  )
+                }
+              >
+                Save & Choose
               </button>
             </div>
           </div>

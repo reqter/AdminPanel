@@ -89,7 +89,8 @@
           "type": "media",
           "mediaType": "image",
           "isTranslate": true,
-          "isRequired": true
+          "isRequired": true,
+          "isList": true
         }
       ]
     }

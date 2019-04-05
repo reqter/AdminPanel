@@ -69,12 +69,12 @@ const fields = [
   //   description: languageManager.translate("FIELD_TYPE_OBJECT_INFO"),
   //   icon: "icon-json-file"
   // },
-  {
-    name: "reference",
-    title: languageManager.translate("FIELD_TYPE_REFERENCE"),
-    description: languageManager.translate("FIELD_TYPE_REFERENCE_INFO"),
-    icon: "icon-reference"
-  }
+  // {
+  //   name: "reference",
+  //   title: languageManager.translate("FIELD_TYPE_REFERENCE"),
+  //   description: languageManager.translate("FIELD_TYPE_REFERENCE_INFO"),
+  //   icon: "icon-reference"
+  // }
 ];
 
 const AddNewField = props => {
