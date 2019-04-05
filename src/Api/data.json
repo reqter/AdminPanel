@@ -24,7 +24,14 @@
       "allowCustomFields": true,
       "fields": [
         {
-          "id": "1",
+          "sys": {
+            "id": "1",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
           "name": "name",
           "title": {
             "en": "Name",
@@ -40,7 +47,14 @@
           "isRequired": true
         },
         {
-          "id": "2",
+          "sys": {
+            "id": "2",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
           "name": "shortDesc",
           "title": {
             "fa": "Short Description",
@@ -55,7 +69,14 @@
           "isTranslate": true
         },
         {
-          "id": "3",
+          "sys": {
+            "id": "3",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
           "name": "thumbnail",
           "title": {
             "fa": "Thumbnail",

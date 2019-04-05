@@ -179,7 +179,7 @@ const ItemTypes = props => {
             )
           }
         });
-        const f = [...fields].filter(item => item.id !== field.id);
+        const f = [...fields].filter(item => item.sys.id !== field.sys.id);
         setFields(f);
         //dispatch({ type: "SET_FIELDS", value: f });
         dispatch({
@@ -231,10 +231,18 @@ const ItemTypes = props => {
           }
         });
       })
-      .call(selectedContentType.sys.id, field.id);
+      .call(selectedContentType.sys.id, field.sys.id);
   }
-  function closeFieldConfigModal(field) {
+  function closeFieldConfigModal(updatedField) {
     toggleShowFieldConfig(false);
+    if (updatedField) {
+      const newFields = fields.map(item => {
+        if (item.sys.id === updatedField.sys.id) return updatedField;
+
+        return item;
+      });
+      setFields(newFields);
+    }
   }
   function showAdvanceConfig(field) {
     setSelectedField(field);
@@ -293,7 +301,7 @@ const ItemTypes = props => {
                     fields.map(field => (
                       <div
                         className="fieldItem"
-                        key={field.id}
+                        key={field.sys.id}
                         // style={{
                         //   display: !selectedContentType.allowCustomFields
                         //     ? field.isBase
@@ -390,6 +398,7 @@ const ItemTypes = props => {
       )}
       {showFieldConfig && (
         <FieldConfig
+          selectedContentType={selectedContentType}
           selectedField={selectedField}
           isOpen={showFieldConfig}
           onCloseModal={closeFieldConfigModal}

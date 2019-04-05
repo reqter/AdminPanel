@@ -1,10 +1,43 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
-import { languageManager, utility, useGlobalState } from "../../../../services";
+import React, { useState, useEffect } from "react";
+import { Modal, ModalFooter } from "reactstrap";
+import { languageManager, useGlobalState, utility } from "../../../../services";
+import { updateField } from "./../../../../Api/contentType-api";
 import "./styles.scss";
 
-const acceptedMediaTypes = ["Image", "Video", "Audio", "PDF", "Spreadsheet"];
+const acceptedMediaTypes = [
+  {
+    id: 1,
+    name: "all",
+    title: "All Files"
+  },
+  {
+    id: 2,
+    name: "image",
+    title: "Image"
+  },
+  {
+    id: 3,
+    name: "video",
+    title: "Video"
+  },
+  {
+    id: 4,
+    name: "audio",
+    title: "Audio"
+  },
+  {
+    id: 5,
+    name: "pdf",
+    title: "PDF"
+  },
+  {
+    id: 6,
+    name: "spreadsheet",
+    title: "Spreadsheet"
+  }
+];
 const FieldConfig = props => {
+  const { selectedContentType } = props;
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ contentTypes }, dispatch] = useGlobalState();
   const { selectedField } = props;
@@ -12,21 +45,64 @@ const FieldConfig = props => {
   const [isOpen, toggleModal] = useState(true);
   const [tab, changeTab] = useState(1);
   const [name, setName] = useState(selectedField.name);
-  const [title, setTitle] = useState(selectedField.name);
+  const [title, setTitle] = useState(selectedField.title[currentLang]);
   const [translation, toggleTranslation] = useState(selectedField.isTranslate);
-  const [isRequired, toggleRequired] = useState(false);
-  const [isUnique, toggleUnique] = useState(false);
+  const [isRequired, toggleRequired] = useState(
+    selectedField.isRequired === true ? true : false
+  );
 
-  const [imageUploadMethod, setImageUploadMethod] = useState("oneFile");
-  const [mediaTypeVisibility, toggleMediaType] = useState(false);
-  const [mediaType, setMediaType] = useState(false);
+  const [imageUploadMethod, setImageUploadMethod] = useState(
+    selectedField.isList === true ? "manyFiles" : "oneFile"
+  );
+  const [mediaTypeVisibility, toggleMediaType] = useState(
+    selectedField.type === "media" ? true : false
+  );
+  const [mediaType, setMediaType] = useState(() => {
+    if (
+      selectedField.mediaType === undefined ||
+      selectedField.mediaType === "all"
+    ) {
+      return acceptedMediaTypes[0];
+    } else {
+      for (let i = 0; i < acceptedMediaTypes.length; i++) {
+        if (acceptedMediaTypes[i].name === selectedField.mediaType) {
+          return acceptedMediaTypes[i];
+        }
+      }
+    }
+  });
 
-  const [referenceContentTypeChk, toggleReferenceContentType] = useState(false);
-  const [selectedContentTypeRef, setContentTypeRef] = useState({});
+  const [referenceContentTypeChk, toggleReferenceContentType] = useState(
+    selectedField.type === "reference"
+      ? () => {
+        if (selectedField.referenceId === undefined) {
+            return false;
+          } else return true;
+        }
+      : false
+  );
+  const [selectedContentTypeRef, setContentTypeRef] = useState(
+    selectedField.type === "reference"
+      ? () => {
+          if (selectedField.referenceId === undefined) return {};
+          for (let i = 0; i < contentTypes.length; i++) {
+            if (contentTypes[i].sys.id === selectedField.referenceId) {
+              return contentTypes[i];
+            }
+          }
+        }
+      : {}
+  );
 
-  const [helpText, setHelpText] = useState("");
-  const [booleanTrueText, setBooleanTrueText] = useState("True");
-  const [booleanFalseText, setBooleanFalseText] = useState("False");
+  const [helpText, setHelpText] = useState(
+    selectedField.helpText ? selectedField.helpText : ""
+  );
+  const [booleanTrueText, setBooleanTrueText] = useState(
+    selectedField.trueText ? selectedField.trueText : "True"
+  );
+  const [booleanFalseText, setBooleanFalseText] = useState(
+    selectedField.falseText ? selectedField.falseText : "False"
+  );
 
   useEffect(() => {
     return () => {
@@ -37,14 +113,14 @@ const FieldConfig = props => {
     props.onCloseModal();
   }
 
-  function handleChangeName(e) {}
-  function handleChangeTitle(e) {}
-  function handleChangeTranslation(e) {}
+  function handleChangeTitle(e) {
+    setTitle(e.target.value);
+  }
+  function handleChangeTranslation(e) {
+    toggleTranslation(e.target.checked);
+  }
   function handleRequireCheckBox(e) {
     toggleRequired(e.target.checked);
-  }
-  function handleUniqueCheckBox(e) {
-    toggleUnique(e.target.checked);
   }
   function handleImageUploadMethod(e) {
     setImageUploadMethod(e.target.value);
@@ -60,6 +136,94 @@ const FieldConfig = props => {
   }
   function handleBooleanFalseText(e) {
     setBooleanFalseText(e.target.value);
+  }
+  function update() {
+    let obj = { ...selectedField };
+    obj["title"] = utility.applyeLangs(title);
+    obj["isTranslate"] = translation;
+    obj["isRequired"] = isRequired;
+    obj["helpText"] = helpText;
+    obj["apearance"] = "default";
+    
+    if (selectedField.type === "media") {
+      obj["isList"] = imageUploadMethod === "oneFile" ? false : true;
+      obj["mediaType"] = mediaTypeVisibility
+        ? mediaType !== undefined
+          ? mediaType.name
+          : "file"
+        : "file";
+    } else if (selectedField.type === "reference") {
+      obj["referenceId"] = referenceContentTypeChk
+        ? selectedContentTypeRef !== undefined
+          ? selectedContentTypeRef.sys.id
+          : "all"
+        : "all";
+    } else if (selectedField.type === "boolean") {
+      obj["trueText"] = booleanTrueText;
+      obj["falseText"] = booleanFalseText;
+    }
+    updateField()
+      .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate(
+              "CONTENT_TYPE_UPDATE_FIELD_ON_OK"
+            )
+          }
+        });
+        dispatch({
+          type: "SET_CONTENT_TYPES",
+          value: result
+        });
+        props.onCloseModal(obj);
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
+            )
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND"
+            )
+          }
+        });
+      })
+      .call(selectedContentType.sys.id, obj);
   }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
@@ -131,7 +295,7 @@ const FieldConfig = props => {
                     className="form-control"
                     placeholder={languageManager.translate("Field name")}
                     value={name}
-                    onChange={handleChangeName}
+                    readOnly
                   />
                   <small className="form-text text-muted">
                     {languageManager.translate(
@@ -187,7 +351,7 @@ const FieldConfig = props => {
                 <>
                   <div className="custom_checkbox ">
                     <div className="left">
-                      <label class="radio">
+                      <label className="radio">
                         <input
                           type="radio"
                           value="oneFile"
@@ -196,7 +360,7 @@ const FieldConfig = props => {
                           onChange={handleImageUploadMethod}
                           id="oneFileRadio"
                         />
-                        <span class="checkround" />
+                        <span className="checkround" />
                       </label>
                     </div>
                     <div className="right">
@@ -209,7 +373,7 @@ const FieldConfig = props => {
                   </div>
                   <div className="custom_checkbox">
                     <div className="left">
-                      <label class="radio">
+                      <label className="radio">
                         <input
                           type="radio"
                           value="manyFiles"
@@ -218,7 +382,7 @@ const FieldConfig = props => {
                           onChange={handleImageUploadMethod}
                           id="manyFileRadio"
                         />
-                        <span class="checkround" />
+                        <span className="checkround" />
                       </label>
                     </div>
                     <div className="right">
@@ -254,26 +418,6 @@ const FieldConfig = props => {
                   </label>
                 </div>
               </div>
-              <div className="custom_checkbox">
-                <div className="left">
-                  <label className="checkBox">
-                    <input
-                      type="checkbox"
-                      id="isUnique"
-                      checked={isUnique}
-                      onChange={handleUniqueCheckBox}
-                    />
-                    <span className="checkmark" />
-                  </label>
-                </div>
-                <div className="right">
-                  <label for="isUnique">Unique field</label>
-                  <label>
-                    You won't be able to publish an entry if there is an
-                    existing entry with identical content
-                  </label>
-                </div>
-              </div>
               {selectedField.type === "media" && (
                 <div className="custom_checkbox">
                   <div className="left">
@@ -303,11 +447,13 @@ const FieldConfig = props => {
                             key={"btnType" + index}
                             className={
                               "btn btn-sm " +
-                              (mediaType === type ? "btn-primary" : "btn-light")
+                              (mediaType.name === type.name
+                                ? "btn-primary"
+                                : "btn-light")
                             }
                             onClick={() => setMediaType(type)}
                           >
-                            {type}
+                            {type.title}
                           </button>
                         ))}
                       </div>
@@ -315,7 +461,7 @@ const FieldConfig = props => {
                   </div>
                 </div>
               )}
-              {selectedField.type === "media" && (
+              {selectedField.type === "reference" && (
                 <div className="custom_checkbox">
                   <div className="left">
                     <label className="checkBox">
@@ -374,7 +520,7 @@ const FieldConfig = props => {
                   </div>
                 </div>
               </div>
-              <div style={{ paddingTop: 30 }}>
+              <div style={{ paddingTop: 15 }}>
                 <div className="form-group">
                   <label>{languageManager.translate("Help Text")}</label>
                   <input
@@ -392,7 +538,7 @@ const FieldConfig = props => {
                     )}
                   </small>
                 </div>
-                {selectedField.type === "media" && (
+                {selectedField.type === "boolean" && (
                   <>
                     <div className="form-group">
                       <label>
@@ -437,7 +583,9 @@ const FieldConfig = props => {
           )}
         </div>
         <ModalFooter>
-          <button className="btn btn-primary">Save</button>
+          <button className="btn btn-primary" onClick={update}>
+            Save
+          </button>
           <button className="btn btn-secondary" onClick={closeModal}>
             Close
           </button>

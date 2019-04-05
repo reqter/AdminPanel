@@ -59,7 +59,7 @@
       border-radius: 4px;
       display: flex;
       flex-direction: column;
-
+      height: 100%;
       .ct-content-right-header {
         position: relative;
         height: 100px;
@@ -81,6 +81,7 @@
         flex: 1;
         display: flex;
         flex-direction: column;
+        overflow: auto;
         .fieldsContent {
           flex: 1;
           overflow: auto;

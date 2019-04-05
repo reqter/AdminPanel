@@ -133,7 +133,14 @@ const AddNewField = props => {
 
   function addField(e, showConfig) {
     const obj = {
-      id: Math.random().toString(),
+      sys: {
+        id: Math.random().toString(),
+        issuer: {
+          fullName: "Saeed Padyab",
+          image: ""
+        },
+        issueDate: "19/01/2019 20:18"
+      },
       name: name,
       title: utility.applyeLangs(title),
       description: utility.applyeLangs(description),

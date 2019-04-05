@@ -26,7 +26,14 @@ const templates = [
     icon: "",
     fields: [
       {
-        id: "1",
+        sys: {
+          id: "1",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "name",
         title: {
           en: "Name",
@@ -42,7 +49,14 @@ const templates = [
         isRequired: true
       },
       {
-        id: "2",
+        sys: {
+          id: "2",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "shortDesc",
         title: {
           fa: "Short Description",
@@ -57,7 +71,14 @@ const templates = [
         isTranslate: true
       },
       {
-        id: "3",
+        sys: {
+          id: "3",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "thumbnail",
         title: {
           fa: "Thumbnail",
@@ -83,7 +104,14 @@ const templates = [
     icon: "",
     fields: [
       {
-        id: "1",
+        sys: {
+          id: "1",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "name",
         title: {
           en: "Name",
@@ -99,7 +127,14 @@ const templates = [
         isRequired: true
       },
       {
-        id: "2",
+        sys: {
+          id: "2",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "shortDesc",
         title: {
           fa: "Short Description",
@@ -114,7 +149,14 @@ const templates = [
         isTranslate: true
       },
       {
-        id: "3",
+        sys: {
+          id: "3",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "thumbnail",
         title: {
           fa: "Thumbnail",
@@ -130,10 +172,23 @@ const templates = [
         isRequired: true
       },
       {
-        id: Math.random(),
+        sys: {
+          id: "4",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "body",
-        title: "Body",
-        description: "",
+        title: {
+          en: "Body",
+          fa: "محتوا"
+        },
+        description:  {
+          en: "",
+          fa: ""
+        },
         type: "richText",
         isBase: true
       }
@@ -148,7 +203,14 @@ const templates = [
     icon: "icon-images",
     fields: [
       {
-        id: "1",
+        sys: {
+          id: "1",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "name",
         title: {
           en: "Name",
@@ -164,7 +226,14 @@ const templates = [
         isRequired: true
       },
       {
-        id: "2",
+        sys: {
+          id: "2",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "shortDesc",
         title: {
           fa: "Short Description",
@@ -179,7 +248,14 @@ const templates = [
         isTranslate: true
       },
       {
-        id: "3",
+        sys: {
+          id: "3",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "thumbnail",
         title: {
           fa: "Thumbnail",
@@ -195,10 +271,23 @@ const templates = [
         isRequired: true
       },
       {
-        id: Math.random(),
+        sys: {
+          id: "4",
+          issuer: {
+            fullName: "Saeed Padyab",
+            image: ""
+          },
+          issueDate: "19/01/2019 20:18"
+        },
         name: "images",
-        title: "Images",
-        description: "",
+        title: {
+          en: "Images",
+          fa: "عکس ها"
+        },
+        description: {
+          en: "",
+          fa: ""
+        },
         type: "media",
         isList: true,
         isBase: true
@@ -567,7 +656,7 @@ const UpsertTemplate = props => {
                 </div>
                 <div className="right">
                   <label for="localization">
-                    Enable localization of this field
+                    Enable localization of this item type
                   </label>
                   <label>
                     All the content can be translated to English (United States)

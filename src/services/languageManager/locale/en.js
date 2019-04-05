@@ -191,6 +191,14 @@ export default {
   CONTENT_TYPE_ADD_FIELD_ON_BAD_REQUEST: "Bad request",
   CONTENT_TYPE_ADD_FIELD_UN_AUTHORIZED:
     "You have not authorized.login to get new token",
+  CONTENT_TYPE_UPDATE_FIELD_ON_OK: "The field is updated successfully.",
+  CONTENT_TYPE_UPDATE_FIELD_ON_SERVER_ERROR:
+    "Internal server error.please report that to administrtor",
+  CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST: "Bad request",
+  CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED:
+    "You have not authorized.login to get new token",
+  CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND:
+    "Item not found",
   // items
   ITEMS_CATEGORIES_CONTENT: "Content",
   //assets
