@@ -52,7 +52,7 @@ class Tree extends Component {
                 {node.children && node.children.length > 0 ? (
                   <>
                     <button
-                      className="btnCategoryCollapse btn btn-primary btn-sm"
+                      className="btnCategoryCollapse btn btn-link btn-sm"
                       id={id}
                       color="primary"
                       onClick={this.toggle}
@@ -77,7 +77,7 @@ class Tree extends Component {
                   </>
                 ) : node.image !== undefined ? (
                   <>
-                    <button className="btnCategoryLeaf btn btn-primary btn-sm">
+                    <button className="btnCategoryLeaf btn btn-link btn-sm">
                       <i className="icon-circle-o" />
                     </button>
                     <div className="treeItem-img">
@@ -86,7 +86,7 @@ class Tree extends Component {
                   </>
                 ) : (
                   <>
-                    <button className="btnCategoryLeaf btn btn-primary btn-sm">
+                    <button className="btnCategoryLeaf btn btn-link btn-sm">
                       <i className="icon-circle-o" />
                     </button>
                     <div className="treeItem-icon">

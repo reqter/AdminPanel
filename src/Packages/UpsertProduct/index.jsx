@@ -4,7 +4,9 @@ import { useGlobalState, languageManager } from "./../../services";
 import {
   addContent,
   updateContent,
-  getContentById
+  getContentById,
+  getCategories,
+  getContentTypes
 } from "./../../Api/content-api";
 import CategoriesModal from "./Categories";
 import {
@@ -36,6 +38,8 @@ const UpsertProduct = props => {
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
 
+  const [error, setError] = useState({});
+
   useEffect(() => {
     if (updateMode) {
       if (props.match.params.id !== undefined) {
@@ -46,12 +50,52 @@ const UpsertProduct = props => {
           toggleTab(3);
         }
       } else {
-        toggleTab(1);
+        getContentTypesList();
       }
-    } else toggleTab(1);
+    } else {
+      getContentTypesList();
+    }
   }, [props.match.params.id]);
 
   // methods
+  function getContentTypesList() {
+    getContentTypes()
+      .onOk(result => {
+        toggleTab(1);
+        dispatch({
+          type: "SET_CONTENT_TYPES",
+          value: result
+        });
+      })
+      .onServerError(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "contentType",
+          message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR")
+        };
+        setError(obj);
+      })
+      .onBadRequest(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "contentType",
+          message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST")
+        };
+        setError(obj);
+      })
+      .unAuthorized(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "contentType",
+          message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED")
+        };
+        setError(obj);
+      })
+      .call();
+  }
   function getItemById(id) {
     getContentById()
       .onOk(result => {
@@ -258,26 +302,28 @@ const UpsertProduct = props => {
           <i className="icon-arrow-left2" />
           Back
         </button>
-        <div className="tabItems">
-          {updateMode ? (
-            <div className="item active">Update Mode</div>
-          ) : (
-            <>
-              <div
-                className={["item", tab === 1 ? "active" : ""].join(" ")}
-                onClick={() => changeTab(1)}
-              >
-                1.Choosing Item Type
-              </div>
-              <div
-                className={["item", tab === 2 ? "active" : ""].join(" ")}
-                onClick={() => changeTab(2)}
-              >
-                2.Complete Form
-              </div>
-            </>
-          )}
-        </div>
+        {tab !== undefined && tab !== 3 && (
+          <div className="tabItems">
+            {updateMode ? (
+              <div className="item active">Update Mode</div>
+            ) : (
+              <>
+                <div
+                  className={["item", tab === 1 ? "active" : ""].join(" ")}
+                  onClick={() => changeTab(1)}
+                >
+                  1.Choosing Item Type
+                </div>
+                <div
+                  className={["item", tab === 2 ? "active" : ""].join(" ")}
+                  onClick={() => changeTab(2)}
+                >
+                  2.Complete Form
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
       <div className="up-content">
         <main>
@@ -374,10 +420,16 @@ const UpsertProduct = props => {
             </>
           )}
           {tab === 3 && (
-            <>
-              <div className="up-content-title">Error has occurred</div>
-              <div className="up-error-section" />
-            </>
+            <div className="up-formInputs animated fadeIn errorsBox">
+              <div className="alert alert-danger">{error.message}</div>
+              <div className="actions">
+                {error.sender === "contentType" && (
+                  <button className="btn btn-light">
+                    {languageManager.translate("Reload Item Types")}
+                  </button>
+                )}
+              </div>
+            </div>
           )}
         </main>
       </div>

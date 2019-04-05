@@ -39,13 +39,14 @@
     flex: 1;
     display: flex;
     .p-content-left {
-      //   background-color: white;
-      //   box-shadow: 0 0 3px lightgray;
       margin-right: 10px;
-      overflow: auto;
       flex: 1;
       min-width: 300px;
       border-radius: 4px;
+      overflow: hidden;
+      &:hover {
+        overflow: auto;
+      }
       .filterBox {
         background: white;
         box-shadow: 0 0 10px lightgray;

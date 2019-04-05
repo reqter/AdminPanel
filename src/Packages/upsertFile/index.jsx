@@ -381,7 +381,7 @@ const UpsertFile = props => {
           if (closePage) {
             backToAssets();
           } else {
-            setResetForm(false);
+            //setResetForm(false);
             setResetForm(true);
             setFormData({});
             setFormValidation();

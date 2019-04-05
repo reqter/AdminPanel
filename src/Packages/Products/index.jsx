@@ -181,15 +181,16 @@ const Products = props => {
         return <div className="p-string">{props.value}</div>;
     }
   }
-
+  function doFilter() {}
   function removeFilter(filter) {
     let f = dataFilters.filter(item => item.type !== filter.type);
     setFilters(f);
-    if (filter.type === "text") setSearchText("");
-    // doFiltersOnData();
-    //  getContentByFilter(dataFilters);
-  }
-  function handleSearchChanged() {
+    let text = searchText;
+    if (filter.type === "text") {
+      text = undefined;
+      setSearchText("");
+    }
+
     filterContents()
       .onOk(result => {
         dispatch({
@@ -197,20 +198,35 @@ const Products = props => {
           value: result
         });
       })
-      .call(searchText, selectedContentType.id, selectedNode.id);
+      .call(
+        text,
+        selectedContentType.sys ? selectedContentType.sys.id : undefined,
+        selectedNode.sys ? selectedNode.sys.id : undefined
+      );
+  }
+  function handleSearchChanged() {
+    let f = [...dataFilters].filter(item => item.type !== "text");
+    if (searchText.length !== 0) f.push({ type: "text", title: searchText });
+    setFilters(f);
 
-    // if (searchText.length === 0) {
-    //   let f = [...dataFilters].filter(item => item.type !== "text");
-    //   setFilters(f);
-    // } else {
-    //   let f = [...dataFilters].filter(item => item.type !== "text");
-    //   f.push({ type: "text", title: searchText });
-    //setFilters(f);
-    //}
-    // doFiltersOnData();
-    //getContentByFilter(dataFilters);
+    filterContents()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENTS",
+          value: result
+        });
+      })
+      .call(
+        searchText,
+        selectedContentType.sys ? selectedContentType.sys.id : undefined,
+        selectedNode.sys ? selectedNode.sys.id : undefined
+      );
   }
   function handleContentTypeSelect(selected) {
+    let f = dataFilters.filter(item => item.type !== "contentType");
+    f.push(selected);
+    setFilters(f);
+
     setSelectedContentType(selected);
     filterContents()
       .onOk(result => {
@@ -219,16 +235,20 @@ const Products = props => {
           value: result
         });
       })
-      .call(searchText, selected.id, selectedNode.id);
-    // let f = [...dataFilters].filter(item => item.type !== "contentType");
-    // f.push(selected);
-    // setFilters(f);
-    // doFiltersOnData();
-    //getContentByFilter(dataFilters);
+      .call(
+        searchText,
+        selected.sys.id,
+        selectedNode.sys ? selectedNode.sys.id : undefined
+      );
   }
   function handleStatusSelect(selected) {}
   function handleClickCategory(selected) {
+    let f = dataFilters.filter(item => item.type !== "category");
+    f.push(selected);
+    setFilters(f);
+
     setSelectedNode(selected);
+
     filterContents()
       .onOk(result => {
         dispatch({
@@ -236,12 +256,11 @@ const Products = props => {
           value: result
         });
       })
-      .call(searchText, selectedContentType.id, selected.id);
-    // let f = [...dataFilters].filter(item => item.type !== "category");
-    // f.push(selected);
-    // setFilters(f);
-    // doFiltersOnData();
-    //getContentByFilter(dataFilters);
+      .call(
+        searchText,
+        selectedContentType.sys ? selectedContentType.sys.id : undefined,
+        selected.sys.id
+      );
 
     // if (selected.type === "category") {
     //   initColumns();
@@ -286,17 +305,10 @@ const Products = props => {
         });
       })
       .call(row.original);
-    // dispatch({
-    //   type: "DELETE_ITEM",
-    //   value: row.original
-    // });
   }
   function handleEditRow(row) {
     props.history.push({
       pathname: `/editItem/${row.original.sys.id}`
-      // search: "?sort=name",
-      //hash: "#the-hash",
-      //  params: { selectedItem: row.original }
     });
   }
   return (

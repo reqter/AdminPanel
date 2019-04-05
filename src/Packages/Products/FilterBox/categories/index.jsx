@@ -1,14 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { languageManager } from "../../../../services";
-import { getCategories } from "./../../../../Api/category-api";
+import { languageManager, useGlobalState } from "../../../../services";
+import { getCategories } from "./../../../../Api/content-api";
 
 const Tree = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
+  const [{ categories }, dispatch] = useGlobalState();
   const [selected, setSelected] = useState({});
   const [idState, setId] = useState({});
-  const [data,setData] = useState(getCategories().on)
-
   useEffect(() => {
+    if (categories.length === 0) {
+      getCategories()
+        .onOk(result => {
+          dispatch({
+            type: "SET_CATEGORIES",
+            value: result
+          });
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CATEGORY_ON_SERVER_ERROR")
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CATEGORY_ON_BAD_REQUEST")
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("CATEGORY_UN_AUTHORIZED")
+            }
+          });
+        })
+        .call();
+    }
     if (Object.keys(selected).length > 0) {
       const c = props.filters.find(item => item.type === "category");
       if (!c) {
@@ -21,7 +57,7 @@ const Tree = props => {
     let n_s = { ...idState };
     n_s[id] = !idState[id];
     setId(n_s);
-    if (node && node.id !== selected.id) {
+    if (selected.sys === undefined || node.sys.id !== selected.sys.id) {
       setSelected(node);
       props.onCategorySelect(node);
     }
@@ -29,7 +65,7 @@ const Tree = props => {
   function mapper(nodes, parentId, lvl) {
     return nodes.map((node, index) => {
       if (node.type !== "contentType") {
-        const id = `${node.id}-${parentId ? parentId : "top"}`.replace(
+        const id = `${node.sys.id}-${parentId ? parentId : "top"}`.replace(
           /[^a-zA-Z0-9-_]/g,
           ""
         );
@@ -38,7 +74,11 @@ const Tree = props => {
             key={id}
             className="animated fadeIn faster"
             style={{
-              color: selected.id === node.id ? "rgb(56,132,255)" : "gray"
+              color: selected.sys
+                ? selected.sys.id === node.sys.id
+                  ? "rgb(56,132,255)"
+                  : "gray"
+                : "gray"
             }}
           >
             {node.children ? (
@@ -81,7 +121,7 @@ const Tree = props => {
             <i className="icon-right-chevron chevron" />
             All Categories
           </li>
-          {mapper(data)}
+          {categories !== undefined && categories.length && mapper(categories)}
         </ul>
       </div>
     </div>
