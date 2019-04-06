@@ -8,6 +8,8 @@ class Tree extends Component {
     hasContentType: false,
     currentLang: languageManager.getCurrentLanguage().name
   };
+
+  
   static getDerivedStateFromProps(props, current_state) {
     if (!props.leftContent) {
       return {
@@ -52,26 +54,60 @@ class Tree extends Component {
                   }}
                 >
                   {node.children && node.children.length > 0 ? (
-                    <button
-                      className="btnCategoryCollapse btn btn-primary btn-sm"
-                      id={id}
-                      color="primary"
-                      onClick={this.toggle}
-                    >
-                      {this.state[id] ? (
-                        <i className="icon-caret-down" onClick={this.toggle} />
+                    <>
+                      <button
+                        className="btnCategoryCollapse btn btn-link btn-sm"
+                        id={id}
+                        color="primary"
+                        onClick={this.toggle}
+                      >
+                        {this.state[id] ? (
+                          <i
+                            className="icon-caret-down"
+                            onClick={this.toggle}
+                          />
+                        ) : (
+                          <i
+                            className="icon-caret-right"
+                            onClick={this.toggle}
+                          />
+                        )}
+                      </button>
+                      {node.image !== undefined ? (
+                        <div className="treeItem-img">
+                          <img
+                            src={node.image[this.state.currentLang]}
+                            alt=""
+                          />
+                        </div>
                       ) : (
-                        <i className="icon-caret-right" onClick={this.toggle} />
+                        <div className="treeItem-icon">
+                          <div className="contentIcon">
+                            <i className="icon-item-type" />
+                          </div>
+                        </div>
                       )}
-                    </button>
-                  ) : node.type === "category" ? (
-                    <button className="btnCategoryLeaf btn btn-primary btn-sm">
-                      <i className="icon-circle-o" />
-                    </button>
+                    </>
+                  ) : node.image !== undefined ? (
+                    <>
+                      <button className="btnCategoryLeaf btn btn-link btn-sm">
+                        <i className="icon-circle-o" />
+                      </button>
+                      <div className="treeItem-img">
+                        <img src={node.image[this.state.currentLang]} alt="" />
+                      </div>
+                    </>
                   ) : (
-                    <button className="btnCategoryLeaf btn btn-dark btn-sm">
-                      <i className="icon-circle-o" />
-                    </button>
+                    <>
+                      <button className="btnCategoryLeaf btn btn-link btn-sm">
+                        <i className="icon-circle-o" />
+                      </button>
+                      <div className="treeItem-icon">
+                        <div className="contentIcon">
+                          <i className="icon-item-type" />
+                        </div>
+                      </div>
+                    </>
                   )}
                   <div className="treeItem-text">
                     <span className="treeItem-name">

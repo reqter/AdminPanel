@@ -27,27 +27,27 @@ const routes = [
     component: Signup
   },
   {
-    path: "/home",
+    path: "/panel",
     component: Home,
     routes: [
       {
         name: translate("HOME_SIDE_NAV_CONTENT_TYPE"),
         icon: "item-type",
-        path: "/home/contentType",
+        path: "/panel/contentType",
         desc: translate("HOME_SIDE_NAV_CONTENT_TYPE_DEC"),
         component: ContentType
       },
       {
         name: translate("HOME_SIDE_NAV_CATEGRIES"),
         icon: "category",
-        path: "/home/categories",
+        path: "/panel/categories",
         desc: translate("HOME_SIDE_NAV_CATEGORIES_DEC"),
         component: Categories
       },
       {
         name: translate("HOME_SIDE_NAV_PRODUCTS"),
         icon: "product",
-        path: "/home/products",
+        path: "/panel/items",
         desc: translate("HOME_SIDE_NAV_PRODUCTS_DESC"),
         component: Products
       },
@@ -76,18 +76,18 @@ const routes = [
       {
         name: translate("HOME_SIDE_NAV_ASSETS_MANAGER"),
         icon: "images",
-        path: "/home/assets",
+        path: "/panel/assets",
         desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC"),
         component: Assets
       }
     ]
   },
   {
-    path: "/addNew",
+    path: "/items/new",
     component: UpsertProduct
   },
   {
-    path: "/editItem/:id",
+    path: "/items/edit/:id",
     component: UpsertProduct
   },
   {

@@ -155,7 +155,6 @@ const UpsertProduct = props => {
     }
     toggleCategoryModal(false);
   }
-
   function getFieldItem(field) {
     switch (field.type.toLowerCase()) {
       case "string":
@@ -235,7 +234,7 @@ const UpsertProduct = props => {
     }
   }
   function backToProducts() {
-    props.history.push("/home/products");
+    props.history.push("/panel/items");
   }
   function changeTab(tab) {
     if (tab === 2) {
@@ -334,13 +333,25 @@ const UpsertProduct = props => {
                 {contentTypes.map(c => (
                   <div key={c.id} className="listGroupItem">
                     <div className="treeItem">
-                      <button
+                      {c.images === undefined || c.images.length === 0 ? (
+                        <div className="treeItem-icon">
+                          <div className="contentIcon">
+                            <i className="icon-item-type" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="treeItem-img">
+                          <img src={c.images[0][currentLang]} alt="" />
+                        </div>
+                      )}
+
+                      {/* <button
                         className="btn btn-primary btn-sm"
                         color="primary"
                         style={{ marginRight: 15 }}
                       >
                         <i className="icon-item-type" />
-                      </button>
+                      </button> */}
                       <div className="treeItem-text">
                         <span className="treeItem-name">
                           {c.title[currentLang]}

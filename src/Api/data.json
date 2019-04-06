@@ -122,7 +122,10 @@
           "fullName": "Saeed Padyab",
           "image": ""
         },
-        "issueDate": "19/01/2019 20:18"
+        "issueDate": "19/01/2019 20:18",
+        "version": 1,
+        "updater": "saeed",
+        "updateDate": "19/01/2019 20:18"
       },
       "contentType": {
         "id": "1",

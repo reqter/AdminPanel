@@ -9,7 +9,7 @@ const Login = (...props) => {
   //   setVisibility({ visibility: true });
   // }
   const login = () => {
-    props[0].history.replace("home");
+    props[0].history.replace("panel");
   };
   return (
     <div className="wrapper">

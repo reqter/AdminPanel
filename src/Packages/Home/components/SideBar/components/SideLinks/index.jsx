@@ -10,19 +10,19 @@ const NavLinks = props => {
     {
       name: translate("HOME_SIDE_NAV_CONTENT_TYPE"),
       icon: "item-type",
-      path: "/home/contentType",
+      path: "/panel/contentType",
       desc: translate("HOME_SIDE_NAV_CONTENT_TYPE_DEC")
     },
     {
       name: translate("HOME_SIDE_NAV_CATEGRIES"),
       icon: "category",
-      path: "/home/categories",
+      path: "/panel/categories",
       desc: translate("HOME_SIDE_NAV_CATEGORIES_DEC")
     },
     {
       name: translate("HOME_SIDE_NAV_PRODUCTS"),
       icon: "product",
-      path: "/home/products",
+      path: "/panel/items",
       desc: translate("HOME_SIDE_NAV_PRODUCTS_DESC")
     },
 
@@ -47,10 +47,9 @@ const NavLinks = props => {
     {
       name: translate("HOME_SIDE_NAV_ASSETS_MANAGER"),
       icon: "images",
-      path: "/home/assets",
-      desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC"),
-    } 
-
+      path: "/panel/assets",
+      desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC")
+    }
   ];
 
   return (

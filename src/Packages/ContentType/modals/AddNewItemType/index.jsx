@@ -640,7 +640,7 @@ const UpsertTemplate = props => {
                   <label for="version">
                     Enable versioning of this item type
                   </label>
-                  <label>A content will be a version after updating</label>
+                  <label>This item type stores all updates as a version</label>
                 </div>
               </div>
               <div className="up-uploader">

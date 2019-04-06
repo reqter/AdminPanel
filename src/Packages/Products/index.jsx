@@ -167,7 +167,7 @@ const Products = props => {
   }
   function openNewItemBox(contentType) {
     props.history.push({
-      pathname: "/addNew"
+      pathname: "/items/new"
       // search: "?sort=name",
       //hash: "#the-hash",
       //params: { contentType, hasContentType }
@@ -308,7 +308,7 @@ const Products = props => {
   }
   function handleEditRow(row) {
     props.history.push({
-      pathname: `/editItem/${row.original.sys.id}`
+      pathname: `/items/edit/${row.original.sys.id}`
     });
   }
   return (
