@@ -7,16 +7,7 @@ const MediaInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
   const [assetBrowser, toggleAssetBrowser] = useState(false);
-  const [resetInputLocaly, setResetLocaly] = useState(true);
-  const [files, setFiles] = useState(() => {
-    if (formData[field.name]) {
-      return formData[field.name].map(item => {
-        item.id = Math.random();
-        return item;
-      });
-    }
-    return [];
-  });
+  const [files, setFiles] = useState([]);
 
   if (props.init && field.isRequired === true && !props.reset) {
     if (formData[field.name] === undefined) props.init(field.name);

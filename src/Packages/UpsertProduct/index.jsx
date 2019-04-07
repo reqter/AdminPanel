@@ -106,10 +106,8 @@ const UpsertProduct = props => {
           if (tab !== 2) toggleTab(2);
           setFormData(result.fields);
           setContentType(result.contentType);
-          const c = contentTypes.find(
-            item => item.id === result.contentType.id
-          );
-          setFields(c.fields.sort((a, b) => a.index - b.index));
+          const c_fields = result.contentType.fields;
+          setFields(c_fields.sort((a, b) => a.index - b.index));
           setCategory(result.category);
         } else {
           toggleTab(3);

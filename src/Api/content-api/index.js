@@ -242,27 +242,27 @@ export function getContentTypes() {
 
   return {
     call: _call,
-    onOk: function (callback) {
+    onOk: function(callback) {
       _onOkCallBack = callback;
       return this;
     },
-    onServerError: function (callback) {
+    onServerError: function(callback) {
       _onServerErrorCallBack = callback;
       return this;
     },
-    onBadRequest: function (callback) {
+    onBadRequest: function(callback) {
       _onBadRequestCallBack = callback;
       return this;
     },
-    notFound: function (callback) {
+    notFound: function(callback) {
       _notFoundCallBack = callback;
       return this;
     },
-    unAuthorized: function (callback) {
+    unAuthorized: function(callback) {
       _unAuthorizedCallBack = callback;
       return this;
     },
-    onConnectionError: function (callback) {
+    onConnectionError: function(callback) {
       _onConnectionErrorCallBack = callback;
       return this;
     }
@@ -333,27 +333,27 @@ export function getCategories() {
 
   return {
     call: _call,
-    onOk: function (callback) {
+    onOk: function(callback) {
       _onOkCallBack = callback;
       return this;
     },
-    onServerError: function (callback) {
+    onServerError: function(callback) {
       _onServerErrorCallBack = callback;
       return this;
     },
-    onBadRequest: function (callback) {
+    onBadRequest: function(callback) {
       _onBadRequestCallBack = callback;
       return this;
     },
-    notFound: function (callback) {
+    notFound: function(callback) {
       _notFoundCallBack = callback;
       return this;
     },
-    unAuthorized: function (callback) {
+    unAuthorized: function(callback) {
       _unAuthorizedCallBack = callback;
       return this;
     },
-    onConnectionError: function (callback) {
+    onConnectionError: function(callback) {
       _onConnectionErrorCallBack = callback;
       return this;
     }
@@ -695,6 +695,12 @@ export function getContentById() {
     //
 
     const result = data.contents.find(item => item.sys.id === id);
+    result.contentType = data.contentTypes.find(
+      item => item.sys.id === result.contentType.id
+    );
+    result.category = data.categories.find(
+      item => item.sys.id === result.category.id
+    );
     const status = 200;
     switch (status) {
       case 200:

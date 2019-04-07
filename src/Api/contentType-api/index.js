@@ -636,7 +636,7 @@ export function removeContentTypeField() {
     const result = data.contentTypes.map(item => {
       if (item.sys.id === contentTypeId) {
         const newItem = { ...item };
-        const f_s = newItem.fields.filter(f => f.id !== fieldId);
+        const f_s = newItem.fields.filter(f => f.sys.id !== fieldId);
         newItem.fields = f_s;
         return newItem;
       }
