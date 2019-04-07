@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import { languageManager, utility } from "../../services";
 import { AssetBrowser } from "./../../components";
@@ -10,53 +10,10 @@ const MediaInput = props => {
   const [resetInputLocaly, setResetLocaly] = useState(true);
   const [files, setFiles] = useState(() => {
     if (formData[field.name]) {
-      // what is the type of data ? "Array" , "String" , "Object"
-      if (Array.isArray(formData[field.name])) {
-        if (formData[field.name].length === 0) return [];
-        if (field.isList === true) {
-          if (field.isTranslate) {
-            if (typeof formData[field.name][0] === "string") {
-              return formData[field.name].map(item => ({
-                id: Math.random(),
-                url: { [currentLang]: item }
-              }));
-            } else {
-              return formData[field.name].map(item => ({
-                id: Math.random(),
-                url: item
-              }));
-            }
-          }
-        } else {
-          if (field.isTranslate) {
-            if (typeof formData[field.name][0] === "string") {
-              return [
-                {
-                  id: Math.random(),
-                  url: { [currentLang]: formData[field.name][0] }
-                }
-              ];
-            } else {
-              return [
-                {
-                  id: Math.random(),
-                  url: formData[field.name][0]
-                }
-              ];
-            }
-          }
-        }
-
-        // رندر رو باید شرطی کنم ترجمه داریم یا نه . اگه نداریم عکس از زبان جاری بخونه . چون داخل همه ابجکت ها وجود داره
-      } else if (typeof formData[field.name] === "object")
-        //بر تو رشته و ابجکت باید تو رندر اگه ترجمه نداشتیم بگم که زبان جاری رو نشون بده برای عکس ها .
-        // ترجمه داشتیم هرکس زبان خودش نداشتیم زبان جاری
-        return [{ id: Math.random(), url: formData[field.name] }];
-      else if (typeof formData[field.name] === "string") {
-        return [
-          { id: Math.random(), url: { [currentLang]: formData[field.name] } }
-        ];
-      }
+      return formData[field.name].map(item => {
+        item.id = Math.random();
+        return item;
+      });
     }
     return [];
   });
@@ -67,75 +24,52 @@ const MediaInput = props => {
 
   useEffect(() => {
     // set form value update time
-    if (formData[field.name]) {
-      if (field.isList) {
-        setFiles(formData[field.name]);
-      } else {
-        if (field.isTranslate) {
-          let fs = [];
-          fs.push({
-            id: Math.random(),
-            url: formData[field.name][currentLang],
-            fileType: formData["fileType"]
-          });
-          setFiles(fs);
-        } else {
-          let fs = [];
-          fs.push({ url: formData[field.name] });
-          setFiles(fs);
-        }
-      }
+    if (formData[field.name] && formData[field.name].length > 0) {
+      const d = formData[field.name].map(item => {
+        item.id = Math.random();
+        item.url = item;
+        return item;
+      });
+      setFiles(d);
     } else {
-      if (files.length > 0) {
-        setFiles([]);
-      }
+      if (files.length > 0) setFiles([]);
     }
+  }, []);
 
+  useEffect(() => {
     // cheking form reset
-    if (props.reset && resetInputLocaly) {
-      setResetLocaly(false);
+    if (Object.keys(props.formData).length === 0) {
       setFiles([]);
     }
-
+  }, [props.formData]);
+  useEffect(() => {
     // send value to form after updateing
-    if (field.isList !== undefined && field.isList) {
-      let result;
-
-      if (field.isTranslate === true) {
-        result = files.map(item => item.url);
-      } else result = files.map(item => item.url[currentLang]);
-
-      if (field.isRequired === true) {
-        if (result === undefined || result.length === 0)
-          props.onChangeValue(field, result, false);
-        else props.onChangeValue(field, result, true);
-      }
+    let result = files.map(item => item.url);
+    if (field.isRequired === true) {
+      if (result === undefined || result.length === 0)
+        props.onChangeValue(field, result, false);
+      else props.onChangeValue(field, result, true);
     } else {
-      let result;
-      if (field.isTranslate === true) {
-        result = files[0] ? files[0].url : undefined;
-      } else result = files[0] ? files[0]["url"][currentLang] : undefined;
-      if (field.isRequired === true) {
-        if (result === undefined) props.onChangeValue(field, result, false);
-        else props.onChangeValue(field, result, true);
-      }
+      props.onChangeValue(field, result, true);
     }
-  }, [props.reset, files]);
+  }, [files]);
 
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
     if (asset) {
       const obj = {
         id: Math.random(),
-        url: asset.url
+        url: field.isTranslate
+          ? asset.url
+          : { [currentLang]: asset[currentLang] }
       };
       if (field.isList !== undefined && field.isList) {
-        let fs = [...files];
+        let fs = [...files, obj];
         fs.push(obj);
         setFiles(fs);
       } else {
         let fs = [];
-        fs.push(obj);
+        fs[0] = obj;
         setFiles(fs);
       }
     }
@@ -144,23 +78,6 @@ const MediaInput = props => {
   function removeFile(f) {
     const fs = files.filter(file => file.id !== f.id);
     setFiles(fs);
-
-    if (field.isRequired) {
-      if (field.isList !== undefined && field.isList) {
-        if (fs.length === 0) props.onChangeValue(field, fs, false);
-        else props.onChangeValue(field, fs, true);
-      } else {
-        if (fs.length === 0) {
-          let img;
-          if (field.isTranslate) {
-            img = utility.applyeLangs("");
-            props.onChangeValue(field, img, false);
-          } else props.onChangeValue(field, "", false);
-        }
-      }
-    } else {
-      props.onChangeValue(field, fs, true);
-    }
   }
   function openAssetBrowser() {
     toggleAssetBrowser(true);
@@ -185,10 +102,7 @@ const MediaInput = props => {
                   <i className="icon-file-plus-o" />
                 </div>
               ) : field.mediaType === "image" ? (
-                <img
-                  src={file.url[currentLang] ? file.url[currentLang] : file.url}
-                  alt=""
-                />
+                <img src={file.url[currentLang]} alt="" />
               ) : (
                 <div className="updatedFileType">
                   <i className="icon-file-plus-o" />
@@ -220,3 +134,168 @@ const MediaInput = props => {
 };
 
 export default MediaInput;
+
+// class MediaInput extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       currentLang: languageManager.getCurrentLanguage().name,
+//       field: props.field,
+//       formData: props.formData,
+//       assetBrowser: false,
+//       resetInputLocaly: true,
+//       files: []
+//     };
+//     if (props.init && props.field.isRequired === true && !props.reset) {
+//       if (props.formData[props.field.name] === undefined)
+//         props.init(props.field.name);
+//     }
+//   }
+
+//   static getDerivedStateFromProps(nextProps, prevState) {
+//     if (
+//       nextProps.formData[nextProps.field.name] &&
+//       nextProps.formData[nextProps.field.name].length > 0
+//     ) {
+//       const d = nextProps.formData[nextProps.field.name].map(item => {
+//         item.id = Math.random();
+//         item.url = item;
+
+//         return item;
+//       });
+//       return {
+//         ...prevState,
+//         files: d
+//       };
+//     }
+
+//     return { ...prevState, files: [] };
+//   }
+
+//   handleChooseAsset = asset => {
+//     this.setState(prevState => ({
+//       ...prevState,
+//       assetBrowser: false
+//     }));
+//     if (asset) {
+//       const obj = {
+//         id: Math.random(),
+//         url: this.state.field.isTranslate
+//           ? asset.url
+//           : { [this.state.currentLang]: asset[this.state.currentLang] }
+//       };
+//       if (this.state.field.isList !== undefined && this.state.field.isList) {
+//         this.setState(
+//           prevState => ({
+//             ...prevState,
+//             files: [...prevState.files, obj]
+//           }),
+//           () => {
+//             let result = this.state.files.map(item => item.url);
+//             if (this.state.field.isRequired === true) {
+//               if (result === undefined || result.length === 0)
+//                 this.state.props.onChangeValue(this.state.field, result, false);
+//               else this.props.onChangeValue(this.state.field, result, true);
+//             } else this.props.onChangeValue(this.state.field, result, true);
+//           }
+//         );
+//       } else {
+//         this.setState(
+//           prevState => ({
+//             ...prevState,
+//             files: [...[], obj]
+//           }),
+//           () => {
+//             let result = this.state.files.map(item => item.url);
+//             if (this.state.field.isRequired === true) {
+//               if (result === undefined || result.length === 0)
+//                 this.state.props.onChangeValue(this.state.field, result, false);
+//               else this.props.onChangeValue(this.state.field, result, true);
+//             } else this.props.onChangeValue(this.state.field, result, true);
+//           }
+//         );
+//       }
+//     }
+//   };
+
+//   removeFile = f => {
+//     const fs = this.state.files.filter(file => file.id !== f.id);
+//     this.setState(
+//       prevState => ({
+//         ...prevState,
+//         files: fs
+//       }),
+//       () => {
+//         let result = this.state.files.map(item => item.url);
+//         if (this.state.field.isRequired === true) {
+//           if (result === undefined || result.length === 0)
+//             this.state.props.onChangeValue(this.state.field, result, false);
+//           else this.props.onChangeValue(this.state.field, result, true);
+//         }
+//       }
+//     );
+//   };
+//   openAssetBrowser = () => {
+//     this.setState(prevState => ({
+//       ...prevState,
+//       assetBrowser: true
+//     }));
+//   };
+//   render() {
+//     return (
+//       <>
+//         <div className="up-uploader">
+//           <span className="title">
+//             {this.state.field.title[this.state.currentLang]}
+//           </span>
+//           <span className="description">
+//             {this.state.field.description[this.state.currentLang]}
+//           </span>
+
+//           <div className="files">
+//             {this.state.files.map(file => (
+//               <div key={file.id} className="files-uploaded">
+//                 <div
+//                   className="files-uploaded-icon"
+//                   onClick={() => this.removeFile(file)}
+//                 >
+//                   <i className="icon-bin" />
+//                 </div>
+//                 {this.state.field.mediaType === "file" ? (
+//                   <div className="updatedFileType">
+//                     <i className="icon-file-plus-o" />
+//                   </div>
+//                 ) : this.state.field.mediaType === "image" ? (
+//                   <img src={file.url[this.state.currentLang]} alt="" />
+//                 ) : (
+//                   <div className="updatedFileType">
+//                     <i className="icon-file-plus-o" />
+//                   </div>
+//                 )}
+//               </div>
+//             ))}
+//             <div className="files-input" onClick={this.openAssetBrowser}>
+//               {this.state.field.mediaType === "file" ? (
+//                 <i className="icon-file-plus-o" />
+//               ) : this.state.field.mediaType === "image" ? (
+//                 <i className="icon-camera" />
+//               ) : (
+//                 <i className="icon-file-plus-o" />
+//               )}
+//             </div>
+//           </div>
+//         </div>
+
+//         {this.state.assetBrowser && (
+//           <AssetBrowser
+//             isOpen={this.state.assetBrowser}
+//             onCloseModal={this.handleChooseAsset}
+//             mediaType={undefined}
+//           />
+//         )}
+//       </>
+//     );
+//   }
+// }
+
+// export default MediaInput;

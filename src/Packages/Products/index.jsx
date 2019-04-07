@@ -39,19 +39,21 @@ const Products = props => {
         display: "block"
       },
       accessor: "fields.thumbnail",
-      Cell: props => (
-        <div className="p-image">
-          <img
-            className="p-image-value"
-            src={
-              props.value
-                ? props.value[currentLang]
-                : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png"
-            }
-            alt=""
-          />
-        </div>
-      )
+      Cell: props => {
+        return (
+          <div className="p-image">
+            <img
+              className="p-image-value"
+              src={
+                props.value
+                  ? props.value[0][currentLang]
+                  : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png"
+              }
+              alt=""
+            />
+          </div>
+        );
+      }
     },
     {
       Header: () => <div className="p-header-td">Name</div>,

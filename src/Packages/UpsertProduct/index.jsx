@@ -56,6 +56,10 @@ const UpsertProduct = props => {
     }
   }, [props.match.params.id]);
 
+  useEffect(() => {
+    changeTab(2);
+  }, [contentType]);
+
   // methods
   function getContentTypesList() {
     getContentTypes()
@@ -255,12 +259,12 @@ const UpsertProduct = props => {
         setFields(f.sort((a, b) => a.index - b.index));
       }
     } else {
+      setContentType(undefined);
       toggleTab(1);
     }
   }
   function handleSelectContentType(contentType) {
     setContentType(contentType);
-    changeTab(2);
   }
   function upsertItem(closePage) {
     const obj = {
@@ -361,9 +365,9 @@ const UpsertProduct = props => {
           if (closePage) {
             backToProducts();
           } else {
-            setResetForm(true);
             setFormData({});
             setFormValidation();
+            setResetForm(prevState => !prevState);
           }
         })
         .onServerError(result => {

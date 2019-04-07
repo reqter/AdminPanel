@@ -15,7 +15,9 @@ const NumberInput = props => {
       ? props.formData[field.name][currentLang]
       : props.formData[field.name]
     : "";
+
   const [input, setInput] = useState(value);
+  
   if (
     props.init &&
     field.isRequired !== undefined &&
@@ -37,6 +39,7 @@ const NumberInput = props => {
       setInput("");
     }
   }, [props.reset, formData]);
+
   function handleOnChange(e) {
     setInput(e.target.value);
 

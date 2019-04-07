@@ -142,10 +142,12 @@
         }
       },
       "fields": {
-        "thumbnail": {
-          "en": "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-          "fa": "https://myresources1195.blob.core.windows.net/images/banana.jpg"
-        },
+        "thumbnail": [
+          {
+            "en": "https://myresources1195.blob.core.windows.net/images/banana.jpg",
+            "fa": "https://myresources1195.blob.core.windows.net/images/banana.jpg"
+          }
+        ],
         "name": {
           "en": "Banana",
           "fa": "موز ممتاز"
