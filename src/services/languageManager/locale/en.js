@@ -210,6 +210,7 @@ export default {
   UPSERT_ITEM_ADD_ON_BAD_REQUEST: "Bad request",
   UPSERT_ITEM_ADD_UN_AUTHORIZED: "Un Authorized",
   UPSERT_ITEM_ADD_NOT_FOUND: "Not found",
+  UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED:"Content type is removed from content. ",
   //assets
   UPSERT_ASSET_WRONG_URL: "You have entered wrong url",
   UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",

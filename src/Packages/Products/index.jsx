@@ -61,23 +61,11 @@ const Products = props => {
       headerStyle: {
         display: "block"
       },
-      accessor: "fields.name",
+      accessor: "fields",
       Cell: props => (
         <div className="p-name">
-          {props.value ? props.value[currentLang] : ""}
-        </div>
-      )
-    },
-    {
-      Header: () => <div className="p-header-td">Description</div>,
-      //show: false,
-      headerStyle: {
-        display: "block"
-      },
-      accessor: "fields.shortDesc",
-      Cell: props => (
-        <div className="p-description">
-          {props.value ? props.value[currentLang] : ""}
+          <span>{props.value["name"][currentLang]}</span>
+          <span>{props.value["shortDesc"][currentLang]}</span>
         </div>
       )
     },
@@ -87,17 +75,45 @@ const Products = props => {
       headerStyle: {
         display: "block"
       },
-      accessor: "sys.issuer.fullName",
-      Cell: props => <div className="p-issuer">{props.value}</div>
+      accessor: "sys",
+      Cell: props => (
+        <div className="p-issuer">
+          <span>{props.value.issuer.fullName}</span>
+          <span>{props.value.issueDate}</span>
+        </div>
+      )
     },
     {
-      Header: () => <div className="p-header-td">Issue Date</div>,
+      Header: () => <div className="p-header-td">Type</div>,
       //show: false,
       headerStyle: {
         display: "block"
       },
-      accessor: "sys.issueDate",
-      Cell: props => <div className="p-date">{props.value}</div>
+      accessor: "contentType",
+      Cell: props => {
+        return (
+          <div className="p-contentType">
+            <span className="badge badge-primary">
+              {props.value.title[currentLang]}
+            </span>
+          </div>
+        );
+      }
+    },
+    {
+      Header: () => <div className="p-header-td">Category</div>,
+      //show: false,
+      headerStyle: {
+        display: "block"
+      },
+      accessor: "category",
+      Cell: props => (
+        <div className="p-contentType">
+          <span className="badge badge-primary">
+            {props.value.name[currentLang]}
+          </span>
+        </div>
+      )
     },
     {
       Header: "Actions",
@@ -149,7 +165,6 @@ const Products = props => {
         });
       })
       .call();
-    // doFiltersOnData();
   }, []);
   // methods
   function initColumns() {
@@ -169,7 +184,7 @@ const Products = props => {
   }
   function openNewItemBox(contentType) {
     props.history.push({
-      pathname: "/items/new"
+      pathname: "/contents/new"
       // search: "?sort=name",
       //hash: "#the-hash",
       //params: { contentType, hasContentType }
@@ -183,7 +198,6 @@ const Products = props => {
         return <div className="p-string">{props.value}</div>;
     }
   }
-  function doFilter() {}
   function removeFilter(filter) {
     let f = dataFilters.filter(item => item.type !== filter.type);
     setFilters(f);
@@ -310,7 +324,7 @@ const Products = props => {
   }
   function handleEditRow(row) {
     props.history.push({
-      pathname: `/items/edit/${row.original.sys.id}`
+      pathname: `/contents/edit/${row.original.sys.id}`
     });
   }
   return (
@@ -332,7 +346,7 @@ const Products = props => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search in all data"
+                placeholder="Search name of content"
                 value={searchText}
                 onChange={e => setSearchText(e.target.value)}
               />
@@ -347,7 +361,7 @@ const Products = props => {
               <i className="icon-filter" />
             </button>
             <button className="btn btn-primary" onClick={openNewItemBox}>
-              New Item
+              New Content
             </button>
           </div>
         </div>

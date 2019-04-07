@@ -36,6 +36,8 @@ const acceptedMediaTypes = [
     title: "Spreadsheet"
   }
 ];
+const translatableFields = ["string", "media", "richText"];
+
 const FieldConfig = props => {
   const { selectedContentType } = props;
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -75,7 +77,7 @@ const FieldConfig = props => {
   const [referenceContentTypeChk, toggleReferenceContentType] = useState(
     selectedField.type === "reference"
       ? () => {
-        if (selectedField.referenceId === undefined) {
+          if (selectedField.referenceId === undefined) {
             return false;
           } else return true;
         }
@@ -142,9 +144,9 @@ const FieldConfig = props => {
     obj["title"] = utility.applyeLangs(title);
     obj["isTranslate"] = translation;
     obj["isRequired"] = isRequired;
-    obj["helpText"] = helpText;
+    obj["helpText"] = utility.applyeLangs(helpText);
     obj["apearance"] = "default";
-    
+
     if (selectedField.type === "media") {
       obj["isList"] = imageUploadMethod === "oneFile" ? false : true;
       obj["mediaType"] = mediaTypeVisibility
@@ -159,8 +161,8 @@ const FieldConfig = props => {
           : "all"
         : "all";
     } else if (selectedField.type === "boolean") {
-      obj["trueText"] = booleanTrueText;
-      obj["falseText"] = booleanFalseText;
+      obj["trueText"] = utility.applyeLangs(booleanTrueText);
+      obj["falseText"] = utility.applyeLangs(booleanFalseText);
     }
     updateField()
       .onOk(result => {
@@ -325,28 +327,30 @@ const FieldConfig = props => {
               >
                 {languageManager.translate("Field Options")}
               </span>
-              <div className="custom_checkbox">
-                <div className="left">
-                  <label className="checkBox">
-                    <input
-                      type="checkbox"
-                      id="localization"
-                      checked={translation}
-                      onChange={handleChangeTranslation}
-                    />
-                    <span className="checkmark" />
-                  </label>
+              {translatableFields.indexOf(selectedField.name) > -1 && (
+                <div className="custom_checkbox">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="localization"
+                        checked={translation}
+                        onChange={handleChangeTranslation}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label for="localization">
+                      Enable localization of this field
+                    </label>
+                    <label>
+                      All the content can be translated to English (United
+                      States) and Persian (Farsi)
+                    </label>
+                  </div>
                 </div>
-                <div className="right">
-                  <label for="localization">
-                    Enable localization of this field
-                  </label>
-                  <label>
-                    All the content can be translated to English (United States)
-                    and Persian (Farsi)
-                  </label>
-                </div>
-              </div>
+              )}
               {selectedField.type === "media" && (
                 <>
                   <div className="custom_checkbox ">

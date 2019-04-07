@@ -47,7 +47,7 @@ const routes = [
       {
         name: translate("HOME_SIDE_NAV_PRODUCTS"),
         icon: "product",
-        path: "/panel/items",
+        path: "/panel/contents",
         desc: translate("HOME_SIDE_NAV_PRODUCTS_DESC"),
         component: Products
       },
@@ -83,11 +83,11 @@ const routes = [
     ]
   },
   {
-    path: "/items/new",
+    path: "/contents/new",
     component: UpsertProduct
   },
   {
-    path: "/items/edit/:id",
+    path: "/contents/edit/:id",
     component: UpsertProduct
   },
   {

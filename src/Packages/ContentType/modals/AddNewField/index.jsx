@@ -14,6 +14,7 @@ import { languageManager, utility, useGlobalState } from "../../../../services";
 import { CheckBox } from "./../../../../components";
 import { addFieldToContentType } from "./../../../../Api/contentType-api";
 import "./styles.scss";
+
 const fields = [
   {
     name: "string",
@@ -62,7 +63,7 @@ const fields = [
     title: languageManager.translate("FIELD_TYPE_RICH_TEXT"),
     description: languageManager.translate("FIELD_TYPE_RICH_TEXT_INFO"),
     icon: "icon-file-text-o"
-  },
+  }
   // {
   //   name: "jsonObject",
   //   title: languageManager.translate("FIELD_TYPE_OBJECT"),
@@ -76,6 +77,7 @@ const fields = [
   //   icon: "icon-reference"
   // }
 ];
+const translatableFields = ["string", "media", "richText"];
 
 const AddNewField = props => {
   const [{}, dispatch] = useGlobalState();
@@ -200,6 +202,10 @@ const AddNewField = props => {
   function addField_configure() {
     addField(undefined, true);
   }
+  function checkFieldTranslation() {
+    if (translatableFields.indexOf(selectedField.name) > -1) return true;
+    return false;
+  }
   return (
     <Modal isOpen={isOpen} toggle={closeAddFieldModal} size="lg">
       <ModalHeader toggle={closeAddFieldModal}>
@@ -207,7 +213,7 @@ const AddNewField = props => {
       </ModalHeader>
       <ModalBody>
         <div className="c-category-addField-body">
-          {tab === 1 ? (
+          {tab === 1 && (
             <div className="fieldsTab">
               {fields.map(field => (
                 <div
@@ -223,7 +229,8 @@ const AddNewField = props => {
                 </div>
               ))}
             </div>
-          ) : (
+          )}
+          {tab === 2 && (
             <Form className="formTab">
               <div className="row">
                 <div className="form-group col">
@@ -293,11 +300,12 @@ const AddNewField = props => {
                     )}
                   </small>
                 </FormGroup>
-
-                <CheckBox
-                  title="Enable Local Translation"
-                  onChange={e => toggleTranslation(e.target.checked)}
-                />
+                {translatableFields.indexOf(selectedField.name) > -1 && (
+                  <CheckBox
+                    title="Enable Local Translation"
+                    onChange={e => toggleTranslation(e.target.checked)}
+                  />
+                )}
               </div>
             </Form>
           )}

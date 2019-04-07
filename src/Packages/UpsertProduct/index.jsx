@@ -103,12 +103,24 @@ const UpsertProduct = props => {
     getContentById()
       .onOk(result => {
         if (result) {
-          if (tab !== 2) toggleTab(2);
-          setFormData(result.fields);
-          setContentType(result.contentType);
-          const c_fields = result.contentType.fields;
-          setFields(c_fields.sort((a, b) => a.index - b.index));
-          setCategory(result.category);
+          if (result.contentType === undefined) {
+            toggleTab(3);
+            const obj = {
+              type: "CONTEN_TYPE_UNDEFINED",
+              sender: "getItemById",
+              message: languageManager.translate(
+                "UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"
+              )
+            };
+            setError(obj);
+          } else {
+            if (tab !== 2) toggleTab(2);
+            setFormData(result.fields);
+            setContentType(result.contentType);
+            const c_fields = result.contentType.fields;
+            setFields(c_fields.sort((a, b) => a.index - b.index));
+            setCategory(result.category);
+          }
         } else {
           toggleTab(3);
         }
@@ -247,7 +259,7 @@ const UpsertProduct = props => {
     }
   }
   function backToProducts() {
-    props.history.push("/panel/items");
+    props.history.push("/panel/contents");
   }
   function changeTab(tab) {
     if (tab === 2) {
@@ -277,13 +289,13 @@ const UpsertProduct = props => {
       },
       //contentType: contentType.id,
       contentType: {
-        id: contentType.id,
+        id: contentType.sys.id,
         name: contentType.name,
         title: contentType.title
       },
       //category:category.id,
       category: {
-        id: category.id,
+        id: category.sys.id,
         name: category.name
       },
       fields: formData
@@ -430,7 +442,7 @@ const UpsertProduct = props => {
                   className={["item", tab === 1 ? "active" : ""].join(" ")}
                   onClick={() => changeTab(1)}
                 >
-                  1.Choosing Item Type
+                  1.Choosing Content Type
                 </div>
                 <div
                   className={["item", tab === 2 ? "active" : ""].join(" ")}
@@ -447,7 +459,7 @@ const UpsertProduct = props => {
         <main>
           {tab === 1 && (
             <>
-              <div className="up-content-title">Choose an item type</div>
+              <div className="up-content-title">Choose a content type</div>
               <div className="up-content-itemTypes animated fadeIn ">
                 {contentTypes.map(c => (
                   <div key={c.id} className="listGroupItem">
@@ -556,6 +568,11 @@ const UpsertProduct = props => {
                 {error.sender === "contentType" && (
                   <button className="btn btn-light">
                     {languageManager.translate("Reload Item Types")}
+                  </button>
+                )}
+                {error.sender === "getItemById" && (
+                  <button className="btn btn-light">
+                    {languageManager.translate("Reload")}
                   </button>
                 )}
               </div>
