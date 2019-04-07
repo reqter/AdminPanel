@@ -286,7 +286,7 @@ const UpsertFile = props => {
     }
   }
   function backToAssets() {
-    props.history.push("/home/assets");
+    props.history.push("/panel/assets");
   }
 
   function upsertItem(closePage) {

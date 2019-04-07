@@ -9,7 +9,6 @@ class Tree extends Component {
     currentLang: languageManager.getCurrentLanguage().name
   };
 
-  
   static getDerivedStateFromProps(props, current_state) {
     if (!props.leftContent) {
       return {
@@ -55,24 +54,18 @@ class Tree extends Component {
                 >
                   {node.children && node.children.length > 0 ? (
                     <>
-                      <button
-                        className="btnCategoryCollapse btn btn-link btn-sm"
+                      <div
+                        className="btnCategoryCollapse"
                         id={id}
                         color="primary"
                         onClick={this.toggle}
                       >
                         {this.state[id] ? (
-                          <i
-                            className="icon-caret-down"
-                            onClick={this.toggle}
-                          />
+                          <span className="icon-caret-down" id={id} />
                         ) : (
-                          <i
-                            className="icon-caret-right"
-                            onClick={this.toggle}
-                          />
+                          <span className="icon-caret-right" id={id} />
                         )}
-                      </button>
+                      </div>
                       {node.image !== undefined ? (
                         <div className="treeItem-img">
                           <img

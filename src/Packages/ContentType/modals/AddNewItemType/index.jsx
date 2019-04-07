@@ -79,6 +79,7 @@ const templates = [
     title: "Content",
     description: "It contains a body field",
     icon: "icon-drawer2",
+    allowCustomFields: true,
     fields: [
       {
         sys: {
@@ -134,10 +135,10 @@ const templates = [
           },
           issueDate: "19/01/2019 20:18"
         },
-        name: "thumbnail",
+        name: "media",
         title: {
-          fa: "Thumbnail",
-          en: "Thumbnail"
+          fa: "رسانه",
+          en: "Media"
         },
         description: {
           fa: "",
@@ -146,8 +147,7 @@ const templates = [
         type: "media",
         isBase: true,
         mediaType: "all",
-        isTranslate: true,
-        isRequired: true
+        isTranslate: true
       },
       {
         sys: {
@@ -170,8 +170,7 @@ const templates = [
         type: "richText",
         isBase: true
       }
-    ],
-    allowCustomFields: true
+    ]
   },
   {
     id: "3",
@@ -234,16 +233,17 @@ const templates = [
           },
           issueDate: "19/01/2019 20:18"
         },
-        name: "thumbnail",
+        name: "cover",
         title: {
-          fa: "Thumbnail",
-          en: "Thumbnail"
+          fa: "تصویر گالری",
+          en: "Cover Image"
         },
         description: {
           fa: "",
           en: ""
         },
         type: "media",
+        mediaType: "image",
         isTranslate: true,
         isRequired: true,
         isList: false,

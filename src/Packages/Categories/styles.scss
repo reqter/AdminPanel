@@ -159,10 +159,16 @@
     }
   }
   .btnCategoryCollapse {
-    margin-right: 10px;
+    margin-right: 5px;
     font-size: 14px;
     width: 30px;
     height: 30px;
+    color: rgb(56, 132, 255);
+    font-size: 23px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .btnCategoryLeaf {
     width: 30px;

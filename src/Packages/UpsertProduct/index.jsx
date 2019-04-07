@@ -5,7 +5,6 @@ import {
   addContent,
   updateContent,
   getContentById,
-  getCategories,
   getContentTypes
 } from "./../../Api/content-api";
 import CategoriesModal from "./Categories";
@@ -37,7 +36,7 @@ const UpsertProduct = props => {
 
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
-
+  const [resetForm, setResetForm] = useState(false);
   const [error, setError] = useState({});
 
   useEffect(() => {
@@ -122,13 +121,17 @@ const UpsertProduct = props => {
       }));
     }
   }
-  function handleOnChangeValue(key, value, isValid) {
+  function handleOnChangeValue(field, value, isValid) {
     // add value to form
     let f = { ...formData };
-    if (key === "thumbnail") {
-      f[key] = value["url"];
-    } else f[key] = value;
+    const { name: key } = field;
+    if (value === undefined) {
+      delete f[key];
+    } else {
+      f[key] = value;
+    }
     setFormData(f);
+
     // check validation
     let obj = { ...formValidation };
     if (isValid && obj) {
@@ -160,6 +163,7 @@ const UpsertProduct = props => {
       case "string":
         return (
           <String
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -169,6 +173,7 @@ const UpsertProduct = props => {
       case "number":
         return (
           <Number
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -178,6 +183,7 @@ const UpsertProduct = props => {
       case "datetime":
         return (
           <DateTime
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -187,6 +193,7 @@ const UpsertProduct = props => {
       case "location":
         return (
           <Location
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -196,6 +203,7 @@ const UpsertProduct = props => {
       case "media":
         return (
           <Media
+            reset={resetForm}
             formData={formData}
             field={field}
             init={setNameToFormValidation}
@@ -205,6 +213,7 @@ const UpsertProduct = props => {
       case "boolean":
         return (
           <Boolean
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -214,6 +223,7 @@ const UpsertProduct = props => {
       case "keyvalue":
         return (
           <KeyValue
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -223,6 +233,7 @@ const UpsertProduct = props => {
       case "richtext":
         return (
           <RichText
+            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -279,17 +290,123 @@ const UpsertProduct = props => {
     if (updateMode) {
       updateContent()
         .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK")
+            }
+          });
           if (closePage) {
             backToProducts();
+          } else {
+            setResetForm(true);
+            setFormData({});
+            setFormValidation();
           }
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("UPSERT_ITEM_UPDATE_NOT_FOUND")
+            }
+          });
         })
         .call(obj);
     } else {
       addContent()
         .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK")
+            }
+          });
           if (closePage) {
             backToProducts();
+          } else {
+            setResetForm(true);
+            setFormData({});
+            setFormValidation();
           }
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND")
+            }
+          });
         })
         .call(obj);
     }
@@ -400,14 +517,14 @@ const UpsertProduct = props => {
                 <div className="actions">
                   {!updateMode && (
                     <button
-                      className="btn btn-primary "
+                      className="btn btn-primary"
                       onClick={() => upsertItem(false)}
                       disabled={
-                        Object.keys(formData).length > 0 &&
-                        formValidation === undefined &&
-                        category !== undefined
-                          ? false
-                          : true
+                        !(
+                          Object.keys(formData).length > 0 &&
+                          formValidation === undefined &&
+                          category !== undefined
+                        )
                       }
                     >
                       Save & New
@@ -417,11 +534,11 @@ const UpsertProduct = props => {
                     className="btn btn-primary "
                     onClick={() => upsertItem(true)}
                     disabled={
-                      Object.keys(formData).length > 0 &&
-                      formValidation === undefined &&
-                      category !== undefined
-                        ? false
-                        : true
+                      !(
+                        Object.keys(formData).length > 0 &&
+                        formValidation === undefined &&
+                        category !== undefined
+                      )
                     }
                   >
                     {updateMode ? "Update & Close" : "Save & Close"}

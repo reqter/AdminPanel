@@ -37,7 +37,7 @@ export function filterAssets() {
       _onConnectionErrorCallBack(result);
     }
   }
-  function _call(fileType, state) {
+  function _call(fileType = "all", state) {
     let result;
     if (fileType === "all" && state === undefined) {
       result = data.assets;

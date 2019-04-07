@@ -7,59 +7,136 @@ const MediaInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
   const [assetBrowser, toggleAssetBrowser] = useState(false);
+  const [resetInputLocaly, setResetLocaly] = useState(true);
   const [files, setFiles] = useState(() => {
     if (formData[field.name]) {
-      if (field.isList) {
-        return formData[field.name];
-      } else {
-        if (field.isTranslate) {
-          let fs = [];
-          fs.push({ url: formData[field.name][currentLang] });
-          return fs;
+      // what is the type of data ? "Array" , "String" , "Object"
+      if (Array.isArray(formData[field.name])) {
+        if (formData[field.name].length === 0) return [];
+        if (field.isList === true) {
+          if (field.isTranslate) {
+            if (typeof formData[field.name][0] === "string") {
+              return formData[field.name].map(item => ({
+                id: Math.random(),
+                url: { [currentLang]: item }
+              }));
+            } else {
+              return formData[field.name].map(item => ({
+                id: Math.random(),
+                url: item
+              }));
+            }
+          }
         } else {
-          let fs = [];
-          fs.push({ url: formData[field.name][currentLang] });
-          return fs;
+          if (field.isTranslate) {
+            if (typeof formData[field.name][0] === "string") {
+              return [
+                {
+                  id: Math.random(),
+                  url: { [currentLang]: formData[field.name][0] }
+                }
+              ];
+            } else {
+              return [
+                {
+                  id: Math.random(),
+                  url: formData[field.name][0]
+                }
+              ];
+            }
+          }
         }
+
+        // رندر رو باید شرطی کنم ترجمه داریم یا نه . اگه نداریم عکس از زبان جاری بخونه . چون داخل همه ابجکت ها وجود داره
+      } else if (typeof formData[field.name] === "object")
+        //بر تو رشته و ابجکت باید تو رندر اگه ترجمه نداشتیم بگم که زبان جاری رو نشون بده برای عکس ها .
+        // ترجمه داشتیم هرکس زبان خودش نداشتیم زبان جاری
+        return [{ id: Math.random(), url: formData[field.name] }];
+      else if (typeof formData[field.name] === "string") {
+        return [
+          { id: Math.random(), url: { [currentLang]: formData[field.name] } }
+        ];
       }
     }
     return [];
   });
 
+  if (props.init && field.isRequired === true && !props.reset) {
+    if (formData[field.name] === undefined) props.init(field.name);
+  }
+
   useEffect(() => {
-    if (
-      props.init &&
-      field.isRequired !== undefined &&
-      field.isRequired &&
-      !props.reset
-    ) {
-      if (formData[field.name] === undefined) props.init(field.name);
+    // set form value update time
+    if (formData[field.name]) {
+      if (field.isList) {
+        setFiles(formData[field.name]);
+      } else {
+        if (field.isTranslate) {
+          let fs = [];
+          fs.push({
+            id: Math.random(),
+            url: formData[field.name][currentLang],
+            fileType: formData["fileType"]
+          });
+          setFiles(fs);
+        } else {
+          let fs = [];
+          fs.push({ url: formData[field.name] });
+          setFiles(fs);
+        }
+      }
+    } else {
+      if (files.length > 0) {
+        setFiles([]);
+      }
     }
 
-    if (props.reset) {
+    // cheking form reset
+    if (props.reset && resetInputLocaly) {
+      setResetLocaly(false);
       setFiles([]);
     }
-  }, [props.reset]);
+
+    // send value to form after updateing
+    if (field.isList !== undefined && field.isList) {
+      let result;
+
+      if (field.isTranslate === true) {
+        result = files.map(item => item.url);
+      } else result = files.map(item => item.url[currentLang]);
+
+      if (field.isRequired === true) {
+        if (result === undefined || result.length === 0)
+          props.onChangeValue(field, result, false);
+        else props.onChangeValue(field, result, true);
+      }
+    } else {
+      let result;
+      if (field.isTranslate === true) {
+        result = files[0] ? files[0].url : undefined;
+      } else result = files[0] ? files[0]["url"][currentLang] : undefined;
+      if (field.isRequired === true) {
+        if (result === undefined) props.onChangeValue(field, result, false);
+        else props.onChangeValue(field, result, true);
+      }
+    }
+  }, [props.reset, files]);
 
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
     if (asset) {
       const obj = {
         id: Math.random(),
-        url: asset.url,
-        name: asset.name,
-        fileType: asset.fileType
+        url: asset.url
       };
       if (field.isList !== undefined && field.isList) {
         let fs = [...files];
         fs.push(obj);
         setFiles(fs);
-        props.onChangeValue(field.name, fs, true);
       } else {
-        let fs = [...files];
-        fs[0] = obj;
+        let fs = [];
+        fs.push(obj);
         setFiles(fs);
-        props.onChangeValue(field.name, fs[0], true);
       }
     }
   }
@@ -70,19 +147,19 @@ const MediaInput = props => {
 
     if (field.isRequired) {
       if (field.isList !== undefined && field.isList) {
-        if (fs.length === 0) props.onChangeValue(field.name, fs, false);
-        else props.onChangeValue(field.name, fs, true);
+        if (fs.length === 0) props.onChangeValue(field, fs, false);
+        else props.onChangeValue(field, fs, true);
       } else {
         if (fs.length === 0) {
           let img;
           if (field.isTranslate) {
             img = utility.applyeLangs("");
-            props.onChangeValue(field.name, img, false);
-          } else props.onChangeValue(field.name, "", false);
+            props.onChangeValue(field, img, false);
+          } else props.onChangeValue(field, "", false);
         }
       }
     } else {
-      props.onChangeValue(field.name, fs, true);
+      props.onChangeValue(field, fs, true);
     }
   }
   function openAssetBrowser() {
@@ -108,7 +185,10 @@ const MediaInput = props => {
                   <i className="icon-file-plus-o" />
                 </div>
               ) : field.mediaType === "image" ? (
-                <img src={file.url[currentLang]} alt="" />
+                <img
+                  src={file.url[currentLang] ? file.url[currentLang] : file.url}
+                  alt=""
+                />
               ) : (
                 <div className="updatedFileType">
                   <i className="icon-file-plus-o" />
@@ -127,12 +207,12 @@ const MediaInput = props => {
           </div>
         </div>
       </div>
-     
+
       {assetBrowser && (
         <AssetBrowser
           isOpen={assetBrowser}
           onCloseModal={handleChooseAsset}
-          mediaType={field.mediaType}
+          mediaType={undefined}
         />
       )}
     </>

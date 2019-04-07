@@ -1,16 +1,22 @@
-.up-categories{
+.up-categories {
   padding: 0;
   min-height: 250px;
- .treeItem {
+  .treeItem {
     cursor: pointer;
     display: flex;
     align-items: center;
     border: 0;
     .btnCategoryCollapse {
-      margin-right: 10px;
+      margin-right: 5px;
       font-size: 14px;
       width: 30px;
       height: 30px;
+      color: rgb(56, 132, 255);
+      font-size: 23px;
+      font-weight: bolder;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .btnCategoryLeaf {
       width: 30px;

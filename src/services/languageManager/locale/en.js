@@ -197,10 +197,19 @@ export default {
   CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST: "Bad request",
   CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED:
     "You have not authorized.login to get new token",
-  CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND:
-    "Item not found",
+  CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND: "Item not found",
   // items
   ITEMS_CATEGORIES_CONTENT: "Content",
+  UPSERT_ITEM_UPDATE_ON_OK: "Item is updated succefully.",
+  UPSERT_ITEM_UPDATE_ON_SERVER_ERROR: "Internal server error",
+  UPSERT_ITEM_UPDATE_ON_BAD_REQUEST: "Bad request",
+  UPSERT_ITEM_UPDATE_UN_AUTHORIZED: "Un Authorized",
+  UPSERT_ITEM_UPDATE_NOT_FOUND: "Not found",
+  UPSERT_ITEM_ADD_ON_OK: "Item is created succefully.",
+  UPSERT_ITEM_ADD_ON_SERVER_ERROR: "Internal server error",
+  UPSERT_ITEM_ADD_ON_BAD_REQUEST: "Bad request",
+  UPSERT_ITEM_ADD_UN_AUTHORIZED: "Un Authorized",
+  UPSERT_ITEM_ADD_NOT_FOUND: "Not found",
   //assets
   UPSERT_ASSET_WRONG_URL: "You have entered wrong url",
   UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",
