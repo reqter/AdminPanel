@@ -39,6 +39,7 @@ const acceptedMediaTypes = [
 const translatableFields = ["string", "media", "richText"];
 
 const FieldConfig = props => {
+  //#region variables
   const { selectedContentType } = props;
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ contentTypes }, dispatch] = useGlobalState();
@@ -105,18 +106,86 @@ const FieldConfig = props => {
   const [booleanFalseText, setBooleanFalseText] = useState(
     selectedField.falseText ? selectedField.falseText : "False"
   );
+  const [inVisible, toggleInVisible] = useState(
+    selectedField.inVisible ? selectedField.inVisible : false
+  );
+  const [textDefaultValue, setTextDefaultValue] = useState(
+    selectedField.type === "string" ? selectedField.defaultValue : ""
+  );
+  const [numberDefaultValue, setNumberDefaultValue] = useState(
+    selectedField.type === "number"
+      ? selectedField.defaultValue
+        ? selectedField.defaultValue
+        : ""
+      : ""
+  );
+  const [dateDefaultValue, toggleDateDefaultValue] = useState(
+    selectedField.type === "dateTime" ? selectedField.defaultValue : false
+  );
+  const [dateTimeFormat, toggleDateFormat] = useState(
+    selectedField.type === "dateTime"
+      ? selectedField.format
+        ? selectedField.format
+        : "dateTime"
+      : "dateTime"
+  );
+  const [latitude, setLatitude] = useState(
+    selectedField.type === "location"
+      ? selectedField.defaultValue
+        ? selectedField.defaultValue.latitude
+        : ""
+      : ""
+  );
+  const [longitude, setLongitude] = useState(
+    selectedField.type === "location"
+      ? selectedField.defaultValue
+        ? selectedField.defaultValue.longitude
+        : ""
+      : ""
+  );
+  const [booleanDefaultValue, setBooleanDefaultValue] = useState(
+    selectedField.type === "boolean"
+      ? selectedField.defaultValue !== undefined
+        ? selectedField.defaultValue
+        : false
+      : false
+  );
+  const [options, setOptions] = useState(
+    selectedField.type === "keyValue"
+      ? selectedField.options !== undefined
+        ? selectedField.options
+        : [{ value: "", selected: false }]
+      : [{ value: "", selected: false }]
+  );
+  //#endregion variables
 
   useEffect(() => {
     return () => {
       if (!props.isOpen) toggleModal(false);
     };
   }, []);
+
+  //#region methods
   function closeModal(params) {
     props.onCloseModal();
   }
-
+  function handleTextDefaultValue(e) {
+    setTextDefaultValue(e.target.value);
+  }
+  function handleNumberDefaultValue(e) {
+    setNumberDefaultValue(e.target.value);
+  }
+  function handleDateDefaultValue(e) {
+    toggleDateDefaultValue(e.target.checked);
+  }
   function handleChangeTitle(e) {
     setTitle(e.target.value);
+  }
+  function handleLatitudeChange(e) {
+    setLatitude(e.target.value);
+  }
+  function handleLongitudeChange(e) {
+    setLongitude(e.target.value);
   }
   function handleChangeTranslation(e) {
     toggleTranslation(e.target.checked);
@@ -139,14 +208,45 @@ const FieldConfig = props => {
   function handleBooleanFalseText(e) {
     setBooleanFalseText(e.target.value);
   }
+  function handleToggleInVisible(e) {
+    toggleInVisible(e.target.checked);
+  }
   function update() {
-    let obj = { ...selectedField };
+    let obj = {
+      ...selectedField
+    };
     obj["title"] = utility.applyeLangs(title);
     obj["isTranslate"] = translation;
     obj["isRequired"] = isRequired;
-    obj["helpText"] = utility.applyeLangs(helpText);
-    obj["apearance"] = "default";
-
+    obj["appearance"] = "default";
+    if (helpText.length > 0) obj["helpText"] = utility.applyeLangs(helpText);
+    if (selectedField.type !== "media" && selectedField.type !== "richText") {
+      obj["inVisible"] = inVisible;
+    }
+    if (selectedField.type === "string" && textDefaultValue.length > 0) {
+      obj["defaultValue"] = textDefaultValue;
+    }
+    if (selectedField.type === "number" && numberDefaultValue.length > 0) {
+      obj["defaultValue"] = numberDefaultValue;
+    }
+    if (selectedField.type === "dateTime") {
+      obj["defaultValue"] = dateDefaultValue;
+      obj["format"] = dateTimeFormat;
+    }
+    if (selectedField.type === "location") {
+      obj["defaultValue"] = {
+        latitude: latitude,
+        longitude: longitude
+      };
+    }
+    if (selectedField.type === "boolean") {
+      obj["defaultValue"] = booleanDefaultValue;
+    }
+    if (selectedField.type === "keyValue") {
+      obj["options"] = options.map(item => {
+        if (item.value.length > 0) return item;
+      });
+    }
     if (selectedField.type === "media") {
       obj["isList"] = imageUploadMethod === "oneFile" ? false : true;
       obj["mediaType"] = mediaTypeVisibility
@@ -160,10 +260,11 @@ const FieldConfig = props => {
           ? selectedContentTypeRef.sys.id
           : "all"
         : "all";
-    } else if (selectedField.type === "boolean") {
-      obj["trueText"] = utility.applyeLangs(booleanTrueText);
-      obj["falseText"] = utility.applyeLangs(booleanFalseText);
     }
+    //  else if (selectedField.type === "boolean") {
+    //   obj["trueText"] = utility.applyeLangs(booleanTrueText);
+    //   obj["falseText"] = utility.applyeLangs(booleanFalseText);
+    // }
     updateField()
       .onOk(result => {
         dispatch({
@@ -227,6 +328,36 @@ const FieldConfig = props => {
       })
       .call(selectedContentType.sys.id, obj);
   }
+  function addNewOption() {
+    let opts = [...options];
+    opts.push({
+      value: "",
+      selected: false
+    });
+    setOptions(opts);
+  }
+  function handleOptionValueChanged(e, index) {
+    const opts = options.map((item, i) => {
+      if (i === index) item.value = e.target.value;
+      return item;
+    });
+    setOptions(opts);
+  }
+  function removeOption(item, index) {
+    if (options.length > 1) {
+      const opts = options.filter((item, i) => i !== index);
+      setOptions(opts);
+    }
+  }
+  function setSelectedOption(item, index) {
+    const opts = options.map((item, i) => {
+      item.selected = false;
+      if (i === index) item.selected = true;
+      return item;
+    });
+    setOptions(opts);
+  }
+  //#endregion methods
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
       <div className="fieldConfig">
@@ -291,11 +422,10 @@ const FieldConfig = props => {
             <div className="firstTab">
               <div className="row">
                 <div className="form-group col">
-                  <label>{languageManager.translate("Name")}</label>
+                  <label>{languageManager.translate("NAME")}</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder={languageManager.translate("Field name")}
                     value={name}
                     readOnly
                   />
@@ -306,28 +436,148 @@ const FieldConfig = props => {
                   </small>
                 </div>
                 <div className="form-group col">
-                  <label>{languageManager.translate("Title")}</label>
+                  <label>{languageManager.translate("TITLE")}</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder={languageManager.translate("Filed title")}
                     value={title}
                     onChange={handleChangeTitle}
                   />
                   <small className="form-text text-muted">
-                    {languageManager.translate("Display name of the field")}
+                    {languageManager.translate("TITLE_INFO")}
                   </small>
                 </div>
               </div>
-              <span
-                style={{
-                  marginTop: 10,
-                  fontSize: 14
-                }}
-              >
-                {languageManager.translate("Field Options")}
-              </span>
-              {translatableFields.indexOf(selectedField.name) > -1 && (
+              {selectedField.type === "location" && (
+                <div className="row">
+                  <div className="form-group col">
+                    <label>
+                      {languageManager.translate("FIELD_LOCATION_LATITUDE")}
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={latitude}
+                      onChange={handleLatitudeChange}
+                    />
+                    <small className="form-text text-muted">
+                      {languageManager.translate(
+                        "FIELD_LOCATION_LATITUDE_INFO"
+                      )}
+                    </small>
+                  </div>
+                  <div className="form-group col">
+                    <label>
+                      {languageManager.translate("FIELD_LOCATION_LONGITUDE")}
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={longitude}
+                      onChange={handleLongitudeChange}
+                    />
+                    <small className="form-text text-muted">
+                      {languageManager.translate(
+                        "FIELD_LOCATION_LONGITUDE_INFO"
+                      )}
+                    </small>
+                  </div>
+                </div>
+              )}
+              {selectedField.type === "string" && (
+                <div className="form-group">
+                  <label>
+                    {languageManager.translate("DEFAULT_VALUE_TEXT")}
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={textDefaultValue}
+                    onChange={handleTextDefaultValue}
+                  />
+                  <small className="form-text text-muted">
+                    {languageManager.translate("DEFAULT_VALUE_TEXT_INFO")}
+                  </small>
+                </div>
+              )}
+              {selectedField.type === "number" && (
+                <div className="form-group">
+                  <label>
+                    {languageManager.translate("DEFAULT_VALUE_NUMBER")}
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={numberDefaultValue}
+                    onChange={handleNumberDefaultValue}
+                  />
+                  <small className="form-text text-muted">
+                    {languageManager.translate("DEFAULT_VALUE_NUMBER_INFO")}
+                  </small>
+                </div>
+              )}
+              {selectedField.type === "boolean" && (
+                <div
+                  className="inputSwitch"
+                  style={{
+                    marginBottom: 20
+                  }}
+                >
+                  <span>
+                    {languageManager.translate("FIELD_BOOLEAN_DEFAULT_VALUE")}
+                  </span>
+                  <span>
+                    {languageManager.translate(
+                      "FIELD_BOOLEAN_DEFAULT_VALUE_INFO"
+                    )}
+                  </span>
+                  <div className="inputSwitch-content">
+                    <button
+                      className={
+                        "btn btn-sm " +
+                        (booleanDefaultValue ? "btn-primary" : "btn-light")
+                      }
+                      onClick={() => setBooleanDefaultValue(true)}
+                    >
+                      {languageManager.translate("TRUE")}
+                    </button>
+                    <button
+                      className={
+                        "btn btn-sm " +
+                        (!booleanDefaultValue ? "btn-primary" : "btn-light")
+                      }
+                      onClick={() => setBooleanDefaultValue(false)}
+                    >
+                      {languageManager.translate("FALSE")}
+                    </button>
+                  </div>
+                </div>
+              )}
+              {selectedField.type !== "media" &&
+                selectedField.type !== "richText" && (
+                  <div className="custom_checkbox">
+                    <div className="left">
+                      <label className="checkBox">
+                        <input
+                          type="checkbox"
+                          id="invisible"
+                          checked={inVisible}
+                          onChange={handleToggleInVisible}
+                        />
+                        <span className="checkmark" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label for="invisible">
+                        {languageManager.translate("FIELD_INVISIBLE")}
+                      </label>
+                      <label for="invisible">
+                        {languageManager.translate("FIELD_INVISIBLE_INFO")}
+                      </label>
+                    </div>
+                  </div>
+                )}
+              {translatableFields.indexOf(selectedField.type) > -1 && (
                 <div className="custom_checkbox">
                   <div className="left">
                     <label className="checkBox">
@@ -342,11 +592,35 @@ const FieldConfig = props => {
                   </div>
                   <div className="right">
                     <label for="localization">
-                      Enable localization of this field
+                      {languageManager.translate("TRANSLATION")}
                     </label>
                     <label>
-                      All the content can be translated to English (United
-                      States) and Persian (Farsi)
+                      {languageManager.translate("TRANSLATION_INFO")}
+                    </label>
+                  </div>
+                </div>
+              )}
+              {selectedField.type === "dateTime" && (
+                <div className="custom_checkbox">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="dateShowCurrent"
+                        checked={dateDefaultValue}
+                        onChange={handleDateDefaultValue}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label for="dateShowCurrent">
+                      {languageManager.translate("FIELD_DATE_SHOW_CURRENT")}
+                    </label>
+                    <label>
+                      {languageManager.translate(
+                        "FIELD_DATE_SHOW_CURRENT_INFO"
+                      )}
                     </label>
                   </div>
                 </div>
@@ -524,7 +798,7 @@ const FieldConfig = props => {
                   </div>
                 </div>
               </div>
-              <div style={{ paddingTop: 15 }}>
+              <div>
                 <div className="form-group">
                   <label>{languageManager.translate("Help Text")}</label>
                   <input
@@ -542,44 +816,100 @@ const FieldConfig = props => {
                     )}
                   </small>
                 </div>
-                {selectedField.type === "boolean" && (
+                {selectedField.type === "dateTime" && (
+                  <div className="inputSwitch">
+                    <span>
+                      {languageManager.translate("FIELD_DATE_FORMAT_TITLE")}
+                    </span>
+                    <span>
+                      {languageManager.translate(
+                        "FIELD_DATE_FORMAT_TITLE_INFO"
+                      )}
+                    </span>
+                    <div className="inputSwitch-content">
+                      <button
+                        className={
+                          "btn btn-sm " +
+                          (dateTimeFormat === "dateTime"
+                            ? "btn-primary"
+                            : "btn-light")
+                        }
+                        onClick={() => toggleDateFormat("dateTime")}
+                      >
+                        {languageManager.translate(
+                          "FIELD_DATE_FORMAT_DATE_TIME"
+                        )}
+                      </button>
+                      <button
+                        className={
+                          "btn btn-sm " +
+                          (dateTimeFormat === "date"
+                            ? "btn-primary"
+                            : "btn-light")
+                        }
+                        onClick={() => toggleDateFormat("date")}
+                      >
+                        {languageManager.translate("FIELD_DATE_FORMAT_DATE")}
+                      </button>
+                      <button
+                        className={
+                          "btn btn-sm " +
+                          (dateTimeFormat === "time"
+                            ? "btn-primary"
+                            : "btn-light")
+                        }
+                        onClick={() => toggleDateFormat("time")}
+                      >
+                        {languageManager.translate("FIELD_DATE_FORMAT_TIME")}
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {selectedField.type === "keyValue" && (
                   <>
-                    <div className="form-group">
-                      <label>
-                        {languageManager.translate(
-                          "True condition custom label"
-                        )}
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={booleanTrueText}
-                        onChange={handleBooleanTrueText}
-                      />
-                      <small className="form-text text-muted">
-                        {languageManager.translate(
-                          "Try to enter maximum 255 char"
-                        )}
-                      </small>
-                    </div>
-                    <div className="form-group">
-                      <label>
-                        {languageManager.translate(
-                          "False condition custom label"
-                        )}
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={booleanFalseText}
-                        onChange={handleBooleanFalseText}
-                      />
-                      <small className="form-text text-muted">
-                        {languageManager.translate(
-                          "Try to enter maximum 255 char"
-                        )}
-                      </small>
-                    </div>
+                    <span>
+                      {languageManager.translate("FIELD_OPTIONS_TITLE")}
+                    </span>
+                    {options.map((item, index) => (
+                      <div className="options" key={index}>
+                        <div className="leftInput">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder={languageManager.translate(
+                              "FIELD_OPTIONS_VALUE"
+                            )}
+                            value={options[index].value}
+                            onChange={e => handleOptionValueChanged(e, index)}
+                          />
+                        </div>
+                        <div className="rightInput">
+                          <button
+                            className="btn btn-light"
+                            onClick={() => setSelectedOption(item, index)}
+                          >
+                            <i
+                              className="icon-checkmark"
+                              style={{
+                                visibility: item.selected ? "visible" : "hidden"
+                              }}
+                            />
+                          </button>
+                          <button
+                            className="btn btn-light"
+                            onClick={() => removeOption(item, index)}
+                          >
+                            <i className="icon-bin" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      className="btn btn-danger btn-plus btn-sm"
+                      onClick={addNewOption}
+                    >
+                      <i className="icon-plus" />
+                    </button>
                   </>
                 )}
               </div>

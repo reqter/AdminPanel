@@ -5,6 +5,18 @@ export default {
   archived: "Archive",
   changed: "Changed",
   published: "Published",
+  NAME: "Name",
+  TITLE: "Title",
+  TITLE_INFO: "will be used as display name",
+  TRANSLATION: "Enable localization of this field",
+  TRANSLATION_INFO:
+    "All the content can be translated to English (UnitedStates) and Persian(Farsi)",
+  DEFAULT_VALUE_TEXT: "Default Value",
+  DEFAULT_VALUE_TEXT_INFO: "Try to enter maximum 255 char",
+  DEFAULT_VALUE_NUMBER: "Default Value",
+  DEFAULT_VALUE_NUMBER_INFO: "Default numeric value",
+  TRUE:"True",
+  FALSE:"False",
   // login
   LOGIN_TITLE: "SignIn Reqter",
   LOGIN_EMAIL_INPUT_TITLE: "Email Address",
@@ -151,8 +163,6 @@ export default {
   FIELD_TYPE_REFERENCE: "Reference",
   FIELD_TYPE_REFERENCE_INFO:
     "For example, a blog post can reference its author(s)",
-
-  // CONTENT TYPES
   ITEM_TYPES_FIELDS: "Fields",
   CONTENT_TYPE_ON_SERVER_ERROR:
     "Internal server error.please report that to administrtor",
@@ -198,6 +208,24 @@ export default {
   CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED:
     "You have not authorized.login to get new token",
   CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND: "field not found",
+  FIELD_DATE_SHOW_CURRENT: "Show current date",
+  FIELD_DATE_SHOW_CURRENT_INFO: "It will be as default value",
+  FIELD_DATE_FORMAT_DATE_TIME: "Date & Time",
+  FIELD_DATE_FORMAT_TITLE: "DateTime Format",
+  FIELD_DATE_FORMAT_TITLE_INFO: "You can have only date or both date and time",
+  FIELD_DATE_FORMAT_DATE: "Date Only",
+  FIELD_DATE_FORMAT_TIME: "Time",
+  FIELD_INVISIBLE: "Invisible this field",
+  FIELD_INVISIBLE_INFO: "This field will be invisbile on content entry",
+  FIELD_LOCATION_LATITUDE: "Latitude",
+  FIELD_LOCATION_LATITUDE_INFO: "Latitude as default value",
+  FIELD_LOCATION_LONGITUDE: "Longitude",
+  FIELD_LOCATION_LONGITUDE_INFO: "Longitude as default value",
+  FIELD_BOOLEAN_DEFAULT_VALUE: "Default Value",
+  FIELD_BOOLEAN_DEFAULT_VALUE_INFO: "Set true/false to this field as default value",
+  FIELD_OPTIONS_TITLE:"Options",
+  FIELD_OPTIONS_KEY:"Key",
+  FIELD_OPTIONS_VALUE:"Value",
   // items
   ITEMS_CATEGORIES_CONTENT: "Content",
   UPSERT_ITEM_UPDATE_ON_OK: "Content is updated succefully.",
@@ -210,7 +238,8 @@ export default {
   UPSERT_ITEM_ADD_ON_BAD_REQUEST: "Bad request",
   UPSERT_ITEM_ADD_UN_AUTHORIZED: "Un Authorized",
   UPSERT_ITEM_ADD_NOT_FOUND: "Not found",
-  UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED:"Content type is removed from content. ",
+  UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED:
+    "Content type is removed from content. ",
   //assets
   UPSERT_ASSET_WRONG_URL: "You have entered wrong url",
   UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",

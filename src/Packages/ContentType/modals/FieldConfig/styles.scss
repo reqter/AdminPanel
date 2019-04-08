@@ -96,3 +96,23 @@
     }
   }
 }
+.options {
+  display: flex;
+  padding-top: 10px;
+  input{
+    margin-bottom: 10px
+  }
+  .leftInput {
+    flex: 1;
+    padding-right: 10px;
+  }
+  .centerInput {
+    flex: 1;
+    padding-right: 10px;
+  }
+  .rightInput{
+    button{
+      margin-left: 5px
+    }
+  }
+}

@@ -47,23 +47,21 @@ const List = props => {
                 </span>
               </div>
               {listItem.template !== "generic" && (
-                <>
-                  <button
-                    className="btn btn-light treeItem-action"
-                    size="xs"
-                    onClick={() => props.handleDeleteType(listItem)}
-                  >
-                    <i className="icon-bin" />
-                  </button>
-                  <button
-                    className="btn btn-light treeItem-action"
-                    size="xs"
-                    onClick={() => props.handleEditType(listItem)}
-                  >
-                    <i className="icon-pencil" />
-                  </button>
-                </>
+                <button
+                  className="btn btn-light treeItem-action"
+                  size="xs"
+                  onClick={() => props.handleDeleteType(listItem)}
+                >
+                  <i className="icon-bin" />
+                </button>
               )}
+              <button
+                className="btn btn-light treeItem-action"
+                size="xs"
+                onClick={() => props.handleEditType(listItem)}
+              >
+                <i className="icon-pencil" />
+              </button>
               <button
                 className="btn btn-light treeItem-action"
                 size="xs"

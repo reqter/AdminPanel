@@ -38,28 +38,24 @@ const BooleanComponent = props => {
 
   function handleCheckboxValue(e) {
     setValue(e.target.checked);
-
-    let value;
-    if (field.isTranslate) value = utility.applyeLangs(e.target.checked);
-    else value = e.target.checked;
-
+    let value = e.target.checked;
     if (field.isRequired) {
       let isValid = false;
-      // if (e.target.value.length > 0) {
-      //   isValid = true;
-      // }
+      if (value) {
+        isValid = true;
+      }
       props.onChangeValue(field, value, isValid);
     } else props.onChangeValue(field, value, true);
   }
 
   if (field.appearance === "default") {
     return (
-      <div className="custom_checkbox">
+      <div className="custom_checkbox" style={{ marginTop: 10 }}>
         <div className="left">
           <label className="checkBox">
             <input
               type="checkbox"
-              id="isRequired"
+              id={"chk" + field.sys.id}
               checked={value}
               onChange={handleCheckboxValue}
             />
@@ -67,25 +63,29 @@ const BooleanComponent = props => {
           </label>
         </div>
         <div className="right">
-          <label for="isRequired">Required</label>
-          <label>
-            You won't be able to publish an entry if this field is empty
-          </label>
+          <label for={"chk" + field.sys.id}>{field.title[currentLang]}</label>
+          <label>{field.description[currentLang]}</label>
         </div>
       </div>
     );
   } else {
     return (
-      <div className="form-check">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          value=""
-          id={"chk" + field.id}
-        />
-        <label className="form-check-label" for={"chk" + field.id}>
-          {field.title[currentLang]}
-        </label>
+      <div className="custom_checkbox" style={{ marginTop: 10 }}>
+        <div className="left">
+          <label className="checkBox">
+            <input
+              type="checkbox"
+              id={"chk" + field.sys.id}
+              checked={value}
+              onChange={handleCheckboxValue}
+            />
+            <span className="checkmark" />
+          </label>
+        </div>
+        <div className="right">
+          <label for={"chk" + field.sys.id}>{field.title[currentLang]}</label>
+          <label>{field.description[currentLang]}</label>
+        </div>
       </div>
     );
   }

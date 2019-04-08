@@ -45,7 +45,7 @@ const Products = props => {
             <img
               className="p-image-value"
               src={
-                props.value
+                props.value && props.value.length > 0
                   ? props.value[0][currentLang]
                   : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png"
               }
@@ -64,8 +64,13 @@ const Products = props => {
       accessor: "fields",
       Cell: props => (
         <div className="p-name">
-          <span>{props.value["name"][currentLang]}</span>
-          <span>{props.value["shortDesc"][currentLang]}</span>
+          <span>
+            {props.value["name"] && props.value["name"][currentLang]}
+          </span>
+          <span>
+            {props.value["shortDesc"] &&
+              props.value["shortDesc"][currentLang]}
+          </span>
         </div>
       )
     },
@@ -84,7 +89,7 @@ const Products = props => {
       )
     },
     {
-      Header: () => <div className="p-header-td">Type</div>,
+      Header: () => <div className="p-header-td">Content Type</div>,
       //show: false,
       headerStyle: {
         display: "block"
@@ -93,7 +98,7 @@ const Products = props => {
       Cell: props => {
         return (
           <div className="p-contentType">
-            <span className="badge badge-primary">
+            <span className="badge badge-light">
               {props.value.title[currentLang]}
             </span>
           </div>
@@ -109,8 +114,23 @@ const Products = props => {
       accessor: "category",
       Cell: props => (
         <div className="p-contentType">
-          <span className="badge badge-primary">
+          <span className="badge badge-light">
             {props.value.name[currentLang]}
+          </span>
+        </div>
+      )
+    },
+    {
+      Header: () => <div className="p-header-td">Status</div>,
+      //show: false,
+      headerStyle: {
+        display: "block"
+      },
+      accessor: "category",
+      Cell: props => (
+        <div className="p-contentType">
+          <span className="badge badge-primary">
+            Draft
           </span>
         </div>
       )

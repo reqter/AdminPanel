@@ -51,6 +51,10 @@ class Tree extends Component {
                   style={{
                     paddingLeft: `${15 * lvl}px`
                   }}
+                  onClick={() => {
+                    this.setState(state => ({ selected: node }));
+                    this.props.onRowSelect(node);
+                  }}
                 >
                   {node.children && node.children.length > 0 ? (
                     <>

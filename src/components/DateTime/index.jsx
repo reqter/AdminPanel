@@ -37,14 +37,11 @@ const StringInput = props => {
   }, [props.reset, formData]);
   function handleOnChange(e) {
     setInput(e.target.value);
-
-    let value;
-    if (field.isTranslate) value = utility.applyeLangs(e.target.value);
-    else value = e.target.value;
+    let value = e.target.value;
 
     if (field.isRequired) {
       let isValid = false;
-      if (e.target.value.length > 0) {
+      if (value.length > 0) {
         isValid = true;
       }
       props.onChangeValue(field, value, isValid);
@@ -55,7 +52,7 @@ const StringInput = props => {
     <div className="form-group">
       <label>{field.title[currentLang]}</label>
       <input
-        type="datetime"
+        type="datetime-local"
         className="form-control"
         placeholder={field.title[currentLang]}
         value={input}
