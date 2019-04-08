@@ -435,7 +435,7 @@ const UpsertProduct = props => {
         {tab !== undefined && tab !== 3 && (
           <div className="tabItems">
             {updateMode ? (
-              <div className="item active">Update Mode</div>
+              <div className="item active">Update Content</div>
             ) : (
               <>
                 <div
@@ -514,6 +514,18 @@ const UpsertProduct = props => {
                 {contentType && contentType.title[currentLang]}
               </div>
               <div className="up-categoryBox animated fadeIn">
+                {category &&
+                  (category.image !== undefined ? (
+                    <div className="selectedCategory-img">
+                      <img src={category.image[currentLang]} alt="" />
+                    </div>
+                  ) : (
+                    <div className="selectedCategory-icon">
+                      <div className="contentIcon">
+                        <i className="icon-item-type" />
+                      </div>
+                    </div>
+                  ))}
                 <span>
                   {category ? category.name[currentLang] : "Choose a category"}
                 </span>
