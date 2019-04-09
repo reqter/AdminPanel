@@ -139,12 +139,10 @@ const UpsertProduct = props => {
     // add value to form
     let f = { ...formData };
     const { name: key } = field;
-    if (value === undefined) {
-      delete f[key];
-    } else {
-      f[key] = value;
-    }
-    setFormData(f);
+    setFormData(prevForm => ({
+      ...prevForm,
+      [field.name]: value
+    }));
 
     // check validation
     let obj = { ...formValidation };
