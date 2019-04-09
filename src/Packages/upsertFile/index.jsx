@@ -73,7 +73,6 @@ const UpsertFile = props => {
   const [error, setError] = useState();
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
-  const [resetForm, setResetForm] = useState(false);
 
   useEffect(() => {
     if (props.match.params.id !== undefined) {
@@ -194,7 +193,6 @@ const UpsertFile = props => {
       case "string":
         return (
           <String
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -204,7 +202,6 @@ const UpsertFile = props => {
       case "number":
         return (
           <Number
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -214,7 +211,6 @@ const UpsertFile = props => {
       case "datetime":
         return (
           <DateTime
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -224,7 +220,6 @@ const UpsertFile = props => {
       case "location":
         return (
           <Location
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -234,7 +229,6 @@ const UpsertFile = props => {
       case "media":
         return (
           <Media
-            reset={resetForm}
             formData={formData}
             field={field}
             init={setNameToFormValidation}
@@ -244,7 +238,6 @@ const UpsertFile = props => {
       case "fileuploader":
         return (
           <FileUploader
-            reset={resetForm}
             formData={formData}
             field={field}
             init={setNameToFormValidation}
@@ -254,7 +247,6 @@ const UpsertFile = props => {
       case "boolean":
         return (
           <Boolean
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -264,7 +256,6 @@ const UpsertFile = props => {
       case "keyvalue":
         return (
           <KeyValue
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -274,7 +265,6 @@ const UpsertFile = props => {
       case "richtext":
         return (
           <RichText
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -303,7 +293,6 @@ const UpsertFile = props => {
           if (closePage) {
             backToAssets();
           } else {
-            setResetForm(true);
             setFormData({});
             setFormValidation();
           }
@@ -381,8 +370,6 @@ const UpsertFile = props => {
           if (closePage) {
             backToAssets();
           } else {
-            //setResetForm(false);
-            setResetForm(true);
             setFormData({});
             setFormValidation();
           }

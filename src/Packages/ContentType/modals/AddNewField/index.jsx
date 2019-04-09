@@ -127,11 +127,6 @@ const AddNewField = props => {
   function handleDescriptionChanged(e) {
     setDescription(e.target.value);
   }
-  function resetForm() {
-    setName("");
-    setTitle("");
-    setDescription("");
-  }
 
   function addField(e, showConfig) {
     const obj = {
@@ -201,10 +196,6 @@ const AddNewField = props => {
   }
   function addField_configure() {
     addField(undefined, true);
-  }
-  function checkFieldTranslation() {
-    if (translatableFields.indexOf(selectedField.name) > -1) return true;
-    return false;
   }
   return (
     <Modal isOpen={isOpen} toggle={closeAddFieldModal} size="lg">
@@ -303,6 +294,7 @@ const AddNewField = props => {
                 {translatableFields.indexOf(selectedField.name) > -1 && (
                   <CheckBox
                     title="Enable Local Translation"
+                    value={translation}
                     onChange={e => toggleTranslation(e.target.checked)}
                   />
                 )}

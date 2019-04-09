@@ -110,7 +110,11 @@ const FieldConfig = props => {
     selectedField.inVisible ? selectedField.inVisible : false
   );
   const [textDefaultValue, setTextDefaultValue] = useState(
-    selectedField.type === "string" ? selectedField.defaultValue : ""
+    selectedField.type === "string"
+      ? selectedField.defaultValue
+        ? selectedField.defaultValue
+        : ""
+      : ""
   );
   const [numberDefaultValue, setNumberDefaultValue] = useState(
     selectedField.type === "number"
@@ -121,6 +125,13 @@ const FieldConfig = props => {
   );
   const [dateDefaultValue, toggleDateDefaultValue] = useState(
     selectedField.type === "dateTime" ? selectedField.defaultValue : false
+  );
+  const [isMultiLine, toggleMultiLine] = useState(
+    selectedField.type === "string"
+      ? selectedField.isMultiLine
+        ? selectedField.isMultiLine
+        : false
+      : false
   );
   const [dateTimeFormat, toggleDateFormat] = useState(
     selectedField.type === "dateTime"
@@ -178,6 +189,9 @@ const FieldConfig = props => {
   function handleDateDefaultValue(e) {
     toggleDateDefaultValue(e.target.checked);
   }
+  function handleMultiLineChanged(e) {
+    toggleMultiLine(e.target.checked);
+  }
   function handleChangeTitle(e) {
     setTitle(e.target.value);
   }
@@ -223,14 +237,15 @@ const FieldConfig = props => {
     if (selectedField.type !== "media" && selectedField.type !== "richText") {
       obj["inVisible"] = inVisible;
     }
-    if (selectedField.type === "string" && textDefaultValue.length > 0) {
-      obj["defaultValue"] = textDefaultValue;
+    if (selectedField.type === "string") {
+      if (textDefaultValue.length > 0) obj["defaultValue"] = textDefaultValue;
+      obj["isMultiLine"] = isMultiLine;
     }
     if (selectedField.type === "number" && numberDefaultValue.length > 0) {
       obj["defaultValue"] = numberDefaultValue;
     }
     if (selectedField.type === "dateTime") {
-      obj["defaultValue"] = dateDefaultValue;
+      obj["showCurrent"] = dateDefaultValue;
       obj["format"] = dateTimeFormat;
     }
     if (selectedField.type === "location") {
@@ -261,10 +276,6 @@ const FieldConfig = props => {
           : "all"
         : "all";
     }
-    //  else if (selectedField.type === "boolean") {
-    //   obj["trueText"] = utility.applyeLangs(booleanTrueText);
-    //   obj["falseText"] = utility.applyeLangs(booleanFalseText);
-    // }
     updateField()
       .onOk(result => {
         dispatch({
@@ -621,6 +632,29 @@ const FieldConfig = props => {
                       {languageManager.translate(
                         "FIELD_DATE_SHOW_CURRENT_INFO"
                       )}
+                    </label>
+                  </div>
+                </div>
+              )}
+              {selectedField.type === "string" && (
+                <div className="custom_checkbox">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="multiLine"
+                        checked={isMultiLine}
+                        onChange={handleMultiLineChanged}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label for="multiLine">
+                      {languageManager.translate("FIELD_STRING_MULTILINE")}
+                    </label>
+                    <label for="multiLine">
+                      {languageManager.translate("FIELD_STRING_MULTILINE_INFO")}
                     </label>
                   </div>
                 </div>

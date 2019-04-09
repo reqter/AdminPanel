@@ -44,8 +44,7 @@
           "type": "string",
           "isBase": true,
           "isTranslate": true,
-          "isRequired": true,
-          "defaultValue": "saeed"
+          "isRequired": true
         },
         {
           "sys": {

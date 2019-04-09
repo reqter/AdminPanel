@@ -6,53 +6,80 @@ const StringInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
   const { field, formData } = props;
-  const [resetInputLocaly, setResetLocaly] = useState(true);
-  // چک کن ببین فرم دیتا با این اسم فیلد مقدار داره یا نه . الان فقط رو یه اینپوت ست کردم باید رو تک تک اینپوت های زبان ها ست بشه
-  const value = props.formData[field.name]
-    ? field.isTranslate
-      ? props.formData[field.name][currentLang]
-      : props.formData[field.name]
-    : "";
-  const [input, setInput] = useState(value);
-  if (
-    props.init &&
-    field.isRequired !== undefined &&
-    field.isRequired &&
-    !props.reset
-  ) {
+  const [input, setInput] = useState(initValue());
+
+  function initValue() {
+    if (field.showCurrent) {
+      if (field.format === "date") {
+        return getCurrentDate();
+      }
+    }
+    return "";
+  }
+  if (field.isRequired !== undefined && field.isRequired) {
     if (formData[field.name] === undefined) props.init(field.name);
   }
 
+  // set default value to form data in parent
+  useEffect(() => {
+    if (field.showCurrent && !props.formData[field.name]) {
+      setValueToParentForm(initValue());
+    }
+  }, []);
+
+  // set value to input (update time and reset form)
   useEffect(() => {
     props.formData[field.name]
       ? field.isTranslate
         ? setInput(props.formData[field.name][currentLang])
         : setInput(props.formData[field.name])
       : setInput("");
+  }, [formData]);
 
-    if (props.reset && resetInputLocaly) {
-      setResetLocaly(false);
-      setInput("");
-    }
-  }, [props.reset, formData]);
-  function handleOnChange(e) {
-    setInput(e.target.value);
-    let value = e.target.value;
+  function getCurrentDate() {
+    const today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //As January is 0.
+    let yyyy = today.getFullYear();
+
+    if (dd < 10) dd = "0" + dd;
+    if (mm < 10) mm = "0" + mm;
+    return mm + "/" + dd + "/" + yyyy;
+  }
+  function setValueToParentForm(inputValue) {
+    let value;
+    if (field.isTranslate) value = utility.applyeLangs(inputValue);
+    else value = inputValue;
 
     if (field.isRequired) {
       let isValid = false;
-      if (value.length > 0) {
+      if (inputValue.length > 0) {
         isValid = true;
       }
       props.onChangeValue(field, value, isValid);
     } else props.onChangeValue(field, value, true);
   }
 
+  function handleOnChange(e) {
+    setInput(e.target.value);
+    setValueToParentForm(e.target.value);
+  }
+
   return (
     <div className="form-group">
       <label>{field.title[currentLang]}</label>
       <input
-        type="datetime-local"
+        type={
+          field.format
+            ? field.format === "dateTime"
+              ? "datetime-local"
+              : field.format === "date"
+              ? "date"
+              : field.format === "time"
+              ? "time"
+              : "datetime-local"
+            : "datetime-local"
+        }
         className="form-control"
         placeholder={field.title[currentLang]}
         value={input}

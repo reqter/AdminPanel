@@ -44,12 +44,11 @@
   }
 
   .item-enter {
-    position: absolute;
-    right: -500px;
+    opacity: 0;
   }
   .item-enter-active {
-    right: 0;
-    transition: right 1000ms;
+    opacity: 1;
+    transition: opacity 500ms ease-in;
   }
   .item-exit {
     opacity: 1;

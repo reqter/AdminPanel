@@ -28,8 +28,7 @@ const FileUploaderInput = props => {
   if (
     props.init &&
     field.isRequired !== undefined &&
-    field.isRequired &&
-    !props.reset
+    field.isRequired 
   ) {
     if (formData[field.name] === undefined) props.init(field.name);
   }
@@ -58,12 +57,7 @@ const FileUploaderInput = props => {
         setFiles([]);
       }
     }
-
-    if (props.reset && resetInputLocaly) {
-      setResetLocaly(false);
-      setFiles([]);
-    }
-  }, [props.reset, formData]);
+  }, [formData]);
 
   function handleChange(event) {
     let obj = {

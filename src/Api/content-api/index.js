@@ -695,13 +695,18 @@ export function getContentById() {
     //
 
     const result = data.contents.find(item => item.sys.id === id);
-    result.contentType = data.contentTypes.find(
-      item => item.sys.id === result.contentType.id
-    );
-    result.category = data.categories.find(
-      item => item.sys.id === result.category.id
-    );
-    const status = 200;
+    let status;
+    if (result) {
+      status = 200;
+      result.contentType = data.contentTypes.find(
+        item => item.sys.id === result.contentType.id
+      );
+      result.category = data.categories.find(
+        item => item.sys.id === result.category.id
+      );
+    } else {
+      status = 404;
+    }
     switch (status) {
       case 200:
         _onOk(result);

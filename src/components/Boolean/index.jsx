@@ -5,40 +5,33 @@ import { languageManager, utility } from "./../../services";
 const BooleanComponent = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
-  const [resetInputLocaly, setResetLocaly] = useState(true);
-  // چک کن ببین فرم دیتا با این اسم فیلد مقدار داره یا نه . الان فقط رو یه اینپوت ست کردم باید رو تک تک اینپوت های زبان ها ست بشه
-  const chk_value = props.formData[field.name]
-    ? field.isTranslate
-      ? props.formData[field.name][currentLang]
-      : props.formData[field.name]
-    : false;
-  const [value, setValue] = useState(chk_value);
 
-  if (
-    props.init &&
-    field.isRequired !== undefined &&
-    field.isRequired &&
-    !props.reset
-  ) {
+  const [value, setValue] = useState(
+    field.defaultValue ? field.defaultValue : false
+  );
+
+  if (field.isRequired !== undefined && field.isRequired) {
     if (formData[field.name] === undefined) props.init(field.name);
   }
 
+  // set default value to form data in parent
+  useEffect(() => {
+    if (field.defaultValue && !props.formData[field.name]) {
+      setValueToParentForm(field.defaultValue);
+    }
+  }, []);
+
+  // set value to input
   useEffect(() => {
     props.formData[field.name]
       ? field.isTranslate
         ? setValue(props.formData[field.name][currentLang])
         : setValue(props.formData[field.name])
       : setValue(false);
+  }, [formData]);
 
-    if (props.reset && resetInputLocaly) {
-      setResetLocaly(false);
-      setValue(false);
-    }
-  }, [props.reset, formData]);
-
-  function handleCheckboxValue(e) {
-    setValue(e.target.checked);
-    let value = e.target.checked;
+  function setValueToParentForm(inputValue) {
+    let value = inputValue;
     if (field.isRequired) {
       let isValid = false;
       if (value) {
@@ -48,9 +41,19 @@ const BooleanComponent = props => {
     } else props.onChangeValue(field, value, true);
   }
 
+  function handleCheckboxValue(e) {
+    setValue(e.target.checked);
+    setValueToParentForm(e.target.checked);
+  }
+
   if (field.appearance === "default") {
     return (
-      <div className="custom_checkbox" style={{ marginTop: 10 }}>
+      <div
+        className="custom_checkbox"
+        style={{
+          marginTop: 10
+        }}
+      >
         <div className="left">
           <label className="checkBox">
             <input
@@ -70,7 +73,12 @@ const BooleanComponent = props => {
     );
   } else {
     return (
-      <div className="custom_checkbox" style={{ marginTop: 10 }}>
+      <div
+        className="custom_checkbox"
+        style={{
+          marginTop: 10
+        }}
+      >
         <div className="left">
           <label className="checkBox">
             <input

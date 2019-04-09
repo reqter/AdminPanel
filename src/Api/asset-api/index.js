@@ -534,7 +534,7 @@ export function getAssetById() {
     //const result = await rawResponse.json();
 
     const result = data.assets.find(item => item.sys.id === id);
-    let status = 500;
+    let status = 200;
     if (!result) status = 404;
     switch (status) {
       case 200:

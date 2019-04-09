@@ -36,7 +36,6 @@ const UpsertProduct = props => {
 
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
-  const [resetForm, setResetForm] = useState(false);
   const [error, setError] = useState({});
 
   useEffect(() => {
@@ -125,6 +124,48 @@ const UpsertProduct = props => {
           toggleTab(3);
         }
       })
+      .onServerError(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate(
+            "UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"
+          )
+        };
+        setError(obj);
+      })
+      .onBadRequest(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate(
+            "UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"
+          )
+        };
+        setError(obj);
+      })
+      .unAuthorized(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate(
+            "UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"
+          )
+        };
+        setError(obj);
+      })
+      .notFound(() => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate("UPSERT_ITEM_GET_BY_ID_NOT_FOUND")
+        };
+        setError(obj);
+      })
       .call(id);
   }
   function setNameToFormValidation(name) {
@@ -175,7 +216,6 @@ const UpsertProduct = props => {
       case "string":
         return (
           <String
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -185,7 +225,6 @@ const UpsertProduct = props => {
       case "number":
         return (
           <Number
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -195,7 +234,6 @@ const UpsertProduct = props => {
       case "datetime":
         return (
           <DateTime
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -205,7 +243,6 @@ const UpsertProduct = props => {
       case "location":
         return (
           <Location
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -215,7 +252,6 @@ const UpsertProduct = props => {
       case "media":
         return (
           <Media
-            reset={resetForm}
             formData={formData}
             field={field}
             init={setNameToFormValidation}
@@ -225,7 +261,6 @@ const UpsertProduct = props => {
       case "boolean":
         return (
           <Boolean
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -235,7 +270,6 @@ const UpsertProduct = props => {
       case "keyvalue":
         return (
           <KeyValue
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -245,7 +279,6 @@ const UpsertProduct = props => {
       case "richtext":
         return (
           <RichText
-            reset={resetForm}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -312,7 +345,6 @@ const UpsertProduct = props => {
           if (closePage) {
             backToProducts();
           } else {
-            setResetForm(true);
             setFormData({});
             setFormValidation();
           }
@@ -375,7 +407,6 @@ const UpsertProduct = props => {
           } else {
             setFormData({});
             setFormValidation();
-            setResetForm(prevState => !prevState);
           }
         })
         .onServerError(result => {
