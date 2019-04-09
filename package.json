@@ -13,6 +13,7 @@
     "react-scripts": "^2.1.8",
     "react-sortable-hoc": "^1.7.1",
     "react-table": "^6.9.2",
+    "react-transition-group": "^2.9.0",
     "reactstrap": "^7.1.0",
     "source-map-explorer": "^1.8.0"
   },

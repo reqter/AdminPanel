@@ -4,7 +4,7 @@ const NotifyItem = props => {
   const { notify } = props;
   const timeout = setTimeout(() => {
     props.onRemove(notify);
-  }, 1000);
+  }, 2000);
 
   useEffect(() => {
     return () => {
@@ -13,7 +13,7 @@ const NotifyItem = props => {
   });
 
   return (
-    <div className="custom-notify animated slideInRight faster">
+    <div className="custom-notify">
       <div
         className="leftbox"
         style={{

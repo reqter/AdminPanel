@@ -2,6 +2,7 @@ import React from "react";
 import "./styles.scss";
 import { useGlobalState } from "./../../services";
 import NotifyItem from "./notifyItem";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 const Notifies = props => {
   const [{ notifies }, dispatch] = useGlobalState();
   function remove(item) {
@@ -11,8 +12,8 @@ const Notifies = props => {
     });
   }
   return (
-    notifies.length > 0 && (
-      <div className="notifies">
+    <div className="notifies">
+      <TransitionGroup>
         {notifies.map(notify => {
           if (notify.type === "success") {
             notify.icon = "icon-checkmark";
@@ -22,11 +23,13 @@ const Notifies = props => {
             notify.icon = "icon-warning";
           }
           return (
-            <NotifyItem notify={notify} onRemove={remove} key={notify.id} />
+            <CSSTransition key={notify.id} timeout={500} classNames="item">
+              <NotifyItem notify={notify} onRemove={remove} />
+            </CSSTransition>
           );
         })}
-      </div>
-    )
+      </TransitionGroup>
+    </div>
   );
 };
 

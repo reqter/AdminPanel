@@ -14,7 +14,7 @@
     margin-bottom: 10px;
     box-shadow: 0 0 20px lightgray;
     .leftbox {
-      width: 30px ;
+      width: 30px;
       color: white;
       display: flex;
       justify-content: center;
@@ -41,5 +41,21 @@
         transition-duration: 0.2s;
       }
     }
+  }
+
+  .item-enter {
+    position: absolute;
+    right: -500px;
+  }
+  .item-enter-active {
+    right: 0;
+    transition: right 1000ms;
+  }
+  .item-exit {
+    opacity: 1;
+  }
+  .item-exit-active {
+    opacity: 0;
+    transition: opacity 500ms ease-in;
   }
 }
