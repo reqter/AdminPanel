@@ -10,9 +10,9 @@ const StringInput = props => {
 
   function initValue() {
     if (field.showCurrent) {
-      if (field.format === "date") {
-        return getCurrentDate();
-      }
+      if (field.format === "dateTime") return getCurrentDateTime();
+      if (field.format === "date") return getCurrentDate();
+      if (field.format === "time") return getCurrentTime();
     }
     return "";
   }
@@ -30,9 +30,7 @@ const StringInput = props => {
   // set value to input (update time and reset form)
   useEffect(() => {
     props.formData[field.name]
-      ? field.isTranslate
-        ? setInput(props.formData[field.name][currentLang])
-        : setInput(props.formData[field.name])
+      ? setInput(props.formData[field.name])
       : setInput("");
   }, [formData]);
 
@@ -46,16 +44,31 @@ const StringInput = props => {
     if (mm < 10) mm = "0" + mm;
     return mm + "/" + dd + "/" + yyyy;
   }
+  function getCurrentTime() {
+    var today = new Date();
+    return (
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+    );
+  }
+  function getCurrentDateTime() {
+    var today = new Date();
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes();
+    //2019-04-19T01:00"
+    return date + "T" + time;
+  }
   function setValueToParentForm(inputValue) {
-    let value;
-    if (field.isTranslate) value = utility.applyeLangs(inputValue);
-    else value = inputValue;
+    let value = inputValue;
 
     if (field.isRequired) {
       let isValid = false;
-      if (inputValue.length > 0) {
-        isValid = true;
-      }
+      if (inputValue.length > 0) isValid = true;
+
       props.onChangeValue(field, value, isValid);
     } else props.onChangeValue(field, value, true);
   }
@@ -82,7 +95,7 @@ const StringInput = props => {
         }
         className="form-control"
         placeholder={field.title[currentLang]}
-        value={input}
+        defaultValue={input}
         onChange={handleOnChange}
       />
       <small className="form-text text-muted">

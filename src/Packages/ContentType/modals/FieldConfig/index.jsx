@@ -124,7 +124,11 @@ const FieldConfig = props => {
       : ""
   );
   const [dateDefaultValue, toggleDateDefaultValue] = useState(
-    selectedField.type === "dateTime" ? selectedField.defaultValue : false
+    selectedField.type === "dateTime"
+      ? selectedField.showCurrent
+        ? selectedField.showCurrent
+        : false
+      : false
   );
   const [isMultiLine, toggleMultiLine] = useState(
     selectedField.type === "string"

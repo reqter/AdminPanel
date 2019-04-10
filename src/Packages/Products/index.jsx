@@ -64,12 +64,9 @@ const Products = props => {
       accessor: "fields",
       Cell: props => (
         <div className="p-name">
+          <span>{props.value["name"] && props.value["name"][currentLang]}</span>
           <span>
-            {props.value["name"] && props.value["name"][currentLang]}
-          </span>
-          <span>
-            {props.value["shortDesc"] &&
-              props.value["shortDesc"][currentLang]}
+            {props.value["shortDesc"] && props.value["shortDesc"][currentLang]}
           </span>
         </div>
       )
@@ -129,9 +126,7 @@ const Products = props => {
       accessor: "category",
       Cell: props => (
         <div className="p-contentType">
-          <span className="badge badge-primary">
-            Draft
-          </span>
+          <span className="badge badge-primary">Draft</span>
         </div>
       )
     },
@@ -226,7 +221,6 @@ const Products = props => {
       text = undefined;
       setSearchText("");
     }
-
     filterContents()
       .onOk(result => {
         dispatch({
@@ -284,7 +278,6 @@ const Products = props => {
     setFilters(f);
 
     setSelectedNode(selected);
-
     filterContents()
       .onOk(result => {
         dispatch({

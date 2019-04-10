@@ -68,16 +68,17 @@ const ContentTypeFilter = props => {
             key={listItem.sys.id}
             onClick={() => handleClick(listItem)}
           >
-            <div
-              className="item-checkbox"
-              style={{
-                backgroundColor: selected.sys
-                  ? selected.sys.id === listItem.sys.id
-                    ? "rgb(56,132,255)"
-                    : "whitesmoke"
-                  : "whitesmoke"
-              }}
-            />
+            {listItem.images !== undefined && listItem.images.length > 0 ? (
+              <div className="treeItem-img treeItem-contentType">
+                <img src={listItem.images[0][currentLang]} alt="" />
+              </div>
+            ) : (
+              <div className="treeItem-icon treeItem-contentType">
+                <div className="contentIcon">
+                  <i className="icon-item-type" />
+                </div>
+              </div>
+            )}
             <div
               className="item-name"
               style={{

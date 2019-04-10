@@ -74,6 +74,7 @@ const Tree = props => {
             key={id}
             className="animated fadeIn faster"
             style={{
+              paddingLeft: `${25 * lvl}px`,
               color: selected.sys
                 ? selected.sys.id === node.sys.id
                   ? "rgb(56,132,255)"
@@ -83,32 +84,66 @@ const Tree = props => {
           >
             {node.children ? (
               <>
-                {idState[id] ? (
-                  <i
-                    className="icon-down-chevron chevron"
-                    onClick={toggle}
-                    id={id}
-                  />
-                ) : (
-                  <i
-                    className="icon-right-chevron chevron"
-                    onClick={toggle}
-                    id={id}
-                  />
-                )}
-                {node.name[currentLang]}
-                <ul style={{ display: idState[id] ? "block" : "none" }}>
+                <div>
+                  {idState[id] ? (
+                    <i
+                      className="icon-down-chevron chevron"
+                      onClick={e => toggle(e, node)}
+                      id={id}
+                    />
+                  ) : (
+                    <i
+                      className="icon-right-chevron chevron"
+                      onClick={e => toggle(e, node)}
+                      id={id}
+                    />
+                  )}
+                  {node.image !== undefined ? (
+                    <div className="treeItem-img">
+                      <img src={node.image[currentLang]} alt="" />
+                    </div>
+                  ) : (
+                    <div className="treeItem-icon">
+                      <div className="contentIcon">
+                        <i className="icon-item-type" />
+                      </div>
+                    </div>
+                  )}
+                  {node.name[currentLang]}
+                </div>
+                <ul
+                  style={{
+                    display: idState[id] ? "block" : "none"
+                  }}
+                >
                   {mapper(node.children, id, (lvl || 0) + 1)}
                 </ul>
               </>
             ) : (
-              <span onClick={e => toggle(e, node)} id={id}>
-                {node.name[currentLang]}
-              </span>
+              <div>
+                  <i
+                    className="icon-circle-o circleIcon"
+                  />
+                {node.image !== undefined ? (
+                  <div className="treeItem-img">
+                    <img src={node.image[currentLang]} alt="" />
+                  </div>
+                ) : (
+                  <div className="treeItem-icon">
+                    <div className="contentIcon">
+                      <i className="icon-item-type" />
+                    </div>
+                  </div>
+                )}
+                <span onClick={e => toggle(e, node)} id={id}>
+                  {node.name[currentLang]}
+                </span>
+              </div>
             )}
           </li>
         );
       }
+      return undefined;
     });
   }
 
@@ -117,10 +152,10 @@ const Tree = props => {
       <div className="filter-header">Categories</div>
       <div className="filter-body">
         <ul>
-          <li className="root">
+          {/* <li className="root">
             <i className="icon-right-chevron chevron" />
             All Categories
-          </li>
+          </li> */}
           {categories !== undefined && categories.length && mapper(categories)}
         </ul>
       </div>
