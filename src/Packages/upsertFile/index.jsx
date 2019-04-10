@@ -158,7 +158,10 @@ const UpsertFile = props => {
     const { name: key } = field;
     if (value === undefined) {
       delete f[key];
-      if (key === "url" && field.isBase) delete f["fileType"];
+      if (key === "url" && field.isBase) {
+        delete f["fileType"];
+        delete f["name"];
+      }
     } else {
       if (key === "url" && field.isBase) {
         f[key] = {
@@ -166,6 +169,10 @@ const UpsertFile = props => {
           fa: value["fa"]
         };
         f.fileType = value.fileType;
+        f["name"] = {
+          en: value["name"],
+          fa: value["name"]
+        };
       } else f[key] = value;
     }
     setFormData(f);
@@ -174,6 +181,7 @@ const UpsertFile = props => {
     let obj = { ...formValidation };
     if (isValid && obj) {
       delete obj[key];
+      if (key === "url" && field.isBase) delete obj["name"];
       if (Object.keys(obj).length === 0) {
         setFormValidation(undefined);
       } else {

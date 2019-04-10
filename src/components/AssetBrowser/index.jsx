@@ -188,6 +188,10 @@ const AssetBrowser = props => {
           fa: value["fa"]
         };
         f.fileType = value.fileType;
+        f["name"] = {
+          en: value["name"],
+          fa: value["name"]
+        };
       } else f[key] = value;
     }
     setFormData(f);
@@ -198,6 +202,7 @@ const AssetBrowser = props => {
     };
     if (isValid && obj) {
       delete obj[key];
+      if (key === "url" && field.isBase) delete obj["name"];
       if (Object.keys(obj).length === 0) {
         setFormValidation(undefined);
       } else {
