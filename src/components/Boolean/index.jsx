@@ -42,8 +42,12 @@ const BooleanComponent = props => {
   }
 
   function handleCheckboxValue(e) {
-    setValue(e.target.checked);
-    setValueToParentForm(e.target.checked);
+    if (props.viewMode) {
+      e.preventDefault();
+    } else {
+      setValue(e.target.checked);
+      setValueToParentForm(e.target.checked);
+    }
   }
 
   if (field.appearance === "default") {
@@ -61,6 +65,7 @@ const BooleanComponent = props => {
               id={"chk" + field.sys.id}
               checked={value}
               onChange={handleCheckboxValue}
+              disabled={props.viewMode}
             />
             <span className="checkmark" />
           </label>

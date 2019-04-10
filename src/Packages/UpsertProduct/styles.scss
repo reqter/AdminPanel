@@ -111,6 +111,9 @@
         background: white;
         box-shadow: 0 0 3px lightgray;
         padding: 4%;
+        input[readonly] , select[disabled]{
+          background: white;
+        }
         .rowItem {
           margin: 20px 0;
         }

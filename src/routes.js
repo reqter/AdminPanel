@@ -91,6 +91,10 @@ const routes = [
     component: UpsertProduct
   },
   {
+    path: "/contents/view/:id",
+    component: UpsertProduct
+  },
+  {
     name: translate("HOME_SIDE_NAV_ASSETS_MANAGER_UPLOAD"),
     icon: "folder",
     path: "/addAsset",

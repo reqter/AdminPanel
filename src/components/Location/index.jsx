@@ -68,6 +68,7 @@ const StringInput = props => {
             placeholder={languageManager.translate("LATITUDE")}
             value={latitude}
             onChange={handleLatitudeChange}
+            readOnly={props.viewMode}
           />
         </div>
         <div className="col">
@@ -77,6 +78,7 @@ const StringInput = props => {
             className="form-control"
             value={longitude}
             onChange={handleLongitudeChange}
+            readOnly={props.viewMode}
           />
         </div>
       </div>

@@ -26,8 +26,14 @@ const UpsertProduct = props => {
 
   // variables
   const [updateMode, toggleUpdateMode] = useState(
-    props.match.params.id ? true : false
+    props.match.params.id
+      ? props.match.url.includes("view")
+        ? false
+        : true
+      : false
   );
+  const [viewMode] = useState(props.match.url.includes("view") ? true : false);
+
   const [tab, toggleTab] = useState();
   const [categoryModal, toggleCategoryModal] = useState(false);
   const [category, setCategory] = useState();
@@ -39,10 +45,10 @@ const UpsertProduct = props => {
   const [error, setError] = useState({});
 
   useEffect(() => {
-    if (updateMode) {
+    if (updateMode || viewMode) {
       if (props.match.params.id !== undefined) {
         if (props.match.params.id.length > 0) {
-          toggleUpdateMode(true);
+          //toggleUpdateMode(true);
           getItemById(props.match.params.id);
         } else {
           toggleTab(3);
@@ -216,6 +222,7 @@ const UpsertProduct = props => {
       case "string":
         return (
           <String
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -225,6 +232,7 @@ const UpsertProduct = props => {
       case "number":
         return (
           <Number
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -234,6 +242,7 @@ const UpsertProduct = props => {
       case "datetime":
         return (
           <DateTime
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -243,6 +252,7 @@ const UpsertProduct = props => {
       case "location":
         return (
           <Location
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -252,6 +262,7 @@ const UpsertProduct = props => {
       case "media":
         return (
           <Media
+            viewMode={viewMode}
             formData={formData}
             field={field}
             init={setNameToFormValidation}
@@ -261,6 +272,7 @@ const UpsertProduct = props => {
       case "boolean":
         return (
           <Boolean
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -270,6 +282,7 @@ const UpsertProduct = props => {
       case "keyvalue":
         return (
           <KeyValue
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -279,6 +292,7 @@ const UpsertProduct = props => {
       case "richtext":
         return (
           <RichText
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -465,7 +479,7 @@ const UpsertProduct = props => {
         </button>
         {tab !== undefined && tab !== 3 && (
           <div className="tabItems">
-            {updateMode ? (
+            {updateMode || viewMode ? (
               <div className="item active">
                 {contentType && contentType.title[currentLang]}
               </div>
@@ -508,14 +522,6 @@ const UpsertProduct = props => {
                           <img src={c.images[0][currentLang]} alt="" />
                         </div>
                       )}
-
-                      {/* <button
-                        className="btn btn-primary btn-sm"
-                        color="primary"
-                        style={{ marginRight: 15 }}
-                      >
-                        <i className="icon-item-type" />
-                      </button> */}
                       <div className="treeItem-text">
                         <span className="treeItem-name">
                           {c.title[currentLang]}
@@ -545,6 +551,8 @@ const UpsertProduct = props => {
               <div className="up-content-title">
                 {updateMode
                   ? "Edit "
+                  : viewMode
+                  ? "View"
                   : "Add New " + contentType.title[currentLang]}
               </div>
               <div className="up-categoryBox animated fadeIn">
@@ -563,9 +571,11 @@ const UpsertProduct = props => {
                 <span>
                   {category ? category.name[currentLang] : "Choose a category"}
                 </span>
-                <button className="btn btn-link" onClick={showCatgoryModal}>
-                  Change category
-                </button>
+                {!viewMode && (
+                  <button className="btn btn-link" onClick={showCatgoryModal}>
+                    Change category
+                  </button>
+                )}
               </div>
               <div className="up-formInputs animated fadeIn">
                 {fields &&
@@ -574,11 +584,26 @@ const UpsertProduct = props => {
                       {getFieldItem(field)}
                     </div>
                   ))}
-                <div className="actions">
-                  {!updateMode && (
+                {!viewMode && (
+                  <div className="actions">
+                    {!updateMode && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => upsertItem(false)}
+                        disabled={
+                          !(
+                            Object.keys(formData).length > 0 &&
+                            formValidation === undefined &&
+                            category !== undefined
+                          )
+                        }
+                      >
+                        Save & New
+                      </button>
+                    )}
                     <button
-                      className="btn btn-primary"
-                      onClick={() => upsertItem(false)}
+                      className="btn btn-primary "
+                      onClick={() => upsertItem(true)}
                       disabled={
                         !(
                           Object.keys(formData).length > 0 &&
@@ -587,23 +612,10 @@ const UpsertProduct = props => {
                         )
                       }
                     >
-                      Save & New
+                      {updateMode ? "Update & Close" : "Save & Close"}
                     </button>
-                  )}
-                  <button
-                    className="btn btn-primary "
-                    onClick={() => upsertItem(true)}
-                    disabled={
-                      !(
-                        Object.keys(formData).length > 0 &&
-                        formValidation === undefined &&
-                        category !== undefined
-                      )
-                    }
-                  >
-                    {updateMode ? "Update & Close" : "Save & Close"}
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
             </>
           )}

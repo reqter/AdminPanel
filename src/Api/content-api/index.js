@@ -695,9 +695,9 @@ export function getContentById() {
     //const result = await rawResponse.json();
 
     //
-
-    const result = data.contents.find(item => item.sys.id === id);
+    const item = data.contents.find(item => item.sys.id === id);
     let status;
+    let result = { ...item };
     if (result) {
       status = 200;
       result.contentType = data.contentTypes.find(

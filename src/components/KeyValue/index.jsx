@@ -54,6 +54,7 @@ const KeyValueInput = props => {
           className="form-control"
           value={selectedOption}
           onChange={handleOnChange}
+          disabled
         >
           <option value="">Pick an option</option>
           {field.options &&

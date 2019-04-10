@@ -50,7 +50,7 @@ const StringInput = props => {
   }
 
 
-  
+
   if (field.isMultiLine !== undefined && field.isMultiLine) {
     return (
       <div className="form-group">
@@ -77,6 +77,7 @@ const StringInput = props => {
           placeholder={field.title[currentLang]}
           value={input}
           onChange={handleOnChange}
+          readOnly={props.viewMode}
         />
         <small className="form-text text-muted">
           {field.description[currentLang]}

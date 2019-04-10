@@ -56,6 +56,7 @@ const NumberInput = props => {
         placeholder={field.title[currentLang]}
         value={input}
         onChange={handleOnChange}
+        readOnly={props.viewMode}
       />
       <small className="form-text text-muted">
         {field.description[currentLang]}

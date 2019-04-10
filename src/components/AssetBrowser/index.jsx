@@ -65,7 +65,6 @@ const AssetBrowser = props => {
   const [tab, changeTab] = useState(1);
   const [formData, setFormData] = useState({});
   const [formValidation, setFormValidation] = useState();
-  const [resetForm, setResetForm] = useState(false);
 
   useEffect(() => {
     if (tab === 1) {
@@ -114,10 +113,9 @@ const AssetBrowser = props => {
     addAsset()
       .onOk(result => {
         if (choose) {
-          chooseFile(obj);
+          //chooseFile(obj);
+          changeTab(1);
         } else {
-          setResetForm(false);
-          setResetForm(true);
           setFormData({});
           setFormValidation();
         }
@@ -253,8 +251,8 @@ const AssetBrowser = props => {
                 onClick={() => chooseFile(file)}
               >
                 <div className="top">
-                  {file.fileType &&
-                    (file.fileType.toLowerCase().includes("image") ? (
+                  {file.fileType ? (
+                    file.fileType.toLowerCase().includes("image") ? (
                       <img src={file.url[currentLang]} alt="" />
                     ) : file.fileType.toLowerCase().includes("video") ? (
                       <i className="icon-video icon" />
@@ -265,8 +263,11 @@ const AssetBrowser = props => {
                     ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
                       <i className="icon-spreadsheet icon" />
                     ) : (
-                      <i className="icon-folder icon" />
-                    ))}
+                      <i style={{ fontSize: 14 }}>.file</i>
+                    )
+                  ) : (
+                    <i style={{ fontSize: 14 }}>.file</i>
+                  )}
                 </div>
                 <div className="bottom">
                   <span>{file.name[currentLang]}</span>
@@ -276,24 +277,21 @@ const AssetBrowser = props => {
           </div>
         )}
         {tab === 2 && (
-          <div className="secondTab  animated fadeIn">
+          <div className="secondTab animated fadeIn">
             <div className="newUpload">
               <String
-                reset={resetForm}
                 field={fields[0]}
                 formData={formData}
                 init={setNameToFormValidation}
                 onChangeValue={handleOnChangeValue}
               />
               <String
-                reset={resetForm}
                 field={fields[1]}
                 formData={formData}
                 init={setNameToFormValidation}
                 onChangeValue={handleOnChangeValue}
               />
               <FileUploader
-                reset={resetForm}
                 formData={formData}
                 field={fields[2]}
                 init={setNameToFormValidation}
@@ -323,7 +321,7 @@ const AssetBrowser = props => {
                   )
                 }
               >
-                Save & Choose
+                Save & Back
               </button>
             </div>
           </div>

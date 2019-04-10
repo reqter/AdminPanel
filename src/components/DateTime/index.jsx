@@ -97,6 +97,7 @@ const StringInput = props => {
         placeholder={field.title[currentLang]}
         defaultValue={input}
         onChange={handleOnChange}
+         readOnly={props.viewMode}
       />
       <small className="form-text text-muted">
         {field.description[currentLang]}

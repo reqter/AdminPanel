@@ -96,7 +96,7 @@ const Products = props => {
         return (
           <div className="p-contentType">
             <span className="badge badge-light">
-              {props.value.title[currentLang]}
+              {props.value ? props.value.title[currentLang] : ""}
             </span>
           </div>
         );
@@ -112,7 +112,7 @@ const Products = props => {
       Cell: props => (
         <div className="p-contentType">
           <span className="badge badge-light">
-            {props.value.name[currentLang]}
+            {props.value ? props.value.name[currentLang] : ""}
           </span>
         </div>
       )
@@ -138,6 +138,7 @@ const Products = props => {
       headerStyle: {
         display: "block"
       },
+      clickable: false,
       Cell: props => (
         <div className="p-actions">
           <button
@@ -371,6 +372,12 @@ const Products = props => {
       pathname: `/contents/edit/${row.original.sys.id}`
     });
   }
+  function viewContent(row) {
+    props.history.push({
+      pathname: `/contents/view/${row.sys.id}`,
+      viewMode: true
+    });
+  }
   return (
     <>
       <div className="p-wrapper">
@@ -477,6 +484,16 @@ const Products = props => {
                   border: "none",
                   overflow: "auto",
                   height: "100%" // This will force the table body to overflow and scroll, since there is not enough room
+                }}
+                getTdProps={(state, rowInfo, column, instance) => {
+                  return {
+                    onClick: (e, handleOriginal) => {
+                      if (handleOriginal) {
+                        if (column.clickable === undefined)
+                          viewContent(rowInfo.original);
+                      }
+                    }
+                  };
                 }}
               />
             </div>

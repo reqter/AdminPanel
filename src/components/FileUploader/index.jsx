@@ -25,11 +25,7 @@ const FileUploaderInput = props => {
     return [];
   });
 
-  if (
-    props.init &&
-    field.isRequired !== undefined &&
-    field.isRequired 
-  ) {
+  if (props.init && field.isRequired !== undefined && field.isRequired) {
     if (formData[field.name] === undefined) props.init(field.name);
   }
 
@@ -60,28 +56,30 @@ const FileUploaderInput = props => {
   }, [formData]);
 
   function handleChange(event) {
-    let obj = {
-      id: Math.random().toString(),
-      url: URL.createObjectURL(event.target.files[0]),
-      name: event.target.files[0].name,
-      fileType: event.target.files[0].type
-    };
-    if (field.isList !== undefined && field.isList) {
-      let fs = [...files];
-      fs.push(obj);
-      setFiles(fs);
-      props.onChangeValue(field, fs, true);
-    } else {
-      let fs = [];
-      fs.push(obj);
-      setFiles(fs);
+    if (event.target.files.length > 0) {
+      let obj = {
+        id: Math.random().toString(),
+        url: URL.createObjectURL(event.target.files[0]),
+        name: event.target.files[0].name,
+        fileType: event.target.files[0].type
+      };
+      if (field.isList !== undefined && field.isList) {
+        let fs = [...files];
+        fs.push(obj);
+        setFiles(fs);
+        props.onChangeValue(field, fs, true);
+      } else {
+        let fs = [];
+        fs.push(obj);
+        setFiles(fs);
 
-      let f, l;
-      if (field.isTranslate) {
-        l = utility.applyeLangs(fs[0].url);
-        f = { ...fs[0], ...l };
+        let f, l;
+        if (field.isTranslate) {
+          l = utility.applyeLangs(fs[0].url);
+          f = { ...fs[0], ...l };
+        }
+        props.onChangeValue(field, f, true);
       }
-      props.onChangeValue(field, f, true);
     }
   }
 
@@ -119,8 +117,8 @@ const FileUploaderInput = props => {
               <i className="icon-bin" />
             </div>
             <div className="updatedFileType">
-              {file.fileType &&
-                (file.fileType.toLowerCase().includes("image") ? (
+              {file.fileType ? (
+                file.fileType.toLowerCase().includes("image") ? (
                   <img src={file.url} alt="" />
                 ) : file.fileType.toLowerCase().includes("video") ? (
                   <i className="icon-video" />
@@ -132,7 +130,10 @@ const FileUploaderInput = props => {
                   <i className="icon-spreadsheet" />
                 ) : (
                   <i className="icon-folder" />
-                ))}
+                )
+              ) : (
+                <i style={{ fontSize: 14 }}>.file</i>
+              )}
             </div>
           </div>
         ))}
@@ -147,7 +148,6 @@ const FileUploaderInput = props => {
           )}
         </div>
       </div>
-   
     </div>
   );
 };

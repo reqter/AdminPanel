@@ -73,6 +73,19 @@ const MediaInput = props => {
   function openAssetBrowser() {
     toggleAssetBrowser(true);
   }
+  const imgs = ["jpg", "jpeg", "gif", "bmp", "png"];
+  const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
+  const audios = ["wav", "mp3", "ogg"];
+  function getAssetUi(file) {
+    const ext = file.url[currentLang].split(".").pop();
+    if (imgs.indexOf(ext.toLowerCase()) !== -1)
+      return <img src={file.url[currentLang]} alt="" />;
+    else if (videos.indexOf(ext.toLowerCase()) !== -1)
+      return <i className="icon-video" />;
+    else if (audios.indexOf(ext.toLowerCase()) !== -1)
+      return <i className="icon-audio" />;
+    else return <i style={{ fontSize: 14 }}>.file</i>;
+  }
   return (
     <>
       <div className="up-uploader">
@@ -82,34 +95,42 @@ const MediaInput = props => {
         <div className="files">
           {files.map(file => (
             <div key={file.id} className="files-uploaded">
-              <div
-                className="files-uploaded-icon"
-                onClick={() => removeFile(file)}
-              >
-                <i className="icon-bin" />
-              </div>
-              {field.mediaType === "file" ? (
-                <div className="updatedFileType">
-                  <i className="icon-file-plus-o" />
-                </div>
-              ) : field.mediaType === "image" ? (
-                <img src={file.url[currentLang]} alt="" />
-              ) : (
-                <div className="updatedFileType">
-                  <i className="icon-file-plus-o" />
+              {!props.viewMode && (
+                <div
+                  className="files-uploaded-icon"
+                  onClick={() => removeFile(file)}
+                >
+                  <i className="icon-bin" />
                 </div>
               )}
+              <div className="updatedFileType">
+                {field.mediaType === "image" ? (
+                  <img src={file.url[currentLang]} alt="" />
+                ) : field.mediaType === "video" ? (
+                  <i className="icon-video" />
+                ) : field.mediaType === "audio" ? (
+                  <i className="icon-audio" />
+                ) : field.mediaType === "pdf" ? (
+                  <i className="icon-pdf" />
+                ) : field.mediaType === "spreadsheet" ? (
+                  <i className="icon-spreadsheet" />
+                ) : (
+                  getAssetUi(file)
+                )}
+              </div>
             </div>
           ))}
-          <div className="files-input" onClick={openAssetBrowser}>
-            {field.mediaType === "file" ? (
-              <i className="icon-file-plus-o" />
-            ) : field.mediaType === "image" ? (
-              <i className="icon-camera" />
-            ) : (
-              <i className="icon-file-plus-o" />
-            )}
-          </div>
+          {!props.viewMode && (
+            <div className="files-input" onClick={openAssetBrowser}>
+              {field.mediaType === "file" ? (
+                <i className="icon-file-plus-o" />
+              ) : field.mediaType === "image" ? (
+                <i className="icon-camera" />
+              ) : (
+                <i className="icon-file-plus-o" />
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -117,7 +138,7 @@ const MediaInput = props => {
         <AssetBrowser
           isOpen={assetBrowser}
           onCloseModal={handleChooseAsset}
-          mediaType={undefined}
+          mediaType={field.mediaType ? field.mediaType : "all"}
         />
       )}
     </>
