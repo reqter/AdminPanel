@@ -182,6 +182,33 @@ const Products = props => {
           value: result
         });
       })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("CONTENTS_UN_AUTHORIZED")
+          }
+        });
+      })
       .call();
   }, []);
   // methods
@@ -298,6 +325,33 @@ const Products = props => {
         dispatch({
           type: "SET_CONTENTS",
           value: result
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("CONTENTS_UN_AUTHORIZED")
+          }
         });
       })
       .call(text, contentTypeId, categoryId, status);

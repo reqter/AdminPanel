@@ -232,6 +232,9 @@ export default {
   FIELD_STRING_MULTILINE: "Enable Multi Line",
   FIELD_STRING_MULTILINE_INFO: "You will be able enter text more than normal",
   // items
+  CONTENTS_ON_SERVER_ERROR: "Internl server error",
+  CONTENTS_ON_BAD_REQUEST: "Bad Request",
+  CONTENTS_UN_AUTHORIZED: "Un Authorized",
   ITEMS_CATEGORIES_CONTENT: "Content",
   UPSERT_ITEM_UPDATE_ON_OK: "Content is updated succefully.",
   UPSERT_ITEM_UPDATE_ON_SERVER_ERROR: "Internal server error",
