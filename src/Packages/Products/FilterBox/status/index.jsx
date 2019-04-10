@@ -5,9 +5,10 @@ const StatusFilter = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const [selected, setSelected] = useState({});
   const [{ status }, dispatch] = useGlobalState();
+
   useEffect(() => {
     if (Object.keys(selected).length > 0) {
-      const c = props.filters.find(item => item.type === "contentType");
+      const c = props.filters.find(item => item.type === "status");
       if (!c) {
         setSelected({});
       }
@@ -16,7 +17,7 @@ const StatusFilter = props => {
 
   function handleClick(item) {
     setSelected(item);
-    if (item.id !== selected.id) props.onContentTypeSelect(item);
+    if (item.id !== selected.id) props.onStatusSelected(item);
   }
   return (
     <div className="filterBox">
@@ -28,12 +29,12 @@ const StatusFilter = props => {
             key={listItem.id}
             onClick={() => handleClick(listItem)}
           >
-            <i
-              className={listItem.icon}
-              style={{
-                marginRight: 10
-              }}
-            />
+            <div className="treeItem-icon treeItem-contentType">
+              <div className="contentIcon">
+                <i className={listItem.icon} />
+              </div>
+            </div>
+
             <div
               className="item-name"
               style={{

@@ -123,10 +123,12 @@ const Products = props => {
       headerStyle: {
         display: "block"
       },
-      accessor: "category",
+      accessor: "fields.status",
       Cell: props => (
         <div className="p-contentType">
-          <span className="badge badge-primary">Draft</span>
+          <span className="badge badge-primary">
+            {languageManager.translate(props.value)}
+          </span>
         </div>
       )
     },
@@ -164,8 +166,9 @@ const Products = props => {
   const [leftContent, toggleLeftContent] = useState(false);
 
   const [searchText, setSearchText] = useState("");
-  const [selectedNode, setSelectedNode] = useState({});
   const [selectedContentType, setSelectedContentType] = useState({});
+  const [selectedNode, setSelectedNode] = useState({});
+  const [selectedStatus, setSelectedStatus] = useState({});
   const [columnsVisibility, toggleColumns] = useState(false);
 
   const [columns, setColumns] = useState(baseFieldColumnsConfig.slice());
@@ -217,67 +220,79 @@ const Products = props => {
     let f = dataFilters.filter(item => item.type !== filter.type);
     setFilters(f);
     let text = searchText;
+    let contentTypeID = selectedContentType.sys
+      ? selectedContentType.sys.id
+      : undefined;
+    let categoryID = selectedNode.sys ? selectedNode.sys.id : undefined;
+    let status = selectedStatus.name;
     if (filter.type === "text") {
       text = undefined;
       setSearchText("");
+    } else if (filter.type === "contentType") {
+      contentTypeID = undefined;
+      setSelectedContentType({});
+    } else if (filter.type === "category") {
+      categoryID = undefined;
+      setSelectedNode({});
+    } else if (filter.type === "status") {
+      status = undefined;
+      setSelectedNode({});
     }
-    filterContents()
-      .onOk(result => {
-        dispatch({
-          type: "SET_CONTENTS",
-          value: result
-        });
-      })
-      .call(
-        text,
-        selectedContentType.sys ? selectedContentType.sys.id : undefined,
-        selectedNode.sys ? selectedNode.sys.id : undefined
-      );
+    filterData(text, contentTypeID, categoryID, status);
   }
   function handleSearchChanged() {
     let f = [...dataFilters].filter(item => item.type !== "text");
     if (searchText.length !== 0) f.push({ type: "text", title: searchText });
     setFilters(f);
 
-    filterContents()
-      .onOk(result => {
-        dispatch({
-          type: "SET_CONTENTS",
-          value: result
-        });
-      })
-      .call(
-        searchText,
-        selectedContentType.sys ? selectedContentType.sys.id : undefined,
-        selectedNode.sys ? selectedNode.sys.id : undefined
-      );
+    filterData(
+      searchText,
+      selectedContentType.sys ? selectedContentType.sys.id : undefined,
+      selectedNode.sys ? selectedNode.sys.id : undefined,
+      selectedStatus.name
+    );
   }
   function handleContentTypeSelect(selected) {
     let f = dataFilters.filter(item => item.type !== "contentType");
     f.push(selected);
     setFilters(f);
-
     setSelectedContentType(selected);
-    filterContents()
-      .onOk(result => {
-        dispatch({
-          type: "SET_CONTENTS",
-          value: result
-        });
-      })
-      .call(
-        searchText,
-        selected.sys.id,
-        selectedNode.sys ? selectedNode.sys.id : undefined
-      );
+    filterData(
+      searchText,
+      selected.sys.id,
+      selectedNode.sys ? selectedNode.sys.id : undefined,
+      selectedStatus.name
+    );
   }
-  function handleStatusSelect(selected) {}
+
   function handleClickCategory(selected) {
     let f = dataFilters.filter(item => item.type !== "category");
     f.push(selected);
     setFilters(f);
-
     setSelectedNode(selected);
+
+    filterData(
+      searchText,
+      selectedContentType.sys ? selectedContentType.sys.id : undefined,
+      selected.sys.id,
+      selectedStatus.name
+    );
+  }
+  function handleStatusSelected(selected) {
+    let f = dataFilters.filter(item => item.type !== "status");
+    selected.type = "status";
+    f.push(selected);
+    setFilters(f);
+    setSelectedStatus(selected);
+
+    filterData(
+      searchText,
+      selectedContentType.sys ? selectedContentType.sys.id : undefined,
+      selectedNode.sys ? selectedNode.sys.id : undefined,
+      selected.name
+    );
+  }
+  function filterData(text, contentTypeId, categoryId, status) {
     filterContents()
       .onOk(result => {
         dispatch({
@@ -285,45 +300,7 @@ const Products = props => {
           value: result
         });
       })
-      .call(
-        searchText,
-        selectedContentType.sys ? selectedContentType.sys.id : undefined,
-        selected.sys.id
-      );
-
-    // if (selected.type === "category") {
-    //   initColumns();
-    // } else {
-    //   if (selected.fields) {
-    //     toggleColumns(true); // columns are visible or not
-
-    //     const cols = columns.slice();
-    //     let c_arr = cols.map(col => {
-    //       let item = col;
-    //       item.headerStyle.display = "flex";
-    //       return item;
-    //     });
-    //     const fields = selected.fields;
-    //     for (let i = 0; i < fields.length; i++) {
-    //       const field = selected.fields[i];
-    //       const obj = {
-    //         Header: field.title,
-    //         //show: false,
-    //         headerStyle: {
-    //           display: "block"
-    //         },
-    //         accessor: field.name,
-    //         Cell: props => {
-    //           return makeTableFieldView(field.type, props);
-    //         }
-    //       };
-    //       c_arr.push(obj);
-    //     }
-    //     setColumns(c_arr);
-    //   } else {
-    //     initColumns();
-    //   }
-    // }
+      .call(text, contentTypeId, categoryId, status);
   }
   function handleDeleteRow(row) {
     deleteContent()
@@ -426,7 +403,7 @@ const Products = props => {
               <Status
                 filters={dataFilters}
                 leftContent={leftContent}
-                onStatusSelect={selected => handleStatusSelect(selected)}
+                onStatusSelected={selected => handleStatusSelected(selected)}
               />
             </div>
           )}

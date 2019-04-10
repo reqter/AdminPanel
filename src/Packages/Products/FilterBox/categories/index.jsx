@@ -57,9 +57,11 @@ const Tree = props => {
     let n_s = { ...idState };
     n_s[id] = !idState[id];
     setId(n_s);
-    if (selected.sys === undefined || node.sys.id !== selected.sys.id) {
-      setSelected(node);
-      props.onCategorySelect(node);
+    if (node.children === undefined || node.children.length === 0) {
+      if (selected.sys === undefined || node.sys.id !== selected.sys.id) {
+        setSelected(node);
+        props.onCategorySelect(node);
+      }
     }
   }
   function mapper(nodes, parentId, lvl) {
@@ -121,9 +123,7 @@ const Tree = props => {
               </>
             ) : (
               <div>
-                  <i
-                    className="icon-circle-o circleIcon"
-                  />
+                <i className="icon-circle-o circleIcon" />
                 {node.image !== undefined ? (
                   <div className="treeItem-img">
                     <img src={node.image[currentLang]} alt="" />

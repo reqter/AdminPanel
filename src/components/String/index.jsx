@@ -48,6 +48,9 @@ const StringInput = props => {
     setInput(e.target.value);
     setValueToParentForm(e.target.value);
   }
+
+
+  
   if (field.isMultiLine !== undefined && field.isMultiLine) {
     return (
       <div className="form-group">

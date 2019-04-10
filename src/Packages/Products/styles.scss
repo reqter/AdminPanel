@@ -112,7 +112,9 @@
           .selectedFilters {
             display: flex;
             padding: 10px 0;
+            flex-wrap: wrap;
             .filterItem {
+              margin-bottom: 5px;
               transition-duration: 1s;
               min-width: 70px;
               align-items: center;
@@ -125,7 +127,7 @@
               color: white;
               .filterText {
                 margin-right: 10px;
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: 500;
               }
               .icon {
@@ -143,7 +145,7 @@
 
             .item-name {
               transition-duration: 0.2s;
-              font-weight: 400;
+              font-weight: 500;
               font-size: 14px;
               cursor: pointer;
             }
@@ -161,7 +163,6 @@
             .circleIcon {
               font-size: 6px;
               margin-right: 11px;
-              font-weight: bold;
             }
             li {
               font-size: 14px;
@@ -175,6 +176,7 @@
               div {
                 display: flex;
                 align-items: center;
+                font-weight: 500;
               }
 
               // &:before {

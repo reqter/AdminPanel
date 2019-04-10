@@ -156,6 +156,7 @@
           "en": "Imported product from africa",
           "fa": "محصولات وارداتی از افریقا"
         },
+        "status": "published",
         "price": "2500",
         "brand": {
           "en": "Chicita",

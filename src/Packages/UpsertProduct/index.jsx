@@ -464,7 +464,9 @@ const UpsertProduct = props => {
         {tab !== undefined && tab !== 3 && (
           <div className="tabItems">
             {updateMode ? (
-              <div className="item active">Update Content</div>
+              <div className="item active">
+                {contentType && contentType.title[currentLang]}
+              </div>
             ) : (
               <>
                 <div
@@ -539,8 +541,9 @@ const UpsertProduct = props => {
           {tab === 2 && (
             <>
               <div className="up-content-title">
-                {updateMode ? "Edit " : "Add New "}
-                {contentType && contentType.title[currentLang]}
+                {updateMode
+                  ? "Edit "
+                  : "Add New " + contentType.title[currentLang]}
               </div>
               <div className="up-categoryBox animated fadeIn">
                 {category &&

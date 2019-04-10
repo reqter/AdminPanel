@@ -943,7 +943,7 @@ const FieldConfig = props => {
                       </div>
                     ))}
                     <button
-                      className="btn btn-danger btn-plus btn-sm"
+                      className="btn btn-primary btn-plus btn-sm"
                       onClick={addNewOption}
                     >
                       <i className="icon-plus" />

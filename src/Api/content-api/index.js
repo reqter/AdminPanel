@@ -39,7 +39,7 @@ export function filterContents() {
       _onConnectionErrorCallBack(result);
     }
   }
-  function _call(name, contentType, category) {
+  function _call(name, contentType, category, status) {
     const f_data = data.contents.filter(item => {
       if (name && name.length > 0) {
         if (!item.fields.name[currentLang].toLowerCase().includes(name))
@@ -51,7 +51,9 @@ export function filterContents() {
       if (category) {
         if (item.category.id !== category) return false;
       }
-
+      if (status) {
+        if (item.fields.status !== status) return false;
+      }
       return true;
     });
     _onOk(f_data);
