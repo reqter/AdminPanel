@@ -50,20 +50,36 @@ const KeyValueInput = props => {
     return (
       <div className="form-group">
         <label>{field.title[currentLang]}</label>
-        <select
-          className="form-control"
-          value={selectedOption}
-          onChange={handleOnChange}
-          disabled
-        >
-          <option value="">Pick an option</option>
-          {field.options &&
-            field.options.map(option => (
-              <option value={option.value} key={option.value}>
-                {option.value}
-              </option>
-            ))}
-        </select>
+        {props.viewMode ? (
+          <select
+            className="form-control"
+            value={selectedOption}
+            onChange={handleOnChange}
+            disabled
+          >
+            <option value="">Pick an option</option>
+            {field.options &&
+              field.options.map(option => (
+                <option value={option.value} key={option.value}>
+                  {option.value}
+                </option>
+              ))}
+          </select>
+        ) : (
+          <select
+            className="form-control"
+            value={selectedOption}
+            onChange={handleOnChange}
+          >
+            <option value="">Pick an option</option>
+            {field.options &&
+              field.options.map(option => (
+                <option value={option.value} key={option.value}>
+                  {option.value}
+                </option>
+              ))}
+          </select>
+        )}
         <small className="form-text text-muted">
           {field.description[currentLang]}
         </small>
