@@ -63,19 +63,19 @@ const fields = [
     title: languageManager.translate("FIELD_TYPE_RICH_TEXT"),
     description: languageManager.translate("FIELD_TYPE_RICH_TEXT_INFO"),
     icon: "icon-file-text-o"
-  }
+  },
   // {
   //   name: "jsonObject",
   //   title: languageManager.translate("FIELD_TYPE_OBJECT"),
   //   description: languageManager.translate("FIELD_TYPE_OBJECT_INFO"),
   //   icon: "icon-json-file"
   // },
-  // {
-  //   name: "reference",
-  //   title: languageManager.translate("FIELD_TYPE_REFERENCE"),
-  //   description: languageManager.translate("FIELD_TYPE_REFERENCE_INFO"),
-  //   icon: "icon-reference"
-  // }
+  {
+    name: "reference",
+    title: languageManager.translate("FIELD_TYPE_REFERENCE"),
+    description: languageManager.translate("FIELD_TYPE_REFERENCE_INFO"),
+    icon: "icon-reference"
+  }
 ];
 const translatableFields = ["string", "media", "richText"];
 

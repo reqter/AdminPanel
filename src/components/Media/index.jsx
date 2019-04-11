@@ -77,14 +77,14 @@ const MediaInput = props => {
   const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
   const audios = ["wav", "mp3", "ogg"];
   function getAssetUi(file) {
-    const ext = file.url[currentLang].split(".").pop();
+    const ext = file.url[currentLang].split("/").pop().split(".").pop();
     if (imgs.indexOf(ext.toLowerCase()) !== -1)
       return <img src={file.url[currentLang]} alt="" />;
     else if (videos.indexOf(ext.toLowerCase()) !== -1)
       return <i className="icon-video" />;
     else if (audios.indexOf(ext.toLowerCase()) !== -1)
       return <i className="icon-audio" />;
-    else return <i style={{ fontSize: 14 }}>.file</i>;
+    else return <i style={{ fontSize: 14 }}>.unknown</i>;
   }
   return (
     <>

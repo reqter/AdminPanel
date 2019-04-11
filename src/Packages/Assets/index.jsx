@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
+import { AssetFile } from "./../../components";
 import {
   getAssets,
   deleteAsset,
@@ -270,6 +271,7 @@ const Assets = props => {
       .notFound(result => {})
       .call(file.id);
   }
+
   return (
     <>
       <div className="as-wrapper">
@@ -364,37 +366,29 @@ const Assets = props => {
                         </div>
                       </td>
                       <td>
-                        {file.fileType.toLowerCase().includes("image") ? (
-                          <div className="as-table-image">
+                        <div className="as-table-image">
+                          {file.fileType.toLowerCase().includes("image") ? (
                             <img src={file.url[currentLang]} alt="" />
-                          </div>
-                        ) : file.fileType.toLowerCase().includes("video") ? (
-                          <div className="as-table-image">
+                          ) : file.fileType.toLowerCase().includes("video") ? (
                             <i className="icon-video" />
-                          </div>
-                        ) : file.fileType.toLowerCase().includes("audio") ? (
-                          <div className="as-table-image">
+                          ) : file.fileType.toLowerCase().includes("audio") ? (
                             <i className="icon-audio" />
-                          </div>
-                        ) : file.fileType.toLowerCase().includes("pdf") ? (
-                          <div className="as-table-image">
+                          ) : file.fileType.toLowerCase().includes("pdf") ? (
                             <i className="icon-pdf" />
-                          </div>
-                        ) : file.fileType
-                            .toLowerCase()
-                            .includes("spreadsheet") ? (
-                          <div className="as-table-image">
+                          ) : file.fileType
+                              .toLowerCase()
+                              .includes("spreadsheet") ? (
                             <i className="icon-spreadsheet" />
-                          </div>
-                        ) : (
-                          <div className="as-table-image">
-                            <i className="icon-folder" />
-                          </div>
-                        )}
+                          ) : (
+                            <AssetFile file={file} class="assetFile" />
+                          )}
+                        </div>
                       </td>
                       <td>
                         <div className="as-table-name">
-                          <span className="name">{file.name[currentLang]}</span>
+                          <span className="name">
+                            {file.title[currentLang]}
+                          </span>
                           <span>{file.fileType}</span>
                         </div>
                       </td>

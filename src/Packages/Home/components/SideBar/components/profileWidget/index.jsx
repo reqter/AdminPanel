@@ -33,6 +33,9 @@ const ProfileWidget = props => {
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem>
+              {languageManager.translate("HOME_SIDEBAR_PROFILE_PROFILE")}
+            </DropdownItem>
+            <DropdownItem>
               {languageManager.translate("HOME_SIDEBAR_PROFILE_SETTINGS")}
             </DropdownItem>
             <DropdownItem onClick={logout}>

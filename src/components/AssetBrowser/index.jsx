@@ -2,22 +2,22 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "reactstrap/es/Modal";
 import String from "./../String";
 import FileUploader from "./../FileUploader";
+import { AssetFile } from "./../../components";
 import { languageManager, utility, useGlobalState } from "./../../services";
 import "./styles.scss";
 
 import { filterAssets, getAssets, addAsset } from "./../../Api/asset-api";
-
 const fields = [
   {
     id: "1",
-    name: "name",
+    name: "title",
     title: {
-      en: "Name",
-      fa: "Name"
+      en: "Title",
+      fa: "عنوان"
     },
     description: {
-      fa: "name of each product",
-      en: "name of each product"
+      en: "this will be apear on assets",
+      fa: "نام فایل برای نمایش در لیست"
     },
     type: "string",
     isBase: true,
@@ -28,12 +28,12 @@ const fields = [
     id: "2",
     name: "shortDesc",
     title: {
-      fa: "Short Description",
-      en: "Short Description"
+      en: "Short Description",
+      fa: "توضیحات"
     },
     description: {
-      fa: "",
-      en: ""
+      en: "Short description of your file",
+      fa: "توضیح کوتاه برای فایل"
     },
     type: "string",
     isBase: true,
@@ -174,13 +174,15 @@ const AssetBrowser = props => {
   }
   function handleOnChangeValue(field, value, isValid) {
     // add value to form
-    let f = {
-      ...formData
-    };
+    let f = { ...formData };
     const { name: key } = field;
     if (value === undefined) {
       delete f[key];
-      if (key === "url" && field.isBase) delete f["fileType"];
+      if (key === "url" && field.isBase) {
+        delete f["fileType"];
+        delete f["name"];
+        delete f["title"];
+      }
     } else {
       if (key === "url" && field.isBase) {
         f[key] = {
@@ -188,7 +190,8 @@ const AssetBrowser = props => {
           fa: value["fa"]
         };
         f.fileType = value.fileType;
-        f["name"] = {
+        f.name = value["name"];
+        f["title"] = {
           en: value["name"],
           fa: value["name"]
         };
@@ -197,12 +200,10 @@ const AssetBrowser = props => {
     setFormData(f);
 
     // check validation
-    let obj = {
-      ...formValidation
-    };
+    let obj = { ...formValidation };
     if (isValid && obj) {
       delete obj[key];
-      if (key === "url" && field.isBase) delete obj["name"];
+      if (key === "url" && field.isBase) delete obj["title"];
       if (Object.keys(obj).length === 0) {
         setFormValidation(undefined);
       } else {
@@ -256,22 +257,18 @@ const AssetBrowser = props => {
                 onClick={() => chooseFile(file)}
               >
                 <div className="top">
-                  {file.fileType ? (
-                    file.fileType.toLowerCase().includes("image") ? (
-                      <img src={file.url[currentLang]} alt="" />
-                    ) : file.fileType.toLowerCase().includes("video") ? (
-                      <i className="icon-video icon" />
-                    ) : file.fileType.toLowerCase().includes("audio") ? (
-                      <i className="icon-audio icon" />
-                    ) : file.fileType.toLowerCase().includes("pdf") ? (
-                      <i className="icon-pdf icon" />
-                    ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
-                      <i className="icon-spreadsheet icon" />
-                    ) : (
-                      <i style={{ fontSize: 14 }}>.file</i>
-                    )
+                  {file.fileType.toLowerCase().includes("image") ? (
+                    <img src={file.url[currentLang]} alt="" />
+                  ) : file.fileType.toLowerCase().includes("video") ? (
+                    <i className="icon-video" />
+                  ) : file.fileType.toLowerCase().includes("audio") ? (
+                    <i className="icon-audio" />
+                  ) : file.fileType.toLowerCase().includes("pdf") ? (
+                    <i className="icon-pdf" />
+                  ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
+                    <i className="icon-spreadsheet" />
                   ) : (
-                    <i style={{ fontSize: 14 }}>.file</i>
+                    <AssetFile file={file} class="fileUploader" />
                   )}
                 </div>
                 <div className="bottom">

@@ -17,14 +17,14 @@ import {
 const fields = [
   {
     id: "1",
-    name: "name",
+    name: "title",
     title: {
-      en: "Name",
-      fa: "Name"
+      en: "Title",
+      fa: "عنوان"
     },
     description: {
-      fa: "name of each product",
-      en: "name of each product"
+      en: "this will be apear on assets",
+      fa: "نام فایل برای نمایش در لیست"
     },
     type: "string",
     isBase: true,
@@ -35,12 +35,12 @@ const fields = [
     id: "2",
     name: "shortDesc",
     title: {
-      fa: "Short Description",
-      en: "Short Description"
+      en: "Short Description",
+      fa: "توضیحات"
     },
     description: {
-      fa: "",
-      en: ""
+      en: "Short description of your file",
+      fa: "توضیح کوتاه برای فایل"
     },
     type: "string",
     isBase: true,
@@ -161,6 +161,7 @@ const UpsertFile = props => {
       if (key === "url" && field.isBase) {
         delete f["fileType"];
         delete f["name"];
+        delete f["title"];
       }
     } else {
       if (key === "url" && field.isBase) {
@@ -169,7 +170,8 @@ const UpsertFile = props => {
           fa: value["fa"]
         };
         f.fileType = value.fileType;
-        f["name"] = {
+        f.name = value["name"];
+        f["title"] = {
           en: value["name"],
           fa: value["name"]
         };
@@ -181,7 +183,7 @@ const UpsertFile = props => {
     let obj = { ...formValidation };
     if (isValid && obj) {
       delete obj[key];
-      if (key === "url" && field.isBase) delete obj["name"];
+      if (key === "url" && field.isBase) delete obj["title"];
       if (Object.keys(obj).length === 0) {
         setFormValidation(undefined);
       } else {
@@ -361,6 +363,7 @@ const UpsertFile = props => {
           issueDate: "19/01/2019 20:18"
         },
         name: formData.name,
+        title: formData.title,
         shorDesc: formData.shortDesc,
         status: "draft",
         url: formData.url,

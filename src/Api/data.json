@@ -1,5 +1,273 @@
 {
   "projectInfo": { "name": "REQTER" },
+  "templates": [
+    {
+      "id": "1",
+      "name": "dataCollection",
+      "title": { "en": "Data Collection", "fa": "مجموعه داده ای" },
+      "description": {
+        "en": "Create a content type with custom fields",
+        "fa": "ایجاد محتوا با فیلد های سفارشی"
+      },
+      "icon": "icon-database",
+      "fields": [
+        {
+          "sys": {
+            "id": "1",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true
+        },
+        {
+          "sys": {
+            "id": "2",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true
+        }
+      ],
+      "allowCustomFields": true
+    },
+    {
+      "id": "2",
+      "name": "content",
+      "title": { "en": "Content", "fa": "محتوا" },
+      "description": {
+        "en": "It contains a body field",
+        "fa": "این شامل فیلدی برای تولید محتوای سفارشی می باشد"
+      },
+      "icon": "icon-drawer2",
+      "allowCustomFields": true,
+      "fields": [
+        {
+          "sys": {
+            "id": "1",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true
+        },
+        {
+          "sys": {
+            "id": "2",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true
+        },
+        {
+          "sys": {
+            "id": "3",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "media",
+          "title": {
+            "fa": "رسانه",
+            "en": "Media"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": "all",
+          "isTranslate": true
+        },
+        {
+          "sys": {
+            "id": "4",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "body",
+          "title": {
+            "en": "Body",
+            "fa": "محتوا"
+          },
+          "description": {
+            "en": "",
+            "fa": ""
+          },
+          "type": "richText",
+          "isBase": true
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "gallery",
+      "title": { "en": "Gallery", "fa": "گالری" },
+      "description": {
+        "en": "Making custom gallery collection",
+        "fa": "گالری سفارشی خود را بسازید"
+      },
+      "icon": "icon-images",
+      "fields": [
+        {
+          "sys": {
+            "id": "1",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true
+        },
+        {
+          "sys": {
+            "id": "2",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true
+        },
+        {
+          "sys": {
+            "id": "3",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "cover",
+          "title": {
+            "fa": "تصویر گالری",
+            "en": "Cover Image"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "mediaType": "image",
+          "isTranslate": true,
+          "isRequired": true,
+          "isList": false,
+          "isBase": true
+        },
+        {
+          "sys": {
+            "id": "4",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "gallery",
+          "title": {
+            "en": "Gallery",
+            "fa": "گالری"
+          },
+          "description": {
+            "en": "",
+            "fa": ""
+          },
+          "type": "media",
+          "mediaType": "all",
+          "isList": true,
+          "isBase": true
+        }
+      ],
+      "allowCustomFields": true
+    }
+  ],
   "contentTypes": [
     {
       "sys": {
@@ -175,7 +443,8 @@
         },
         "issueDate": "2 days ago"
       },
-      "name": {
+      "name": "pexels-photo-414612.jpeg",
+      "title": {
         "en": "Image1",
         "fa": "Image1"
       },
@@ -185,8 +454,8 @@
       },
       "status": "draft",
       "url": {
-        "en": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-        "fa": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+        "en": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg",
+        "fa": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg"
       },
       "fileType": "image/jpeg"
     }

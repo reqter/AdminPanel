@@ -29,7 +29,7 @@ const StatusFilter = props => {
             key={listItem.id}
             onClick={() => handleClick(listItem)}
           >
-            <div className="treeItem-icon treeItem-contentType">
+            <div className="treeItem-icon treeItem-status">
               <div className="contentIcon">
                 <i className={listItem.icon} />
               </div>
@@ -38,7 +38,8 @@ const StatusFilter = props => {
             <div
               className="item-name"
               style={{
-                color: selected.id === listItem.id ? "rgb(56,132,255)" : "gray"
+                color:
+                  selected.id === listItem.id ? "rgb(56,132,255)" : "gray"
               }}
             >
               {listItem.title}

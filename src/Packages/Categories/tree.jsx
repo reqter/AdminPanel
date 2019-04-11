@@ -167,3 +167,4 @@ class Tree extends Component {
 }
 
 export default Tree;
+

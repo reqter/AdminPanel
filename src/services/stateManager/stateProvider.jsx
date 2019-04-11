@@ -3,6 +3,7 @@ import { StateProvider } from "./index";
 const Provider = props => {
   const initialState = {
     projectInfo: { name: "REQTER" },
+    contentTypeTemlates: [],
     contentTypes: [],
     fields: [],
     categories: [],
@@ -45,6 +46,12 @@ const Provider = props => {
           contentTypes: action.value
         };
         return s;
+      case "SET_CONTENT_TEMPLATES":
+        const c_t = {
+          ...state,
+          contentTypeTemlates: action.value
+        };
+        return c_t;
       case "SET_FIELDS":
         const f = {
           ...state,

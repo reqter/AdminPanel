@@ -19,6 +19,9 @@ export default {
   FALSE: "False",
   LATITUDE: "Latitude",
   LONGITUDE: "Longitude",
+  ADD_NEW: "Add New",
+  EDIT: "Edit",
+  CONTENT_TYPE: "Content Type",
   // login
   LOGIN_TITLE: "SignIn Reqter",
   LOGIN_EMAIL_INPUT_TITLE: "Email Address",
@@ -66,6 +69,7 @@ export default {
   HOME_SIDEBAR_BLOG: "Blog",
   HOME_SIDEBAR_DOCUMENT: "Document",
   HOME_COPY_RIGHT: "@2019 Copyright",
+  HOME_SIDEBAR_PROFILE_PROFILE: "Profile",
   HOME_SIDEBAR_PROFILE_SETTINGS: "Settings",
   HOME_SIDEBAR_PROFILE_LOGOUT: "Logout",
   //category
@@ -166,6 +170,9 @@ export default {
   FIELD_TYPE_REFERENCE_INFO:
     "For example, a blog post can reference its author(s)",
   ITEM_TYPES_FIELDS: "Fields",
+  CONTENT_TYPE_TEMPLATES_ON_SERVER_ERROR: "Internal Server Error",
+  CONTENT_TYPE_TEMPLATES_ON_BAD_REQUEST: "Bad Request",
+  CONTENT_TYPE_TEMPLATES_UN_AUTHORIZED: "Un Authorized",
   CONTENT_TYPE_ON_SERVER_ERROR:
     "Internal server error.please report that to administrtor",
   CONTENT_TYPE_ON_BAD_REQUEST: "Bad request",

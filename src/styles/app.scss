@@ -185,3 +185,27 @@ div::-moz-scrollbar-thumb:hover {
     }
   }
 }
+.unkownFileType {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.assetFile {
+  .un-icon {
+    font-size: 18px;
+  }
+  .un-text {
+    font-size: 10px;
+    font-weight: 500;
+  }
+}
+.fileUploader {
+  .un-icon {
+    font-size: 25px !important;
+  }
+  .un-text {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}

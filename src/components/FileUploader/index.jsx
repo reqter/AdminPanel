@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, utility } from "../../services";
+import AssetFile from "./../AssetFile";
 
 const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
-  const [resetInputLocaly, setResetLocaly] = useState(true);
   const [files, setFiles] = useState(() => {
     if (formData[field.name]) {
-      if (field.isList) {
-        return formData[field.name];
-      } else {
-        if (field.isTranslate) {
-          let fs = [];
-          fs.push({ url: formData[field.name][currentLang] });
-          return fs;
-        } else {
-          let fs = [];
-          fs.push({ url: formData[field.name][currentLang] });
-          return fs;
-        }
-      }
+      let fs = [];
+      fs.push({
+        id: Math.random(),
+        url: formData[field.name][currentLang],
+        fileType: formData["fileType"],
+        name: formData["name"]
+      });
+      return fs;
     }
     return [];
   });
@@ -31,23 +26,14 @@ const FileUploaderInput = props => {
 
   useEffect(() => {
     if (formData[field.name]) {
-      if (field.isList) {
-        setFiles(formData[field.name]);
-      } else {
-        if (field.isTranslate) {
-          let fs = [];
-          fs.push({
-            id: Math.random(),
-            url: formData[field.name][currentLang],
-            fileType: formData["fileType"]
-          });
-          setFiles(fs);
-        } else {
-          let fs = [];
-          fs.push({ url: formData[field.name] });
-          setFiles(fs);
-        }
-      }
+      let fs = [];
+      fs.push({
+        id: Math.random(),
+        url: formData[field.name][currentLang],
+        fileType: formData["fileType"],
+        name: formData["name"]
+      });
+      setFiles(fs);
     } else {
       if (files.length > 0) {
         setFiles([]);
@@ -129,17 +115,17 @@ const FileUploaderInput = props => {
                 ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
                   <i className="icon-spreadsheet" />
                 ) : (
-                  <i className="icon-folder" />
+                  <AssetFile file={file} class="fileUploader" />
                 )
               ) : (
-                <i style={{ fontSize: 14 }}>.file</i>
+                <AssetFile file={file} class="fileUploader" />
               )}
             </div>
           </div>
         ))}
         <div className="files-input">
           <input type="file" className="btn" onChange={handleChange} />
-          {field.mediaType === "file" ? (
+          {field.mediaType === "all" ? (
             <i className="icon-file-plus-o" />
           ) : field.mediaType === "image" ? (
             <i className="icon-camera" />

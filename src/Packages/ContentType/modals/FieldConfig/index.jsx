@@ -78,21 +78,29 @@ const FieldConfig = props => {
   const [referenceContentTypeChk, toggleReferenceContentType] = useState(
     selectedField.type === "reference"
       ? () => {
-          if (selectedField.referenceId === undefined) {
+          if (selectedField.references === undefined) {
             return false;
           } else return true;
         }
       : false
   );
-  const [selectedContentTypeRef, setContentTypeRef] = useState(
+  const [refContentTypes, setRefContentTypes] = useState(
     selectedField.type === "reference"
       ? () => {
-          if (selectedField.referenceId === undefined) return {};
-          for (let i = 0; i < contentTypes.length; i++) {
-            if (contentTypes[i].sys.id === selectedField.referenceId) {
-              return contentTypes[i];
+          if (
+            selectedField.references === undefined ||
+            selectedField.references.length > 0
+          )
+            return contentTypes;
+          return contentTypes.map(item => {
+            for (let i = 0; i < selectedField.references.length; i++) {
+              const r_id = selectedField.references[i];
+              if (item.sys.id === r_id) {
+                item.selected = true;
+              }
             }
-          }
+            return item;
+          });
         }
       : {}
   );
@@ -217,6 +225,15 @@ const FieldConfig = props => {
   function handleReferenceChk(e) {
     toggleReferenceContentType(e.target.checked);
   }
+  function handleRefSelect(item) {
+    const conts = refContentTypes.map(c => {
+      if (item.sys.id === c.sys.id) {
+        c.selected = !c.selected;
+      }
+      return c;
+    });
+    setRefContentTypes(conts);
+  }
   function handleHelpTextchanged(e) {
     setHelpText(e.target.value);
   }
@@ -274,11 +291,12 @@ const FieldConfig = props => {
           : "file"
         : "file";
     } else if (selectedField.type === "reference") {
-      obj["referenceId"] = referenceContentTypeChk
-        ? selectedContentTypeRef !== undefined
-          ? selectedContentTypeRef.sys.id
-          : "all"
-        : "all";
+      obj["references"] = refContentTypes.map(item => {
+        if (item.selected === true) {
+          return item.sys.id;
+        }
+        return false;
+      });
     }
     updateField()
       .onOk(result => {
@@ -800,18 +818,14 @@ const FieldConfig = props => {
                     </label>
                     {referenceContentTypeChk && (
                       <div className="validation-configs">
-                        {contentTypes.map((item, index) => (
+                        {refContentTypes.map((item, index) => (
                           <button
                             className={
                               "btn btn-sm " +
-                              (selectedContentTypeRef.sys
-                                ? selectedContentTypeRef.sys.id === item.sys.id
-                                  ? "btn-primary"
-                                  : "btn-light"
-                                : "btn-light")
+                              (item.selected ? "btn-primary" : "btn-light")
                             }
                             key={item.sys.id}
-                            onClick={() => setContentTypeRef(item)}
+                            onClick={() => handleRefSelect(item)}
                           >
                             {item.title[currentLang]}
                           </button>

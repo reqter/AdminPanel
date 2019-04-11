@@ -11,275 +11,16 @@ import {
 } from "reactstrap";
 import { languageManager, utility, useGlobalState } from "../../../../services";
 import {
+  getTemplates,
   addContentType,
   updateContentType
 } from "./../../../../Api/contentType-api";
 import AssetBrowser from "./../../../../components/AssetBrowser";
 import "./styles.scss";
 
-const templates = [
-  {
-    id: "1",
-    name: "dataCollection",
-    title: "Data Collection",
-    description: "Create an item type with custom fields",
-    icon: "icon-database",
-    fields: [
-      {
-        sys: {
-          id: "1",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "name",
-        title: {
-          en: "Name",
-          fa: "Name"
-        },
-        description: {
-          fa: "name of each product",
-          en: "name of each product"
-        },
-        type: "string",
-        isBase: true,
-        isTranslate: true,
-        isRequired: true
-      },
-      {
-        sys: {
-          id: "2",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "shortDesc",
-        title: {
-          fa: "Short Description",
-          en: "Short Description"
-        },
-        description: {
-          fa: "",
-          en: ""
-        },
-        type: "string",
-        isBase: true,
-        isTranslate: true
-      }
-    ],
-    allowCustomFields: true
-  },
-  {
-    id: "2",
-    name: "content",
-    title: "Content",
-    description: "It contains a body field",
-    icon: "icon-drawer2",
-    allowCustomFields: true,
-    fields: [
-      {
-        sys: {
-          id: "1",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "name",
-        title: {
-          en: "Name",
-          fa: "Name"
-        },
-        description: {
-          fa: "name of each product",
-          en: "name of each product"
-        },
-        type: "string",
-        isBase: true,
-        isTranslate: true,
-        isRequired: true
-      },
-      {
-        sys: {
-          id: "2",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "shortDesc",
-        title: {
-          fa: "Short Description",
-          en: "Short Description"
-        },
-        description: {
-          fa: "",
-          en: ""
-        },
-        type: "string",
-        isBase: true,
-        isTranslate: true
-      },
-      {
-        sys: {
-          id: "3",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "media",
-        title: {
-          fa: "رسانه",
-          en: "Media"
-        },
-        description: {
-          fa: "",
-          en: ""
-        },
-        type: "media",
-        isBase: true,
-        mediaType: "all",
-        isTranslate: true
-      },
-      {
-        sys: {
-          id: "4",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "body",
-        title: {
-          en: "Body",
-          fa: "محتوا"
-        },
-        description: {
-          en: "",
-          fa: ""
-        },
-        type: "richText",
-        isBase: true
-      }
-    ]
-  },
-  {
-    id: "3",
-    name: "gallery",
-    title: "Gallery",
-    description: "Making custom gallery collection",
-    icon: "icon-images",
-    fields: [
-      {
-        sys: {
-          id: "1",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "name",
-        title: {
-          en: "Name",
-          fa: "Name"
-        },
-        description: {
-          fa: "name of each product",
-          en: "name of each product"
-        },
-        type: "string",
-        isBase: true,
-        isTranslate: true,
-        isRequired: true
-      },
-      {
-        sys: {
-          id: "2",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "shortDesc",
-        title: {
-          fa: "Short Description",
-          en: "Short Description"
-        },
-        description: {
-          fa: "",
-          en: ""
-        },
-        type: "string",
-        isBase: true,
-        isTranslate: true
-      },
-      {
-        sys: {
-          id: "3",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "cover",
-        title: {
-          fa: "تصویر گالری",
-          en: "Cover Image"
-        },
-        description: {
-          fa: "",
-          en: ""
-        },
-        type: "media",
-        mediaType: "image",
-        isTranslate: true,
-        isRequired: true,
-        isList: false,
-        isBase: true
-      },
-      {
-        sys: {
-          id: "4",
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: "gallery",
-        title: {
-          en: "Gallery",
-          fa: "گالری"
-        },
-        description: {
-          en: "",
-          fa: ""
-        },
-        type: "media",
-        mediaType: "all",
-        isList: true,
-        isBase: true
-      }
-    ],
-    allowCustomFields: true
-  }
-];
-
 const UpsertTemplate = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{}, dispatch] = useGlobalState();
+  const [{ contentTypeTemlates }, dispatch] = useGlobalState();
   const { updateMode } = props;
   const submitBtnText = !updateMode
     ? languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
@@ -290,16 +31,7 @@ const UpsertTemplate = props => {
     : undefined;
   const [isOpen, toggleModal] = useState(true);
 
-  const [modalHeaderTitle, setModalHeader] = useState(
-    !updateMode
-      ? languageManager.translate("CONTENT_TYPE_MODAL_HEADER_TITLE_NEW")
-      : languageManager.translate("CONTENT_TYPE_MODAL_HEADER_TITLE_EDIT")
-  );
-
   const [tab, changeTab] = useState(updateMode ? 2 : 1);
-  const [newFieldHeaderTitle, setAddFieldHeaderTitle] = useState(
-    languageManager.translate("CONTENT_TYPE_ADD_FIELD_TITLE")
-  );
   const [selectedTemplate, setTemplate] = useState(
     updateMode ? props.selectedTemplate : {}
   );
@@ -325,6 +57,47 @@ const UpsertTemplate = props => {
   );
 
   useEffect(() => {
+    getTemplates()
+      .onOk(result => {
+        dispatch({
+          type: "SET_CONTENT_TEMPLATES",
+          value: result
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_TEMPLATES_ON_SERVER_ERROR"
+            )
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "CONTENT_TYPE_TEMPLATES_ON_BAD_REQUEST"
+            )
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate(
+              "CONTENT_TYPE_TEMPLATES_UN_AUTHORIZED"
+            )
+          }
+        });
+      })
+      .call();
     return () => {
       if (!props.isOpen) toggleModal(false);
     };
@@ -336,16 +109,10 @@ const UpsertTemplate = props => {
   function handleChooseTemplate(tmp) {
     changeTab(2);
     setTemplate(tmp);
-    const title =
-      languageManager.translate("CONTENT_TYPE_ADD_FIELD_CHOOSEN") +
-      " " +
-      tmp.name;
-    setAddFieldHeaderTitle(title);
   }
   function backToTemplates() {
-    const title = languageManager.translate("CONTENT_TYPE_ADD_FIELD_CHOOSEN");
-    setAddFieldHeaderTitle(title);
     changeTab(1);
+    setTemplate({});
   }
   function handleNameChanged(e) {
     setName(e.target.value);
@@ -537,12 +304,24 @@ const UpsertTemplate = props => {
   }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
-      <ModalHeader toggle={closeModal}>{modalHeaderTitle}</ModalHeader>
+      <ModalHeader toggle={closeModal}>
+        {!updateMode
+          ? languageManager.translate("ADD_NEW") +
+            " " +
+            (selectedTemplate
+              ? selectedTemplate.title
+                ? selectedTemplate.title[currentLang]
+                : languageManager.translate("CONTENT_TYPE")
+              : languageManager.translate("CONTENT_TYPE"))
+          : languageManager.translate("EDIT") +
+            " " +
+            (selectedContentType ? selectedContentType.title[currentLang] : "")}
+      </ModalHeader>
       <ModalBody>
         <div className="c-category-templates-body">
           {tab === 1 ? (
             <div className="fieldsTab">
-              {templates.map(tmp => (
+              {contentTypeTemlates.map(tmp => (
                 <div
                   key={tmp.id}
                   className="add-field-types"
@@ -560,8 +339,10 @@ const UpsertTemplate = props => {
                   >
                     <i className={tmp.icon || "icon-item-type"} />
                   </div>
-                  <span className="title">{tmp.title}</span>
-                  <span className="description">{tmp.description}</span>
+                  <span className="title">{tmp.title[currentLang]}</span>
+                  <span className="description">
+                    {tmp.description[currentLang]}
+                  </span>
                 </div>
               ))}
             </div>

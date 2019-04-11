@@ -1,6 +1,5 @@
-import Divider from "./Divider";
 import CheckBox from "./CheckBox";
-
+import AssetFile from "./AssetFile";
 import Boolean from "./Boolean";
 import DateTime from "./DateTime";
 import KeyValue from "./KeyValue";
@@ -13,7 +12,7 @@ import FileUploader from "./FileUploader";
 import AssetBrowser from "./AssetBrowser";
 
 export {
-  Divider,
+  AssetFile,
   CheckBox,
   Boolean,
   DateTime,
