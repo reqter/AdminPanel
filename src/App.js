@@ -49,7 +49,7 @@ const App = () => {
             ))}
             {/* <Route to="/not-found" render={props=><NoutFound/>}/> */}
             {/* اگه دقیقا / رو زد برو لاگین */}
-            <Redirect from="/" to="/home" exact />
+            <Redirect from="/" to="/panel" exact />
             {/* اگه هیچی نزد یا چرت و پرت زد برو اون روتی که نات فاند هست */}
             {/* <Redirect to="/not-found"/> */}
           </Switch>
