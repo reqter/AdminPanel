@@ -358,6 +358,27 @@
           "mediaType": "image",
           "isTranslate": true,
           "isList": false
+        },
+        {
+          "sys": {
+            "id": "4",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "body",
+          "title": {
+            "fa": "محتوا",
+            "en": "Body"
+          },
+          "description": {
+            "fa": "",
+            "en": "Content long description"
+          },
+          "type": "richText",
+          "isTranslate": true
         }
       ]
     }
