@@ -98,6 +98,9 @@ const Assets = props => {
   const [selectedFileType, setFileType] = useState(filters[0]);
   const [selectedStatus, setStatus] = useState({});
 
+  function translate(key) {
+    return languageManager.translate(key);
+  }
   function handleFileTypeClick(selected) {
     setFileType(selected);
     filterAssets()
@@ -284,15 +287,17 @@ const Assets = props => {
         </div>
         <div className="as-content">
           <div className="as-content-left">
-            <div className="left-text">Filter & Upload New File</div>
+            <div className="left-text">{translate("ASSET_FILTER_TITLE")}</div>
             <div className="left-btnContent">
               <button className="btn btn-primary" onClick={openUploader}>
-                Upload New File
+                {translate("ASSET_FILTER_BTN_TEXT")}
               </button>
             </div>
             <div className="filterContent">
               <div className="left-filters">
-                <div className="title">Filter Files by Extenstion</div>
+                <div className="title">
+                  {translate("ASSET_FILTER_BY_TYPE_TITLE")}
+                </div>
                 {filters.map(f => (
                   <div
                     className="filter"
@@ -306,7 +311,7 @@ const Assets = props => {
                     }}
                   >
                     <i className={["icon", f.icon].join(" ")} />
-                    <span className="name">{f.title}</span>
+                    <span className="name">{translate(f.name)}</span>
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
@@ -317,7 +322,9 @@ const Assets = props => {
                 ))}
               </div>
               <div className="left-filters">
-                <div className="title">Filter Files By Status</div>
+                <div className="title">
+                  {translate("ASSET_FILTER_BY_STATUS_TITLE")}
+                </div>
                 {status.map(f => (
                   <div
                     className="filter"
@@ -329,7 +336,7 @@ const Assets = props => {
                     }}
                   >
                     <i className={["icon", f.icon].join(" ")} />
-                    <span className="name">{f.title}</span>
+                    <span className="name">{translate(f.name)}</span>
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
@@ -342,17 +349,19 @@ const Assets = props => {
             </div>
           </div>
           <div className="as-content-right">
-            <div className="header">All assets</div>
+            <div className="header">
+              {translate("ASSET_TABLE_HEADER_ALL_ASSETS")}
+            </div>
             <div className="rightTable">
               <table className="table">
                 <thead className="table__head">
                   <tr>
                     <th>#</th>
-                    <th>Preview</th>
-                    <th>Name</th>
-                    <th>By</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>{translate("ASSET_TABLE_HEAD_PREVIEW")}</th>
+                    <th>{translate("ASSET_TABLE_HEAD_NAME")}</th>
+                    <th>{translate("ASSET_TABLE_HEAD_BY")}</th>
+                    <th>{translate("ASSET_TABLE_HEAD_STATUS")}</th>
+                    <th>{translate("ASSET_TABLE_HEAD_ACTIONS")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -407,13 +416,21 @@ const Assets = props => {
                       </td>
                       <td>
                         {file.status === "draft" ? (
-                          <button className="btn btn-light">Archive</button>
+                          <button className="btn btn-light">
+                            {translate("ARCHIVE")}
+                          </button>
                         ) : file.status === "changed" ? (
-                          <button className="btn btn-light">Publish</button>
+                          <button className="btn btn-light">
+                            {translate("PUBLISH")}
+                          </button>
                         ) : file.status === "archived" ? (
-                          <button className="btn btn-light">UnArchive</button>
+                          <button className="btn btn-light">
+                            {translate("UN_ARCHIVE")}
+                          </button>
                         ) : file.status === "published" ? (
-                          <button className="btn btn-light">UnPublish</button>
+                          <button className="btn btn-light">
+                            {translate("UN_PUBLIHS")}
+                          </button>
                         ) : (
                           ""
                         )}

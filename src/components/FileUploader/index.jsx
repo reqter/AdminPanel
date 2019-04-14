@@ -124,7 +124,26 @@ const FileUploaderInput = props => {
           </div>
         ))}
         <div className="files-input">
-          <input type="file" className="btn" onChange={handleChange} />
+          <input
+            type="file"
+            className="btn"
+            onChange={handleChange}
+            accept={
+              field.fileType
+                ? field.fileType === "image"
+                  ? "image/*"
+                  : field.fileType === "video"
+                  ? "video/*"
+                  : field.fileType === "audio"
+                  ? "audio/*"
+                  : field.fileType === "pdf"
+                  ? ".pdf"
+                  : field.fileType === "spreadsheet"
+                  ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  : "/*"
+                : "/*"
+            }
+          />
           {field.mediaType === "all" ? (
             <i className="icon-file-plus-o" />
           ) : field.mediaType === "image" ? (

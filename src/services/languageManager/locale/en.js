@@ -22,6 +22,16 @@ export default {
   ADD_NEW: "Add New",
   EDIT: "Edit",
   CONTENT_TYPE: "Content Type",
+  all: "All assets",
+  image: "Image",
+  video: "Video",
+  audio: "Audio",
+  pdf: "PDF",
+  spreadsheet: "Spreadsheet",
+  UN_PUBLISH: "UnPublish",
+  PUBLISH: "Publish",
+  ARCHIVE: "Archive",
+  UN_ARCHIVE: "UnArchive",
   // login
   LOGIN_TITLE: "SignIn Reqter",
   LOGIN_EMAIL_INPUT_TITLE: "Email Address",
@@ -260,10 +270,25 @@ export default {
   UPSERT_ITEM_GET_BY_ID_NOT_FOUND: "Content did not found",
   UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED: "Un Authorized",
   //assets
+  ASSET_FILTER_TITLE: "Filter & Upload New File",
+  ASSET_FILTER_BTN_TEXT: "Upload New File",
+  ASSET_FILTER_BY_TYPE_TITLE: "Filter Files by Extenstion",
+  ASSET_FILTER_BY_STATUS_TITLE: "Filter Files By Status",
+  ASSET_TABLE_HEADER_ALL_ASSETS: "All Assets",
+  ASSET_TABLE_HEAD_PREVIEW: "Preview",
+  ASSET_TABLE_HEAD_NAME: "Name",
+  ASSET_TABLE_HEAD_BY: "By",
+  ASSET_TABLE_HEAD_STATUS: "Status",
+  ASSET_TABLE_HEAD_ACTIONS: "Actions",
+  ASSET_FILTER_TITLE: "",
+  ASSET_FILTER_TITLE: "",
+  ASSET_FILTER_TITLE: "",
+
   UPSERT_ASSET_WRONG_URL: "You have entered wrong url",
   UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",
   UPSERT_ASSET_HEADER_EDIT_TITLE: "Edit a file ",
   // ASSETS-API-GET
+
   ASSET_GET_ON_SERVER_ERROR:
     "Internal server error.please report that to administrtor",
   ASSET_GET_ON_BAD_REQUEST:

@@ -293,7 +293,7 @@ const AddNewField = props => {
                 </FormGroup>
                 {translatableFields.indexOf(selectedField.name) > -1 && (
                   <CheckBox
-                    title="Enable Local Translation"
+                    title={languageManager.translate("TRANSLATION")}
                     value={translation}
                     onChange={e => toggleTranslation(e.target.checked)}
                   />

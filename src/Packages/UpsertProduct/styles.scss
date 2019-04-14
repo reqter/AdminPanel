@@ -111,7 +111,8 @@
         background: white;
         box-shadow: 0 0 3px lightgray;
         padding: 4%;
-        input[readonly] , select[disabled]{
+        input[readonly],
+        select[disabled] {
           background: white;
         }
         .rowItem {
@@ -140,4 +141,10 @@
       }
     }
   }
+}
+
+.richText-header-customBtn{
+  padding: 0 10px;
+  color: gray;
+  cursor: pointer;
 }

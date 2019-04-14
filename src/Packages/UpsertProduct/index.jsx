@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Editor } from "react-draft-wysiwyg";
+import "./../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./styles.scss";
 import { useGlobalState, languageManager } from "./../../services";
 import {
@@ -470,6 +472,7 @@ const UpsertProduct = props => {
         .call(obj);
     }
   }
+  function showAsset() {}
   return (
     <div className="up-wrapper">
       <div className="up-header">
@@ -569,7 +572,9 @@ const UpsertProduct = props => {
                     </div>
                   ))}
                 <span>
-                  {category ? category.name[currentLang] : "Choose a category"}
+                  {category
+                    ? category.name[currentLang]
+                    : "Choose a category"}
                 </span>
                 {!viewMode && (
                   <button className="btn btn-link" onClick={showCatgoryModal}>
@@ -639,7 +644,10 @@ const UpsertProduct = props => {
         </main>
       </div>
       {categoryModal && (
-        <CategoriesModal categories={categories} onCloseModal={onCloseModel} />
+        <CategoriesModal
+          categories={categories}
+          onCloseModal={onCloseModel}
+        />
       )}
     </div>
   );

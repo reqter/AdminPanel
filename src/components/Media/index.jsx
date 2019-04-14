@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import { languageManager, utility } from "../../services";
-import { AssetBrowser } from "./../../components";
+import AssetBrowser from "./../AssetBrowser";
 
 const MediaInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;

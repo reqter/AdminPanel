@@ -51,10 +51,11 @@ const fields = [
       en: "Click on file selector top choose your file"
     },
     type: "fileUploader",
-    mediaType: "file",
+    fileType: "image",
     isBase: true,
     isTranslate: true,
-    isRequired: true
+    isRequired: true,
+
   }
 ];
 

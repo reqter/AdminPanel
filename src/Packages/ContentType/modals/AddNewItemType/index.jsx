@@ -337,7 +337,7 @@ const UpsertTemplate = props => {
                           : "whitesmoke"
                     }}
                   >
-                    <i className={tmp.icon || "icon-item-type"} />
+                    <i className={tmp.icon ? tmp.icon : "icon-item-type"} />
                   </div>
                   <span className="title">{tmp.title[currentLang]}</span>
                   <span className="description">
