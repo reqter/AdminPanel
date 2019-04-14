@@ -21,6 +21,8 @@ import "./styles.scss";
 const UpsertTemplate = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ contentTypeTemlates }, dispatch] = useGlobalState();
+  const nameInput = useRef(null);
+
   const { updateMode } = props;
   const submitBtnText = !updateMode
     ? languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
@@ -102,6 +104,11 @@ const UpsertTemplate = props => {
       if (!props.isOpen) toggleModal(false);
     };
   }, []);
+  useEffect(() => {
+    if (tab === 2) {
+      nameInput.current.focus();
+    }
+  }, [tab]);
 
   function closeModal() {
     props.onCloseModal();
@@ -354,6 +361,7 @@ const UpsertTemplate = props => {
                     {languageManager.translate("CONTENT_TYPE_MODAL_NAME")}
                   </label>
                   <input
+                    ref={nameInput}
                     type="text"
                     className="form-control"
                     placeholder={languageManager.translate(

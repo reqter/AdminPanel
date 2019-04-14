@@ -75,7 +75,7 @@ const Categories = props => {
   }, []);
 
   // variables and handlers
-  const newCategoryNameInput = useRef(null);
+  const nameInput = useRef(null);
   const [upsertCategoryModal, setModal] = useState(false);
   const [upsertItemTypeModal, toggleUpsertItemTypeModal] = useState(false);
 
@@ -91,6 +91,12 @@ const Categories = props => {
   const [isManageCategory, setManageCategory] = useState(false);
   const [image, setImage] = useState();
   const [assetBrowser, toggleAssetBrowser] = useState(false);
+
+  useEffect(() => {
+    if (upsertCategoryModal) {
+      nameInput.current.focus();
+    }
+  }, [upsertCategoryModal]);
 
   function initModalForm() {
     handleNameChanged("");
@@ -126,10 +132,6 @@ const Categories = props => {
     setModalUpsertBtnText(
       languageManager.translate("CATEGORIES_MODAL_FOOTER_UPSERT_BTN_NEW")
     );
-    setTimeout(() => {
-      newCategoryNameInput.current.focus();
-    }, 1);
-    setManageCategory(true);
   }
   function editCategory(item) {
     setModal(prevModal => !prevModal);
@@ -616,7 +618,7 @@ const Categories = props => {
                   {languageManager.translate("CATEGORIES_MODAL_NAME")}
                 </label>
                 <input
-                  ref={newCategoryNameInput}
+                  ref={nameInput}
                   type="text"
                   className="form-control"
                   placeholder={languageManager.translate(

@@ -100,6 +100,11 @@ const AddNewField = props => {
       if (!props.isOpen) toggleModal(false);
     };
   });
+  useEffect(() => {
+    if (tab === 2) {
+      nameInput.current.focus();
+    }
+  }, [tab]);
   function closeAddFieldModal(params) {
     props.onCloseModal();
   }
