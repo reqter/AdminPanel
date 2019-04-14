@@ -33,7 +33,7 @@ const Products = props => {
     },
     {
       width: 100,
-      Header: () => <div className="p-header-td">Image</div>,
+      Header: () => <div className="p-header-td">Thumbnail</div>,
       //show: false,
       headerStyle: {
         display: "block"
@@ -42,15 +42,14 @@ const Products = props => {
       Cell: props => {
         return (
           <div className="p-image">
-            <img
-              className="p-image-value"
-              src={
-                props.value && props.value.length > 0
-                  ? props.value[0][currentLang]
-                  : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png"
-              }
-              alt=""
-            />
+            {props.value && props.value.length > 0 ? (
+              getAssetUi(props.value[0][currentLang])
+            ) : (
+                <div className="p-thumbnail-file empty">
+                {/* <i className="file-text" /> */}
+                empty
+              </div>
+            )}
           </div>
         );
       }
@@ -213,6 +212,37 @@ const Products = props => {
       .call();
   }, []);
   // methods
+  const imgs = ["jpg", "jpeg", "gif", "bmp", "png"];
+  const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
+  const audios = ["wav", "mp3", "ogg"];
+  function getAssetUi(url) {
+    const ext = url
+      .split("/")
+      .pop()
+      .split(".")
+      .pop();
+    if (imgs.indexOf(ext.toLowerCase()) !== -1)
+      return <img className="p-image-value" src={url} alt="" />;
+    else if (videos.indexOf(ext.toLowerCase()) !== -1)
+      return (
+        <div className="p-thumbnail-file">
+          <i className="icon-video" />
+        </div>
+      );
+    else if (audios.indexOf(ext.toLowerCase()) !== -1)
+      return (
+        <div className="p-thumbnail-file">
+          <i className="icon-audio" />
+        </div>
+      );
+    else
+      return (
+        <div className="p-thumbnail-file unknown">
+          <i className="icon-file-text" />
+          .file
+        </div>
+      );
+  }
   function initColumns() {
     if (columnsVisibility) {
       const cols = baseFieldColumnsConfig.map(col => {
