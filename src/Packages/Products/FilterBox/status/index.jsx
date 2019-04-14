@@ -42,7 +42,7 @@ const StatusFilter = props => {
                   selected.id === listItem.id ? "rgb(56,132,255)" : "gray"
               }}
             >
-              {listItem.title}
+              {languageManager.translate(listItem.name)}
             </div>
           </div>
         ))}
