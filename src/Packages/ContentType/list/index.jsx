@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ListGroup, ListGroupItem } from "reactstrap";
-import { languageManager } from "../../../services";
+import { languageManager, utility } from "../../../services";
 
 const List = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -26,7 +26,7 @@ const List = props => {
             }}
           >
             <div className="treeItem">
-              {listItem.images === undefined || listItem.images.length === 0 ? (
+              {listItem.media === undefined || listItem.media.length === 0 ? (
                 <div className="treeItem-icon">
                   <div className="contentIcon">
                     <i className="icon-item-type" />
@@ -34,7 +34,9 @@ const List = props => {
                 </div>
               ) : (
                 <div className="treeItem-img">
-                  <img src={listItem.images[0][currentLang]} alt="" />
+                  <div className="treeItem-ext">
+                    {utility.getAssetIconByURL(listItem.media[0][currentLang])}
+                  </div>
                 </div>
               )}
               <div className="treeItem-text">

@@ -1,4 +1,18 @@
 .c-category-templates-body {
+  .files-uploaded {
+    .un-icon {
+      font-size: 25px;
+    }
+    .un-text {
+      font-size: 15px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      font-weight: 500;
+      padding-top: 10px;
+      width: 100px
+    }
+  }
   .fieldsTab {
     display: flex;
     flex-wrap: wrap;

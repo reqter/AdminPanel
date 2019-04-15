@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { languageManager, useGlobalState } from "../../../../services";
+import { languageManager, useGlobalState, utility } from "../../../../services";
 import { getContentTypes } from "./../../../../Api/content-api";
 const ContentTypeFilter = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -68,9 +68,11 @@ const ContentTypeFilter = props => {
             key={listItem.sys.id}
             onClick={() => handleClick(listItem)}
           >
-            {listItem.images !== undefined && listItem.images.length > 0 ? (
+            {listItem.media !== undefined && listItem.media.length > 0 ? (
               <div className="treeItem-img treeItem-contentType">
-                <img src={listItem.images[0][currentLang]} alt="" />
+                <div>
+                  {utility.getAssetIconByURL(listItem.media[0][currentLang])}
+                </div>
               </div>
             ) : (
               <div className="treeItem-icon treeItem-contentType">

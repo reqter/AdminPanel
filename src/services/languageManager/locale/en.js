@@ -139,8 +139,9 @@ export default {
   CONTENT_TYPE_MODAL_NAME_DESCRIPTION: "try to enter meaningfull name",
   CONTENT_TYPE_MODAL_DESCRIPTION: "Description",
   CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER: "Enter a short description",
-  CONTENT_TYPE_MODAL_IMAGES_TITLE: "Images",
-  CONTENT_TYPE_MODAL_IMAGES_DESC: "A content type can have multi images",
+  CONTENT_TYPE_MODAL_IMAGES_TITLE: "Media",
+  CONTENT_TYPE_MODAL_IMAGES_DESC:
+    "A content type can have multi images and videos",
   CONTENT_TYPE_MODAL_TEMPLATE_BTN: "Templates",
   CONTENT_TYPE_NEW_ITEM_BTN: "New Content Type",
   CONTENT_TYPE_ADD_FIELD_TITLE: "Add New Field",
@@ -280,9 +281,6 @@ export default {
   ASSET_TABLE_HEAD_BY: "By",
   ASSET_TABLE_HEAD_STATUS: "Status",
   ASSET_TABLE_HEAD_ACTIONS: "Actions",
-  ASSET_FILTER_TITLE: "",
-  ASSET_FILTER_TITLE: "",
-  ASSET_FILTER_TITLE: "",
 
   UPSERT_ASSET_WRONG_URL: "You have entered wrong url",
   UPSERT_ASSET_HEADER_ADD_TITLE: "Upload new file",

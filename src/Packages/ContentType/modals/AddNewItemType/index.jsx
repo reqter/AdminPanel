@@ -46,10 +46,10 @@ const UpsertTemplate = props => {
   const [description, setDescription] = useState(
     selectedContentType ? selectedContentType.description[currentLang] : ""
   );
-  const [images, setImages] = useState(
+  const [media, setMedia] = useState(
     selectedContentType
-      ? selectedContentType.images
-        ? makeImages(selectedContentType.images)
+      ? selectedContentType.media
+        ? makeImages(selectedContentType.media)
         : []
       : []
   );
@@ -149,7 +149,7 @@ const UpsertTemplate = props => {
       obj["name"] = name;
       obj["title"] = utility.applyeLangs(title);
       obj["description"] = utility.applyeLangs(description);
-      obj["images"] = images;
+      obj["media"] = media;
       obj["enableVersioning"] = versioning;
 
       updateContentType()
@@ -225,7 +225,7 @@ const UpsertTemplate = props => {
         name: name,
         title: utility.applyeLangs(title),
         description: utility.applyeLangs(description),
-        images: images,
+        media: media,
         fields: [...selectedTemplate.fields],
         type: "contentType",
         template: selectedTemplate.name,
@@ -291,8 +291,8 @@ const UpsertTemplate = props => {
     // };
   }
   function removeFile(image) {
-    const imgs = images.filter(item => item.id !== image.id);
-    setImages(imgs);
+    const m = media.filter(item => item.id !== image.id);
+    setMedia(m);
   }
   function openAssetBrowser() {
     toggleAssetBrowser(true);
@@ -300,10 +300,10 @@ const UpsertTemplate = props => {
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
     if (asset) {
-      let imgs = [...images];
+      let imgs = [...media];
       const obj = { ...asset.url, id: Math.random() };
       imgs.push(obj);
-      setImages(imgs);
+      setMedia(imgs);
     }
   }
   function handleChangeVersion(e) {
@@ -322,7 +322,9 @@ const UpsertTemplate = props => {
               : languageManager.translate("CONTENT_TYPE"))
           : languageManager.translate("EDIT") +
             " " +
-            (selectedContentType ? selectedContentType.title[currentLang] : "")}
+            (selectedContentType
+              ? selectedContentType.title[currentLang]
+              : "")}
       </ModalHeader>
       <ModalBody>
         <div className="c-category-templates-body">
@@ -402,7 +404,9 @@ const UpsertTemplate = props => {
 
               <FormGroup>
                 <Label>
-                  {languageManager.translate("CONTENT_TYPE_MODAL_DESCRIPTION")}
+                  {languageManager.translate(
+                    "CONTENT_TYPE_MODAL_DESCRIPTION"
+                  )}
                 </Label>
                 <Input
                   type="string"
@@ -429,19 +433,25 @@ const UpsertTemplate = props => {
                   <label for="version">
                     Enable versioning of this item type
                   </label>
-                  <label>This item type stores all updates as a version</label>
+                  <label>
+                    This item type stores all updates as a version
+                  </label>
                 </div>
               </div>
               <div className="up-uploader">
                 <span className="title">
-                  {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
+                  {languageManager.translate(
+                    "CONTENT_TYPE_MODAL_IMAGES_TITLE"
+                  )}
                 </span>
                 <span className="description">
-                  {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_DESC")}
+                  {languageManager.translate(
+                    "CONTENT_TYPE_MODAL_IMAGES_DESC"
+                  )}
                 </span>
 
                 <div className="files">
-                  {images.map((url, index) => (
+                  {media.map((url, index) => (
                     <div key={index} className="files-uploaded">
                       <div
                         className="files-uploaded-icon"
@@ -449,7 +459,11 @@ const UpsertTemplate = props => {
                       >
                         <i className="icon-bin" />
                       </div>
-                      <img src={url[currentLang]} alt="" />
+                      <div className="updatedFileType">
+                        {utility.getAssetIconByURL(
+                          url[currentLang],
+                        )}
+                      </div>
                     </div>
                   ))}
                   <div className="files-input" onClick={openAssetBrowser}>
@@ -489,7 +503,7 @@ const UpsertTemplate = props => {
         <AssetBrowser
           isOpen={assetBrowser}
           onCloseModal={handleChooseAsset}
-          mediaType={"image"}
+          mediaType={"image,video"}
         />
       )}
     </Modal>

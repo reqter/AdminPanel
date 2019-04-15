@@ -54,8 +54,7 @@ const fields = [
     fileType: "image",
     isBase: true,
     isTranslate: true,
-    isRequired: true,
-
+    isRequired: true
   }
 ];
 
@@ -79,6 +78,19 @@ const AssetBrowser = props => {
     props.onCloseModal();
   }
   function getAssetFiles() {
+    const all =
+      props.mediaType === undefined ||
+      props.mediaType.length === 0 ||
+      props.mediaType.includes("file")
+        ? true
+        : false;
+    const image = props.mediaType.includes("image") ? true : false;
+    const video = props.mediaType.includes("video") ? true : false;
+    const audio = props.mediaType.includes("audio") ? true : false;
+    const pdf = props.mediaType.includes("pdf") ? true : false;
+    const spreadsheet =
+      props.mediaType.includes("spreadsheet") !== -1 ? true : false;
+
     filterAssets()
       .onOk(result => {
         dispatch({
@@ -90,7 +102,7 @@ const AssetBrowser = props => {
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(result => {})
-      .call(props.mediaType, undefined);
+      .call(all, image, video, audio, pdf, spreadsheet, undefined);
   }
   function chooseFile(file) {
     props.onCloseModal(file);
@@ -106,6 +118,7 @@ const AssetBrowser = props => {
         issueDate: "19/01/2019 20:18"
       },
       name: formData.name,
+      title: formData.title,
       shorDesc: formData.shortDesc,
       status: "draft",
       url: formData.url,
@@ -269,11 +282,11 @@ const AssetBrowser = props => {
                   ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
                     <i className="icon-spreadsheet" />
                   ) : (
-                    <AssetFile file={file} class="fileUploader" />
+                    <AssetFile file={file} />
                   )}
                 </div>
                 <div className="bottom">
-                  <span>{file.name[currentLang]}</span>
+                  <div>{file.title[currentLang]}</div>
                 </div>
               </div>
             ))}

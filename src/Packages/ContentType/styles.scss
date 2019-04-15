@@ -164,14 +164,29 @@
         height: 60px;
         margin-right: 10px;
         border: 1px solid rgb(220, 220, 220);
-        padding: 3px;
-        img {
-          width: 100%;
+        .treeItem-ext {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           height: 100%;
-          object-fit: cover;
+          background: rgb(56, 132, 255);
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+          .un-icon {
+            align-self: center;
+            font-size: 35px;
+            color: white;
+          }
+          .un-text {
+            display: none;
+          }
         }
       }
       .treeItem-icon {
+        background: rgb(56, 132, 255);
         width: 70px;
         height: 60px;
         margin-right: 10px;
@@ -183,7 +198,7 @@
           height: 100%;
           justify-content: center;
           align-items: center;
-          background: rgb(56, 132, 255);
+
           i {
             font-size: 35px;
             color: white;

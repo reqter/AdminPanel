@@ -37,25 +37,57 @@ export function filterAssets() {
       _onConnectionErrorCallBack(result);
     }
   }
-  function _call(fileType = "all", state) {
+  function _call(
+    all,
+    image = false,
+    video = false,
+    audio = false,
+    pdf = false,
+    spreadsheet = false,
+    state = undefined
+  ) {
     let result;
-    if (fileType === "all" && state === undefined) {
+    if (all && state === undefined) {
       result = data.assets;
-    } else if (fileType === "all" && state) {
+    } else if (all && state) {
       result = [...data.assets].filter(item => item.status === state);
-    } else if (fileType !== "all" && state === undefined) {
-      result = [...data.assets].filter(item =>
-        item.fileType.toLowerCase().includes(fileType)
-      );
-    } else
+    } else {
       result = [...data.assets].filter(item => {
-        if (
-          item.fileType.toLowerCase().includes(fileType) &&
-          item.status === state
-        )
-          return true;
+        if (image) {
+          if (state) {
+            if (item.status === state)
+              if (item.fileType.toLowerCase().includes("image")) return true;
+          } else if (item.fileType.toLowerCase().includes("image")) return true;
+        }
+        if (video) {
+          if (state) {
+            if (item.status === state)
+              if (item.fileType.toLowerCase().includes("video")) return true;
+          } else if (item.fileType.toLowerCase().includes("video")) return true;
+        }
+        if (audio) {
+          if (state) {
+            if (item.status === state)
+              if (item.fileType.toLowerCase().includes("audio")) return true;
+          } else if (item.fileType.toLowerCase().includes("audio")) return true;
+        }
+        if (pdf) {
+          if (state) {
+            if (item.status === state)
+              if (item.fileType.toLowerCase().includes("pdf")) return true;
+          } else if (item.fileType.toLowerCase().includes("pdf")) return true;
+        }
+        if (spreadsheet) {
+          if (state) {
+            if (item.status === state)
+              if (item.fileType.toLowerCase().includes("spreadsheet"))
+                return true;
+          } else if (item.fileType.toLowerCase().includes("spreadsheet"))
+            return true;
+        }
         return false;
       });
+    }
 
     const status = 200;
     switch (status) {

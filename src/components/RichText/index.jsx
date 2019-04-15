@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertFromHTML, ContentState } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 import "./../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 import "./styles.scss";
 import { languageManager, utility } from "../../services";
 import AssetBrowser from "./../AssetBrowser";
@@ -10,39 +12,28 @@ const RichTextInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
 
-  const sampleMarkup =
-    "<b>Bold text</b>, <i>Italic text</i><br/ ><br />" +
-    '<a href="http://www.facebook.com">Example link</a>';
-
-  const blocksFromHTML = convertFromHTML(sampleMarkup);
-  const state = ContentState.createFromBlockArray(
-    blocksFromHTML.contentBlocks,
-    blocksFromHTML.entityMap
-  );
-
   const [assetBrowser, toggleAssetBrowser] = useState(false);
-  //const [input, setInput] = useState(EditorState.createWithContent(state));
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(EditorState.createEmpty());
 
   if (field.isRequired !== undefined && field.isRequired) {
     if (formData[field.name] === undefined) props.init(field.name);
   }
 
   // set default value to form data in parent
-  useEffect(() => {
-    if (field.defaultValue && !props.formData[field.name]) {
-      setValueToParentForm(field.defaultValue);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (field.defaultValue && !props.formData[field.name]) {
+  //     setValueToParentForm(field.defaultValue);
+  //   }
+  // }, []);
 
   // set value to input
-  useEffect(() => {
-    props.formData[field.name]
-      ? field.isTranslate
-        ? setInput(props.formData[field.name][currentLang])
-        : setInput(props.formData[field.name])
-      : setInput("");
-  }, [formData]);
+  // useEffect(() => {
+  //   props.formData[field.name]
+  //     ? field.isTranslate
+  //       ? setInput(props.formData[field.name][currentLang])
+  //       : setInput(props.formData[field.name])
+  //     : setInput("");
+  // }, [formData]);
 
   function setValueToParentForm(inputValue) {
     let value;
@@ -58,8 +49,11 @@ const RichTextInput = props => {
     } else props.onChangeValue(field, value, true);
   }
   function handleOnChange(content) {
-    //setInput(e.target.value);
-    //setValueToParentForm(e.target.value);
+    setInput(content);
+    console.log(draftToHtml(convertToRaw(content.getCurrentContent())));
+    // setValueToParentForm(
+    //   draftToHtml(convertToRaw(content.getCurrentContent()))
+    // );
   }
   function openAssetBrowser() {
     toggleAssetBrowser(true);
@@ -72,7 +66,8 @@ const RichTextInput = props => {
   return (
     <>
       <Editor
-        initialContentState={input}
+        editorState={input}
+        onEditorStateChange={handleOnChange}
         wrapperClassName="wrapper-class"
         editorClassName="editor-class"
         toolbarClassName="toolbar-class"
@@ -116,40 +111,3 @@ const RichTextInput = props => {
 };
 
 export default RichTextInput;
-
-// import React, { Component } from "react";
-// import { EditorState } from "draft-js";
-// import { Editor } from "react-draft-wysiwyg";
-
-// export default class ControlledEditor extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       editorState: EditorState.createEmpty()
-//     };
-//   }
-
-//   onEditorStateChange = editorState => {
-//     this.setState(
-//       {
-//         editorState
-//       },
-//       () => console.log(this.state.editorState)
-//     );
-//   };
-
-//   render() {
-//     const { editorState } = this.state;
-//     return (
-//       <Editor
-//         editorState={editorState}
-//         wrapperClassName="demo-wrapper"
-//         editorClassName="editor-class"
-//         onEditorStateChange={this.onEditorStateChange}
-//         toolbarCustomButtons={[<>
-
-//         </>]}
-//       />
-//     );
-//   }
-// }

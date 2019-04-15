@@ -138,7 +138,7 @@ const MediaInput = props => {
         <AssetBrowser
           isOpen={assetBrowser}
           onCloseModal={handleChooseAsset}
-          mediaType={field.mediaType ? field.mediaType : "all"}
+          mediaType={field.mediaType ? field.mediaType : "file"}
         />
       )}
     </>

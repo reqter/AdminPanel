@@ -33,7 +33,7 @@ const Products = props => {
     },
     {
       width: 100,
-      Header: () => <div className="p-header-td">Thumbnail</div>,
+      Header: () => <div className="p-header-td">Media</div>,
       //show: false,
       headerStyle: {
         display: "block"
@@ -45,7 +45,7 @@ const Products = props => {
             {props.value && props.value.length > 0 ? (
               getAssetUi(props.value[0][currentLang])
             ) : (
-                <div className="p-thumbnail-file empty">
+              <div className="p-thumbnail-file empty">
                 {/* <i className="file-text" /> */}
                 empty
               </div>
@@ -461,7 +461,9 @@ const Products = props => {
                     {dataFilters.map(filter => (
                       <div key={filter.id} className="filterItem">
                         <span className="filterText">
-                          {filter.title !== undefined
+                          {filter.type === "status"
+                            ? languageManager.translate(filter.name)
+                            : filter.title !== undefined
                             ? filter.title.en !== undefined
                               ? filter.title[currentLang]
                               : filter.title

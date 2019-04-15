@@ -16,37 +16,31 @@ const filters = [
   {
     id: "0",
     name: "all",
-    title: "All Files",
     icon: "icon-folder"
   },
   {
     id: "1",
     name: "image",
-    title: "Image",
     icon: "icon-images"
   },
   {
     id: "2",
     name: "video",
-    title: "Video",
     icon: "icon-video"
   },
   {
     id: "3",
     name: "audio",
-    title: "Audio",
     icon: "icon-audio"
   },
   {
     id: "4",
     name: "pdf",
-    title: "PDF",
     icon: "icon-pdf"
   },
   {
     id: "5",
     name: "spreadsheet",
-    title: "Spreadsheet",
     icon: "icon-spreadsheet"
   }
 ];
@@ -101,8 +95,19 @@ const Assets = props => {
   function translate(key) {
     return languageManager.translate(key);
   }
+  function getTypeFilters(item) {
+    return {
+      all: item.name === "all" ? true : false,
+      image: item.name === "image" ? true : false,
+      video: item.name === "video" ? true : false,
+      audio: item.name === "audio" ? true : false,
+      pdf: item.name === "pdf" ? true : false,
+      spreadsheet: item.name === "spreadsheet" ? true : false
+    };
+  }
   function handleFileTypeClick(selected) {
     setFileType(selected);
+    const typeFilters = getTypeFilters(selected);
     filterAssets()
       .onOk(result => {
         dispatch({
@@ -138,10 +143,19 @@ const Assets = props => {
         });
       })
       .notFound(result => {})
-      .call(selected.name, selectedStatus.name);
+      .call(
+        typeFilters.all,
+        typeFilters.image,
+        typeFilters.video,
+        typeFilters.audio,
+        typeFilters.pdf,
+        typeFilters.spreadsheet,
+        selectedStatus.name
+      );
   }
   function handleStatusClick(selected) {
     setStatus(selected);
+    const typeFilters = getTypeFilters(selectedFileType);
     filterAssets()
       .onOk(result => {
         dispatch({
@@ -177,7 +191,15 @@ const Assets = props => {
         });
       })
       .notFound(result => {})
-      .call(selectedFileType.name, selected.name);
+      .call(
+        typeFilters.all,
+        typeFilters.image,
+        typeFilters.video,
+        typeFilters.audio,
+        typeFilters.pdf,
+        typeFilters.spreadsheet,
+        selected.name
+      );
   }
   function openUploader() {
     props.history.push("/addAsset");

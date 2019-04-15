@@ -87,20 +87,24 @@ const FieldConfig = props => {
   const [refContentTypes, setRefContentTypes] = useState(
     selectedField.type === "reference"
       ? () => {
+          let d = [];
           if (
             selectedField.references === undefined ||
-            selectedField.references.length > 0
-          )
-            return contentTypes;
-          return contentTypes.map(item => {
-            for (let i = 0; i < selectedField.references.length; i++) {
-              const r_id = selectedField.references[i];
-              if (item.sys.id === r_id) {
-                item.selected = true;
+            selectedField.references.length  === 0
+          ) {
+            d = contentTypes;
+          } else {
+            for (let j = 0; j < contentTypes.length; j++) {
+              for (let i = 0; i < selectedField.references.length; i++) {
+                const r_id = selectedField.references[i];
+                if (contentTypes[j].sys.id === r_id) {
+                  contentTypes[j].selected = true;
+                }
               }
             }
-            return item;
-          });
+          }
+          d = contentTypes;
+          return d;
         }
       : {}
   );
@@ -184,9 +188,11 @@ const FieldConfig = props => {
 
   useEffect(() => {
     return () => {
-      if (!props.isOpen) toggleModal(false);
+      if (!props.isOpen) {
+        toggleModal(false);
+      }
     };
-  }, []);
+  });
 
   //#region methods
   function closeModal(params) {
@@ -309,9 +315,13 @@ const FieldConfig = props => {
             )
           }
         });
+        const data = result.map(item => {
+          delete item.selected;
+          return item;
+        });
         dispatch({
           type: "SET_CONTENT_TYPES",
-          value: result
+          value: data
         });
         props.onCloseModal(obj);
       })
