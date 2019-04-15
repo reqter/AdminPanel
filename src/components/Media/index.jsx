@@ -9,11 +9,10 @@ const MediaInput = props => {
   const [assetBrowser, toggleAssetBrowser] = useState(false);
   const [files, setFiles] = useState([]);
 
-  if (props.init && field.isRequired === true && !props.reset) {
-    if (formData[field.name] === undefined) props.init(field.name);
-  }
-
   useEffect(() => {
+    if (props.init && field.isRequired === true && !props.reset) {
+      if (formData[field.name] === undefined) props.init(field.name);
+    }
     // set form value update time
     if (formData[field.name] && formData[field.name].length > 0) {
       const d = formData[field.name].map(item => {
@@ -32,13 +31,14 @@ const MediaInput = props => {
     if (Object.keys(props.formData).length === 0) {
       setFiles([]);
     }
-  }, [props.formData]);
+  }, [formData]);
+
   useEffect(() => {
     // send value to form after updateing
     let result = files.map(item => item.url);
+    if (result.length === 0) result = undefined;
     if (field.isRequired === true) {
-      if (result === undefined || result.length === 0)
-        props.onChangeValue(field, result, false);
+      if (result === undefined) props.onChangeValue(field, result, false);
       else props.onChangeValue(field, result, true);
     } else {
       props.onChangeValue(field, result, true);
@@ -73,19 +73,6 @@ const MediaInput = props => {
   function openAssetBrowser() {
     toggleAssetBrowser(true);
   }
-  const imgs = ["jpg", "jpeg", "gif", "bmp", "png"];
-  const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
-  const audios = ["wav", "mp3", "ogg"];
-  function getAssetUi(file) {
-    const ext = file.url[currentLang].split("/").pop().split(".").pop();
-    if (imgs.indexOf(ext.toLowerCase()) !== -1)
-      return <img src={file.url[currentLang]} alt="" />;
-    else if (videos.indexOf(ext.toLowerCase()) !== -1)
-      return <i className="icon-video" />;
-    else if (audios.indexOf(ext.toLowerCase()) !== -1)
-      return <i className="icon-audio" />;
-    else return <i style={{ fontSize: 14 }}>.unknown</i>;
-  }
   return (
     <>
       <div className="up-uploader">
@@ -115,7 +102,7 @@ const MediaInput = props => {
                 ) : field.mediaType === "spreadsheet" ? (
                   <i className="icon-spreadsheet" />
                 ) : (
-                  getAssetUi(file)
+                  utility.getAssetIconByURL(file.url[currentLang])
                 )}
               </div>
             </div>

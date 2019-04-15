@@ -697,7 +697,7 @@ export function getContentById() {
     //
     const item = data.contents.find(item => item.sys.id === id);
     let status;
-    let result = { ...item };
+    let result = item !== undefined ? { ...item } : undefined;
     if (result) {
       status = 200;
       result.contentType = data.contentTypes.find(

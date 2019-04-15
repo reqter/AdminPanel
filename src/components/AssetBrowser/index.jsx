@@ -64,7 +64,9 @@ const AssetBrowser = props => {
   const [isOpen, toggleModal] = useState(props.isOpen);
   const [tab, changeTab] = useState(1);
   const [formData, setFormData] = useState({});
+  const [form, setForm] = useState({});
   const [formValidation, setFormValidation] = useState();
+  const [isValidForm, toggleIsValidForm] = useState();
 
   useEffect(() => {
     if (tab === 1) {
@@ -74,6 +76,13 @@ const AssetBrowser = props => {
       if (!props.isOpen) toggleModal(false);
     };
   }, [props.isOpen, tab]);
+
+  useEffect(() => {
+    if (Object.keys(form).length > 0 && formValidation === undefined) {
+      toggleIsValidForm(true);
+    } else toggleIsValidForm(false);
+  }, [form]);
+
   function closeModal() {
     props.onCloseModal();
   }
@@ -117,12 +126,12 @@ const AssetBrowser = props => {
         },
         issueDate: "19/01/2019 20:18"
       },
-      name: formData.name,
-      title: formData.title,
-      shorDesc: formData.shortDesc,
+      name: form.name,
+      title: form.title,
+      shorDesc: form.shortDesc,
       status: "draft",
-      url: formData.url,
-      fileType: formData.fileType
+      url: form.url,
+      fileType: form.fileType
     };
     addAsset()
       .onOk(result => {
@@ -131,7 +140,9 @@ const AssetBrowser = props => {
           changeTab(1);
         } else {
           setFormData({});
-          setFormValidation();
+          setForm({});
+          const newObj = { ...formValidation };
+          setFormValidation(newObj);
         }
       })
       .onServerError(result => {
@@ -188,7 +199,9 @@ const AssetBrowser = props => {
   }
   function handleOnChangeValue(field, value, isValid) {
     // add value to form
-    let f = { ...formData };
+    let f = {
+      ...form
+    };
     const { name: key } = field;
     if (value === undefined) {
       delete f[key];
@@ -211,10 +224,12 @@ const AssetBrowser = props => {
         };
       } else f[key] = value;
     }
-    setFormData(f);
+    setForm(f);
 
     // check validation
-    let obj = { ...formValidation };
+    let obj = {
+      ...formValidation
+    };
     if (isValid && obj) {
       delete obj[key];
       if (key === "url" && field.isBase) delete obj["title"];
@@ -318,24 +333,14 @@ const AssetBrowser = props => {
               <button
                 className="btn btn-primary"
                 onClick={() => upsertItem(false)}
-                disabled={
-                  !(
-                    Object.keys(formData).length > 0 &&
-                    formValidation === undefined
-                  )
-                }
+                disabled={!isValidForm}
               >
                 Save & New
               </button>
               <button
                 className="btn btn-primary"
                 onClick={() => upsertItem(true)}
-                disabled={
-                  !(
-                    Object.keys(formData).length > 0 &&
-                    formValidation === undefined
-                  )
-                }
+                disabled={!isValidForm}
               >
                 Save & Back
               </button>

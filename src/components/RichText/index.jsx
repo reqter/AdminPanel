@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 import "./../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import "./styles.scss";
@@ -15,26 +16,36 @@ const RichTextInput = props => {
   const [assetBrowser, toggleAssetBrowser] = useState(false);
   const [input, setInput] = useState(EditorState.createEmpty());
 
-  if (field.isRequired !== undefined && field.isRequired) {
-    if (formData[field.name] === undefined) props.init(field.name);
+
+  //set default value to form data in parent
+  useEffect(() => {
+
+    if (field.isRequired !== undefined && field.isRequired) {
+      if (formData[field.name] === undefined) props.init(field.name);
+    }
+    // if (field.defaultValue && !props.formData[field.name]) {
+    //   setValueToParentForm(field.defaultValue);
+    // }
+  }, []);
+
+  //  set value to input
+  useEffect(() => {
+    props.formData[field.name]
+      ? field.isTranslate
+        ? initValue(props.formData[field.name][currentLang])
+        : initValue(props.formData[field.name])
+      : initValue("<p></p>");
+  }, [formData]);
+
+  function initValue(content) {
+    const blocksFromHtml = htmlToDraft(content);
+    const { contentBlocks, entityMap } = blocksFromHtml;
+    const contentState = ContentState.createFromBlockArray(
+      contentBlocks,
+      entityMap
+    );
+    setInput(EditorState.createWithContent(contentState));
   }
-
-  // set default value to form data in parent
-  // useEffect(() => {
-  //   if (field.defaultValue && !props.formData[field.name]) {
-  //     setValueToParentForm(field.defaultValue);
-  //   }
-  // }, []);
-
-  // set value to input
-  // useEffect(() => {
-  //   props.formData[field.name]
-  //     ? field.isTranslate
-  //       ? setInput(props.formData[field.name][currentLang])
-  //       : setInput(props.formData[field.name])
-  //     : setInput("");
-  // }, [formData]);
-
   function setValueToParentForm(inputValue) {
     let value;
     if (field.isTranslate) value = utility.applyeLangs(inputValue);
@@ -50,10 +61,9 @@ const RichTextInput = props => {
   }
   function handleOnChange(content) {
     setInput(content);
-    console.log(draftToHtml(convertToRaw(content.getCurrentContent())));
-    // setValueToParentForm(
-    //   draftToHtml(convertToRaw(content.getCurrentContent()))
-    // );
+    setValueToParentForm(
+      draftToHtml(convertToRaw(content.getCurrentContent()))
+    );
   }
   function openAssetBrowser() {
     toggleAssetBrowser(true);

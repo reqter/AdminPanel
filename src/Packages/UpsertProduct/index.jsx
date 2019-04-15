@@ -43,8 +43,10 @@ const UpsertProduct = props => {
   const [fields, setFields] = useState();
 
   const [formData, setFormData] = useState({});
+  const [form, setForm] = useState({});
   const [formValidation, setFormValidation] = useState();
   const [error, setError] = useState({});
+  const [isValidForm, toggleIsValidForm] = useState(false);
 
   useEffect(() => {
     if (updateMode || viewMode) {
@@ -66,7 +68,15 @@ const UpsertProduct = props => {
   useEffect(() => {
     changeTab(2);
   }, [contentType]);
-
+  useEffect(() => {
+    if (
+      Object.keys(form).length > 0 &&
+      formValidation === undefined &&
+      category !== undefined
+    ) {
+      toggleIsValidForm(true);
+    } else toggleIsValidForm(false);
+  }, [form, category]);
   // methods
   function getContentTypesList() {
     getContentTypes()
@@ -123,6 +133,7 @@ const UpsertProduct = props => {
           } else {
             if (tab !== 2) toggleTab(2);
             setFormData(result.fields);
+            setForm(result.fields);
             setContentType(result.contentType);
             const c_fields = result.contentType.fields;
             setFields(c_fields.sort((a, b) => a.index - b.index));
@@ -176,6 +187,7 @@ const UpsertProduct = props => {
       })
       .call(id);
   }
+
   function setNameToFormValidation(name) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
@@ -185,20 +197,20 @@ const UpsertProduct = props => {
     }
   }
   function handleOnChangeValue(field, value, isValid) {
-    // add value to form
-    let f = { ...formData };
     const { name: key } = field;
-    setFormData(prevForm => ({
-      ...prevForm,
-      [field.name]: value
-    }));
-
+    if (value !== undefined) {
+      // add value to form
+      setForm(prevState => ({
+        ...prevState,
+        [field.name]: value
+      }));
+    }
     // check validation
     let obj = { ...formValidation };
     if (isValid && obj) {
       delete obj[key];
       if (Object.keys(obj).length === 0) {
-        setFormValidation(undefined);
+        setFormValidation();
       } else {
         setFormValidation(obj);
       }
@@ -345,9 +357,8 @@ const UpsertProduct = props => {
         id: category.sys.id,
         name: category.name
       },
-      fields: formData
+      fields: form
     };
-
     if (updateMode) {
       obj["fields"]["status"] = "changed";
       updateContent()
@@ -359,12 +370,7 @@ const UpsertProduct = props => {
               message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK")
             }
           });
-          if (closePage) {
-            backToProducts();
-          } else {
-            setFormData({});
-            setFormValidation();
-          }
+          backToProducts();
         })
         .onServerError(result => {
           dispatch({
@@ -423,8 +429,10 @@ const UpsertProduct = props => {
           if (closePage) {
             backToProducts();
           } else {
+            const obj = { ...formValidation };
+            setFormValidation(obj);
             setFormData({});
-            setFormValidation();
+            setForm({});
           }
         })
         .onServerError(result => {
@@ -472,7 +480,6 @@ const UpsertProduct = props => {
         .call(obj);
     }
   }
-  function showAsset() {}
   return (
     <div className="up-wrapper">
       <div className="up-header">
@@ -572,9 +579,7 @@ const UpsertProduct = props => {
                     </div>
                   ))}
                 <span>
-                  {category
-                    ? category.name[currentLang]
-                    : "Choose a category"}
+                  {category ? category.name[currentLang] : "Choose a category"}
                 </span>
                 {!viewMode && (
                   <button className="btn btn-link" onClick={showCatgoryModal}>
@@ -595,13 +600,7 @@ const UpsertProduct = props => {
                       <button
                         className="btn btn-primary"
                         onClick={() => upsertItem(false)}
-                        disabled={
-                          !(
-                            Object.keys(formData).length > 0 &&
-                            formValidation === undefined &&
-                            category !== undefined
-                          )
-                        }
+                        disabled={!isValidForm}
                       >
                         Save & New
                       </button>
@@ -609,13 +608,7 @@ const UpsertProduct = props => {
                     <button
                       className="btn btn-primary "
                       onClick={() => upsertItem(true)}
-                      disabled={
-                        !(
-                          Object.keys(formData).length > 0 &&
-                          formValidation === undefined &&
-                          category !== undefined
-                        )
-                      }
+                      disabled={!isValidForm}
                     >
                       {updateMode ? "Update & Close" : "Save & Close"}
                     </button>
@@ -644,10 +637,7 @@ const UpsertProduct = props => {
         </main>
       </div>
       {categoryModal && (
-        <CategoriesModal
-          categories={categories}
-          onCloseModal={onCloseModel}
-        />
+        <CategoriesModal categories={categories} onCloseModal={onCloseModel} />
       )}
     </div>
   );

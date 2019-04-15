@@ -8,6 +8,7 @@
     "bootstrap": "^4.3.1",
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
+    "html-to-draftjs": "^1.4.0",
     "node-sass": "^4.11.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",

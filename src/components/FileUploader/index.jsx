@@ -20,9 +20,11 @@ const FileUploaderInput = props => {
     return [];
   });
 
-  if (props.init && field.isRequired !== undefined && field.isRequired) {
-    if (formData[field.name] === undefined) props.init(field.name);
-  }
+  useEffect(() => {
+    if (field.isRequired !== undefined && field.isRequired) {
+      if (formData[field.name] === undefined) props.init(field.name);
+    }
+  }, []);
 
   useEffect(() => {
     if (formData[field.name]) {

@@ -72,7 +72,9 @@ const UpsertFile = props => {
   const [tab, changeTab] = useState(); // tab1 ; form , tab2 : errors
   const [error, setError] = useState();
   const [formData, setFormData] = useState({});
+  const [form, setForm] = useState({});
   const [formValidation, setFormValidation] = useState();
+  const [isFormValid, toggleIsValidForm] = useState();
 
   useEffect(() => {
     if (props.match.params.id !== undefined) {
@@ -95,12 +97,19 @@ const UpsertFile = props => {
     }
   }, [props.match.params.id]);
 
+  useEffect(() => {
+    if (Object.keys(form).length > 0 && formValidation === undefined) {
+      toggleIsValidForm(true);
+    } else toggleIsValidForm(false);
+  }, [form]);
+
   // methods
   function getAssetItemById(id) {
     getAssetById()
       .onOk(result => {
         changeTab(1);
         setFormData(result);
+        setForm(result);
       })
       .onServerError(result => {
         const obj = {
@@ -154,7 +163,7 @@ const UpsertFile = props => {
   }
   function handleOnChangeValue(field, value, isValid) {
     // add value to form
-    let f = { ...formData };
+    let f = { ...form };
     const { name: key } = field;
     if (value === undefined) {
       delete f[key];
@@ -177,7 +186,7 @@ const UpsertFile = props => {
         };
       } else f[key] = value;
     }
-    setFormData(f);
+    setForm(f);
 
     // check validation
     let obj = { ...formValidation };
@@ -351,7 +360,7 @@ const UpsertFile = props => {
             }
           });
         })
-        .call(formData);
+        .call(form);
     } else {
       const obj = {
         sys: {
@@ -362,12 +371,12 @@ const UpsertFile = props => {
           },
           issueDate: "19/01/2019 20:18"
         },
-        name: formData.name,
-        title: formData.title,
-        shorDesc: formData.shortDesc,
+        name: form.name,
+        title: form.title,
+        shorDesc: form.shortDesc,
         status: "draft",
-        url: formData.url,
-        fileType: formData.fileType
+        url: form.url,
+        fileType: form.fileType
       };
       addAsset()
         .onOk(result => {
@@ -382,7 +391,9 @@ const UpsertFile = props => {
             backToAssets();
           } else {
             setFormData({});
-            setFormValidation();
+            setForm({});
+            const newObj = { ...formValidation };
+            setFormValidation(newObj);
           }
         })
         .onServerError(result => {
@@ -472,12 +483,7 @@ const UpsertFile = props => {
                     <button
                       className="btn btn-primary"
                       onClick={() => upsertItem(false)}
-                      disabled={
-                        !(
-                          Object.keys(formData).length > 0 &&
-                          formValidation === undefined
-                        )
-                      }
+                      disabled={!isFormValid}
                     >
                       Save & New
                     </button>
@@ -485,12 +491,7 @@ const UpsertFile = props => {
                   <button
                     className="btn btn-primary"
                     onClick={() => upsertItem(true)}
-                    disabled={
-                      !(
-                        Object.keys(formData).length > 0 &&
-                        formValidation === undefined
-                      )
-                    }
+                    disabled={!isFormValid}
                   >
                     {updateMode ? "Update & Close" : "Save & Close"}
                   </button>

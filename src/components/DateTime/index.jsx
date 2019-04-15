@@ -16,12 +16,12 @@ const StringInput = props => {
     }
     return "";
   }
-  if (field.isRequired !== undefined && field.isRequired) {
-    if (formData[field.name] === undefined) props.init(field.name);
-  }
-
+  
   // set default value to form data in parent
   useEffect(() => {
+    if (field.isRequired !== undefined && field.isRequired) {
+      if (formData[field.name] === undefined) props.init(field.name);
+    }
     if (field.showCurrent && !props.formData[field.name]) {
       setValueToParentForm(initValue());
     }
