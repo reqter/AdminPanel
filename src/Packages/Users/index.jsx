@@ -301,9 +301,7 @@ const Users = props => {
             </div>
             <div className="filterContent">
               <div className="left-filters">
-                <div className="title">
-                  {translate("USERS_FILTER_BY_ROLE")}
-                </div>
+                <div className="title">{translate("USERS_FILTER_BY_ROLE")}</div>
                 {roles.map(f => (
                   <div
                     className="filter"
@@ -321,8 +319,7 @@ const Users = props => {
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
-                        display:
-                          f.id === selectedFileType.id ? "block" : "none"
+                        display: f.id === selectedFileType.id ? "block" : "none"
                       }}
                     />
                   </div>
@@ -332,26 +329,42 @@ const Users = props => {
                 <div className="title">
                   {translate("USERS_FILTER_BY_STATUS_TITLE")}
                 </div>
-                {/* {status.map(f => (
-                  <div
-                    className="filter"
-                    key={f.id}
-                    onClick={() => handleStatusClick(f)}
+                <div
+                  className="filter"
+                  onClick={() => handleStatusClick("active")}
+                  style={{
+                    color:
+                      selectedStatus === "active" ? "rgb(56,132,255)" : "black"
+                  }}
+                >
+                  <i className="icon icon-shield" />
+                  <span className="name">{translate("active")}</span>
+                  <span
+                    className="icon-circle-o iconSelected"
                     style={{
-                      color:
-                        f.id === selectedStatus.id ? "rgb(56,132,255)" : "black"
+                      display: selectedStatus === "active" ? "block" : "none"
                     }}
-                  >
-                    <i className={["icon", f.icon].join(" ")} />
-                    <span className="name">{translate(f.name)}</span>
-                    <span
-                      className="icon-circle-o iconSelected"
-                      style={{
-                        display: f.id === selectedStatus.id ? "block" : "none"
-                      }}
-                    />
-                  </div>
-                ))} */}
+                  />
+                </div>
+                <div
+                  className="filter"
+                  onClick={() => handleStatusClick("deactive")}
+                  style={{
+                    color:
+                      selectedStatus === "deactive"
+                        ? "rgb(56,132,255)"
+                        : "black"
+                  }}
+                >
+                  <i className="icon icon-shield" />
+                  <span className="name">{translate("deactive")}</span>
+                  <span
+                    className="icon-circle-o iconSelected"
+                    style={{
+                      display: selectedStatus === "deactive" ? "block" : "none"
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
