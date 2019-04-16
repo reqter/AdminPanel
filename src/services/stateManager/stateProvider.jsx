@@ -8,6 +8,7 @@ const Provider = props => {
     fields: [],
     categories: [],
     contents: [],
+    users: [],
     assets: [],
     status: [
       {
@@ -63,6 +64,11 @@ const Provider = props => {
         return {
           ...state,
           contents: action.value
+        };
+      case "SET_USERS":
+        return {
+          ...state,
+          users: action.value
         };
       case "SET_ASSETS":
         return {

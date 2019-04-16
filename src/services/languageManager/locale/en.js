@@ -32,6 +32,8 @@ export default {
   PUBLISH: "Publish",
   ARCHIVE: "Archive",
   UN_ARCHIVE: "UnArchive",
+  active: "Active",
+  deactive: "Deactive",
   // login
   LOGIN_TITLE: "SignIn Reqter",
   LOGIN_EMAIL_INPUT_TITLE: "Email Address",
@@ -270,6 +272,19 @@ export default {
   UPSERT_ITEM_GET_BY_ID_BAD_REQUEST: "Bad request",
   UPSERT_ITEM_GET_BY_ID_NOT_FOUND: "Content did not found",
   UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED: "Un Authorized",
+
+  // USERS
+  USERS_FILTER_TITLE: "Filter & Add New File",
+  USERS_FILTER_BTN_TEXT: "Create New User",
+  USERS_FILTER_BY_ROLE: "Filter Users by Role",
+  USERS_FILTER_BY_STATUS_TITLE: "Filter Users By Status",
+  USERS_TABLE_HEAD_IMAGE: "Image",
+  USERS_TABLE_HEAD_FULLNAME: "FullName",
+  USERS_TABLE_HEAD_STATUS: "Status",
+  USERS_TABLE_HEAD_ROLES: "Roles",
+  USERS_TABLE_HEAD_ACTIONS: "Actions",
+  USERS_TABLE_HEADER_TITLE: "All Users",
+
   //assets
   ASSET_FILTER_TITLE: "Filter & Upload New File",
   ASSET_FILTER_BTN_TEXT: "Upload New File",
@@ -320,6 +335,7 @@ export default {
     "Your asset not found . it probebly has been removed or maybe you have entered wrong id of the asset",
   UPSERT_ASSET_ERROR_BOX_MEDIA_BTN: "Media",
   UPSERT_ASSET_ERROR_BOX_REFRESH_BTN: "Refresh",
+
   //COMPONENTS
   COMPONENTS_ASSET_BROWSER_HEADER: "Choose your asset"
 };
