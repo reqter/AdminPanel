@@ -10,8 +10,10 @@ import RichText from "./RichText";
 import String from "./String";
 import FileUploader from "./FileUploader";
 import AssetBrowser from "./AssetBrowser";
+import Reference from "./reference";
 
 export {
+  Reference,
   AssetFile,
   CheckBox,
   Boolean,

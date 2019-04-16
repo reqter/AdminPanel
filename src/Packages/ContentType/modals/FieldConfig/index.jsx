@@ -57,6 +57,9 @@ const FieldConfig = props => {
   const [imageUploadMethod, setImageUploadMethod] = useState(
     selectedField.isList === true ? "manyFiles" : "oneFile"
   );
+  const [referenceChooseType, setReferenceChooseType] = useState(
+    selectedField.isList === true ? "multiSelect" : "single"
+  );
   const [mediaTypeVisibility, toggleMediaType] = useState(
     selectedField.type === "media" ? true : false
   );
@@ -90,7 +93,7 @@ const FieldConfig = props => {
           let d = [];
           if (
             selectedField.references === undefined ||
-            selectedField.references.length  === 0
+            selectedField.references.length === 0
           ) {
             d = contentTypes;
           } else {
@@ -111,12 +114,6 @@ const FieldConfig = props => {
 
   const [helpText, setHelpText] = useState(
     selectedField.helpText ? selectedField.helpText : ""
-  );
-  const [booleanTrueText, setBooleanTrueText] = useState(
-    selectedField.trueText ? selectedField.trueText : "True"
-  );
-  const [booleanFalseText, setBooleanFalseText] = useState(
-    selectedField.falseText ? selectedField.falseText : "False"
   );
   const [inVisible, toggleInVisible] = useState(
     selectedField.inVisible ? selectedField.inVisible : false
@@ -228,6 +225,9 @@ const FieldConfig = props => {
   function handleImageUploadMethod(e) {
     setImageUploadMethod(e.target.value);
   }
+  function handleReferencechooseType(e) {
+    setReferenceChooseType(e.target.value);
+  }
   function handleReferenceChk(e) {
     toggleReferenceContentType(e.target.checked);
   }
@@ -242,12 +242,6 @@ const FieldConfig = props => {
   }
   function handleHelpTextchanged(e) {
     setHelpText(e.target.value);
-  }
-  function handleBooleanTrueText(e) {
-    setBooleanTrueText(e.target.value);
-  }
-  function handleBooleanFalseText(e) {
-    setBooleanFalseText(e.target.value);
   }
   function handleToggleInVisible(e) {
     toggleInVisible(e.target.checked);
@@ -297,12 +291,15 @@ const FieldConfig = props => {
           : "file"
         : "file";
     } else if (selectedField.type === "reference") {
-      obj["references"] = refContentTypes.map(item => {
+      obj["isList"] = referenceChooseType === "single" ? false : true;
+      let arr = [];
+      for (let i = 0; i < refContentTypes.length; i++) {
+        const item = refContentTypes[i];
         if (item.selected === true) {
-          return item.sys.id;
+          arr.push(item.sys.id);
         }
-        return false;
-      });
+      }
+      obj["references"] = arr;
     }
     updateField()
       .onOk(result => {
@@ -734,6 +731,52 @@ const FieldConfig = props => {
                       <label>
                         Select this if there are several things to be stored For
                         example, several photos or PDF files
+                      </label>
+                    </div>
+                  </div>
+                </>
+              )}
+              {selectedField.type === "reference" && (
+                <>
+                  <div className="custom_checkbox ">
+                    <div className="left">
+                      <label className="radio">
+                        <input
+                          type="radio"
+                          value="single"
+                          checked={referenceChooseType === "single"}
+                          name="referenceChooseType"
+                          onChange={handleReferencechooseType}
+                          id="singleRadio"
+                        />
+                        <span className="checkround" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label for="singleRadio">Single Select</label>
+                      <label for="singleRadio">
+                        Select this if there is only one thing to store For
+                      </label>
+                    </div>
+                  </div>
+                  <div className="custom_checkbox">
+                    <div className="left">
+                      <label className="radio">
+                        <input
+                          type="radio"
+                          value="multiSelect"
+                          checked={referenceChooseType === "multiSelect"}
+                          name="referenceChooseType"
+                          onChange={handleReferencechooseType}
+                          id="multiSelectRadio"
+                        />
+                        <span className="checkround" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label for="multiSelectRadio">Multi Select</label>
+                      <label for="multiSelectRadio">
+                        Select this if there are several things to be stored
                       </label>
                     </div>
                   </div>

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  AtomicBlockUtils,
+  Entity,
+  RichUtils
+} from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
@@ -16,10 +23,8 @@ const RichTextInput = props => {
   const [assetBrowser, toggleAssetBrowser] = useState(false);
   const [input, setInput] = useState(EditorState.createEmpty());
 
-
   //set default value to form data in parent
   useEffect(() => {
-
     if (field.isRequired !== undefined && field.isRequired) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
@@ -60,22 +65,54 @@ const RichTextInput = props => {
     } else props.onChangeValue(field, value, true);
   }
   function handleOnChange(content) {
+    debugger
     setInput(content);
     setValueToParentForm(
       draftToHtml(convertToRaw(content.getCurrentContent()))
     );
   }
+
   function openAssetBrowser() {
     toggleAssetBrowser(true);
+  }
+  function _addMedia(url) {
+    const contentState = input.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      "image",
+      "IMMUTABLE",
+      {
+        src: url
+      }
+    );
+
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(input, {
+      currentContent: contentStateWithEntity
+    });
+    return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, " ");
   }
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
     if (asset) {
+      handleOnChange(_addMedia(asset.url[currentLang]));
     }
   }
+  function mediaBlockRenderer(block) {
+    if (block.getType() === "atomic") {
+      return {
+        component: Media,
+        editable: false
+      };
+    }
+    return null;
+  }
+
   return (
     <>
       <Editor
+        readOnly={props.viewMode}
+        toolbarHidden={props.viewMode}
+        blockRendererFn={mediaBlockRenderer}
         editorState={input}
         onEditorStateChange={handleOnChange}
         wrapperClassName="wrapper-class"
@@ -121,3 +158,17 @@ const RichTextInput = props => {
 };
 
 export default RichTextInput;
+
+const Media = props => {
+  const entity = Entity.get(props.block.getEntityAt(0));
+
+  const { src } = entity.getData();
+  const type = entity.getType();
+
+  let media;
+  if (type === "image") {
+    media = <img src={src} alt="" />;
+  }
+
+  return media;
+};

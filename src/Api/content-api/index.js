@@ -87,6 +87,109 @@ export function filterContents() {
     }
   };
 }
+export function getByContentTypes() {
+  let _onOkCallBack;
+  function _onOk(result) {
+    if (_onOkCallBack) {
+      _onOkCallBack(result);
+    }
+  }
+  let _onServerErrorCallBack;
+  function _onServerError(result) {
+    if (_onServerErrorCallBack) {
+      _onServerErrorCallBack(result);
+    }
+  }
+  let _onBadRequestCallBack;
+  function _onBadRequest(result) {
+    if (_onBadRequestCallBack) {
+      _onBadRequestCallBack(result);
+    }
+  }
+  let _unAuthorizedCallBack;
+  function _unAuthorized(result) {
+    if (_unAuthorizedCallBack) {
+      _unAuthorizedCallBack(result);
+    }
+  }
+  let _notFoundCallBack;
+  function _notFound(result) {
+    if (_notFoundCallBack) {
+      _notFoundCallBack(result);
+    }
+  }
+  let _onConnectionErrorCallBack;
+  function _onConnectionError(result) {
+    if (_onConnectionErrorCallBack) {
+      _onConnectionErrorCallBack(result);
+    }
+  }
+  function _call(contentTypes = []) {
+    let result = [];
+    if (contentTypes.length === 0) {
+      result = data.contents;
+    } else {
+      for (let i = 0; i < contentTypes.length; i++) {
+        const contentTypeId = contentTypes[i];
+        for (let j = 0; j < data.contents.length; j++) {
+          const content = data.contents[i];
+          if (content.contentType.id === contentTypeId) {
+            result.push(content);
+            break;
+          }
+        }
+      }
+    }
+    const status = 200;
+    switch (status) {
+      case 200:
+        _onOk(result);
+        break;
+      case 400:
+        _onBadRequest(result);
+        break;
+      case 401:
+        _unAuthorized(result);
+        break;
+      case 404:
+        _notFound(result);
+        break;
+      case 500:
+        _onServerError(result);
+        break;
+      default:
+        break;
+    }
+  }
+
+  return {
+    call: _call,
+    onOk: function(callback) {
+      _onOkCallBack = callback;
+      return this;
+    },
+    onServerError: function(callback) {
+      _onServerErrorCallBack = callback;
+      return this;
+    },
+    onBadRequest: function(callback) {
+      _onBadRequestCallBack = callback;
+      return this;
+    },
+    notFound: function(callback) {
+      _notFoundCallBack = callback;
+      return this;
+    },
+    unAuthorized: function(callback) {
+      _unAuthorizedCallBack = callback;
+      return this;
+    },
+    onConnectionError: function(callback) {
+      _onConnectionErrorCallBack = callback;
+      return this;
+    }
+  };
+}
 
 export function getContents() {
   let _onOkCallBack;

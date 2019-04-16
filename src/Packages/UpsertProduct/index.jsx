@@ -18,7 +18,8 @@ import {
   Media,
   Boolean,
   KeyValue,
-  RichText
+  RichText,
+  Reference
 } from "./../../components";
 
 const UpsertProduct = props => {
@@ -306,6 +307,16 @@ const UpsertProduct = props => {
       case "richtext":
         return (
           <RichText
+            viewMode={viewMode}
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
+      case "reference":
+        return (
+          <Reference
             viewMode={viewMode}
             field={field}
             formData={formData}
