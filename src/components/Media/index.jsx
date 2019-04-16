@@ -10,7 +10,7 @@ const MediaInput = props => {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    if (props.init && field.isRequired === true && !props.reset) {
+    if (field.isRequired === true) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
     // set form value update time
@@ -36,9 +36,10 @@ const MediaInput = props => {
   useEffect(() => {
     // send value to form after updateing
     let result = files.map(item => item.url);
-    if (result.length === 0) result = undefined;
+    if (result.length === 0) result = [];
     if (field.isRequired === true) {
-      if (result === undefined) props.onChangeValue(field, result, false);
+      if (result === undefined || result.length === 0)
+        props.onChangeValue(field, result, false);
       else props.onChangeValue(field, result, true);
     } else {
       props.onChangeValue(field, result, true);
@@ -52,7 +53,7 @@ const MediaInput = props => {
         id: Math.random(),
         url: field.isTranslate
           ? asset.url
-          : { [currentLang]: asset[currentLang] }
+          : { [currentLang]: asset.url[currentLang] }
       };
       if (field.isList !== undefined && field.isList) {
         let fs = [...files, obj];

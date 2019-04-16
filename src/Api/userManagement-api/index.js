@@ -37,57 +37,26 @@ export function filterUsers() {
       _onConnectionErrorCallBack(result);
     }
   }
-  function _call(
-    all,
-    image = false,
-    video = false,
-    audio = false,
-    pdf = false,
-    spreadsheet = false,
-    state = undefined
-  ) {
+  function _call(roleId = undefined, s = undefined) {
     let result;
-    if (all && state === undefined) {
-      result = data.assets;
-    } else if (all && state) {
-      result = [...data.assets].filter(item => item.status === state);
-    } else {
-      result = [...data.assets].filter(item => {
-        if (image) {
-          if (state) {
-            if (item.status === state)
-              if (item.fileType.toLowerCase().includes("image")) return true;
-          } else if (item.fileType.toLowerCase().includes("image")) return true;
+    result = [...data.users].filter(item => {
+      if (roleId) {
+        if (item.roles) {
+          let res = false;
+          for (let i = 0; i < item.roles.length; i++) {
+            const role = item.roles[i];
+            if (role.id === roleId) {
+              res = true;
+              break;
+            }
+          }
+          if (!res) return false;
         }
-        if (video) {
-          if (state) {
-            if (item.status === state)
-              if (item.fileType.toLowerCase().includes("video")) return true;
-          } else if (item.fileType.toLowerCase().includes("video")) return true;
-        }
-        if (audio) {
-          if (state) {
-            if (item.status === state)
-              if (item.fileType.toLowerCase().includes("audio")) return true;
-          } else if (item.fileType.toLowerCase().includes("audio")) return true;
-        }
-        if (pdf) {
-          if (state) {
-            if (item.status === state)
-              if (item.fileType.toLowerCase().includes("pdf")) return true;
-          } else if (item.fileType.toLowerCase().includes("pdf")) return true;
-        }
-        if (spreadsheet) {
-          if (state) {
-            if (item.status === state)
-              if (item.fileType.toLowerCase().includes("spreadsheet"))
-                return true;
-          } else if (item.fileType.toLowerCase().includes("spreadsheet"))
-            return true;
-        }
-        return false;
-      });
-    }
+      }
+      if (s) if (item.status !== s) return false;
+
+      return true;
+    });
 
     const status = 200;
     switch (status) {
@@ -400,7 +369,7 @@ export function addUser() {
 
     //
 
-    data.assets.push(obj);
+    data.users.push(obj);
 
     const status = 200;
     switch (status) {
@@ -495,13 +464,13 @@ export function updateUser() {
 
     //
 
-    const result = data.assets.map(item => {
-      if (item.sys.id === obj.sys.id) {
+    const result = data.users.map(item => {
+      if (item.id === obj.id) {
         return { ...item, ...obj };
       }
       return item;
     });
-    data.assets = result;
+    data.users = result;
 
     const status = 200;
     switch (status) {
@@ -596,8 +565,8 @@ export function deleteUser() {
 
     //
 
-    const result = data.assets.filter(item => item.sys.id !== obj.sys.id);
-    data.assets = result;
+    const result = data.users.filter(item => item.id !== obj.id);
+    data.users = result;
 
     const status = 200;
     switch (status) {
@@ -690,7 +659,7 @@ export function getUserById() {
     //const status = rawResponse.status;
     //const result = await rawResponse.json();
 
-    const result = data.assets.find(item => item.sys.id === id);
+    const result = data.users.find(item => item.id === id);
     let status = 200;
     if (!result) status = 404;
     switch (status) {
@@ -779,17 +748,17 @@ export function activeUser() {
       _onConnectionErrorCallBack(result);
     }
   }
-  function _call(id) {
+  function _call(user) {
     //const status = rawResponse.status;
     //const result = await rawResponse.json();
 
     //
 
-    const result = data.assets.map(item => {
-      if (item.sys.id === id) item.status = "publish";
+    const result = data.users.map(item => {
+      if (item.id === user.id) item.status = "active";
       return item;
     });
-    data.assets = result;
+    data.users = result;
     let status = 200;
     switch (status) {
       case 200:
@@ -877,17 +846,17 @@ export function deactiveUser() {
       _onConnectionErrorCallBack(result);
     }
   }
-  function _call(id) {
+  function _call(user) {
     //const status = rawResponse.status;
     //const result = await rawResponse.json();
 
     //
 
-    const result = data.assets.map(item => {
-      if (item.sys.id === id) item.status = "archive";
+    const result = data.users.map(item => {
+      if (item.id === user.id) item.status = "deactive";
       return item;
     });
-    data.assets = result;
+    data.users = result;
     let status = 200;
     switch (status) {
       case 200:

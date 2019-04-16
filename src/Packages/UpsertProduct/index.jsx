@@ -72,13 +72,20 @@ const UpsertProduct = props => {
   useEffect(() => {
     if (
       Object.keys(form).length > 0 &&
-      formValidation === undefined &&
+      checkFormValidation() &&
       category !== undefined
     ) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [form, category]);
+
   // methods
+  function checkFormValidation() {
+    for (const key in formValidation) {
+      if (formValidation[key] === false) return false;
+    }
+    return true;
+  }
   function getContentTypesList() {
     getContentTypes()
       .onOk(result => {
@@ -192,7 +199,7 @@ const UpsertProduct = props => {
   function setNameToFormValidation(name) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
-        [name]: null,
+        [name]: false,
         ...prevFormValidation
       }));
     }
@@ -206,21 +213,16 @@ const UpsertProduct = props => {
         [field.name]: value
       }));
     }
-    // check validation
-    let obj = { ...formValidation };
-    if (isValid && obj) {
-      delete obj[key];
-      if (Object.keys(obj).length === 0) {
-        setFormValidation();
-      } else {
-        setFormValidation(obj);
-      }
+    if (isValid) {
+      setFormValidation(prevFormValidation => ({
+        ...prevFormValidation,
+        [key]: true
+      }));
     } else {
-      if (obj === undefined) {
-        obj = {};
-      }
-      obj[key] = null;
-      setFormValidation(obj);
+      setFormValidation(prevFormValidation => ({
+        ...prevFormValidation,
+        [key]: false
+      }));
     }
   }
   function showCatgoryModal() {
@@ -440,10 +442,13 @@ const UpsertProduct = props => {
           if (closePage) {
             backToProducts();
           } else {
-            const obj = { ...formValidation };
-            setFormValidation(obj);
             setFormData({});
             setForm({});
+            let n_obj = {};
+            for (const key in formValidation) {
+              n_obj[key] = false;
+            }
+            setFormValidation(n_obj);
           }
         })
         .onServerError(result => {

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { useGlobalState, languageManager } from "./../../services";
-import { getAssetById, addAsset, updateAsset } from "./../../Api/asset-api";
+import {
+  getUserById,
+  addUser,
+  updateUser
+} from "./../../Api/userManagement-api";
 import {
   String,
   Number,
@@ -17,51 +21,60 @@ import {
 const fields = [
   {
     id: "1",
-    name: "title",
+    name: "firstName",
     title: {
-      en: "Title",
-      fa: "عنوان"
+      en: "First Name",
+      fa: "نام"
     },
     description: {
-      en: "this will be apear on assets",
-      fa: "نام فایل برای نمایش در لیست"
+      en: "Enter your first name",
+      fa: "نام خود را وارد کنید"
     },
     type: "string",
-    isBase: true,
-    isTranslate: true,
     isRequired: true
   },
   {
     id: "2",
-    name: "shortDesc",
+    name: "lastName",
     title: {
-      en: "Short Description",
-      fa: "توضیحات"
+      en: "Last Name",
+      fa: "نام خانوادگی"
     },
     description: {
-      en: "Short description of your file",
-      fa: "توضیح کوتاه برای فایل"
+      en: "Enter your last name",
+      fa: "نام خانوادگی خود را وارد کنید"
     },
     type: "string",
-    isBase: true,
-    isTranslate: true
+    isRequired: true
   },
   {
     id: "3",
-    name: "url",
+    name: "userName",
     title: {
-      fa: "Your File",
-      en: "Your File"
+      en: "UserName",
+      fa: "نام کاربری"
+    },
+    description: {
+      en: "Choose a valid username",
+      fa: "نام کاربری خود را انتخاب کنید"
+    },
+    type: "string",
+    isRequired: true
+  },
+  {
+    id: "4",
+    name: "image",
+    title: {
+      fa: "عکس",
+      en: "Your image"
     },
     description: {
       fa: "",
-      en: "Click on file selector top choose your file"
+      en: "Choose an image as profile "
     },
-    type: "fileUploader",
-    mediaType: "file",
-    isBase: true,
-    isTranslate: true,
-    isRequired: true
+    type: "media",
+    mediaType: "image",
+    
   }
 ];
 
@@ -79,7 +92,7 @@ const UpsertFile = props => {
   useEffect(() => {
     if (props.match.params.id !== undefined) {
       if (props.match.params.id.length > 0) {
-        getAssetItemById(props.match.params.id);
+        getUserItemById(props.match.params.id);
         toggleUpdateMode(true);
       } else {
         const obj = {
@@ -98,14 +111,20 @@ const UpsertFile = props => {
   }, [props.match.params.id]);
 
   useEffect(() => {
-    if (Object.keys(form).length > 0 && formValidation === undefined) {
+    if (Object.keys(form).length > 0 && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [form]);
 
   // methods
-  function getAssetItemById(id) {
-    getAssetById()
+  function checkFormValidation() {
+    for (const key in formValidation) {
+      if (formValidation[key] === false) return false;
+    }
+    return true;
+  }
+  function getUserItemById(id) {
+    getUserById()
       .onOk(result => {
         changeTab(1);
         setFormData(result);
@@ -115,7 +134,7 @@ const UpsertFile = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           message: languageManager.translate(
-            "UPSERT_ASSET_GET_BY_ID_ON_SERVER_ERROR"
+            "UPSERT_USER_GET_BY_ID_ON_SERVER_ERROR"
           )
         };
         changeTab(2);
@@ -127,7 +146,7 @@ const UpsertFile = props => {
           value: {
             type: "error",
             message: languageManager.translate(
-              "UPSERT_ASSET_GET_BY_ID_ON_BAD_REQUEST"
+              "UPSERT_USER_GET_BY_ID_ON_BAD_REQUEST"
             )
           }
         });
@@ -138,7 +157,7 @@ const UpsertFile = props => {
           value: {
             type: "warning",
             message: languageManager.translate(
-              "UPSERT_ASSET_GET_BY_ID_UN_AUTHORIZED"
+              "UPSERT_USER_GET_BY_ID_UN_AUTHORIZED"
             )
           }
         });
@@ -146,7 +165,7 @@ const UpsertFile = props => {
       .notFound(result => {
         const obj = {
           type: "NOT_FOUND",
-          message: languageManager.translate("UPSERT_ASSET_GET_BY_ID_NOT_FOUND")
+          message: languageManager.translate("UPSERT_USER_GET_BY_ID_NOT_FOUND")
         };
         changeTab(2);
         setError(obj);
@@ -156,54 +175,32 @@ const UpsertFile = props => {
   function setNameToFormValidation(name) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
-        [name]: null,
+        [name]: false,
         ...prevFormValidation
       }));
     }
   }
   function handleOnChangeValue(field, value, isValid) {
-    // add value to form
-    let f = { ...form };
     const { name: key } = field;
-    if (value === undefined) {
-      delete f[key];
-      if (key === "url" && field.isBase) {
-        delete f["fileType"];
-        delete f["name"];
-        delete f["title"];
-      }
-    } else {
-      if (key === "url" && field.isBase) {
-        f[key] = {
-          en: value["en"],
-          fa: value["fa"]
-        };
-        f.fileType = value.fileType;
-        f.name = value["name"];
-        f["title"] = {
-          en: value["name"],
-          fa: value["name"]
-        };
-      } else f[key] = value;
+    if (value !== undefined) {
+      // add value to form
+      setForm(prevState => ({
+        ...prevState,
+        [field.name]: value
+      }));
     }
-    setForm(f);
-
     // check validation
-    let obj = { ...formValidation };
-    if (isValid && obj) {
-      delete obj[key];
-      if (key === "url" && field.isBase) delete obj["title"];
-      if (Object.keys(obj).length === 0) {
-        setFormValidation(undefined);
-      } else {
-        setFormValidation(obj);
-      }
+
+    if (isValid) {
+      setFormValidation(prevFormValidation => ({
+        ...prevFormValidation,
+        [key]: true
+      }));
     } else {
-      if (obj === undefined) {
-        obj = {};
-      }
-      obj[key] = null;
-      setFormValidation(obj);
+      setFormValidation(prevFormValidation => ({
+        ...prevFormValidation,
+        [key]: false
+      }));
     }
   }
 
@@ -295,26 +292,21 @@ const UpsertFile = props => {
     }
   }
   function backToAssets() {
-    props.history.push("/panel/assets");
+    props.history.push("/panel/users");
   }
 
   function upsertItem(closePage) {
     if (updateMode) {
-      updateAsset()
+      updateUser()
         .onOk(result => {
           dispatch({
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: languageManager.translate("UPSERT_ASSET_UPDATE_ON_OK")
+              message: languageManager.translate("UPSERT_USER_UPDATE_ON_OK")
             }
           });
-          if (closePage) {
-            backToAssets();
-          } else {
-            setFormData({});
-            setFormValidation();
-          }
+          backToAssets();
         })
         .onServerError(result => {
           dispatch({
@@ -322,7 +314,7 @@ const UpsertFile = props => {
             value: {
               type: "error",
               message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_ON_SERVER_ERROR"
+                "UPSERT_USER_UPDATE_ON_SERVER_ERROR"
               )
             }
           });
@@ -333,7 +325,7 @@ const UpsertFile = props => {
             value: {
               type: "error",
               message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_ON_BAD_REQUEST"
+                "UPSERT_USER_UPDATE_ON_BAD_REQUEST"
               )
             }
           });
@@ -344,7 +336,7 @@ const UpsertFile = props => {
             value: {
               type: "warning",
               message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_UN_AUTHORIZED"
+                "UPSERT_USER_UPDATE_UN_AUTHORIZED"
               )
             }
           });
@@ -354,37 +346,27 @@ const UpsertFile = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_NOT_FOUND"
-              )
+              message: languageManager.translate("UPSERT_USER_UPDATE_NOT_FOUND")
             }
           });
         })
         .call(form);
     } else {
       const obj = {
-        sys: {
-          id: Math.random().toString(),
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: ""
-          },
-          issueDate: "19/01/2019 20:18"
-        },
-        name: form.name,
-        title: form.title,
-        shorDesc: form.shortDesc,
-        status: "draft",
-        url: form.url,
-        fileType: form.fileType
+        id: Math.random().toString(),
+        fisrtName: form.fisrtName,
+        lastName: form.lastName,
+        userName: form.userName,
+        status: "active",
+        image: form.image
       };
-      addAsset()
+      addUser()
         .onOk(result => {
           dispatch({
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: languageManager.translate("UPSERT_ASSET_ADD_ON_OK")
+              message: languageManager.translate("UPSERT_USER_ADD_ON_OK")
             }
           });
           if (closePage) {
@@ -392,8 +374,11 @@ const UpsertFile = props => {
           } else {
             setFormData({});
             setForm({});
-            const newObj = { ...formValidation };
-            setFormValidation(newObj);
+            let n_obj = {};
+            for (const key in formValidation) {
+              n_obj[key] = false;
+            }
+            setFormValidation(n_obj);
           }
         })
         .onServerError(result => {
@@ -402,7 +387,7 @@ const UpsertFile = props => {
             value: {
               type: "error",
               message: languageManager.translate(
-                "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+                "UPSERT_USER_ADD_ON_SERVER_ERROR"
               )
             }
           });
@@ -413,7 +398,7 @@ const UpsertFile = props => {
             value: {
               type: "error",
               message: languageManager.translate(
-                "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+                "UPSERT_USER_ADD_ON_BAD_REQUEST"
               )
             }
           });
@@ -424,7 +409,7 @@ const UpsertFile = props => {
             value: {
               type: "warning",
               message: languageManager.translate(
-                "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+                "UPSERT_USER_ADD_UN_AUTHORIZED"
               )
             }
           });
@@ -434,7 +419,7 @@ const UpsertFile = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND")
+              message: languageManager.translate("UPSERT_USER_ADD_NOT_FOUND")
             }
           });
         })
@@ -453,13 +438,7 @@ const UpsertFile = props => {
         </button>
         <div className="tabItems">
           <div className="item active">
-            {updateMode
-              ? `1.${languageManager.translate(
-                  "UPSERT_ASSET_HEADER_EDIT_TITLE"
-                )}`
-              : `1.${languageManager.translate(
-                  "UPSERT_ASSET_HEADER_ADD_TITLE"
-                )}`}
+            {languageManager.translate("UPSERT_ASSET_HEADER_TITLE")}
           </div>
         </div>
       </div>
@@ -469,8 +448,8 @@ const UpsertFile = props => {
             <>
               <div className="up-content-title">
                 {updateMode
-                  ? languageManager.translate("UPSERT_ASSET_HEADER_EDIT_TITLE")
-                  : languageManager.translate("UPSERT_ASSET_HEADER_ADD_TITLE")}
+                  ? languageManager.translate("UPSERT_USER_HEADER_EDIT_TITLE")
+                  : languageManager.translate("UPSERT_USER_HEADER_ADD_TITLE")}
               </div>
               <div className="up-formInputs animated fadeIn">
                 {fields.map(field => (

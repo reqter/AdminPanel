@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
-import { AssetFile } from "./../../components";
-import { deleteAsset, filterAssets } from "./../../Api/asset-api";
+import { deleteAsset } from "./../../Api/asset-api";
 import {
   getUsers,
   getRoles,
@@ -17,8 +16,8 @@ const Users = props => {
   const [{ users }, dispatch] = useGlobalState();
 
   const { name: pageTitle, desc: pageDescription } = props.component;
-  const [selectedFileType, setFileType] = useState({});
-  const [selectedStatus, setStatus] = useState({});
+  const [selectedRole, setRole] = useState({});
+  const [selectedStatus, setStatus] = useState();
   const [roles, setRoles] = useState([]);
 
   useEffect(() => {
@@ -97,23 +96,11 @@ const Users = props => {
   function translate(key) {
     return languageManager.translate(key);
   }
-  function getTypeFilters(item) {
-    return {
-      all: item.name === "all" ? true : false,
-      image: item.name === "image" ? true : false,
-      video: item.name === "video" ? true : false,
-      audio: item.name === "audio" ? true : false,
-      pdf: item.name === "pdf" ? true : false,
-      spreadsheet: item.name === "spreadsheet" ? true : false
-    };
-  }
-  function handleFileTypeClick(selected) {
-    setFileType(selected);
-    const typeFilters = getTypeFilters(selected);
-    filterAssets()
+  function doFilter(roleId, status) {
+    filterUsers()
       .onOk(result => {
         dispatch({
-          type: "SET_ASSETS",
+          type: "SET_USERS",
           value: result
         });
       })
@@ -122,7 +109,7 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
+            message: languageManager.translate("USERS_ON_SERVER_ERROR")
           }
         });
       })
@@ -131,7 +118,7 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
+            message: languageManager.translate("USERS_ON_BAD_REQUEST")
           }
         });
       })
@@ -140,87 +127,39 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
+            message: languageManager.translate("USERS_UN_AUTHORIZED")
           }
         });
       })
       .notFound(result => {})
-      .call(
-        typeFilters.all,
-        typeFilters.image,
-        typeFilters.video,
-        typeFilters.audio,
-        typeFilters.pdf,
-        typeFilters.spreadsheet,
-        selectedStatus.name
-      );
+      .call(roleId, status);
   }
-  function handleStatusClick(selected) {
-    setStatus(selected);
-    const typeFilters = getTypeFilters(selectedFileType);
-    filterAssets()
-      .onOk(result => {
-        dispatch({
-          type: "SET_ASSETS",
-          value: result
-        });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
-          }
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
-          }
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
-          }
-        });
-      })
-      .notFound(result => {})
-      .call(
-        typeFilters.all,
-        typeFilters.image,
-        typeFilters.video,
-        typeFilters.audio,
-        typeFilters.pdf,
-        typeFilters.spreadsheet,
-        selected.name
-      );
+  function handleRoleSelected(selected) {
+    setRole(selected);
+    doFilter(selected.id, selectedStatus);
+  }
+  function handleStatusSelected(status) {
+    setStatus(status);
+    doFilter(selectedRole.id, status);
   }
   function openUploader() {
-    props.history.push("/addAsset");
+    props.history.push("/users/new");
   }
-  function editUser(file) {
-    props.history.push(`/editAsset/${file.sys.id}`);
+  function editUser(user) {
+    props.history.push(`/users/edit/${user.id}`);
   }
   function removeUser(item) {
-    deleteAsset()
+    deleteUser()
       .onOk(result => {
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: languageManager.translate("ASSET_DELETE_ON_OK")
+            message: languageManager.translate("USERS_DELETE_ON_OK")
           }
         });
         dispatch({
-          type: "SET_ASSETS",
+          type: "SET_USERS",
           value: result
         });
       })
@@ -229,7 +168,7 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_DELETE_ON_SERVER_ERROR")
+            message: languageManager.translate("USERS_DELETE_ON_SERVER_ERROR")
           }
         });
       })
@@ -238,7 +177,7 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_DELETE_ON_BAD_REQUEST")
+            message: languageManager.translate("USERS_DELETE_ON_BAD_REQUEST")
           }
         });
       })
@@ -247,7 +186,7 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_DELETE_UN_AUTHORIZED")
+            message: languageManager.translate("USERS_DELETE_UN_AUTHORIZED")
           }
         });
       })
@@ -256,29 +195,117 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_DELETE_NOT_FOUND")
+            message: languageManager.translate("USERS_DELETE_NOT_FOUND")
           }
         });
       })
       .call(item);
   }
-  function active(file) {
+  function active(item) {
     activeUser()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(result => {})
-      .call(file.id);
+      .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("USERS_ACTIVE_ON_OK")
+          }
+        });
+        dispatch({
+          type: "SET_USERS",
+          value: result
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("USERS_ACTIVE_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("USERS_ACTIVE_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("USERS_ACTIVE_UN_AUTHORIZED")
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("USERS_ACTIVE_NOT_FOUND")
+          }
+        });
+      })
+      .call(item);
   }
-  function deactive(file) {
+  function deactive(item) {
     deactiveUser()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(result => {})
-      .call(file.id);
+      .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("USERS_DEACTIVE_ON_OK")
+          }
+        });
+        dispatch({
+          type: "SET_USERS",
+          value: result
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("USERS_DEACTIVE_ON_SERVER_ERROR")
+          }
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("USERS_DEACTIVE_ON_BAD_REQUEST")
+          }
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("USERS_DEACTIVE_UN_AUTHORIZED")
+          }
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("USERS_DEACTIVE_NOT_FOUND")
+          }
+        });
+      })
+      .call(item);
   }
 
   return (
@@ -302,16 +329,35 @@ const Users = props => {
             <div className="filterContent">
               <div className="left-filters">
                 <div className="title">{translate("USERS_FILTER_BY_ROLE")}</div>
+                <div
+                  className="filter"
+                  onClick={() => handleRoleSelected({})}
+                  style={{
+                    color:
+                      selectedRole.id === undefined
+                        ? "rgb(56,132,255)"
+                        : "black"
+                  }}
+                >
+                  <i className="icon icon-file-text-o" />
+                  <span className="name">
+                    {languageManager.translate("USERS_FILTER_BY_ROLE_ALL")}
+                  </span>
+                  <span
+                    className="icon-circle-o iconSelected"
+                    style={{
+                      display: selectedRole.id === undefined ? "block" : "none"
+                    }}
+                  />
+                </div>
                 {roles.map(f => (
                   <div
                     className="filter"
                     key={f.id}
-                    onClick={() => handleFileTypeClick(f)}
+                    onClick={() => handleRoleSelected(f)}
                     style={{
                       color:
-                        f.id === selectedFileType.id
-                          ? "rgb(56,132,255)"
-                          : "black"
+                        f.id === selectedRole.id ? "rgb(56,132,255)" : "black"
                     }}
                   >
                     <i className={["icon", f.icon].join(" ")} />
@@ -319,7 +365,7 @@ const Users = props => {
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
-                        display: f.id === selectedFileType.id ? "block" : "none"
+                        display: f.id === selectedRole.id ? "block" : "none"
                       }}
                     />
                   </div>
@@ -331,7 +377,26 @@ const Users = props => {
                 </div>
                 <div
                   className="filter"
-                  onClick={() => handleStatusClick("active")}
+                  onClick={() => handleStatusSelected()}
+                  style={{
+                    color:
+                      selectedStatus === undefined ? "rgb(56,132,255)" : "black"
+                  }}
+                >
+                  <i className="icon icon-shield" />
+                  <span className="name">
+                    {translate("USERS_FILTER_BY_STATUS_ALL")}
+                  </span>
+                  <span
+                    className="icon-circle-o iconSelected"
+                    style={{
+                      display: selectedStatus === undefined ? "block" : "none"
+                    }}
+                  />
+                </div>
+                <div
+                  className="filter"
+                  onClick={() => handleStatusSelected("active")}
                   style={{
                     color:
                       selectedStatus === "active" ? "rgb(56,132,255)" : "black"
@@ -348,7 +413,7 @@ const Users = props => {
                 </div>
                 <div
                   className="filter"
-                  onClick={() => handleStatusClick("deactive")}
+                  onClick={() => handleStatusSelected("deactive")}
                   style={{
                     color:
                       selectedStatus === "deactive"
@@ -396,7 +461,11 @@ const Users = props => {
                       </td>
                       <td>
                         <div className="as-table-image">
-                          <img src={user.image} alt="" />
+                          {user.image && user.image.length > 0 ? (
+                            <img src={user.image[0][currentLang]} alt="" />
+                          ) : (
+                            <div className="as-table-image-empty">No Image</div>
+                          )}
                         </div>
                       </td>
                       <td>
@@ -426,11 +495,17 @@ const Users = props => {
 
                       <td>
                         {user.status === "active" ? (
-                          <button className="btn btn-light">
+                          <button
+                            className="btn btn-light"
+                            onClick={() => deactive(user)}
+                          >
                             {translate("deactive")}
                           </button>
                         ) : (
-                          <button className="btn btn-light">
+                          <button
+                            className="btn btn-light"
+                            onClick={() => active(user)}
+                          >
                             {translate("active")}
                           </button>
                         )}

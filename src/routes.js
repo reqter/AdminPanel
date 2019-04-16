@@ -10,6 +10,7 @@ import Products from "./Packages/Products";
 import UpsertProduct from "./Packages/UpsertProduct";
 import Assets from "./Packages/Assets";
 import UploadFile from "./Packages/upsertFile";
+import UpsertUser from "./Packages/UpsertUser";
 
 function translate(key) {
   return languageManager.translate(key);
@@ -78,10 +79,15 @@ const routes = [
     component: UpsertProduct
   },
   {
-    name: translate("HOME_SIDE_NAV_ASSETS_MANAGER_UPLOAD"),
-    icon: "folder",
+    path: "/users/new",
+    component: UpsertUser
+  },
+  {
+    path: "/users/edit/:id",
+    component: UpsertUser
+  },
+  {
     path: "/addAsset",
-    desc: translate("HOME_SIDE_NAV_ASSETS_MANAGER_DESC_UPLOAD"),
     component: UploadFile
   },
   {
