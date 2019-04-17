@@ -2,7 +2,7 @@ import React from "react";
 import { StateProvider } from "./index";
 const Provider = props => {
   const initialState = {
-    projectInfo: { name: "REQTER" },
+    projectInfo: { name: "REQTER" ,  },
     contentTypeTemlates: [],
     contentTypes: [],
     fields: [],

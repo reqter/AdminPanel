@@ -1,5 +1,34 @@
 {
-  "projectInfo": { "name": "REQTER" },
+  "projectInfo": { "name": "REQTER" , "roles": [
+      {
+        "name": "admin",
+        "title": {
+          "en": "Admin",
+          "fa": "مدیر"
+        }
+      },
+      {
+        "name": "seller",
+        "title": {
+          "en": "Sellers",
+          "fa": "فروشندگان"
+        }
+      },
+      {
+        "name": "buyer",
+        "title": {
+          "en": "Buyer",
+          "fa": "خریداران"
+        }
+      },
+      {
+        "name": "support",
+        "title": {
+          "en": "Supports",
+          "fa": "پشتیبان"
+        }
+      }
+    ] },
   "templates": [
     {
       "id": "1",

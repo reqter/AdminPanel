@@ -274,6 +274,7 @@ export default {
   UPSERT_ITEM_GET_BY_ID_NOT_FOUND: "Content did not found",
   UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED: "Un Authorized",
 
+
   // USERS
   USERS_FILTER_TITLE: "Filter & Add New File",
   USERS_FILTER_BTN_TEXT: "Reset Filters",
@@ -288,7 +289,9 @@ export default {
   USERS_TABLE_HEAD_ACTIONS: "Actions",
   USERS_TABLE_HEADER_TITLE: "All Users",
   USERS_TABLE_ACTIVATE_BTN: "Activate",
+  USERS_TABLE_ASSIGN_ROLE_BTN:"Assign Role",
   USERS_TABLE_DEACTIVATE_BTN:"Deactivate",
+  USERS_ROLES_MODAL_TITLE:"Assign Role",
   USERS_ROLES_ON_SERVER_ERROR: "Interna server error",
   USERS_ROLES_ON_BAD_REQUEST: "Bad request",
   USERS_ROLES_UN_AUTHORIZED: "Un authorized",
@@ -328,6 +331,11 @@ export default {
   UPSERT_ASSET_HEADER_TITLE: "Add/Edit a user ",
   UPSERT_USER_HEADER_ADD_TITLE: "Add New User",
   UPSERT_USER_HEADER_EDIT_TITLE: "Edit User",
+  USERS_ASSIGN_ROLE_ON_OK:"Roles assigned to the user successfully",
+  USERS_ASSIGN_ROLE_ON_SERVER_ERROR:"Internal server error",
+  USERS_ASSIGN_ROLE_ON_BAD_REQUEST:"Bad request",
+  USERS_ASSIGN_ROLE_UN_AUTHORIZED:"Un auhthorized",
+  USERS_ASSIGN_ROLE_NOT_FOUND:"Not found user",
   //assets
   ASSET_FILTER_TITLE: "Filter & Upload New File",
   ASSET_FILTER_BTN_TEXT: "Upload New File",
@@ -380,5 +388,7 @@ export default {
   UPSERT_ASSET_ERROR_BOX_REFRESH_BTN: "Refresh",
 
   //COMPONENTS
-  COMPONENTS_ASSET_BROWSER_HEADER: "Choose your asset"
+  COMPONENTS_ASSET_BROWSER_HEADER: "Choose your asset",
+  ASSIGN_ROLE_MODAL_HEADER_TITLE:"Assign role",
+  ASSIGN_ROLE_SAVE_BTN:"Save Changes",
 };

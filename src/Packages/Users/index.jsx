@@ -5,9 +5,11 @@ import {
   getUsers,
   getRoles,
   filterUsers,
-  activeUser,
-  deactiveUser
+  activateUser,
+  deactiveUser,
+  assignRoles
 } from "./../../Api/userManagement-api";
+import { AssignRole } from "./../../components";
 
 const Users = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -16,7 +18,9 @@ const Users = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [selectedRole, setRole] = useState({});
   const [selectedStatus, setStatus] = useState();
+  const [assignRoleModal, toggleAssignRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [selectedUser, setSelectedUser] = useState();
 
   useEffect(() => {
     getRoles()
@@ -142,7 +146,7 @@ const Users = props => {
   }
   
   function activate(item) {
-    activeUser()
+    activateUser()
       .onOk(result => {
         dispatch({
           type: "ADD_NOTIFY",
@@ -247,11 +251,72 @@ const Users = props => {
       })
       .call(item);
   }
+
 function resetFilters() {
   setStatus();
   setRole({});
   doFilter(undefined,undefined)
 }
+function openAssignRoleModal(user) {
+  setSelectedUser(user)
+  toggleAssignRoleModal(true)
+}
+  function closeAssignRoleModal(result) { 
+    toggleAssignRoleModal(false)
+    if (result) {
+      assignRoles()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("USERS_ASSIGN_ROLE_ON_OK")
+            }
+          });
+          dispatch({
+            type: "SET_USERS",
+            value: result
+          });
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("USERS_ASSIGN_ROLE_ON_SERVER_ERROR")
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("USERS_ASSIGN_ROLE_ON_BAD_REQUEST")
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("USERS_ASSIGN_ROLE_UN_AUTHORIZED")
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("USERS_ASSIGN_ROLE_NOT_FOUND")
+            }
+          });
+        })
+        .call(selectedUser.id,result);
+    }
+  }
   return (
     <>
       <div className="as-wrapper">
@@ -451,12 +516,18 @@ function resetFilters() {
                           </button>
                         ) : (
                           <button
-                            className="btn btn-light"
+                            className="btn btn-light btn-sm"
                             onClick={() => activate(user)}
                           >
                               {translate("USERS_TABLE_ACTIVATE_BTN")}
                           </button>
                         )}
+                        <button
+                          className="btn btn-light btn-sm"
+                          onClick={()=>openAssignRoleModal(user)}
+                        >
+                          {translate("USERS_TABLE_ASSIGN_ROLE_BTN")}
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -466,6 +537,13 @@ function resetFilters() {
           </div>
         </div>
       </div>
+      {
+        assignRoleModal && <AssignRole isOpen={assignRoleModal} 
+        onClose={closeAssignRoleModal}
+        headerTitle={languageManager.translate("USERS_ROLES_MODAL_TITLE")}
+        roles={selectedUser ? selectedUser.roles : []} 
+        />
+      }
     </>
   );
 };

@@ -11,8 +11,10 @@ import String from "./String";
 import FileUploader from "./FileUploader";
 import AssetBrowser from "./AssetBrowser";
 import Reference from "./reference";
+import AssignRole from "./AssignRole";
 
 export {
+  AssignRole,
   Reference,
   AssetFile,
   CheckBox,
