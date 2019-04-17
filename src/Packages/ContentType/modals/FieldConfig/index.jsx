@@ -87,6 +87,7 @@ const FieldConfig = props => {
         }
       : false
   );
+
   const [refContentTypes, setRefContentTypes] = useState(
     selectedField.type === "reference"
       ? () => {
@@ -95,19 +96,19 @@ const FieldConfig = props => {
             selectedField.references === undefined ||
             selectedField.references.length === 0
           ) {
-            d = contentTypes;
+            return JSON.parse(JSON.stringify(contentTypes));
           } else {
-            for (let j = 0; j < contentTypes.length; j++) {
+            let referencesData = JSON.parse(JSON.stringify(contentTypes));
+            for (let j = 0; j < referencesData.length; j++) {
               for (let i = 0; i < selectedField.references.length; i++) {
                 const r_id = selectedField.references[i];
-                if (contentTypes[j].sys.id === r_id) {
-                  contentTypes[j].selected = true;
+                if (referencesData[j].sys.id === r_id) {
+                  referencesData[j].selected = true;
                 }
               }
             }
+            return referencesData;
           }
-          d = contentTypes;
-          return d;
         }
       : {}
   );
@@ -865,7 +866,7 @@ const FieldConfig = props => {
                     <label for="referenceChk">
                       Accept only specified entry type
                     </label>
-                    <label>
+                    <label for="referenceChk">
                       Make this field only accept entries from specified content
                       type(s)
                     </label>
