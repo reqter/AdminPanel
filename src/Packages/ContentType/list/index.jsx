@@ -64,6 +64,19 @@ const List = props => {
               >
                 <i className="icon-pencil" />
               </button>
+              {listItem.enableAccessRight && (
+                <button
+                  className="btn btn-light treeItem-action"
+                  size="xs"
+                  onClick={() => {
+                    props.onSelectAccessRight(listItem);
+                  }}
+                >
+                  <span style={{ fontSize: 12 }}>
+                    {languageManager.translate("ITEM_TYPES_ACCESS_RIGHT")}
+                  </span>
+                </button>
+              )}
               <button
                 className="btn btn-light treeItem-action"
                 size="xs"
@@ -74,17 +87,6 @@ const List = props => {
               >
                 <span style={{ fontSize: 12 }}>
                   {languageManager.translate("ITEM_TYPES_FIELDS")}
-                </span>
-              </button>
-              <button
-                className="btn btn-light treeItem-action"
-                size="xs"
-                onClick={() => {
-                  props.onSelectAccessRight(listItem);
-                }}
-              >
-                <span style={{ fontSize: 12 }}>
-                  {languageManager.translate("ITEM_TYPES_ACCESS_RIGHT")}
                 </span>
               </button>
             </div>

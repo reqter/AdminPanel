@@ -57,6 +57,9 @@ const UpsertTemplate = props => {
   const [versioning, toggleVersioning] = useState(
     selectedContentType ? selectedContentType.enableVersioning : false
   );
+  const [accessRight, toggleAccessRight] = useState(
+    selectedContentType ? selectedContentType.enableAccessRight : false
+  );
 
   useEffect(() => {
     getTemplates()
@@ -151,6 +154,7 @@ const UpsertTemplate = props => {
       obj["description"] = utility.applyeLangs(description);
       obj["media"] = media;
       obj["enableVersioning"] = versioning;
+      obj["enableAccessRight"] = accessRight;
 
       updateContentType()
         .onOk(result => {
@@ -230,7 +234,8 @@ const UpsertTemplate = props => {
         type: "contentType",
         template: selectedTemplate.name,
         allowCustomFields: selectedTemplate.allowCustomFields,
-        enableVersioning: versioning
+        enableVersioning: versioning,
+        enableAccessRight: accessRight
       };
       addContentType()
         .onOk(result => {
@@ -309,6 +314,9 @@ const UpsertTemplate = props => {
   function handleChangeVersion(e) {
     toggleVersioning(e.target.checked);
   }
+  function handleAccessRightChanged(e) {
+    toggleAccessRight(e.target.checked);
+  }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
       <ModalHeader toggle={closeModal}>
@@ -322,9 +330,7 @@ const UpsertTemplate = props => {
               : languageManager.translate("CONTENT_TYPE"))
           : languageManager.translate("EDIT") +
             " " +
-            (selectedContentType
-              ? selectedContentType.title[currentLang]
-              : "")}
+            (selectedContentType ? selectedContentType.title[currentLang] : "")}
       </ModalHeader>
       <ModalBody>
         <div className="c-category-templates-body">
@@ -404,9 +410,7 @@ const UpsertTemplate = props => {
 
               <FormGroup>
                 <Label>
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODAL_DESCRIPTION"
-                  )}
+                  {languageManager.translate("CONTENT_TYPE_MODAL_DESCRIPTION")}
                 </Label>
                 <Input
                   type="string"
@@ -417,37 +421,56 @@ const UpsertTemplate = props => {
                   onChange={handleDescriptionChanged}
                 />
               </FormGroup>
-              <div className="custom_checkbox">
-                <div className="left">
-                  <label className="checkBox">
-                    <input
-                      type="checkbox"
-                      id="version"
-                      checked={versioning}
-                      onChange={handleChangeVersion}
-                    />
-                    <span className="checkmark" />
-                  </label>
+              <div className="row">
+                <div className="custom_checkbox col">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="version"
+                        checked={versioning}
+                        onChange={handleChangeVersion}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label for="version">
+                      Enable versioning of this content type
+                    </label>
+                    <label>
+                      This item type stores all updates as a version
+                    </label>
+                  </div>
                 </div>
-                <div className="right">
-                  <label for="version">
-                    Enable versioning of this item type
-                  </label>
-                  <label>
-                    This item type stores all updates as a version
-                  </label>
+                <div className="custom_checkbox col">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="accessRight"
+                        checked={accessRight}
+                        onChange={handleAccessRightChanged}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label for="accessRight">
+                      Enable access right of this content type
+                    </label>
+                    <label for="accessRight">
+                      You can set acceess rights on this contebt type
+                    </label>
+                  </div>
                 </div>
               </div>
               <div className="up-uploader">
                 <span className="title">
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODAL_IMAGES_TITLE"
-                  )}
+                  {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
                 </span>
                 <span className="description">
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODAL_IMAGES_DESC"
-                  )}
+                  {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_DESC")}
                 </span>
 
                 <div className="files">
@@ -460,9 +483,7 @@ const UpsertTemplate = props => {
                         <i className="icon-bin" />
                       </div>
                       <div className="updatedFileType">
-                        {utility.getAssetIconByURL(
-                          url[currentLang],
-                        )}
+                        {utility.getAssetIconByURL(url[currentLang])}
                       </div>
                     </div>
                   ))}
