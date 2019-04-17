@@ -496,7 +496,7 @@ const ItemTypes = props => {
             " " +
             selectedContentType.title[currentLang]
           }
-          roles={selectedContentType ? selectedContentType.roles : []}
+          roles={selectedContentType ? selectedContentType.visibleTo : []}
         />
       )}
     </>

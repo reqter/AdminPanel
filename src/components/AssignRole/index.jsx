@@ -15,7 +15,7 @@ const AssignRole = props => {
   useEffect(() => {
     getRoles()
       .onOk(result => {
-        let d = result.slice();
+        let d = JSON.parse(JSON.stringify( result ));
         for (let j = 0; j < items.length; j++) {
           for (let i = 0; i < d.length; i++) {
             if (items[j].name === d[i].name) {

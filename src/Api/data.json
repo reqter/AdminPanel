@@ -1,34 +1,30 @@
 {
-  "projectInfo": { "name": "REQTER" , "roles": [
+  "projectInfo": {
+    "name": "REQTER",
+    "roles": [
       {
-        "name": "admin",
+        "name": "everyOne",
         "title": {
-          "en": "Admin",
-          "fa": "مدیر"
+          "en": "EveryOne",
+          "fa": "همه"
         }
       },
       {
-        "name": "seller",
+        "name": "admins",
         "title": {
-          "en": "Sellers",
-          "fa": "فروشندگان"
+          "en": "Admins",
+          "fa": "مدیران"
         }
       },
       {
-        "name": "buyer",
+        "name": "users",
         "title": {
-          "en": "Buyer",
-          "fa": "خریداران"
-        }
-      },
-      {
-        "name": "support",
-        "title": {
-          "en": "Supports",
-          "fa": "پشتیبان"
+          "en": "Users",
+          "fa": "کاربران"
         }
       }
-    ] },
+    ]
+  },
   "templates": [
     {
       "id": "1",
@@ -319,6 +315,10 @@
       "type": "contentType",
       "template": "generic",
       "allowCustomFields": true,
+      "enableAccessRight": true,
+      "visibleTo": [
+        { "name": "everyOne", "title": { "en": "EveryOne", "fa": "همه" } }
+      ],
       "fields": [
         {
           "sys": {
@@ -597,8 +597,10 @@
       "email": "p@s.com",
       "password": "saeedPDYB123",
       "status": false,
-      "roles": [{"name":"admin","title":{"en":"Admin","fa":"مدیر"}}], 
-      "profile":{
+      "roles": [
+        { "name": "admins", "title": { "en": "Admins", "fa": "مدیران" } }
+      ],
+      "profile": {
         "avatar": "https://d1e5t59v5asibx.cloudfront.net/api/v1/web/image/content/dam/images/entertainment/shows/p/person-of-interest/s5/person-of-interest-s5-ep3new65446086544608.jpg.2018-11-30T15:38:37+13:00.jpg",
         "age": "28",
         "country": "Iran",

@@ -829,7 +829,7 @@ export function setAccessRight () {
 
     //
     const result = data.contentTypes.map(item => {
-      if (item.sys.id === contentTypeId) item.roles = roles
+      if (item.sys.id === contentTypeId) item.visibleTo = roles
       return item
     })
     data.contentTypes = result
@@ -843,7 +843,7 @@ export function setAccessRight () {
         break
       case 401:
         _unAuthorized()
-        break;
+        break
       case 404:
         _notFound()
         break
