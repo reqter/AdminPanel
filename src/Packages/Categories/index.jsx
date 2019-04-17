@@ -152,7 +152,6 @@ const Categories = props => {
     setManageCategory(true);
   }
   function upsertCategory() {
-    debugger
     if (isManageCategory) {
       if (!updateMode) {
         const obj = {

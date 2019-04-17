@@ -56,9 +56,8 @@ const MediaInput = props => {
           : { [currentLang]: asset.url[currentLang] }
       };
       if (field.isList !== undefined && field.isList) {
-        let fs = [...files, obj];
-        fs.push(obj);
-        setFiles(fs);
+        const newFiles = [...files, obj];
+        setFiles(newFiles);
       } else {
         let fs = [];
         fs[0] = obj;
