@@ -236,6 +236,7 @@ export function addCategory() {
         if (list[i].children) addNodeInList(list[i].children, node);
       }
     }
+    debugger
     if (obj.parentId === undefined) {
       data.categories.push(obj);
     } else {

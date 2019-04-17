@@ -124,6 +124,7 @@ const Categories = props => {
 
   function newChildCategory(item) {
     setModal(prevModal => !prevModal);
+     setManageCategory(true);
     setSelectedCategory(item);
     setUpdateMode(false);
     setModalHeader(
@@ -151,6 +152,7 @@ const Categories = props => {
     setManageCategory(true);
   }
   function upsertCategory() {
+    debugger
     if (isManageCategory) {
       if (!updateMode) {
         const obj = {
