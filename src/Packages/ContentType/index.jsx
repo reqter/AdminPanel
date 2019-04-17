@@ -8,8 +8,10 @@ import { languageManager, useGlobalState } from "../../services";
 import {
   getContentTypes,
   deleteContentType,
-  removeContentTypeField
+  removeContentTypeField,
+  setAccessRight
 } from "./../../Api/contentType-api";
+import { AssignRole } from "../../components";
 
 const ItemTypes = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -64,6 +66,7 @@ const ItemTypes = props => {
   const [fields, setFields] = useState([]);
   const [selectedField, setSelectedField] = useState();
   const [rightContent, toggleRightContent] = useState(false);
+  const [assignRoleModal, toggleAssignRoleModal] = useState(false);
 
   function openAddItemTypeModal() {
     setUpdateMode(false);
@@ -248,6 +251,76 @@ const ItemTypes = props => {
     setSelectedField(field);
     toggleShowFieldConfig(true);
   }
+  function openAssignRoleModal(c) {
+    setItemType(c);
+    toggleAssignRoleModal(true);
+  }
+  function closeAssignRoleModal(result) {
+    toggleAssignRoleModal(false);
+    if (result) {
+      setAccessRight()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ASSIGN_ROLE_ON_OK"
+              )
+            }
+          });
+          dispatch({
+            type: "SET_USERS",
+            value: result
+          });
+        })
+        .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ASSIGN_ROLE_SERVER_ERROR"
+              )
+            }
+          });
+        })
+        .onBadRequest(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ASSIGN_ROLE_ON_BAD_REQUEST"
+              )
+            }
+          });
+        })
+        .unAuthorized(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ASSIGN_ROLE_UN_AUTHORIZED"
+              )
+            }
+          });
+        })
+        .notFound(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ASSIGN_ROLE_NOT_FOUND"
+              )
+            }
+          });
+        })
+        .call(selectedContentType.sys.id, result);
+    }
+  }
   return (
     <>
       <div className="ct-wrapper">
@@ -257,7 +330,10 @@ const ItemTypes = props => {
             <span className="ct-header-description">{pageDescription}</span>
           </div>
           <div className="ct-header-right">
-            <button className="btn btn-primary" onClick={openAddItemTypeModal}>
+            <button
+              className="btn btn-primary"
+              onClick={openAddItemTypeModal}
+            >
               {languageManager.translate("CONTENT_TYPE_NEW_ITEM_BTN")}
             </button>
           </div>
@@ -270,16 +346,21 @@ const ItemTypes = props => {
               handleEditType={selected => editItemType(selected)}
               handleDeleteType={selected => removeItemType(selected)}
               handleShowFields={selected => showFields(selected)}
+              onSelectAccessRight={selected => openAssignRoleModal(selected)}
             />
           </div>
           {rightContent && (
             <div className="ct-content-right animated slideInRight faster">
               <div className="ct-content-right-header">
                 <span className="ct-right-header-title">
-                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_TITLE")}
+                  {languageManager.translate(
+                    "CONTENT_TYPE_MODEL_HEADER_TITLE"
+                  )}
                 </span>
                 <span className="ct-right-header-description">
-                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_DESC")}
+                  {languageManager.translate(
+                    "CONTENT_TYPE_MODEL_HEADER_DESC"
+                  )}
                 </span>
                 <span
                   className="icon-cross closeIcon"
@@ -331,12 +412,12 @@ const ItemTypes = props => {
                                 : field.type === "reference"
                                 ? "icon-reference"
                                 : field.type === "boolean"
-                                ? "icon-boolean" 
+                                ? "icon-boolean"
                                 : field.type === "keyValue"
                                 ? "icon-combo-box"
                                 : "icon-file-text"
-                      }
-                    />
+                            }
+                          />
                         </div>
                         <div className="fieldItem-name">{field.name}</div>
                         <div className="fieldItem-title">
@@ -367,7 +448,6 @@ const ItemTypes = props => {
                             // </span>
                             <div />
                           )}
-                      
                         </div>
                       </div>
                     ))}
@@ -407,12 +487,23 @@ const ItemTypes = props => {
           onCloseModal={closeFieldConfigModal}
         />
       )}
+      {assignRoleModal && (
+        <AssignRole
+          isOpen={assignRoleModal}
+          onClose={closeAssignRoleModal}
+          headerTitle={
+            languageManager.translate("CONTENT_TYPE_ROLE_MODAL_TITLE") +
+            " " +
+            selectedContentType.title[currentLang]
+          }
+          roles={selectedContentType ? selectedContentType.roles : []}
+        />
+      )}
     </>
   );
 };
 
 export default ItemTypes;
-
 
 // {
 //   "sys": {
