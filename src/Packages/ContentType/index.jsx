@@ -331,10 +331,12 @@ const ItemTypes = props => {
                                 : field.type === "reference"
                                 ? "icon-reference"
                                 : field.type === "boolean"
-                                ? "icon-boolean"
+                                ? "icon-boolean" 
+                                : field.type === "keyValue"
+                                ? "icon-combo-box"
                                 : "icon-file-text"
-                            }
-                          />
+                      }
+                    />
                         </div>
                         <div className="fieldItem-name">{field.name}</div>
                         <div className="fieldItem-title">
@@ -410,3 +412,103 @@ const ItemTypes = props => {
 };
 
 export default ItemTypes;
+
+
+// {
+//   "sys": {
+//     "id": "3",
+//       "issuer": {
+//       "fullName": "Saeed Padyab",
+//         "image": ""
+//     },
+//     "issueDate": "19/01/2019 20:18"
+//   },
+//   "name": "userName",
+//     "title": {
+//     "fa": "نام کاربری",
+//       "en": "UserName"
+//   },
+//   "description": {
+//     "fa": "نام کاربری الزامی می باشد",
+//       "en": "Username is required"
+//   },
+//   "type": "string",
+//     "isBase": true,
+//       "isSystemField": true,
+//         "isRequired": true
+// },
+// {
+//   "sys": {
+//     "id": "4",
+//       "issuer": {
+//       "fullName": "Saeed Padyab",
+//         "image": ""
+//     },
+//     "issueDate": "19/01/2019 20:18"
+//   },
+//   "name": "password",
+//     "title": {
+//     "fa": "رمز عبور",
+//       "en": "Password"
+//   },
+//   "description": {
+//     "fa": "رمز عبور باید حداقل 6رقم باشد و ترکیبی از اعداد و نشانه ها و حروف کوچک وبزرگ",
+//       "en": "Password must be at least 6 character and includes capital letter and symbol and number"
+//   },
+//   "type": "string",
+//     "isBase": true,
+//       "isSystemField": true,
+//         "isRequired": true
+// },
+// {
+//   "sys": {
+//     "id": "5",
+//       "issuer": {
+//       "fullName": "Saeed Padyab",
+//         "image": ""
+//     },
+//     "issueDate": "19/01/2019 20:18"
+//   },
+//   "name": "roles",
+//     "title": {
+//     "fa": "نقش ها",
+//       "en": "Roles"
+//   },
+//   "description": {
+//     "fa": "",
+//       "en": "Roles of this user"
+//   },
+//   "type": "keyValue",
+//     "isSystemField": true,
+//       "isBase": true,
+//         "isRequired": true,
+//           "isList": true
+// },
+// {
+//   "sys": {
+//     "id": "6",
+//       "issuer": {
+//       "fullName": "Saeed Padyab",
+//         "image": ""
+//     },
+//     "issueDate": "19/01/2019 20:18"
+//   },
+//   "name": "status",
+//     "title": {
+//     "fa": "وضعیت",
+//       "en": "Status"
+//   },
+//   "description": {
+//     "fa": "وضعیت این کاربر",
+//       "en": "Status of this user"
+//   },
+//   "type": "keyValue",
+//     "options": [
+//       { "value": "active", "selected": true },
+//       { "value": "deactive" }
+//     ],
+//       "isList": false,
+//         "isSystemField": true,
+//           "isBase": true,
+//             "isRequired": true
+// },

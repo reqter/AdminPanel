@@ -37,15 +37,15 @@ export function filterUsers() {
       _onConnectionErrorCallBack(result);
     }
   }
-  function _call(roleId = undefined, s = undefined) {
+  function _call(role = undefined, s = undefined) {
     let result;
     result = [...data.users].filter(item => {
-      if (roleId) {
+      if (role) {
         if (item.roles) {
           let res = false;
           for (let i = 0; i < item.roles.length; i++) {
-            const role = item.roles[i];
-            if (role.id === roleId) {
+            const roleItem = item.roles[i];
+            if (roleItem.name === role) {
               res = true;
               break;
             }
@@ -243,36 +243,32 @@ export function getRoles() {
     //const result = await rawResponse.json();
     const result = [
       {
-        id: "1",
-        name: {
+        name:"admin",
+        title: {
           en: "Admin",
           fa: "مدیر"
         },
-        icon: "icon-file-text-o"
       },
       {
-        id: "2",
-        name: {
+        name:"seller",
+        title: {
           en: "Sellers",
           fa: "فروشندگان"
         },
-        icon: "icon-file-text-o"
       },
       {
-        id: "3",
-        name: {
-          en: "Buyers",
+        name:"buyer",
+        title: {
+          en: "Buyer",
           fa: "خریداران"
         },
-        icon: "icon-file-text-o"
       },
       {
-        id: "4",
-        name: {
+        name:"support",
+        title: {
           en: "Supports",
           fa: "پشتیبان"
-        },
-        icon: "icon-file-text-o"
+        }
       }
     ];
     const status = 200;

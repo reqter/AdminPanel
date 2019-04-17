@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
-import { deleteAsset } from "./../../Api/asset-api";
 import {
   getUsers,
   getRoles,
   filterUsers,
-  deleteUser,
   activeUser,
   deactiveUser
 } from "./../../Api/userManagement-api";
@@ -96,7 +94,7 @@ const Users = props => {
   function translate(key) {
     return languageManager.translate(key);
   }
-  function doFilter(roleId, status) {
+  function doFilter(role, status) {
     filterUsers()
       .onOk(result => {
         dispatch({
@@ -132,76 +130,18 @@ const Users = props => {
         });
       })
       .notFound(result => {})
-      .call(roleId, status);
+      .call(role, status);
   }
   function handleRoleSelected(selected) {
     setRole(selected);
-    doFilter(selected.id, selectedStatus);
+    doFilter(selected.name, selectedStatus);
   }
   function handleStatusSelected(status) {
     setStatus(status);
-    doFilter(selectedRole.id, status);
+    doFilter(selectedRole.name, status);
   }
-  function openUploader() {
-    props.history.push("/users/new");
-  }
-  function editUser(user) {
-    props.history.push(`/users/edit/${user.id}`);
-  }
-  function removeUser(item) {
-    deleteUser()
-      .onOk(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "success",
-            message: languageManager.translate("USERS_DELETE_ON_OK")
-          }
-        });
-        dispatch({
-          type: "SET_USERS",
-          value: result
-        });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("USERS_DELETE_ON_SERVER_ERROR")
-          }
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("USERS_DELETE_ON_BAD_REQUEST")
-          }
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("USERS_DELETE_UN_AUTHORIZED")
-          }
-        });
-      })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("USERS_DELETE_NOT_FOUND")
-          }
-        });
-      })
-      .call(item);
-  }
-  function active(item) {
+  
+  function activate(item) {
     activeUser()
       .onOk(result => {
         dispatch({
@@ -254,7 +194,7 @@ const Users = props => {
       })
       .call(item);
   }
-  function deactive(item) {
+  function deactivate(item) {
     deactiveUser()
       .onOk(result => {
         dispatch({
@@ -307,7 +247,11 @@ const Users = props => {
       })
       .call(item);
   }
-
+function resetFilters() {
+  setStatus();
+  setRole({});
+  doFilter(undefined,undefined)
+}
   return (
     <>
       <div className="as-wrapper">
@@ -322,7 +266,7 @@ const Users = props => {
           <div className="as-content-left">
             <div className="left-text">{translate("USERS_FILTER_TITLE")}</div>
             <div className="left-btnContent">
-              <button className="btn btn-primary" onClick={openUploader}>
+              <button className="btn btn-primary" onClick={resetFilters}>
                 {translate("USERS_FILTER_BTN_TEXT")}
               </button>
             </div>
@@ -334,7 +278,7 @@ const Users = props => {
                   onClick={() => handleRoleSelected({})}
                   style={{
                     color:
-                      selectedRole.id === undefined
+                      selectedRole.name === undefined
                         ? "rgb(56,132,255)"
                         : "black"
                   }}
@@ -346,26 +290,26 @@ const Users = props => {
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
-                      display: selectedRole.id === undefined ? "block" : "none"
+                      display: selectedRole.name === undefined ? "block" : "none"
                     }}
                   />
                 </div>
                 {roles.map(f => (
                   <div
                     className="filter"
-                    key={f.id}
+                    key={f.name}
                     onClick={() => handleRoleSelected(f)}
                     style={{
                       color:
-                        f.id === selectedRole.id ? "rgb(56,132,255)" : "black"
+                        f.name === selectedRole.name ? "rgb(56,132,255)" : "black"
                     }}
                   >
-                    <i className={["icon", f.icon].join(" ")} />
-                    <span className="name">{f.name[currentLang]}</span>
+                    <i className="icon icon-file-text-o" />
+                    <span className="name">{f.title[currentLang]}</span>
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
-                        display: f.id === selectedRole.id ? "block" : "none"
+                        display: f.name === selectedRole.name ? "block" : "none"
                       }}
                     />
                   </div>
@@ -396,10 +340,10 @@ const Users = props => {
                 </div>
                 <div
                   className="filter"
-                  onClick={() => handleStatusSelected("active")}
+                  onClick={() => handleStatusSelected(true)}
                   style={{
                     color:
-                      selectedStatus === "active" ? "rgb(56,132,255)" : "black"
+                      selectedStatus === true ? "rgb(56,132,255)" : "black"
                   }}
                 >
                   <i className="icon icon-shield" />
@@ -407,26 +351,26 @@ const Users = props => {
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
-                      display: selectedStatus === "active" ? "block" : "none"
+                      display: selectedStatus === true ? "block" : "none"
                     }}
                   />
                 </div>
                 <div
                   className="filter"
-                  onClick={() => handleStatusSelected("deactive")}
+                  onClick={() => handleStatusSelected(false)}
                   style={{
                     color:
-                      selectedStatus === "deactive"
+                      selectedStatus === false
                         ? "rgb(56,132,255)"
                         : "black"
                   }}
                 >
                   <i className="icon icon-shield" />
-                  <span className="name">{translate("deactive")}</span>
+                  <span className="name">{translate("inactive")}</span>
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
-                      display: selectedStatus === "deactive" ? "block" : "none"
+                      display: selectedStatus === false ? "block" : "none"
                     }}
                   />
                 </div>
@@ -443,7 +387,7 @@ const Users = props => {
                   <tr>
                     <th>#</th>
                     <th>{translate("USERS_TABLE_HEAD_IMAGE")}</th>
-                    <th>{translate("USERS_TABLE_HEAD_FULLNAME")}</th>
+                    <th>{translate("USERS_TABLE_HEAD_USERNAME")}</th>
                     <th>{translate("USERS_TABLE_HEAD_ROLES")}</th>
                     <th>{translate("USERS_TABLE_HEAD_STATUS")}</th>
                     <th>{translate("USERS_TABLE_HEAD_ACTIONS")}</th>
@@ -461,8 +405,8 @@ const Users = props => {
                       </td>
                       <td>
                         <div className="as-table-image">
-                          {user.image && user.image.length > 0 ? (
-                            <img src={user.image[0][currentLang]} alt="" />
+                          {user.profile && user.profile.avatar  ? (
+                            <img src={user.profile.avatar} alt="" />
                           ) : (
                             <div className="as-table-image-empty">No Image</div>
                           )}
@@ -471,7 +415,10 @@ const Users = props => {
                       <td>
                         <div className="as-table-name">
                           <span className="name">
-                            {user.firstName + " " + user.lastName}
+                            {user.userName}
+                          </span>
+                          <span>
+                            {user.email}
                           </span>
                         </div>
                       </td>
@@ -480,7 +427,7 @@ const Users = props => {
                           {user.roles &&
                             user.roles.map(role => (
                               <span className="badge badge-light">
-                                {role.name[currentLang]}
+                                {role.title[currentLang]}
                               </span>
                             ))}
                         </div>
@@ -488,39 +435,28 @@ const Users = props => {
                       <td>
                         <div className="as-table-status">
                           <span className="adge badge-primary">
-                            {languageManager.translate(user.status)}
+                            {user.status === true ? languageManager.translate("active") : languageManager.translate("inactive")}
+                            
                           </span>
                         </div>
                       </td>
 
                       <td>
-                        {user.status === "active" ? (
+                        {user.status && user.status===true ? (
                           <button
                             className="btn btn-light"
-                            onClick={() => deactive(user)}
+                            onClick={() => deactivate(user)}
                           >
-                            {translate("deactive")}
+                            {translate("USERS_TABLE_DEACTIVATE_BTN")}
                           </button>
                         ) : (
                           <button
                             className="btn btn-light"
-                            onClick={() => active(user)}
+                            onClick={() => activate(user)}
                           >
-                            {translate("active")}
+                              {translate("USERS_TABLE_ACTIVATE_BTN")}
                           </button>
                         )}
-                        <button
-                          className="btn btn-light"
-                          onClick={() => removeUser(user)}
-                        >
-                          <i className="icon-bin" />
-                        </button>
-                        <button
-                          className="btn btn-light"
-                          onClick={() => editUser(user)}
-                        >
-                          <i className="icon-pencil" />
-                        </button>
                       </td>
                     </tr>
                   ))}

@@ -403,6 +403,91 @@
           "isList": true
         }
       ]
+    },
+    {
+      "sys": {
+        "id": "2",
+        "issuer": {
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "19/01/2019 20:18"
+      },
+      "name": "userProfile",
+      "title": {
+        "en": "User Profile",
+        "fa": "پروقایل کاربران"
+      },
+      "description": {
+        "en": "Lorem ipsum dolor sit amet, consectetur",
+        "fa": "Lorem ipsum dolor sit amet, consectetur"
+      },
+      "type": "contentType",
+      "template": "userProfile",
+      "allowCustomFields": true,
+      "fields": [
+        {
+          "sys": {
+            "id": "1",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "fullName",
+          "title": {
+            "en": "FullName",
+            "fa": "نام"
+          },
+          "description": {
+            "fa": "enter your full name with a space between",
+            "en": "enter your full name with a space between"
+          },
+          "type": "string"
+        },
+        {
+          "sys": {
+            "id": "2",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "email",
+          "title": {
+            "fa": "ایمیل",
+            "en": "Email"
+          },
+          "description": {
+            "fa": "",
+            "en": "Enter an active email"
+          },
+          "type": "string"
+        },
+        {
+          "sys": {
+            "id": "7",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "image",
+          "title": {
+            "fa": "عکس کاربر",
+            "en": "Image"
+          },
+          "description": {
+            "fa": "برای این کاربر خود یک نمایه عکس انتخاب کنید",
+            "en": "Choose an image as thumbnail of this user"
+          },
+          "type": "media",
+          "mediaType": "image"
+        }
+      ]
     }
   ],
   "categories": [
@@ -479,29 +564,18 @@
   "users": [
     {
       "id": "1",
-      "firstName": "saeed",
-      "lastName": "padyab",
-      "userName": "saeedPDYB",
-      "image": [
-        {
-          "en": "https://d1e5t59v5asibx.cloudfront.net/api/v1/web/image/content/dam/images/entertainment/shows/p/person-of-interest/s5/person-of-interest-s5-ep3new65446086544608.jpg.2018-11-30T15:38:37+13:00.jpg"
-        }
-      ],
-      "status": "active",
-      "roles": [
-        { "id": "1", "name": { "en": "admin", "fa": "مدیر" } },
-        {
-          "id": "4",
-          "name": {
-            "en": "Support",
-            "fa": "پشتیبان"
-          }
-        }
-      ],
-      "age": "28",
-      "country": "Iran",
-      "city": "tehran",
-      "interests": []
+      "userName": "saeedPDUb",
+      "email": "p@s.com",
+      "password": "saeedPDYB123",
+      "status": false,
+      "roles": [{"name":"admin","title":{"en":"Admin","fa":"مدیر"}}], 
+      "profile":{
+        "avatar": "https://d1e5t59v5asibx.cloudfront.net/api/v1/web/image/content/dam/images/entertainment/shows/p/person-of-interest/s5/person-of-interest-s5-ep3new65446086544608.jpg.2018-11-30T15:38:37+13:00.jpg",
+        "age": "28",
+        "country": "Iran",
+        "city": "tehran",
+        "interests": []
+      }
     }
   ],
   "assets": [
