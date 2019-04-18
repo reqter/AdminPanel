@@ -49,7 +49,7 @@ const StringInput = props => {
   }
   return (
     <div className="form-group">
-      <label>{field.title[currentLang]}</label>
+      <label>{field.title && field.title[currentLang]}</label>
       {field.isMultiLine !== undefined && field.isMultiLine ? (
         <textarea
           type={field.appearance ? field.appearance : "text"}
@@ -62,14 +62,14 @@ const StringInput = props => {
         <input
           type={field.appearance ? field.appearance : "text"}
           className="form-control"
-          placeholder={field.title[currentLang]}
+          placeholder={field.title && field.title[currentLang]}
           value={input}
           onChange={handleOnChange}
           readOnly={props.viewMode}
         />
       )}
       <small className="form-text text-muted">
-        {field.description[currentLang]}
+        {field.description && field.description[currentLang]}
       </small>
     </div>
   );

@@ -3,6 +3,10 @@
   padding: 10px;
   align-items: center;
   border-bottom: 1px solid whitesmoke;
+  cursor: pointer;
+  &:hover{
+    background: whitesmoke
+  }
   .imageItem-empty {
     width: 70px;
     height: 70px;

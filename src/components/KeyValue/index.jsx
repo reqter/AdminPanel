@@ -1,86 +1,88 @@
 import React, { useState, useEffect } from "react";
+import Select, { components } from "react-select";
 import "./styles.scss";
 import { languageManager } from "./../../services";
 
 const KeyValueInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
-  // چک کن ببین فرم دیتا با این اسم فیلد مقدار داره یا نه . الان فقط رو یه اینپوت ست کردم باید رو تک تک اینپوت های زبان ها ست بشه
-  const [selectedOption, setSelectedOption] = useState(getSelectedOption());
-  function getSelectedOption() {
-    if (field.options === undefined || field.options.length === 0) {
-      return "";
-    }
-    const selected = field.options.find(opt => opt.selected === true);
 
-    return selected ? selected.value : "";
+  function getSelectedOption() {
+    if (field.options === undefined || field.options.length === 0)
+      return undefined;
+    if (field.isList) {
+      const selected = field.options.filter(opt => opt.selected === true);
+      setValueToParentForm(selected);
+      return selected;
+    } else {
+      const selected = field.options.find(opt => opt.selected === true);
+      setValueToParentForm(selected);
+      return selected;
+    }
   }
- 
 
   // set default value to form data in parent
   useEffect(() => {
     if (field.isRequired !== undefined && field.isRequired) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
-    if (!props.formData[field.name]) {
-      setValueToParentForm(getSelectedOption());
-    }
   }, []);
 
   // set value to input
   useEffect(() => {
-    props.formData[field.name]
-      ? setSelectedOption(props.formData[field.name])
-      : setSelectedOption("");
+    // props.formData[field.name]
+    //   ? setSelectedOption(props.formData[field.name])
+    //   : setSelectedOption("");
   }, [formData]);
 
-  function setValueToParentForm(inputValue) {
-    if (field.isRequired) {
-      let isValid = false;
-      if (inputValue.length > 0) {
-        isValid = true;
+  function setValueToParentForm(input) {
+    if (field.isList) {
+      let s = [];
+      for (let i = 0; i < input.length; i++) {
+        s.push(input[i].value);
       }
-      props.onChangeValue(field, inputValue, isValid);
-    } else props.onChangeValue(field, inputValue, true);
+      if (field.isRequired) {
+        let isValid = false;
+        if (s.length > 0) {
+          isValid = true;
+        }
+        props.onChangeValue(field, s, isValid);
+      } else props.onChangeValue(field, s, true);
+    } else {
+      if (field.isRequired) {
+        let isValid = false;
+        if (input.value.length > 0) {
+          isValid = true;
+        }
+        props.onChangeValue(field, input.value, isValid);
+      } else props.onChangeValue(field, input.value, true);
+    }
   }
-  function handleOnChange(e) {
-    setSelectedOption(e.target.value);
-    setValueToParentForm(e.target.value);
+  function handleOnChange(selected) {
+    // setSelectedOption(selected);
+    setValueToParentForm(selected);
   }
   if (field.appearance === "default") {
     return (
       <div className="form-group">
         <label>{field.title[currentLang]}</label>
-        {props.viewMode ? (
-          <select
-            className="form-control"
-            value={selectedOption}
-            onChange={handleOnChange}
-            disabled
-          >
-            <option value="">Pick an option</option>
-            {field.options &&
-              field.options.map(option => (
-                <option value={option.value} key={option.value}>
-                  {option.value}
-                </option>
-              ))}
-          </select>
-        ) : (
-          <select
-            className="form-control"
-            value={selectedOption}
-            onChange={handleOnChange}
-          >
-            <option value="">Pick an option</option>
-            {field.options &&
-              field.options.map(option => (
-                <option value={option.value} key={option.value}>
-                  {option.value}
-                </option>
-              ))}
-          </select>
-        )}
+        <Select
+          menuPlacement="top"
+          closeMenuOnScroll={true}
+          closeMenuOnSelect={!field.isList}
+          //value={selectedOption}
+          defaultValue={true && getSelectedOption()}
+          onChange={handleOnChange}
+          options={field.options}
+          isMulti={field.isList}
+          isSearchable={true}
+          isDisabled={props.viewMode}
+          components={{
+            Option: CustomOption,
+            MultiValueLabel,
+            SingleValue,
+          }}
+        />
         <small className="form-text text-muted">
           {field.description[currentLang]}
         </small>
@@ -108,22 +110,34 @@ const KeyValueInput = props => {
         </div>
       </>
     );
-  } else {
-    return (
-      <div className="form-group">
-        <label>{field.title[currentLang]}</label>
-        <select className="form-control">
-          {field.options &&
-            field.options.map(option => (
-              <option value={option.key}>{option.value}</option>
-            ))}
-        </select>
-        <small className="form-text text-muted">
-          {field.description[currentLang]}
-        </small>
-      </div>
-    );
   }
 };
 
 export default KeyValueInput;
+
+const SingleValue = props => {
+  const { data } = props;
+  return (
+    <components.SingleValue {...props}>
+      <div className="options-single-selected">{data.value}</div>
+    </components.SingleValue>
+  );
+};
+const MultiValueLabel = props => {
+  const { data } = props;
+  return (
+    <components.MultiValueLabel {...props}>
+      <div className="options-multiple-selected">{data.value}</div>
+    </components.MultiValueLabel>
+  );
+};
+
+const CustomOption = ({ innerProps, isDisabled, data }) => {
+  if (!isDisabled) {
+    return (
+      <div {...innerProps} className="options-items">
+        {data.value}
+      </div>
+    );
+  } else return null;
+};

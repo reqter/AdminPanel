@@ -351,7 +351,8 @@
           "type": "string",
           "isBase": true,
           "appearance": "text",
-          "isTranslate": true
+          "isTranslate": true,
+          "isMultiLine": true
         },
         {
           "sys": {
@@ -408,12 +409,12 @@
           },
           "name": "reference",
           "title": {
-            "fa": "محتوا",
-            "en": "refeerence"
+            "fa": "میوه",
+            "en": "Fruit"
           },
           "description": {
             "fa": "",
-            "en": "Content long description"
+            "en": "Choose a fruit for your order"
           },
           "type": "reference",
           "isTranslate": true,
@@ -505,6 +506,33 @@
           },
           "type": "media",
           "mediaType": "image"
+        },
+        {
+          "sys": {
+            "id": "6",
+            "issuer": {
+              "fullName": "Saeed Padyab",
+              "image": ""
+            },
+            "issueDate": "19/01/2019 20:18"
+          },
+          "name": "status",
+          "title": {
+            "fa": "وضعیت",
+            "en": "Status"
+          },
+          "description": {
+            "fa": "وضعیت این کاربر",
+            "en": "Status of this user"
+          },
+          "type": "keyValue",
+          "options": [
+            { "value": "active", "selected": true },
+            { "value": "deactive" , "selected": true}
+          ],
+          "isList": true,
+          "isRequired": true,
+          "appearance": "default"
         }
       ]
     }
@@ -573,6 +601,57 @@
         },
         "status": "published",
         "price": "2500",
+        "brand": {
+          "en": "Chicita",
+          "fa": "چیکیتا"
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "2",
+        "issuer": {
+          "id": "10",
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "19/01/2019 20:18",
+        "version": 1,
+        "updater": "saeed",
+        "updateDate": "19/01/2019 20:18"
+      },
+      "contentType": {
+        "id": "1",
+        "name": "fruits",
+        "title": {
+          "en": "Fruits",
+          "fa": "میوه"
+        }
+      },
+      "category": {
+        "id": "1",
+        "name": {
+          "en": "Products",
+          "fa": "محصولات"
+        }
+      },
+      "fields": {
+        "thumbnail": [
+          {
+            "en": "https://myresources1195.blob.core.windows.net/images/banana.jpg",
+            "fa": "https://myresources1195.blob.core.windows.net/images/banana.jpg"
+          }
+        ],
+        "name": {
+          "en": "Banana 2",
+          "fa": "موز ممتاز"
+        },
+        "shortDesc": {
+          "en": "Imported product from africa",
+          "fa": "محصولات وارداتی از افریقا"
+        },
+        "status": "draft",
+        "price": "4500",
         "brand": {
           "en": "Chicita",
           "fa": "چیکیتا"

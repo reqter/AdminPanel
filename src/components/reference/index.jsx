@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
+import AsyncCreatableSelect from "react-select/lib/AsyncCreatable";
 import "./styles.scss";
-import { languageManager, utility } from "../../services";
+import { languageManager } from "../../services";
 import { getByContentTypes } from "./../../Api/content-api";
 const currentLang = languageManager.getCurrentLanguage().name;
 
 const ReferenceInput = props => {
   const { field, formData } = props;
-  // چک کن ببین فرم دیتا با این اسم فیلد مقدار داره یا نه . الان فقط رو یه اینپوت ست کردم باید رو تک تک اینپوت های زبان ها ست بشه
-  const [input, setInput] = useState(
-    field.defaultValue ? field.defaultValue : ""
-  );
-  const [selected, setSelected] = useState();
 
-  const [options, setOptions] = useState([]);
+  const [selectedOptions, setSelected] = useState();// is list array object -- single only an object will be return
+  const [options, setOptions] = useState();
 
   // set default value to form data in parent
   useEffect(() => {
     getByContentTypes()
       .onOk(result => {
         if (result) {
-          setOptions(result);
+          const r = result.map(item => {
+            item.value = item.sys.id;
+            return item;
+          });
+          setOptions(r);
         }
       })
       .onServerError(result => {})
@@ -33,42 +34,83 @@ const ReferenceInput = props => {
     }
   }, []);
 
-  // set value to input
+  // set value to selected otions
   useEffect(() => {
     props.formData[field.name]
-      ? field.isTranslate
-        ? setInput(props.formData[field.name][currentLang])
-        : setInput(props.formData[field.name])
-      : setInput("");
+      ? setSelected(props.formData[field.name])
+      : setSelected([]);
   }, [formData]);
 
-  function setValueToParentForm(inputValue) {
-    let value = inputValue;
-
-    if (field.isRequired) {
-      let isValid = false;
-      if (inputValue.length > 0) {
-        isValid = true;
+  function setValueToParentForm(input) {
+    if (field.isList) {
+      let s = [];
+      for (let i = 0; i < input.length; i++) {
+        s.push(input[i].value);
       }
-      props.onChangeValue(field, value, isValid);
-    } else props.onChangeValue(field, value, true);
+      if (field.isRequired) {
+        let isValid = false;
+        if (s.length > 0) {
+          isValid = true;
+        }
+        props.onChangeValue(field, s, isValid);
+      } else props.onChangeValue(field, s, true);
+    } else {
+      if (field.isRequired) {
+        let isValid = false;
+        if (input.value.length > 0) {
+          isValid = true;
+        }
+        props.onChangeValue(field, input.value, isValid);
+      } else props.onChangeValue(field, input.value, true);
+    }
   }
-  function handleChange(item) {
-    setInput(selected);
-    console.log();
-    //setValueToParentForm(selected);
+  function handleChange(selecteds) {
+    setSelected(selecteds);
+    setValueToParentForm(selecteds);
   }
-
+  function initOptions(result) {
+    return result;
+  }
+  function promiseOptions(inputValue) {
+    return new Promise(resolve => {
+      getByContentTypes()
+        .onOk(result => {
+          if (result) resolve(initOptions(result));
+        })
+        .onServerError(result => {})
+        .onBadRequest(result => {})
+        .unAuthorized(result => {})
+        .notFound(() => {})
+        .call(field.references);
+    });
+  }
   return (
     <div className="form-group">
       <label>{field.title[currentLang]}</label>
-      <Select
-        value={selected}
+      {/* <AsyncCreatableSelect
+        cacheOptions
+        defaultOptions
+        loadOptions={promiseOptions}
+        menuPlacement="top"
+        closeMenuOnScroll={true}
+        closeMenuOnSelect={!field.isList}
+        value={selectedOptions}
         onChange={handleChange}
         options={options}
         isMulti={field.isList}
         isSearchable={true}
-        components={{ Option: CustomOption, MultiValueLabel }}
+        components={{ Option: CustomOption, MultiValueLabel, SingleValue }}
+      /> */}
+      <Select
+        menuPlacement="top"
+        closeMenuOnScroll={true}
+        closeMenuOnSelect={!field.isList}
+        value={selectedOptions}
+        onChange={handleChange}
+        options={options}
+        isMulti={field.isList}
+        isSearchable={true}
+        components={{ Option: CustomOption, MultiValueLabel, SingleValue }}
       />
       <small className="form-text text-muted">
         {field.description[currentLang]}
@@ -78,12 +120,30 @@ const ReferenceInput = props => {
 };
 
 export default ReferenceInput;
-
+const SingleValue = props => {
+  const { data } = props;
+  return (
+    <components.SingleValue {...props}>
+      <div className="options-single-selected">
+        <div className="custome-select-selected">
+          {data.fields["thumbnail"] && data.fields["thumbnail"].length > 0 && (
+            <div className="selectedItemImage">
+              <img src={data.fields["thumbnail"][0][currentLang]} alt="" />
+            </div>
+          )}
+          <div className="selectedItemName">
+            {data.fields.name && data.fields.name[currentLang]}
+          </div>
+        </div>
+      </div>
+    </components.SingleValue>
+  );
+};
 const MultiValueLabel = props => {
   const { data } = props;
   return (
     <components.MultiValueLabel {...props}>
-      <div className="custome-select-selected">
+      <div className="custome-select-selected" key={data.sys.id}>
         {data.fields["thumbnail"] && data.fields["thumbnail"].length > 0 && (
           <div className="selectedItemImage">
             <img src={data.fields["thumbnail"][0][currentLang]} alt="" />
@@ -128,3 +188,45 @@ const CustomOption = ({ innerProps, isDisabled, data }) => {
     );
   } else return null;
 };
+
+// import React, { Component } from "react";
+
+// import AsyncCreatableSelect from "react-select/lib/AsyncCreatable";
+// export const colourOptions = [
+//   { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
+//   { value: "blue", label: "Blue", color: "#0052CC", disabled: true },
+//   { value: "purple", label: "Purple", color: "#5243AA" },
+//   { value: "red", label: "Red", color: "#FF5630", isFixed: true },
+//   { value: "orange", label: "Orange", color: "#FF8B00" },
+//   { value: "yellow", label: "Yellow", color: "#FFC400" },
+//   { value: "green", label: "Green", color: "#36B37E" },
+//   { value: "forest", label: "Forest", color: "#00875A" },
+//   { value: "slate", label: "Slate", color: "#253858" },
+//   { value: "silver", label: "Silver", color: "#666666" }
+// ];
+
+// const filterColors = inputValue => {
+//   return colourOptions.filter(i =>
+//     i.label.toLowerCase().includes(inputValue.toLowerCase())
+//   );
+// };
+
+// const promiseOptions = inputValue =>
+//   new Promise(resolve => {
+//     setTimeout(() => {
+//       resolve(filterColors(inputValue));
+//     }, 1000);
+//   });
+
+// export default class WithPromises extends Component {
+//   render() {
+//     return (
+//       <AsyncCreatableSelect
+//         cacheOptions
+//         defaultOptions
+//         loadOptions={promiseOptions}
+//         isMulti
+//       />
+//     );
+//   }
+// }

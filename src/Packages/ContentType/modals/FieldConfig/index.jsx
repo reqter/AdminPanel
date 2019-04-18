@@ -8,41 +8,41 @@ const acceptedMediaTypes = [
   {
     id: 1,
     name: "all",
-    title: "All Files"
+    title: "All Files",
   },
   {
     id: 2,
     name: "image",
-    title: "Image"
+    title: "Image",
   },
   {
     id: 3,
     name: "video",
-    title: "Video"
+    title: "Video",
   },
   {
     id: 4,
     name: "audio",
-    title: "Audio"
+    title: "Audio",
   },
   {
     id: 5,
     name: "pdf",
-    title: "PDF"
+    title: "PDF",
   },
   {
     id: 6,
     name: "spreadsheet",
-    title: "Spreadsheet"
-  }
+    title: "Spreadsheet",
+  },
 ];
 const translatableFields = ["string", "media", "richText"];
 const fieldsApearance = {
   string: [
     { name: "text", title: { en: "Text" }, apearance: "", selected: true },
     { name: "email", title: { en: "Email" }, apearance: "" },
-    { name: "password", title: { en: "Password" }, apearance: "" }
-  ]
+    { name: "password", title: { en: "Password" }, apearance: "" },
+  ],
 };
 
 const FieldConfig = props => {
@@ -257,6 +257,15 @@ const FieldConfig = props => {
   }
   function handlePickerChooseType(e) {
     setPickerType(e.target.value);
+    if (options.length > 0) {
+      let isFind = false;
+      const op = options.map(opt => {
+        if (isFind) delete opt.selected;
+        else if (opt.selected === true) isFind = true;
+        return opt;
+      });
+      setOptions(op);
+    }
   }
   function handleReferenceChk(e) {
     toggleReferenceContentType(e.target.checked);
@@ -284,9 +293,47 @@ const FieldConfig = props => {
     });
     setFieldsUI(f_uis);
   }
+
+  function addNewOption() {
+    let opts = [...options];
+    opts.push({
+      value: "",
+      selected: false,
+    });
+    setOptions(opts);
+  }
+  function handleOptionValueChanged(e, index) {
+    const opts = options.map((item, i) => {
+      if (i === index) item.value = e.target.value;
+      return item;
+    });
+    setOptions(opts);
+  }
+  function removeOption(item, index) {
+    if (options.length > 1) {
+      const opts = options.filter((item, i) => i !== index);
+      setOptions(opts);
+    }
+  }
+  function setSelectedOption(item, index) {
+    if (pickerType === "multiSelect") {
+      const opts = options.map((item, i) => {
+        if (i === index) item.selected = !item.selected;
+        return item;
+      });
+      setOptions(opts);
+    } else {
+      const opts = options.map((item, i) => {
+        delete item.selected;
+        if (i === index) item.selected = true;
+        return item;
+      });
+      setOptions(opts);
+    }
+  }
   function update() {
     let obj = {
-      ...selectedField
+      ...selectedField,
     };
     obj["title"] = utility.applyeLangs(title);
     obj["isTranslate"] = translation;
@@ -314,7 +361,7 @@ const FieldConfig = props => {
     if (selectedField.type === "location") {
       obj["defaultValue"] = {
         latitude: latitude,
-        longitude: longitude
+        longitude: longitude,
       };
     }
     if (selectedField.type === "boolean") {
@@ -350,8 +397,8 @@ const FieldConfig = props => {
             type: "success",
             message: languageManager.translate(
               "CONTENT_TYPE_UPDATE_FIELD_ON_OK"
-            )
-          }
+            ),
+          },
         });
         const data = result.map(item => {
           delete item.selected;
@@ -359,7 +406,7 @@ const FieldConfig = props => {
         });
         dispatch({
           type: "SET_CONTENT_TYPES",
-          value: data
+          value: data,
         });
         props.onCloseModal(obj);
       })
@@ -370,8 +417,8 @@ const FieldConfig = props => {
             type: "error",
             message: languageManager.translate(
               "CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST"
-            )
-          }
+            ),
+          },
         });
       })
       .onBadRequest(result => {
@@ -381,8 +428,8 @@ const FieldConfig = props => {
             type: "error",
             message: languageManager.translate(
               "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
-            )
-          }
+            ),
+          },
         });
       })
       .unAuthorized(result => {
@@ -392,8 +439,8 @@ const FieldConfig = props => {
             type: "warning",
             message: languageManager.translate(
               "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
-            )
-          }
+            ),
+          },
         });
       })
       .notFound(result => {
@@ -403,40 +450,11 @@ const FieldConfig = props => {
             type: "warning",
             message: languageManager.translate(
               "CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND"
-            )
-          }
+            ),
+          },
         });
       })
       .call(selectedContentType.sys.id, obj);
-  }
-  function addNewOption() {
-    let opts = [...options];
-    opts.push({
-      value: "",
-      selected: false
-    });
-    setOptions(opts);
-  }
-  function handleOptionValueChanged(e, index) {
-    const opts = options.map((item, i) => {
-      if (i === index) item.value = e.target.value;
-      return item;
-    });
-    setOptions(opts);
-  }
-  function removeOption(item, index) {
-    if (options.length > 1) {
-      const opts = options.filter((item, i) => i !== index);
-      setOptions(opts);
-    }
-  }
-  function setSelectedOption(item, index) {
-    const opts = options.map((item, i) => {
-      item.selected = false;
-      if (i === index) item.selected = true;
-      return item;
-    });
-    setOptions(opts);
   }
   //#endregion methods
   return (
@@ -472,7 +490,7 @@ const FieldConfig = props => {
             <div
               className="tabItem"
               style={{
-                background: tab === 1 ? "white" : "whitesmoke"
+                background: tab === 1 ? "white" : "whitesmoke",
               }}
               onClick={() => changeTab(1)}
             >
@@ -481,7 +499,7 @@ const FieldConfig = props => {
             <div
               className="tabItem"
               style={{
-                background: tab === 2 ? "white" : "whitesmoke"
+                background: tab === 2 ? "white" : "whitesmoke",
               }}
               onClick={() => changeTab(2)}
             >
@@ -490,7 +508,7 @@ const FieldConfig = props => {
             <div
               className="tabItem"
               style={{
-                background: tab === 3 ? "white" : "whitesmoke"
+                background: tab === 3 ? "white" : "whitesmoke",
               }}
               onClick={() => changeTab(3)}
             >
@@ -601,7 +619,7 @@ const FieldConfig = props => {
                 <div
                   className="inputSwitch"
                   style={{
-                    marginBottom: 20
+                    marginBottom: 20,
                   }}
                 >
                   <span>
@@ -1101,7 +1119,9 @@ const FieldConfig = props => {
                             <i
                               className="icon-checkmark"
                               style={{
-                                visibility: item.selected ? "visible" : "hidden"
+                                visibility: item.selected
+                                  ? "visible"
+                                  : "hidden",
                               }}
                             />
                           </button>
