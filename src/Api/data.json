@@ -3,24 +3,10 @@
     "name": "REQTER",
     "roles": [
       {
-        "name": "everyOne",
-        "title": {
-          "en": "EveryOne",
-          "fa": "همه"
-        }
-      },
-      {
-        "name": "admins",
-        "title": {
-          "en": "Admins",
-          "fa": "مدیران"
-        }
-      },
-      {
         "name": "users",
         "title": {
           "en": "Users",
-          "fa": "کاربران"
+          "fa": "گاربران"
         }
       }
     ]
@@ -341,7 +327,8 @@
           "type": "string",
           "isBase": true,
           "isTranslate": true,
-          "isRequired": true
+          "isRequired": true,
+          "appearance": "text"
         },
         {
           "sys": {
@@ -363,6 +350,7 @@
           },
           "type": "string",
           "isBase": true,
+          "appearance": "text",
           "isTranslate": true
         },
         {
@@ -473,7 +461,8 @@
             "fa": "enter your full name with a space between",
             "en": "enter your full name with a space between"
           },
-          "type": "string"
+          "type": "string",
+          "appearance": "text"
         },
         {
           "sys": {
@@ -493,7 +482,8 @@
             "fa": "",
             "en": "Enter an active email"
           },
-          "type": "string"
+          "type": "string",
+          "appearance": "email"
         },
         {
           "sys": {
@@ -598,7 +588,7 @@
       "password": "saeedPDYB123",
       "status": false,
       "roles": [
-        { "name": "admins", "title": { "en": "Admins", "fa": "مدیران" } }
+        { "name": "users", "title": { "en": "Users", "fa": "گاربران" } }
       ],
       "profile": {
         "avatar": "https://d1e5t59v5asibx.cloudfront.net/api/v1/web/image/content/dam/images/entertainment/shows/p/person-of-interest/s5/person-of-interest-s5-ep3new65446086544608.jpg.2018-11-30T15:38:37+13:00.jpg",

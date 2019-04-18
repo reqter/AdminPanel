@@ -20,49 +20,57 @@ const fields = [
     name: "string",
     title: languageManager.translate("FIELD_TYPE_TEXT"),
     description: languageManager.translate("FIELD_TYPE_TEXT_INFO"),
-    icon: "icon-file-text"
+    icon: "icon-file-text",
+    appearance: "text"
   },
   {
     name: "number",
     title: languageManager.translate("FIELD_TYPE_NUMBER"),
     description: languageManager.translate("FIELD_TYPE_NUMBER_INFO"),
-    icon: "icon-number"
+    icon: "icon-number",
+    appearance: "default"
   },
   {
     name: "dateTime",
     title: languageManager.translate("FIELD_TYPE_DATE_TIME"),
     description: languageManager.translate("FIELD_TYPE_DATE_TIME_INFO"),
-    icon: "icon-calendar"
+    icon: "icon-calendar",
+    appearance: "default"
   },
   {
     name: "location",
     title: languageManager.translate("FIELD_TYPE_LOCATION"),
     description: languageManager.translate("FIELD_TYPE_LOCATION_INFO"),
-    icon: "icon-location"
+    icon: "icon-location",
+    appearance: "default"
   },
   {
     name: "media",
     title: languageManager.translate("FIELD_TYPE_MEDIA"),
     description: languageManager.translate("FIELD_TYPE_MEDIA_INFO"),
-    icon: "icon-images"
+    icon: "icon-images",
+    appearance: "default"
   },
   {
     name: "boolean",
     title: languageManager.translate("FIELD_TYPE_BOOLEAN"),
     description: languageManager.translate("FIELD_TYPE_BOOLEAN_INFO"),
-    icon: "icon-boolean"
+    icon: "icon-boolean",
+    appearance: "default"
   },
   {
     name: "keyValue",
     title: languageManager.translate("FIELD_TYPE_KEY_VALUE"),
     description: languageManager.translate("FIELD_TYPE_KEY_VALUE_INFO"),
-    icon: "icon-combo-box"
+    icon: "icon-combo-box",
+    appearance: "default"
   },
   {
     name: "richText",
     title: languageManager.translate("FIELD_TYPE_RICH_TEXT"),
     description: languageManager.translate("FIELD_TYPE_RICH_TEXT_INFO"),
-    icon: "icon-file-text-o"
+    icon: "icon-file-text-o",
+    appearance: "default"
   },
   // {
   //   name: "jsonObject",
@@ -74,7 +82,8 @@ const fields = [
     name: "reference",
     title: languageManager.translate("FIELD_TYPE_REFERENCE"),
     description: languageManager.translate("FIELD_TYPE_REFERENCE_INFO"),
-    icon: "icon-reference"
+    icon: "icon-reference",
+    appearance: "default"
   }
 ];
 const translatableFields = ["string", "media", "richText"];
@@ -147,7 +156,8 @@ const AddNewField = props => {
       title: utility.applyeLangs(title),
       description: utility.applyeLangs(description),
       type: selectedField.name,
-      isTranslate: translation
+      isTranslate: translation,
+      appearance: selectedField.appearance
     };
     addFieldToContentType()
       .onOk(result => {

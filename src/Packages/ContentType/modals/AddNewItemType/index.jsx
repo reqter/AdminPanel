@@ -155,6 +155,7 @@ const UpsertTemplate = props => {
       obj["media"] = media;
       obj["enableVersioning"] = versioning;
       obj["enableAccessRight"] = accessRight;
+      if (!accessRight) delete obj["visibleTo"];
 
       updateContentType()
         .onOk(result => {

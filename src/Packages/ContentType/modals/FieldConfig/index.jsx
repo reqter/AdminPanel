@@ -37,6 +37,13 @@ const acceptedMediaTypes = [
   }
 ];
 const translatableFields = ["string", "media", "richText"];
+const fieldsApearance = {
+  string: [
+    { name: "text", title: { en: "Text" }, apearance: "", selected: true },
+    { name: "email", title: { en: "Email" }, apearance: "" },
+    { name: "password", title: { en: "Password" }, apearance: "" }
+  ]
+};
 
 const FieldConfig = props => {
   //#region variables
@@ -45,6 +52,20 @@ const FieldConfig = props => {
   const [{ contentTypes }, dispatch] = useGlobalState();
   const { selectedField } = props;
 
+  const [fieldsUI, setFieldsUI] = useState(() => {
+    if (fieldsApearance[selectedField.type] === undefined) return undefined;
+    let items = JSON.parse(JSON.stringify(fieldsApearance[selectedField.type]));
+    if (
+      selectedField.appearance === undefined ||
+      selectedField.appearance === "default"
+    )
+      return items;
+    for (let i = 0; i < items.length; i++) {
+      items[i].selected = false;
+      if (items[i].name === selectedField.appearance) items[i].selected = true;
+    }
+    return items;
+  });
   const [isOpen, toggleModal] = useState(true);
   const [tab, changeTab] = useState(1);
   const [name, setName] = useState(selectedField.name);
@@ -59,6 +80,11 @@ const FieldConfig = props => {
   );
   const [referenceChooseType, setReferenceChooseType] = useState(
     selectedField.isList === true ? "multiSelect" : "single"
+  );
+  const [pickerType, setPickerType] = useState(
+    selectedField.type === "keyValue" && selectedField.isList === true
+      ? "multiSelect"
+      : "single"
   );
   const [mediaTypeVisibility, toggleMediaType] = useState(
     selectedField.type === "media" ? true : false
@@ -177,7 +203,7 @@ const FieldConfig = props => {
   );
   const [options, setOptions] = useState(
     selectedField.type === "keyValue"
-      ? selectedField.options !== undefined
+      ? selectedField.options !== undefined && selectedField.options.length > 0
         ? selectedField.options
         : [{ value: "", selected: false }]
       : [{ value: "", selected: false }]
@@ -229,6 +255,9 @@ const FieldConfig = props => {
   function handleReferencechooseType(e) {
     setReferenceChooseType(e.target.value);
   }
+  function handlePickerChooseType(e) {
+    setPickerType(e.target.value);
+  }
   function handleReferenceChk(e) {
     toggleReferenceContentType(e.target.checked);
   }
@@ -247,6 +276,14 @@ const FieldConfig = props => {
   function handleToggleInVisible(e) {
     toggleInVisible(e.target.checked);
   }
+  function setAppearance(ui) {
+    const f_uis = fieldsUI.map(item => {
+      item.selected = false;
+      if (item.name === ui.name) item.selected = true;
+      return item;
+    });
+    setFieldsUI(f_uis);
+  }
   function update() {
     let obj = {
       ...selectedField
@@ -254,7 +291,11 @@ const FieldConfig = props => {
     obj["title"] = utility.applyeLangs(title);
     obj["isTranslate"] = translation;
     obj["isRequired"] = isRequired;
-    obj["appearance"] = "default";
+    obj["appearance"] = !fieldsUI
+      ? selectedField.appearance
+        ? selectedField.appearance
+        : "default"
+      : fieldsUI.find(ui => ui.selected).name;
     if (helpText.length > 0) obj["helpText"] = utility.applyeLangs(helpText);
     if (selectedField.type !== "media" && selectedField.type !== "richText") {
       obj["inVisible"] = inVisible;
@@ -280,9 +321,8 @@ const FieldConfig = props => {
       obj["defaultValue"] = booleanDefaultValue;
     }
     if (selectedField.type === "keyValue") {
-      obj["options"] = options.map(item => {
-        if (item.value.length > 0) return item;
-      });
+      obj["isList"] = pickerType === "single" ? false : true;
+      obj["options"] = options.filter(item => item.value.length > 0);
     }
     if (selectedField.type === "media") {
       obj["isList"] = imageUploadMethod === "oneFile" ? false : true;
@@ -783,6 +823,52 @@ const FieldConfig = props => {
                   </div>
                 </>
               )}
+              {selectedField.type === "keyValue" && (
+                <>
+                  <div className="custom_checkbox ">
+                    <div className="left">
+                      <label className="radio">
+                        <input
+                          type="radio"
+                          value="single"
+                          checked={pickerType === "single"}
+                          name="pickerChooseType"
+                          onChange={handlePickerChooseType}
+                          id="singlePickerRadio"
+                        />
+                        <span className="checkround" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label for="singlePickerRadio">Single Select</label>
+                      <label for="singlePickerRadio">
+                        Select this if there is only one thing to store For
+                      </label>
+                    </div>
+                  </div>
+                  <div className="custom_checkbox">
+                    <div className="left">
+                      <label className="radio">
+                        <input
+                          type="radio"
+                          value="multiSelect"
+                          checked={pickerType === "multiSelect"}
+                          name="pickerChooseType"
+                          onChange={handlePickerChooseType}
+                          id="multiSelectPickerRadio"
+                        />
+                        <span className="checkround" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label for="multiSelectPickerRadio">Multi Select</label>
+                      <label for="multiSelectPickerRadio">
+                        Select this if there are several things to be stored
+                      </label>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
           {tab === 2 && (
@@ -897,12 +983,30 @@ const FieldConfig = props => {
                 Chooes how this field should be displayed
               </span>
               <div className="apearanceUiList">
-                <div className="apearanceItem">
-                  Default
-                  <div className="activeItem">
-                    <i className="icon-checkmark" />
+                {fieldsUI ? (
+                  fieldsUI.map(ui => (
+                    <div
+                      className={
+                        "apearanceItem " + (ui.selected ? "active" : "")
+                      }
+                      onClick={() => setAppearance(ui)}
+                    >
+                      {ui.title[currentLang]}
+                      {ui.selected && (
+                        <div className="activeItem">
+                          <i className="icon-checkmark" />
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="apearanceItem active">
+                    Default
+                    <div className="activeItem">
+                      <i className="icon-checkmark" />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               <div>
                 <div className="form-group">

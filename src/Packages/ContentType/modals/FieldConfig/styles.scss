@@ -61,7 +61,6 @@
           height: 120px;
           margin: 10px 10px 0 0;
           border: 3px solid rgb(230, 230, 230);
-          border-color: rgb(56, 132, 255);
           border-radius: 3px;
           cursor: pointer;
           transition-duration: 0.2s;
@@ -72,6 +71,9 @@
           &:hover {
             transition-duration: 0.2s;
             border-color: gray;
+          }
+          &.active{
+            border-color: rgb(56, 132, 255);
           }
           .activeItem {
             background-color: rgb(56, 132, 255);
@@ -99,8 +101,8 @@
 .options {
   display: flex;
   padding-top: 10px;
-  input{
-    margin-bottom: 10px
+  input {
+    margin-bottom: 10px;
   }
   .leftInput {
     flex: 1;
@@ -110,9 +112,9 @@
     flex: 1;
     padding-right: 10px;
   }
-  .rightInput{
-    button{
-      margin-left: 5px
+  .rightInput {
+    button {
+      margin-left: 5px;
     }
   }
 }

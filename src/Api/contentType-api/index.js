@@ -321,7 +321,7 @@ export function updateContentType () {
 
     const result = data.contentTypes.map(item => {
       if (item.sys.id === obj.sys.id) {
-        return { ...item, ...obj }
+        item = obj
       }
       return item
     })
