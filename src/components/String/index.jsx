@@ -47,43 +47,32 @@ const StringInput = props => {
     setInput(e.target.value);
     setValueToParentForm(e.target.value);
   }
-
-
-
-  if (field.isMultiLine !== undefined && field.isMultiLine) {
-    return (
-      <div className="form-group">
-        <label>{field.title[currentLang]}</label>
+  return (
+    <div className="form-group">
+      <label>{field.title[currentLang]}</label>
+      {field.isMultiLine !== undefined && field.isMultiLine ? (
         <textarea
-          type="text"
+          type={field.appearance ? field.appearance : "text"}
           className="form-control up-form-stringInput-textArea"
           placeholder={field.title[currentLang]}
           value={input}
           onChange={handleOnChange}
         />
-        <small className="form-text text-muted">
-          {field.description[currentLang]}
-        </small>
-      </div>
-    );
-  } else {
-    return (
-      <div className="form-group">
-        <label>{field.title[currentLang]}</label>
+      ) : (
         <input
-          type="text"
+          type={field.appearance ? field.appearance : "text"}
           className="form-control"
           placeholder={field.title[currentLang]}
           value={input}
           onChange={handleOnChange}
           readOnly={props.viewMode}
         />
-        <small className="form-text text-muted">
-          {field.description[currentLang]}
-        </small>
-      </div>
-    );
-  }
+      )}
+      <small className="form-text text-muted">
+        {field.description[currentLang]}
+      </small>
+    </div>
+  );
 };
 
 export default StringInput;
