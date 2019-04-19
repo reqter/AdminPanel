@@ -16,22 +16,23 @@ const StringInput = props => {
     }
     return "";
   }
-  
+
   // set default value to form data in parent
   useEffect(() => {
     if (field.isRequired !== undefined && field.isRequired) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
-    if (field.showCurrent && !props.formData[field.name]) {
-      setValueToParentForm(initValue());
-    }
   }, []);
 
   // set value to input (update time and reset form)
   useEffect(() => {
-    props.formData[field.name]
-      ? setInput(props.formData[field.name])
-      : setInput("");
+    if (formData[field.name]) {
+      setInput(props.formData[field.name]);
+    } else {
+      if (field.showCurrent) {
+        setValueToParentForm(initValue());
+      } else setInput("");
+    }
   }, [formData]);
 
   function getCurrentDate() {
@@ -97,7 +98,7 @@ const StringInput = props => {
         placeholder={field.title[currentLang]}
         defaultValue={input}
         onChange={handleOnChange}
-         readOnly={props.viewMode}
+        readOnly={props.viewMode}
       />
       <small className="form-text text-muted">
         {field.description[currentLang]}

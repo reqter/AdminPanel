@@ -49,7 +49,10 @@ export default {
   LOGIN_SIGNUP_LINK: 'Create an accout',
   LOGIN_SOCIAL_BTN_GOOGLE: 'Google',
   LOGIN_SOCIAL_BTN_GITHUB: 'Github',
-
+  LOGIN_ON_SERVER_ERROR: 'Internal server error',
+  LOGIN_ON_BAD_REQUEST: 'Bad request',
+  LOGIN_UN_AUTHORIZED: 'Un authorized',
+  LOGIN_NOT_FOUND: 'User not found',
   // SIGNUP
   SIGNUP_TITLE: 'Signup Reqter',
   SIGNUP_LOGIN_LINK_TITLE: 'Have an account?',
@@ -396,5 +399,6 @@ export default {
   // COMPONENTS
   COMPONENTS_ASSET_BROWSER_HEADER: 'Choose your asset',
   ASSIGN_ROLE_MODAL_HEADER_TITLE: 'Assign role',
-  ASSIGN_ROLE_SAVE_BTN: 'Save Changes'
+  ASSIGN_ROLE_SAVE_BTN: 'Save Changes',
+  COMPONENT_DESCRIPTION: 'Empty description'
 }

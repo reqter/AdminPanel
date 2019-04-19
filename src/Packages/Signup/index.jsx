@@ -1,13 +1,63 @@
-import React, { memo } from "react";
-import { Link } from 'react-router-dom';
-import { languageManager } from "./../../services";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { languageManager, useGlobalState } from "./../../services";
+import { signup } from "./../../Api/account-api";
 import "./styles.scss";
 
 const Signup = (...props) => {
-  // const [visibility, setVisibility] = useState(0);
-  // function signIn() {
-  //   setVisibility({ visibility: true });
-  // }
+  const [{}, dispatch] = useGlobalState();
+  const [userName, setUserName] = useState();
+  const [password, setPassword] = useState();
+
+  function handleEmailChanged(e) {
+    setUserName(e.target.value);
+  }
+  function handlePasswordChanged(e) {
+    setPassword(e.target.value);
+  }
+  function signupUser() {
+    signup()
+      .onOk(result => {
+        props[0].history.replace("panel");
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("LOGIN_ON_SERVER_ERROR"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("LOGIN_ON_BAD_REQUEST"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("LOGIN_UN_AUTHORIZED"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("LOGIN_NOT_FOUND"),
+          },
+        });
+      })
+      .call(userName, password);
+  }
   return (
     <div className="wrapper">
       <div className="center">
@@ -30,15 +80,14 @@ const Signup = (...props) => {
                 placeholder={languageManager.translate(
                   "LOGIN_EMAIL_INPUT_PLACEHOLDER"
                 )}
+                onChange={handleEmailChanged}
               />
               <small id="emailHelp" className="form-text text-muted">
                 {languageManager.translate("LOGIN_EMAIL_INPUT_DESCRIPTION")}
               </small>
             </div>
             <div className="form-group">
-              <label>
-                {languageManager.translate("LOGIN_PASSWORD_INPUT")}
-              </label>
+              <label>{languageManager.translate("LOGIN_PASSWORD_INPUT")}</label>
               <input
                 type="password"
                 className="form-control"
@@ -46,6 +95,7 @@ const Signup = (...props) => {
                 placeholder={languageManager.translate(
                   "LOGIN_PASSWORD_INPUT_PLACEHOLDER"
                 )}
+                onChange={handlePasswordChanged}
               />
               <small id="emailHelp" className="form-text text-muted">
                 {languageManager.translate("LOGIN_PASSWORD_INPUT_DESCRIPTION")}
@@ -64,10 +114,16 @@ const Signup = (...props) => {
                 )}
               />
               <small id="emailHelp" className="form-text text-muted">
-                {languageManager.translate("SIGNUP_CONFIRM_PASSWORD_INPUT_DESCRIPTION")}
+                {languageManager.translate(
+                  "SIGNUP_CONFIRM_PASSWORD_INPUT_DESCRIPTION"
+                )}
               </small>
             </div>
-            <button type="submit" className="btn btn-primary btn-block btn-submit">
+            <button
+              type="button"
+              className="btn btn-primary btn-block btn-submit"
+              onClick={signupUser}
+            >
               {languageManager.translate("LOGIN_SUBMIT_BTN")}
             </button>
           </form>
@@ -91,9 +147,12 @@ const Signup = (...props) => {
         <span>
           {languageManager.translate("SIGNUP_LOGIN_LINK_TITLE")}&nbsp;
         </span>
-        <Link to="/login"> {languageManager.translate("SIGNUP_LOGIN_LINK")}</Link>
+        <Link to="/login">
+          {" "}
+          {languageManager.translate("SIGNUP_LOGIN_LINK")}
+        </Link>
       </div>
     </div>
   );
 };
-export default memo(Signup);
+export default Signup;

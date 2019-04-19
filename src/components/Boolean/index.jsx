@@ -10,24 +10,23 @@ const BooleanComponent = props => {
     field.defaultValue ? field.defaultValue : false
   );
 
- 
   // set default value to form data in parent
   useEffect(() => {
     if (field.isRequired !== undefined && field.isRequired) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
-    if (field.defaultValue && !props.formData[field.name]) {
-      setValueToParentForm(field.defaultValue);
-    }
   }, []);
 
   // set value to input
   useEffect(() => {
-    props.formData[field.name]
-      ? field.isTranslate
-        ? setValue(props.formData[field.name][currentLang])
-        : setValue(props.formData[field.name])
-      : setValue(false);
+    if (formData[field.name]) {
+      setValue(props.formData[field.name]);
+    } else {
+      if (field.defaultValue) {
+        setValue(field.defaultValue);
+        setValueToParentForm(field.defaultValue);
+      } else setValue(false);
+    }
   }, [formData]);
 
   function setValueToParentForm(inputValue) {
@@ -55,7 +54,7 @@ const BooleanComponent = props => {
       <div
         className="custom_checkbox"
         style={{
-          marginTop: 10
+          marginTop: 10,
         }}
       >
         <div className="left">
@@ -72,7 +71,11 @@ const BooleanComponent = props => {
         </div>
         <div className="right">
           <label for={"chk" + field.sys.id}>{field.title[currentLang]}</label>
-          <label>{field.description[currentLang]}</label>
+          <label>
+            {field.description
+              ? field.description[currentLang]
+              : languageManager.translate("COMPONENT_DESCRIPTION")}
+          </label>
         </div>
       </div>
     );
@@ -81,7 +84,7 @@ const BooleanComponent = props => {
       <div
         className="custom_checkbox"
         style={{
-          marginTop: 10
+          marginTop: 10,
         }}
       >
         <div className="left">

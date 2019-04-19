@@ -16,18 +16,19 @@ const StringInput = props => {
     if (field.isRequired !== undefined && field.isRequired) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
-    if (field.defaultValue && !props.formData[field.name]) {
-      setValueToParentForm(field.defaultValue);
-    }
   }, []);
 
   // set value to input
   useEffect(() => {
-    props.formData[field.name]
-      ? field.isTranslate
-        ? setInput(props.formData[field.name][currentLang])
-        : setInput(props.formData[field.name])
-      : setInput("");
+    if (formData[field.name]) {
+      if (field.isTranslate) setInput(props.formData[field.name][currentLang]);
+      else setInput(props.formData[field.name]);
+    } else {
+      if (field.defaultValue) {
+        setInput(field.defaultValue);
+        setValueToParentForm(field.defaultValue);
+      } else setInput("");
+    }
   }, [formData]);
 
   function setValueToParentForm(inputValue) {

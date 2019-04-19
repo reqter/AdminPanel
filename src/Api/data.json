@@ -397,28 +397,6 @@
           },
           "type": "richText",
           "isTranslate": true
-        },
-        {
-          "sys": {
-            "id": "5",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
-          "name": "reference",
-          "title": {
-            "fa": "میوه",
-            "en": "Fruit"
-          },
-          "description": {
-            "fa": "",
-            "en": "Choose a fruit for your order"
-          },
-          "type": "reference",
-          "isTranslate": true,
-          "isList": true
         }
       ]
     }

@@ -13,22 +13,23 @@ const StringInput = props => {
     field.defaultValue ? field.defaultValue.longitude : ""
   );
 
- 
-
   // set default value to form data in parent
   useEffect(() => {
     if (field.isRequired !== undefined && field.isRequired) {
       if (formData[field.name] === undefined) props.init(field.name);
     }
-    if (field.defaultValue && !props.formData[field.name])
-      props.onChangeValue(field, field.defaultValue, true);
   }, []);
 
   // set value to input
   useEffect(() => {
-    props.formData[field.name]
-      ? setValueToInput(props.formData[field.name])
-      : setValueToInput({});
+    if (formData[field.name]) {
+      setValueToInput(props.formData[field.name]);
+    } else {
+      if (field.defaultValue) {
+        setValueToInput(field.defaultValue);
+        props.onChangeValue(field, field.defaultValue, true);
+      } else setValueToInput({});
+    }
   }, [formData]);
 
   function setValueToInput(obj) {
@@ -39,7 +40,7 @@ const StringInput = props => {
   function setValueToParentForm(lat, long) {
     let value = {
       latitude: lat,
-      longitude: long
+      longitude: long,
     };
 
     if (field.isRequired) {
