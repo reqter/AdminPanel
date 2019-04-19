@@ -57,6 +57,7 @@ const StringInput = props => {
           placeholder={field.title[currentLang]}
           value={input}
           onChange={handleOnChange}
+          readOnly={props.viewMode}
         />
       ) : (
         <input

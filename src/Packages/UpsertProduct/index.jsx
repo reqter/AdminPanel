@@ -373,7 +373,7 @@ const UpsertProduct = props => {
       fields: form
     };
     if (updateMode) {
-      obj["fields"]["status"] = "changed";
+      obj["status"] = "changed";
       updateContent()
         .onOk(result => {
           dispatch({
@@ -429,7 +429,7 @@ const UpsertProduct = props => {
         })
         .call(obj);
     } else {
-      obj["fields"]["status"] = "draft";
+      obj["status"] = "draft";
       addContent()
         .onOk(result => {
           dispatch({

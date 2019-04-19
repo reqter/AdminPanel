@@ -122,7 +122,7 @@ const Products = props => {
       headerStyle: {
         display: "block"
       },
-      accessor: "fields.status",
+      accessor: "status",
       Cell: props => (
         <div className="p-contentType">
           <span className="badge badge-primary">

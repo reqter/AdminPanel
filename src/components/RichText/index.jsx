@@ -5,7 +5,7 @@ import {
   ContentState,
   AtomicBlockUtils,
   Entity,
-  RichUtils
+  RichUtils,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
@@ -65,7 +65,7 @@ const RichTextInput = props => {
     } else props.onChangeValue(field, value, true);
   }
   function handleOnChange(content) {
-    debugger
+    debugger;
     setInput(content);
     setValueToParentForm(
       draftToHtml(convertToRaw(content.getCurrentContent()))
@@ -81,13 +81,13 @@ const RichTextInput = props => {
       "image",
       "IMMUTABLE",
       {
-        src: url
+        src: url,
       }
     );
 
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     const newEditorState = EditorState.set(input, {
-      currentContent: contentStateWithEntity
+      currentContent: contentStateWithEntity,
     });
     return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, " ");
   }
@@ -101,7 +101,7 @@ const RichTextInput = props => {
     if (block.getType() === "atomic") {
       return {
         component: Media,
-        editable: false
+        editable: false,
       };
     }
     return null;
@@ -121,7 +121,7 @@ const RichTextInput = props => {
         toolbarCustomButtons={[
           <div className="richText-header-customBtn" onClick={openAssetBrowser}>
             <i className="icon-images" />
-          </div>
+          </div>,
         ]}
         toolbar={{
           options: [
@@ -137,13 +137,13 @@ const RichTextInput = props => {
             "emoji",
             //"image",
             "remove",
-            "history"
+            "history",
           ],
           inline: { inDropdown: true },
           list: { inDropdown: true },
           textAlign: {},
           link: { inDropdown: true },
-          history: {}
+          history: {},
         }}
       />
       {assetBrowser && (

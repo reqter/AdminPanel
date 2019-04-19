@@ -9,10 +9,16 @@ const currentLang = languageManager.getCurrentLanguage().name;
 const ReferenceInput = props => {
   const { field, formData } = props;
 
-  const [selectedOptions, setSelected] = useState();// is list array object -- single only an object will be return
   const [options, setOptions] = useState();
-
+  const [values, setValues] = useState();
   // set default value to form data in parent
+  useEffect(() => {
+    if (field.isRequired !== undefined && field.isRequired) {
+      if (formData[field.name] === undefined) props.init(field.name);
+    }
+  }, []);
+
+  // set value to selected otions
   useEffect(() => {
     getByContentTypes()
       .onOk(result => {
@@ -22,6 +28,11 @@ const ReferenceInput = props => {
             return item;
           });
           setOptions(r);
+          if (formData[field.name] === undefined) {
+            setValues(null);
+          } else {
+            initValue(r);
+          }
         }
       })
       .onServerError(result => {})
@@ -29,18 +40,27 @@ const ReferenceInput = props => {
       .unAuthorized(result => {})
       .notFound(() => {})
       .call(field.references);
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
-
-  // set value to selected otions
-  useEffect(() => {
-    props.formData[field.name]
-      ? setSelected(props.formData[field.name])
-      : setSelected([]);
   }, [formData]);
-
+  function initValue(allData) {
+    if (field.isList) {
+      const selectedData = formData[field.name];
+      const result = [];
+      for (let i = 0; i < selectedData.length; i++) {
+        const id = selectedData[i];
+        for (let j = 0; j < allData.length; j++) {
+          const refObj = allData[j];
+          if (refObj.value === id) {
+            result.push(refObj);
+            break;
+          }
+        }
+      }
+      setValues(result.length > 0 ? result : null);
+    } else {
+      const v = allData.find(item => item.value === formData[field.name]);
+      setValues(v);
+    }
+  }
   function setValueToParentForm(input) {
     if (field.isList) {
       let s = [];
@@ -65,7 +85,7 @@ const ReferenceInput = props => {
     }
   }
   function handleChange(selecteds) {
-    setSelected(selecteds);
+    setValues(selecteds);
     setValueToParentForm(selecteds);
   }
   function initOptions(result) {
@@ -105,11 +125,12 @@ const ReferenceInput = props => {
         menuPlacement="top"
         closeMenuOnScroll={true}
         closeMenuOnSelect={!field.isList}
-        value={selectedOptions}
+        value={values}
         onChange={handleChange}
         options={options}
         isMulti={field.isList}
         isSearchable={true}
+        isDisabled={props.viewMode}
         components={{ Option: CustomOption, MultiValueLabel, SingleValue }}
       />
       <small className="form-text text-muted">

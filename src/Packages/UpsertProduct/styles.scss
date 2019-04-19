@@ -112,6 +112,7 @@
         box-shadow: 0 0 3px lightgray;
         padding: 4%;
         input[readonly],
+        textarea[readonly],
         select[disabled] {
           background: white;
         }

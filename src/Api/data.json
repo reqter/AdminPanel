@@ -421,120 +421,6 @@
           "isList": true
         }
       ]
-    },
-    {
-      "sys": {
-        "id": "2",
-        "issuer": {
-          "fullName": "Saeed Padyab",
-          "image": ""
-        },
-        "issueDate": "19/01/2019 20:18"
-      },
-      "name": "userProfile",
-      "title": {
-        "en": "User Profile",
-        "fa": "پروقایل کاربران"
-      },
-      "description": {
-        "en": "Lorem ipsum dolor sit amet, consectetur",
-        "fa": "Lorem ipsum dolor sit amet, consectetur"
-      },
-      "type": "contentType",
-      "template": "userProfile",
-      "allowCustomFields": true,
-      "fields": [
-        {
-          "sys": {
-            "id": "1",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
-          "name": "fullName",
-          "title": {
-            "en": "FullName",
-            "fa": "نام"
-          },
-          "description": {
-            "fa": "enter your full name with a space between",
-            "en": "enter your full name with a space between"
-          },
-          "type": "string",
-          "appearance": "text"
-        },
-        {
-          "sys": {
-            "id": "2",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
-          "name": "email",
-          "title": {
-            "fa": "ایمیل",
-            "en": "Email"
-          },
-          "description": {
-            "fa": "",
-            "en": "Enter an active email"
-          },
-          "type": "string",
-          "appearance": "email"
-        },
-        {
-          "sys": {
-            "id": "7",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
-          "name": "image",
-          "title": {
-            "fa": "عکس کاربر",
-            "en": "Image"
-          },
-          "description": {
-            "fa": "برای این کاربر خود یک نمایه عکس انتخاب کنید",
-            "en": "Choose an image as thumbnail of this user"
-          },
-          "type": "media",
-          "mediaType": "image"
-        },
-        {
-          "sys": {
-            "id": "6",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
-          "name": "status",
-          "title": {
-            "fa": "وضعیت",
-            "en": "Status"
-          },
-          "description": {
-            "fa": "وضعیت این کاربر",
-            "en": "Status of this user"
-          },
-          "type": "keyValue",
-          "options": [
-            { "value": "active", "selected": true },
-            { "value": "deactive" , "selected": true}
-          ],
-          "isList": true,
-          "isRequired": true,
-          "appearance": "default"
-        }
-      ]
     }
   ],
   "categories": [
@@ -599,13 +485,13 @@
           "en": "Imported product from africa",
           "fa": "محصولات وارداتی از افریقا"
         },
-        "status": "published",
         "price": "2500",
         "brand": {
           "en": "Chicita",
           "fa": "چیکیتا"
         }
-      }
+      },
+      "status": "published"
     },
     {
       "sys": {
@@ -650,13 +536,13 @@
           "en": "Imported product from africa",
           "fa": "محصولات وارداتی از افریقا"
         },
-        "status": "draft",
         "price": "4500",
         "brand": {
           "en": "Chicita",
           "fa": "چیکیتا"
         }
-      }
+      },
+      "status": "draft"
     }
   ],
   "users": [
@@ -688,7 +574,32 @@
         },
         "issueDate": "2 days ago"
       },
-      "name": "pexels-photo-414612.jpeg",
+      "name": "banana.jpeg",
+      "title": {
+        "en": "Banana",
+        "fa": "موز"
+      },
+      "shortDesc": {
+        "en": "",
+        "fa": ""
+      },
+      "status": "draft",
+      "url": {
+        "en": "https://myresources1195.blob.core.windows.net/images/banana.jpg",
+        "fa": "https://myresources1195.blob.core.windows.net/images/banana.jpg"
+      },
+      "fileType": "image/jpeg"
+    },
+    {
+      "sys": {
+        "id": "2",
+        "issuer": {
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "2 days ago"
+      },
+      "name": "user.jpeg",
       "title": {
         "en": "Image1",
         "fa": "Image1"
@@ -701,6 +612,31 @@
       "url": {
         "en": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg",
         "fa": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg"
+      },
+      "fileType": "image/jpeg"
+    },
+    {
+      "sys": {
+        "id": "3",
+        "issuer": {
+          "fullName": "Saeed Padyab",
+          "image": ""
+        },
+        "issueDate": "2 days ago"
+      },
+      "name": "user.jpeg",
+      "title": {
+        "en": "Image1",
+        "fa": "Image1"
+      },
+      "shortDesc": {
+        "en": "",
+        "fa": ""
+      },
+      "status": "draft",
+      "url": {
+        "en": "https://d1e5t59v5asibx.cloudfront.net/api/v1/web/image/content/dam/images/entertainment/shows/p/person-of-interest/s5/person-of-interest-s5-ep3new65446086544608.jpg.2018-11-30T15:38:37+13:00.jpg",
+        "fa": "https://d1e5t59v5asibx.cloudfront.net/api/v1/web/image/content/dam/images/entertainment/shows/p/person-of-interest/s5/person-of-interest-s5-ep3new65446086544608.jpg.2018-11-30T15:38:37+13:00.jpg"
       },
       "fileType": "image/jpeg"
     }

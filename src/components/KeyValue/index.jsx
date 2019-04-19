@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Select, { components } from "react-select";
 import "./styles.scss";
 import { languageManager } from "./../../services";
@@ -7,17 +7,32 @@ const KeyValueInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
 
+  const [cmpKey, setKey] = useState();
+  const [selectedOptions, setSelectedOptions] = useState();
+  const selectComponent = useRef(null);
+
   function getSelectedOption() {
-    if (field.options === undefined || field.options.length === 0)
-      return undefined;
-    if (field.isList) {
-      const selected = field.options.filter(opt => opt.selected === true);
-      setValueToParentForm(selected);
-      return selected;
+    if (formData[field.name]) {
+      if (field.isList) {
+        const selected = formData[field.name].map(opt => {
+          return {
+            value: opt,
+          };
+        });
+        return selected;
+      } else {
+        return { value: formData[field.name] };
+      }
     } else {
-      const selected = field.options.find(opt => opt.selected === true);
-      setValueToParentForm(selected);
-      return selected;
+      if (field.options === undefined || field.options.length === 0)
+        return undefined;
+      if (field.isList) {
+        const selected = field.options.filter(opt => opt.selected === true);
+        return selected;
+      } else {
+        const selected = field.options.find(opt => opt.selected === true);
+        return selected;
+      }
     }
   }
 
@@ -30,9 +45,11 @@ const KeyValueInput = props => {
 
   // set value to input
   useEffect(() => {
-    // props.formData[field.name]
-    //   ? setSelectedOption(props.formData[field.name])
-    //   : setSelectedOption("");
+    setKey(Math.random());
+    const defaultValue = getSelectedOption();
+    if (defaultValue !== undefined) {
+      setValueToParentForm(defaultValue);
+    }
   }, [formData]);
 
   function setValueToParentForm(input) {
@@ -67,6 +84,8 @@ const KeyValueInput = props => {
       <div className="form-group">
         <label>{field.title[currentLang]}</label>
         <Select
+          key={cmpKey}
+          ref={selectComponent}
           menuPlacement="top"
           closeMenuOnScroll={true}
           closeMenuOnSelect={!field.isList}
