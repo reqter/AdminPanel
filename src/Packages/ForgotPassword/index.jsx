@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { languageManager, useGlobalState } from "./../../services";
 import { signup } from "./../../Api/account-api";
 import { CircleSpinner } from "./../../components";
-import "./styles.scss";
+import "./styles.scss"
 
-const Signup = props => {
+const ForgotPassword = props => {
   const [{}, dispatch] = useGlobalState();
+
   const [tab, changeTab] = useState(1);
 
   const [spinner, toggleSpinner] = useState(false);
   const [userName, setUserName] = useState();
-  const [password, setPassword] = useState();
-  const [repeatPass, setRepeatPassword] = useState();
 
   useEffect(() => {
     return () => {
@@ -23,12 +22,6 @@ const Signup = props => {
   //#region first tab
   function handleEmailChanged(e) {
     setUserName(e.target.value);
-  }
-  function handlePasswordChanged(e) {
-    setPassword(e.target.value);
-  }
-  function handleRepPasswordChanged(e) {
-    setRepeatPassword(e.target.value);
   }
   function signupUser() {
     if (!spinner) {
@@ -82,7 +75,7 @@ const Signup = props => {
             },
           });
         })
-        .call(userName, password);
+        .call(userName);
     }
   }
   //#endregion first tab
@@ -96,13 +89,16 @@ const Signup = props => {
       <div className="center">
         <div className="header">
           <span className="header-title">
-            {tab === 1 && languageManager.translate("SIGNUP_TITLE")}
+            {tab === 1 && languageManager.translate("FORGOT_PASS_TITLE")}
             {tab === 2 && languageManager.translate("SIGNUP_SUCCESS_TITLE")}
           </span>
         </div>
         <div className="body">
           {tab === 1 && (
             <form>
+              <div className="message">
+                {languageManager.translate("FORGOT_PASS_MESSAGE")}
+              </div>
               <div className="form-group">
                 <label>
                   {languageManager.translate("LOGIN_EMAIL_INPUT_TITLE")}
@@ -122,52 +118,51 @@ const Signup = props => {
                   {languageManager.translate("LOGIN_EMAIL_INPUT_DESCRIPTION")}
                 </small>
               </div>
-              <div className="form-group">
-                <label>
-                  {languageManager.translate("LOGIN_PASSWORD_INPUT")}
-                </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="passInput"
-                  placeholder={languageManager.translate(
-                    "LOGIN_PASSWORD_INPUT_PLACEHOLDER"
-                  )}
-                  onChange={handlePasswordChanged}
-                />
-                <small id="emailHelp" className="form-text text-muted">
-                  {languageManager.translate(
-                    "LOGIN_PASSWORD_INPUT_DESCRIPTION"
-                  )}
-                </small>
-              </div>
-              <div className="form-group">
-                <label>
-                  {languageManager.translate("SIGNUP_CONFIRM_PASSWORD_INPUT")}
-                </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="reapPassInput"
-                  placeholder={languageManager.translate(
-                    "SIGNUP_CONFIRM_PASSWORD_INPUT_PLACEHOLDER"
-                  )}
-                  onChange={handleRepPasswordChanged}
-                />
-                <small id="emailHelp" className="form-text text-muted">
-                  {languageManager.translate(
-                    "SIGNUP_CONFIRM_PASSWORD_INPUT_DESCRIPTION"
-                  )}
-                </small>
-              </div>
+
               <button
                 type="button"
                 className="btn btn-primary btn-block btn-submit"
                 onClick={signupUser}
                 disabled={
-                  repeatPass === undefined ||
-                  password === undefined ||
-                  repeatPass !== password
+                  userName === undefined || userName.length === undefined
+                    ? true
+                    : false
+                }
+              >
+                <CircleSpinner show={spinner} size="small" />
+                {!spinner
+                  ? languageManager.translate("FORGOT_PASS_SEND_EMAIL_BTN")
+                  : null}
+              </button>
+            </form>
+          )}
+          {tab === 2 && (
+            <form>
+              <div className="form-group">
+                <label>
+                  {languageManager.translate("LOGIN_EMAIL_INPUT_TITLE")}
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="emailInput"
+                  aria-describedby="emailHelp"
+                  placeholder={languageManager.translate(
+                    "LOGIN_EMAIL_INPUT_PLACEHOLDER"
+                  )}
+                  onChange={handleEmailChanged}
+                />
+                <small id="emailHelp" className="form-text text-muted">
+                  {languageManager.translate("LOGIN_EMAIL_INPUT_DESCRIPTION")}
+                </small>
+              </div>
+
+              <button
+                type="button"
+                className="btn btn-primary btn-block btn-submit"
+                onClick={signupUser}
+                disabled={
+                  userName === undefined || userName.length === undefined
                     ? true
                     : false
                 }
@@ -179,7 +174,7 @@ const Signup = props => {
               </button>
             </form>
           )}
-          {tab === 2 && (
+          {tab === 3 && (
             <div className="signupSuccess animated fadeIn">
               <span className="welcomeMessage">
                 {languageManager.translate("SIGNUP_SUCCESS_MESSAGE")}
@@ -209,4 +204,4 @@ const Signup = props => {
     </div>
   );
 };
-export default Signup;
+export default ForgotPassword;

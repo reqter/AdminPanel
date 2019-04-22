@@ -33,7 +33,11 @@
   color: #1890ff;
 }
 .body {
+  max-width: 550px;
   padding: 1.5em 2em;
+  .message{
+    margin-bottom: 20px
+  }
 }
 .btn-submit {
   margin-top: 10%;
@@ -54,3 +58,6 @@
 .icon-google{
   color: red
 }
+
+
+

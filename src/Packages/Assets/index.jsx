@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
-import { AssetFile } from "./../../components";
+import { AssetFile, Alert } from "./../../components";
 import {
   getAssets,
   deleteAsset,
@@ -9,40 +9,40 @@ import {
   publish,
   unPublish,
   archive,
-  unArchive
+  unArchive,
 } from "./../../Api/asset-api";
 
 const filters = [
   {
     id: "0",
     name: "all",
-    icon: "icon-folder"
+    icon: "icon-folder",
   },
   {
     id: "1",
     name: "image",
-    icon: "icon-images"
+    icon: "icon-images",
   },
   {
     id: "2",
     name: "video",
-    icon: "icon-video"
+    icon: "icon-video",
   },
   {
     id: "3",
     name: "audio",
-    icon: "icon-audio"
+    icon: "icon-audio",
   },
   {
     id: "4",
     name: "pdf",
-    icon: "icon-pdf"
+    icon: "icon-pdf",
   },
   {
     id: "5",
     name: "spreadsheet",
-    icon: "icon-spreadsheet"
-  }
+    icon: "icon-spreadsheet",
+  },
 ];
 
 const Assets = props => {
@@ -54,7 +54,7 @@ const Assets = props => {
       .onOk(result => {
         dispatch({
           type: "SET_ASSETS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -62,8 +62,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -71,8 +71,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -80,8 +80,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {})
@@ -91,6 +91,8 @@ const Assets = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [selectedFileType, setFileType] = useState(filters[0]);
   const [selectedStatus, setStatus] = useState({});
+  const [showAlert, toggleAlert] = useState(false);
+  const [alertData, setAlertData] = useState();
 
   function translate(key) {
     return languageManager.translate(key);
@@ -102,7 +104,7 @@ const Assets = props => {
       video: item.name === "video" ? true : false,
       audio: item.name === "audio" ? true : false,
       pdf: item.name === "pdf" ? true : false,
-      spreadsheet: item.name === "spreadsheet" ? true : false
+      spreadsheet: item.name === "spreadsheet" ? true : false,
     };
   }
   function handleFileTypeClick(selected) {
@@ -112,7 +114,7 @@ const Assets = props => {
       .onOk(result => {
         dispatch({
           type: "SET_ASSETS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -120,8 +122,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -129,8 +131,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -138,8 +140,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {})
@@ -160,7 +162,7 @@ const Assets = props => {
       .onOk(result => {
         dispatch({
           type: "SET_ASSETS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -168,8 +170,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -177,8 +179,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -186,8 +188,8 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {})
@@ -207,55 +209,74 @@ const Assets = props => {
   function openUploaderForEdit(file) {
     props.history.push(`/editAsset/${file.sys.id}`);
   }
+  function showRemoveAlert(item) {
+    setAlertData({
+      type: "error",
+      title: "Remove Asset",
+      message: "Are you sure to remove ?",
+      isAjaxCall: true,
+      okTitle: "Remove",
+      cancelTitle: "Don't remove",
+      onOk: () => removeAsset(item),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
+  }
   function removeAsset(item) {
     deleteAsset()
       .onOk(result => {
+        setAlertData();
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: languageManager.translate("ASSET_DELETE_ON_OK")
-          }
+            message: languageManager.translate("ASSET_DELETE_ON_OK"),
+          },
         });
         dispatch({
           type: "SET_ASSETS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
+        setAlertData();
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_DELETE_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("ASSET_DELETE_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
+        setAlertData();
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_DELETE_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("ASSET_DELETE_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
+        setAlertData();
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_DELETE_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("ASSET_DELETE_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {
+        setAlertData();
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_DELETE_NOT_FOUND")
-          }
+            message: languageManager.translate("ASSET_DELETE_NOT_FOUND"),
+          },
         });
       })
       .call(item);
@@ -329,7 +350,7 @@ const Assets = props => {
                       color:
                         f.id === selectedFileType.id
                           ? "rgb(56,132,255)"
-                          : "black"
+                          : "black",
                     }}
                   >
                     <i className={["icon", f.icon].join(" ")} />
@@ -337,7 +358,8 @@ const Assets = props => {
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
-                        display: f.id === selectedFileType.id ? "block" : "none"
+                        display:
+                          f.id === selectedFileType.id ? "block" : "none",
                       }}
                     />
                   </div>
@@ -354,7 +376,9 @@ const Assets = props => {
                     onClick={() => handleStatusClick(f)}
                     style={{
                       color:
-                        f.id === selectedStatus.id ? "rgb(56,132,255)" : "black"
+                        f.id === selectedStatus.id
+                          ? "rgb(56,132,255)"
+                          : "black",
                     }}
                   >
                     <i className={["icon", f.icon].join(" ")} />
@@ -362,7 +386,7 @@ const Assets = props => {
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
-                        display: f.id === selectedStatus.id ? "block" : "none"
+                        display: f.id === selectedStatus.id ? "block" : "none",
                       }}
                     />
                   </div>
@@ -438,32 +462,35 @@ const Assets = props => {
                       </td>
                       <td>
                         {file.status === "draft" ? (
-                          <button className="btn btn-light">
+                          <button className="btn btn-light btn-sm">
                             {translate("ARCHIVE")}
                           </button>
                         ) : file.status === "changed" ? (
-                          <button className="btn btn-light">
+                          <button className="btn btn-light btn-sm">
                             {translate("PUBLISH")}
                           </button>
                         ) : file.status === "archived" ? (
-                          <button className="btn btn-light">
+                          <button className="btn btn-light btn-sm">
                             {translate("UN_ARCHIVE")}
                           </button>
                         ) : file.status === "published" ? (
-                          <button className="btn btn-light">
-                            {translate("UN_PUBLIHS")}
+                          <button className="btn btn-light btn-sm">
+                            {translate("UN_PUBLISH")}
                           </button>
                         ) : (
                           ""
                         )}
+                        {file.status !== "published" &&
+                          file.status !== "archived" && (
+                            <button
+                              className="btn btn-light btn-sm"
+                              onClick={() => showRemoveAlert(file)}
+                            >
+                              <i className="icon-bin" />
+                            </button>
+                          )}
                         <button
-                          className="btn btn-light"
-                          onClick={() => removeAsset(file)}
-                        >
-                          <i className="icon-bin" />
-                        </button>
-                        <button
-                          className="btn btn-light"
+                          className="btn btn-light btn-sm"
                           onClick={() => openUploaderForEdit(file)}
                         >
                           <i className="icon-pencil" />
@@ -477,6 +504,7 @@ const Assets = props => {
           </div>
         </div>
       </div>
+      {alertData && <Alert data={alertData} />}
     </>
   );
 };

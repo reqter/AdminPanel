@@ -2,7 +2,8 @@ import React from "react";
 import { StateProvider } from "./index";
 const Provider = props => {
   const initialState = {
-    projectInfo: { name: "REQTER" ,  },
+    isAuthenticated: false,
+    projectInfo: { name: "REQTER" },
     contentTypeTemlates: [],
     contentTypes: [],
     fields: [],
@@ -14,66 +15,72 @@ const Provider = props => {
       {
         id: "0",
         name: "draft",
-        icon: "icon-draft"
+        icon: "icon-draft",
       },
       {
         id: "1",
         name: "archvied",
-        icon: "icon-archive"
+        icon: "icon-archive",
       },
       {
         id: "2",
         name: "changed",
-        icon: "icon-refresh"
+        icon: "icon-refresh",
       },
       {
         id: "3",
         name: "published",
-        icon: "icon-publish"
-      }
+        icon: "icon-publish",
+      },
     ],
-    notifies: []
+    notifies: [],
   };
 
   const reducer = (state, action) => {
     switch (action.type) {
+      case "SET_AUTHENTICATED":
+        const auth = {
+          ...state,
+          isAuthenticated: action.value,
+        };
+        return auth;
       case "SET_CONTENT_TYPES":
         const s = {
           ...state,
-          contentTypes: action.value
+          contentTypes: action.value,
         };
         return s;
       case "SET_CONTENT_TEMPLATES":
         const c_t = {
           ...state,
-          contentTypeTemlates: action.value
+          contentTypeTemlates: action.value,
         };
         return c_t;
       case "SET_FIELDS":
         const f = {
           ...state,
-          fields: action.value
+          fields: action.value,
         };
         return f;
       case "SET_CATEGORIES":
         return {
           ...state,
-          categories: action.value
+          categories: action.value,
         };
       case "SET_CONTENTS":
         return {
           ...state,
-          contents: action.value
+          contents: action.value,
         };
       case "SET_USERS":
         return {
           ...state,
-          users: action.value
+          users: action.value,
         };
       case "SET_ASSETS":
         return {
           ...state,
-          assets: action.value
+          assets: action.value,
         };
       case "ADD_NOTIFY":
         let newItem = { ...action.value };
@@ -82,7 +89,7 @@ const Provider = props => {
         items_n.unshift(newItem);
         return {
           ...state,
-          notifies: items_n
+          notifies: items_n,
         };
       case "REMOVE_NOTIFY":
         const items = state.notifies.filter(
@@ -90,7 +97,7 @@ const Provider = props => {
         );
         return {
           ...state,
-          notifies: items
+          notifies: items,
         };
       default:
         return state;

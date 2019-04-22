@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
-import { languageManager, utility } from "../../services";
+import { languageManager } from "../../services";
 
 const StringInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
   const { field, formData } = props;
-  const [input, setInput] = useState(initValue());
+  const [input, setInput] = useState();
 
   function initValue() {
     if (field.showCurrent) {
@@ -30,7 +30,9 @@ const StringInput = props => {
       setInput(props.formData[field.name]);
     } else {
       if (field.showCurrent) {
-        setValueToParentForm(initValue());
+        const val = initValue();
+        setInput(val);
+        setValueToParentForm(val);
       } else setInput("");
     }
   }, [formData]);
@@ -96,7 +98,7 @@ const StringInput = props => {
         }
         className="form-control"
         placeholder={field.title[currentLang]}
-        defaultValue={input}
+        value={input}
         onChange={handleOnChange}
         readOnly={props.viewMode}
       />

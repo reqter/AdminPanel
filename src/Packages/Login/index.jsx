@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Redirect } from "react-router-dom";
 import { languageManager, useGlobalState } from "./../../services";
 import { login } from "./../../Api/account-api";
+import { CircleSpinner } from "./../../components";
 import "./styles.scss";
 
-const Login = (...props) => {
+const Login = props => {
   const [{}, dispatch] = useGlobalState();
+  const [spinner, toggleSpinner] = useState(false);
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
+  const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
   function handleEmailChanged(e) {
     setUserName(e.target.value);
@@ -15,50 +18,73 @@ const Login = (...props) => {
   function handlePasswordChanged(e) {
     setPassword(e.target.value);
   }
+  function navToForgotPass() {}
   function loginUser() {
-    login()
-      .onOk(result => {
-        console.log(result)
-        props[0].history.replace("panel");
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("LOGIN_ON_SERVER_ERROR"),
-          },
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("LOGIN_ON_BAD_REQUEST"),
-          },
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("LOGIN_UN_AUTHORIZED"),
-          },
-        });
-      })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("LOGIN_NOT_FOUND"),
-          },
-        });
-      })
-      .call(userName, password);
+    if (!spinner) {
+      toggleSpinner(true);
+      login()
+        .onOk(result => {
+          //toggleSpinner(false);
+          dispatch({
+            type: "SET_AUTHENTICATED",
+            value: true,
+          });
+          setRedirectToReferrer(true);
+        })
+        .onServerError(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("LOGIN_ON_SERVER_ERROR"),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("LOGIN_ON_BAD_REQUEST"),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("LOGIN_UN_AUTHORIZED"),
+            },
+          });
+        })
+        .notFound(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("LOGIN_NOT_FOUND"),
+            },
+          });
+        })
+        .call(userName, password);
+    }
   }
+  useEffect(() => {
+    if (redirectToReferrer) {
+      props.history.replace(
+        !props.location.state ? "panel" : props.location.state.from.pathname
+      );
+    }
+    return () => {
+      toggleSpinner(false);
+    };
+  }, [redirectToReferrer]);
+
   return (
     <div className="wrapper">
       <div className="center">
@@ -82,6 +108,7 @@ const Login = (...props) => {
                   "LOGIN_EMAIL_INPUT_PLACEHOLDER"
                 )}
                 onChange={handleEmailChanged}
+                autoFocus
               />
               <small id="emailHelp" className="form-text text-muted">
                 {languageManager.translate("LOGIN_EMAIL_INPUT_DESCRIPTION")}
@@ -102,27 +129,25 @@ const Login = (...props) => {
                 {languageManager.translate("LOGIN_PASSWORD_INPUT_DESCRIPTION")}
               </small>
             </div>
+            <Link to="/forgotPassword">
+              {languageManager.translate("LOGIN_FORGOT_PASS")}
+            </Link>
+            {/* <button
+              type="button"
+              className="btn btn-link btn-sm"
+              onClick={navToForgotPass}
+            >
+              {languageManager.translate("LOGIN_FORGOT_PASS")}
+            </button> */}
             <button
               type="button"
               className="btn btn-primary btn-block btn-submit"
               onClick={loginUser}
             >
-              {languageManager.translate("LOGIN_SUBMIT_BTN")}
+              <CircleSpinner show={spinner} size="small" />
+              {!spinner ? languageManager.translate("LOGIN_SUBMIT_BTN") : null}
             </button>
           </form>
-          {/* <div className="divider">
-            <Divider>{languageManager.translate("LOGIN_SOCIAL_TEXT")}</Divider>
-          </div>
-          <div className="social">
-            <button type="button" className="btn btn-light">
-              <i className="icon-google icon" />
-              {languageManager.translate("LOGIN_SOCIAL_BTN_GOOGLE")}
-            </button>
-            <button type="button" className="btn btn-light">
-              <i className="icon-github icon" />
-              {languageManager.translate("LOGIN_SOCIAL_BTN_GITHUB")}
-            </button>
-          </div> */}
         </div>
       </div>
 

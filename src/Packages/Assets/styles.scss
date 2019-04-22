@@ -136,11 +136,11 @@
         tr td:first-child {
           flex: 0.5;
         }
-        tr th:last-child,
+        //tr th:last-child,
         tr td:last-child {
           flex: 2;
           text-align: center;
-          justify-content: center;
+          justify-content: flex-end;
         }
         table {
           border-collapse: collapse;

@@ -5,10 +5,11 @@ import { useGlobalState, languageManager } from "./../../services";
 import {
   getContents,
   filterContents,
-  deleteContent
+  deleteContent,
 } from "./../../Api/content-api";
 import "./styles.scss";
 
+import { Alert } from "./../../components";
 import ContentTypes from "./FilterBox/contentTypes";
 import Tree from "./FilterBox/categories";
 import Status from "./FilterBox/status";
@@ -21,7 +22,7 @@ const Products = props => {
       //show: false,
       width: 70,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       Cell: props => {
         return (
@@ -29,14 +30,14 @@ const Products = props => {
             <div className="p-number-value">{props.index + 1}</div>
           </div>
         );
-      }
+      },
     },
     {
       width: 100,
       Header: () => <div className="p-header-td">Media</div>,
       //show: false,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       accessor: "fields.thumbnail",
       Cell: props => {
@@ -52,13 +53,13 @@ const Products = props => {
             )}
           </div>
         );
-      }
+      },
     },
     {
       Header: () => <div className="p-header-td">Name</div>,
       //show: false,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       accessor: "fields",
       Cell: props => (
@@ -68,13 +69,13 @@ const Products = props => {
             {props.value["shortDesc"] && props.value["shortDesc"][currentLang]}
           </span>
         </div>
-      )
+      ),
     },
     {
       Header: () => <div className="p-header-td">Issuer</div>,
       //show: false,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       accessor: "sys",
       Cell: props => (
@@ -82,13 +83,13 @@ const Products = props => {
           <span>{props.value.issuer.fullName}</span>
           <span>{props.value.issueDate}</span>
         </div>
-      )
+      ),
     },
     {
       Header: () => <div className="p-header-td">Content Type</div>,
       //show: false,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       accessor: "contentType",
       Cell: props => {
@@ -99,13 +100,13 @@ const Products = props => {
             </span>
           </div>
         );
-      }
+      },
     },
     {
       Header: () => <div className="p-header-td">Category</div>,
       //show: false,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       accessor: "category",
       Cell: props => (
@@ -114,13 +115,13 @@ const Products = props => {
             {props.value ? props.value.name[currentLang] : ""}
           </span>
         </div>
-      )
+      ),
     },
     {
       Header: () => <div className="p-header-td">Status</div>,
       //show: false,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       accessor: "status",
       Cell: props => (
@@ -129,32 +130,37 @@ const Products = props => {
             {languageManager.translate(props.value)}
           </span>
         </div>
-      )
+      ),
     },
     {
       Header: "Actions",
       //show: false,
       headerStyle: {
-        display: "block"
+        display: "block",
       },
       clickable: false,
-      Cell: props => (
-        <div className="p-actions">
-          <button
-            className="btn btn-light"
-            onClick={() => handleEditRow(props)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-light"
-            onClick={() => handleDeleteRow(props)}
-          >
-            <i className="icon-bin" />
-          </button>
-        </div>
-      )
-    }
+      Cell: props => {
+        return (
+          <div className="p-actions">
+            <button
+              className="btn btn-light btn-sm"
+              onClick={() => handleEditRow(props)}
+            >
+              Edit
+            </button>
+            {props.original.status !== "published" &&
+              props.original.status !== "archived" && (
+                <button
+                  className="btn btn-light btn-sm"
+                  onClick={() => handleDeleteRow(props)}
+                >
+                  <i className="icon-bin" />
+                </button>
+              )}
+          </div>
+        );
+      },
+    },
   ];
   const { name: pageTitle, desc: pageDescription } = props.component;
 
@@ -164,6 +170,7 @@ const Products = props => {
   const tableBox = useRef(null);
 
   const [leftContent, toggleLeftContent] = useState(false);
+  const [alertData, setAlertData] = useState();
 
   const [searchText, setSearchText] = useState("");
   const [selectedContentType, setSelectedContentType] = useState({});
@@ -179,7 +186,7 @@ const Products = props => {
       .onOk(result => {
         dispatch({
           type: "SET_CONTENTS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -187,8 +194,8 @@ const Products = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -196,8 +203,8 @@ const Products = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -205,8 +212,8 @@ const Products = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("CONTENTS_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("CONTENTS_UN_AUTHORIZED"),
+          },
         });
       })
       .call();
@@ -260,7 +267,7 @@ const Products = props => {
   }
   function openNewItemBox(contentType) {
     props.history.push({
-      pathname: "/contents/new"
+      pathname: "/contents/new",
       // search: "?sort=name",
       //hash: "#the-hash",
       //params: { contentType, hasContentType }
@@ -355,7 +362,7 @@ const Products = props => {
       .onOk(result => {
         dispatch({
           type: "SET_CONTENTS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -363,8 +370,8 @@ const Products = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -372,8 +379,8 @@ const Products = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -381,31 +388,97 @@ const Products = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("CONTENTS_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("CONTENTS_UN_AUTHORIZED"),
+          },
         });
       })
       .call(text, contentTypeId, categoryId, status);
   }
   function handleDeleteRow(row) {
-    deleteContent()
-      .onOk(result => {
-        dispatch({
-          type: "SET_CONTENTS",
-          value: result
-        });
-      })
-      .call(row.original);
+    setAlertData({
+      type: "error",
+      title: "Remove Content",
+      message: "Are you sure to remove ?",
+      isAjaxCall: true,
+      okTitle: "Remove",
+      cancelTitle: "Don't remove",
+      onOk: () =>
+        deleteContent()
+          .onOk(result => {
+            setAlertData();
+            dispatch({
+              type: "SET_CONTENTS",
+              value: result,
+            });
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("CONTENTS_DELETE_ON_OK"),
+              },
+            });
+          })
+          .onServerError(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENTS_DELETE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENTS_DELETE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "CONTENTS_DELETE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate("CONTENTS_DELETE_NOT_FOUND"),
+              },
+            });
+          })
+          .call(row.original),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
   }
   function handleEditRow(row) {
     props.history.push({
-      pathname: `/contents/edit/${row.original.sys.id}`
+      pathname: `/contents/edit/${row.original.sys.id}`,
     });
   }
   function viewContent(row) {
     props.history.push({
       pathname: `/contents/view/${row.sys.id}`,
-      viewMode: true
+      viewMode: true,
     });
   }
   return (
@@ -515,7 +588,7 @@ const Products = props => {
                 style={{
                   border: "none",
                   overflow: "auto",
-                  height: "100%" // This will force the table body to overflow and scroll, since there is not enough room
+                  height: "100%", // This will force the table body to overflow and scroll, since there is not enough room
                 }}
                 getTdProps={(state, rowInfo, column, instance) => {
                   return {
@@ -524,7 +597,7 @@ const Products = props => {
                         if (column.clickable === undefined)
                           viewContent(rowInfo.original);
                       }
-                    }
+                    },
                   };
                 }}
               />
@@ -532,6 +605,7 @@ const Products = props => {
           </div>
         </div>
       </div>
+      {alertData && <Alert data={alertData} />}
     </>
   );
 };

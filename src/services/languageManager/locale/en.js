@@ -44,7 +44,7 @@ export default {
   LOGIN_PASSWORD_INPUT_PLACEHOLDER: 'Enter pssword',
   LOGIN_PASSWORD_INPUT_DESCRIPTION: 'Password must be at least 6 character',
   LOGIN_SUBMIT_BTN: 'Submit',
-  LOGIN_SOCIAL_TEXT: 'OR SIGNIN WITH',
+  LOGIN_FORGET_PASS: 'Forgot Your Password ?',
   LOGIN_SIGNUP_LINK_TITLE: 'New to REQTER ?',
   LOGIN_SIGNUP_LINK: 'Create an accout',
   LOGIN_SOCIAL_BTN_GOOGLE: 'Google',
@@ -53,6 +53,7 @@ export default {
   LOGIN_ON_BAD_REQUEST: 'Bad request',
   LOGIN_UN_AUTHORIZED: 'Un authorized',
   LOGIN_NOT_FOUND: 'User not found',
+  LOGIN_FORGOT_PASS: 'Forgot your password ?',
   // SIGNUP
   SIGNUP_TITLE: 'Signup Reqter',
   SIGNUP_LOGIN_LINK_TITLE: 'Have an account?',
@@ -61,6 +62,15 @@ export default {
   SIGNUP_CONFIRM_PASSWORD_INPUT_PLACEHOLDER: 'Confirm your password',
   SIGNUP_CONFIRM_PASSWORD_INPUT_DESCRIPTION:
     'Password must be at least 6 character',
+  SIGNUP_SUCCESS_TITLE: 'Signup Success',
+  SIGNUP_SUCCESS_MESSAGE:
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+  SIGNUP_SUCCESS_BTN: 'Login',
+  // FORGOT PASS
+  FORGOT_PASS_TITLE: 'Getting Password',
+  FORGOT_PASS_MESSAGE:
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+  FORGOT_PASS_SEND_EMAIL_BTN: 'Send Code',
   // home
   BRAND_NAME: 'REQTER',
   HOME_NAVS_TITLE: 'Features',
@@ -266,6 +276,11 @@ export default {
   CONTENTS_ON_SERVER_ERROR: 'Internl server error',
   CONTENTS_ON_BAD_REQUEST: 'Bad Request',
   CONTENTS_UN_AUTHORIZED: 'Un Authorized',
+  CONTENTS_DELETE_ON_OK: 'The content is removed successfully.',
+  CONTENTS_DELETE_ON_SERVER_ERROR: 'Internl server error',
+  CONTENTS_DELETE_ON_BAD_REQUEST: 'Bad Request',
+  CONTENTS_DELETE_NOT_FOUND: 'Not found',
+  CONTENTS_DELETE_UN_AUTHORIZED: 'Un Authorized',
   ITEMS_CATEGORIES_CONTENT: 'Content',
   UPSERT_ITEM_UPDATE_ON_OK: 'Content is updated succefully.',
   UPSERT_ITEM_UPDATE_ON_SERVER_ERROR: 'Internal server error',
