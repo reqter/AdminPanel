@@ -7,7 +7,7 @@ import {
   addContent,
   updateContent,
   getContentById,
-  getContentTypes
+  getContentTypes,
 } from "./../../Api/content-api";
 import CategoriesModal from "./Categories";
 import {
@@ -19,7 +19,7 @@ import {
   Boolean,
   KeyValue,
   RichText,
-  Reference
+  Reference,
 } from "./../../components";
 
 const UpsertProduct = props => {
@@ -92,7 +92,7 @@ const UpsertProduct = props => {
         toggleTab(1);
         dispatch({
           type: "SET_CONTENT_TYPES",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -100,7 +100,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "contentType",
-          message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR")
+          message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR"),
         };
         setError(obj);
       })
@@ -109,7 +109,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "contentType",
-          message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST")
+          message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
         };
         setError(obj);
       })
@@ -118,7 +118,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "contentType",
-          message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED")
+          message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
         };
         setError(obj);
       })
@@ -135,7 +135,7 @@ const UpsertProduct = props => {
               sender: "getItemById",
               message: languageManager.translate(
                 "UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"
-              )
+              ),
             };
             setError(obj);
           } else {
@@ -158,7 +158,7 @@ const UpsertProduct = props => {
           sender: "getItemById",
           message: languageManager.translate(
             "UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"
-          )
+          ),
         };
         setError(obj);
       })
@@ -169,7 +169,7 @@ const UpsertProduct = props => {
           sender: "getItemById",
           message: languageManager.translate(
             "UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"
-          )
+          ),
         };
         setError(obj);
       })
@@ -180,7 +180,7 @@ const UpsertProduct = props => {
           sender: "getItemById",
           message: languageManager.translate(
             "UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"
-          )
+          ),
         };
         setError(obj);
       })
@@ -189,7 +189,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: languageManager.translate("UPSERT_ITEM_GET_BY_ID_NOT_FOUND")
+          message: languageManager.translate("UPSERT_ITEM_GET_BY_ID_NOT_FOUND"),
         };
         setError(obj);
       })
@@ -200,7 +200,7 @@ const UpsertProduct = props => {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
         [name]: false,
-        ...prevFormValidation
+        ...prevFormValidation,
       }));
     }
   }
@@ -210,18 +210,18 @@ const UpsertProduct = props => {
       // add value to form
       setForm(prevState => ({
         ...prevState,
-        [field.name]: value
+        [field.name]: value,
       }));
     }
     if (isValid) {
       setFormValidation(prevFormValidation => ({
         ...prevFormValidation,
-        [key]: true
+        [key]: true,
       }));
     } else {
       setFormValidation(prevFormValidation => ({
         ...prevFormValidation,
-        [key]: false
+        [key]: false,
       }));
     }
   }
@@ -355,22 +355,22 @@ const UpsertProduct = props => {
         issuer: {
           id: "1",
           fullName: "Saeed Padyab",
-          image: ""
+          image: "",
         },
-        issueDate: "19/01/2019 20:18"
+        issueDate: "19/01/2019 20:18",
       },
       //contentType: contentType.id,
       contentType: {
         id: contentType.sys.id,
         name: contentType.name,
-        title: contentType.title
+        title: contentType.title,
       },
       //category:category.id,
       category: {
         id: category.sys.id,
-        name: category.name
+        name: category.name,
       },
-      fields: form
+      fields: form,
     };
     if (updateMode) {
       obj["status"] = "changed";
@@ -380,8 +380,8 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK")
-            }
+              message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
+            },
           });
           backToProducts();
         })
@@ -392,8 +392,8 @@ const UpsertProduct = props => {
               type: "error",
               message: languageManager.translate(
                 "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
-              )
-            }
+              ),
+            },
           });
         })
         .onBadRequest(result => {
@@ -403,8 +403,8 @@ const UpsertProduct = props => {
               type: "error",
               message: languageManager.translate(
                 "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
-              )
-            }
+              ),
+            },
           });
         })
         .unAuthorized(result => {
@@ -414,8 +414,8 @@ const UpsertProduct = props => {
               type: "warning",
               message: languageManager.translate(
                 "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
-              )
-            }
+              ),
+            },
           });
         })
         .notFound(result => {
@@ -423,8 +423,10 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("UPSERT_ITEM_UPDATE_NOT_FOUND")
-            }
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_NOT_FOUND"
+              ),
+            },
           });
         })
         .call(obj);
@@ -436,8 +438,8 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK")
-            }
+              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
+            },
           });
           if (closePage) {
             backToProducts();
@@ -458,8 +460,8 @@ const UpsertProduct = props => {
               type: "error",
               message: languageManager.translate(
                 "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
-              )
-            }
+              ),
+            },
           });
         })
         .onBadRequest(result => {
@@ -469,8 +471,8 @@ const UpsertProduct = props => {
               type: "error",
               message: languageManager.translate(
                 "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
-              )
-            }
+              ),
+            },
           });
         })
         .unAuthorized(result => {
@@ -480,8 +482,8 @@ const UpsertProduct = props => {
               type: "warning",
               message: languageManager.translate(
                 "UPSERT_ITEM_ADD_UN_AUTHORIZED"
-              )
-            }
+              ),
+            },
           });
         })
         .notFound(result => {
@@ -489,8 +491,8 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND")
-            }
+              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
+            },
           });
         })
         .call(obj);

@@ -32,11 +32,11 @@
   font-size: 35px;
   color: #1890ff;
 }
-.body {
+.formBody {
   max-width: 550px;
   padding: 1.5em 2em;
-  .message{
-    margin-bottom: 20px
+  .message {
+    margin-bottom: 20px;
   }
 }
 .btn-submit {
@@ -48,16 +48,13 @@
 .social {
   display: flex;
 }
-.social .btn{
+.social .btn {
   width: 100%;
-  margin: 10px
+  margin: 10px;
 }
 .social .icon {
-  margin-right: 10px
+  margin-right: 10px;
 }
-.icon-google{
-  color: red
+.icon-google {
+  color: red;
 }
-
-
-

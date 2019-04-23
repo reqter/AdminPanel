@@ -2,7 +2,7 @@ import React from "react";
 import { StateProvider } from "./index";
 const Provider = props => {
   const initialState = {
-    isAuthenticated: false,
+    isAuthenticated: true,
     projectInfo: { name: "REQTER" },
     contentTypeTemlates: [],
     contentTypes: [],

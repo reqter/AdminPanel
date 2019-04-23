@@ -65,7 +65,6 @@ const RichTextInput = props => {
     } else props.onChangeValue(field, value, true);
   }
   function handleOnChange(content) {
-    debugger;
     setInput(content);
     setValueToParentForm(
       draftToHtml(convertToRaw(content.getCurrentContent()))

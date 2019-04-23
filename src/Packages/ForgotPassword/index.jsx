@@ -93,7 +93,7 @@ const ForgotPassword = props => {
             {tab === 2 && languageManager.translate("SIGNUP_SUCCESS_TITLE")}
           </span>
         </div>
-        <div className="body">
+        <div className="formBody">
           {tab === 1 && (
             <form>
               <div className="message">

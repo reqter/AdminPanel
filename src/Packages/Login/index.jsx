@@ -93,7 +93,7 @@ const Login = props => {
             {languageManager.translate("LOGIN_TITLE")}
           </span>
         </div>
-        <div className="body">
+        <div className="formBody">
           <form>
             <div className="form-group">
               <label>

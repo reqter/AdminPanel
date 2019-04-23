@@ -1,10 +1,12 @@
-.up-wrapper {
+body {
   background: whitesmoke;
+}
+.up-wrapper {
   min-height: 100vh;
   .up-header {
     position: fixed;
     height: 60px;
-    background: rgb(56, 132, 255);
+    background: white;
     top: 0;
     left: 0;
     right: 0;

@@ -9,6 +9,7 @@
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "html-to-draftjs": "^1.4.0",
+    "moment-timezone": "^0.5.25",
     "node-sass": "^4.11.0",
     "react": "^16.8.1",
     "react-datetime": "^2.16.3",

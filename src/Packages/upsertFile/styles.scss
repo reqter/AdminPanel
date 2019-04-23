@@ -1,7 +1,7 @@
-.up-wrapper {
+.up-1wrapper {
   background: whitesmoke;
   min-height: 100vh;
-  .up-header {
+  .up-1header {
     position: fixed;
     height: 60px;
     background: white;
@@ -36,13 +36,13 @@
       }
     }
   }
-  .up-content {
+  .up-1content {
     padding-top: 80px;
     padding-bottom: 30px;
     main {
       width: 768px;
       margin: auto;
-      .up-content-itemTypes {
+      .up-1content-itemTypes {
         background: white;
         min-height: 300px;
         padding: 20px;
@@ -53,13 +53,13 @@
           padding: 10px 0;
         }
       }
-      .up-content-title {
+      .up-1content-title {
         font-size: 25px;
         font-weight: 500;
         margin: 10px 0;
         color: gray;
       }
-      .up-categoryBox {
+      .up-1categoryBox {
         height: 100px;
         box-shadow: 0 0 3px lightgray;
         margin-bottom: 30px;
@@ -74,7 +74,7 @@
           font-weight: 500;
         }
       }
-      .up-formInputs {
+      .up-1formInputs {
         border-radius: 3px;
         background: white;
         box-shadow: 0 0 3px lightgray;
@@ -107,7 +107,7 @@
           align-items: flex-end;
         }
       }
-      .up-error-section {
+      .up-1error-section {
         min-height: 250px;
         background: white;
         box-shadow: 0 0 3px lightgray;

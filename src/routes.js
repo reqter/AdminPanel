@@ -11,7 +11,6 @@ import Products from './Packages/Products'
 import UpsertProduct from './Packages/UpsertProduct'
 import Assets from './Packages/Assets'
 import UploadFile from './Packages/upsertFile'
-import UpsertUser from './Packages/UpsertUser'
 
 function translate (key) {
   return languageManager.translate(key)
@@ -93,16 +92,6 @@ const routes = [
   {
     path: '/contents/view/:id',
     component: UpsertProduct,
-    isPublic: false
-  },
-  {
-    path: '/users/new',
-    component: UpsertUser,
-    isPublic: false
-  },
-  {
-    path: '/users/edit/:id',
-    component: UpsertUser,
     isPublic: false
   },
   {
