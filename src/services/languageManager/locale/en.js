@@ -253,6 +253,8 @@ export default {
   CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND: 'field not found',
   FIELD_DATE_SHOW_CURRENT: 'Show current date/time',
   FIELD_DATE_SHOW_CURRENT_INFO: 'It will be as default value',
+  FIELD_DATE_DISABLE_PAST: 'Disable Past Dates',
+  FIELD_DATE_DISABLE_PAST_INFO: 'You are not able to select past dates',
   FIELD_DATE_FORMAT_DATE_TIME: 'Date & Time',
   FIELD_DATE_FORMAT_TITLE: 'DateTime Format',
   FIELD_DATE_FORMAT_TITLE_INFO: 'You can have only date or both date and time',

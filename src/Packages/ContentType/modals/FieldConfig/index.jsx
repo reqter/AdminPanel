@@ -166,6 +166,13 @@ const FieldConfig = props => {
         : false
       : false
   );
+  const [dateDisablePast, toggleDateDisablePast] = useState(
+    selectedField.type === "dateTime"
+      ? selectedField.disablePastDates
+        ? selectedField.disablePastDates
+        : false
+      : false
+  );
   const [isMultiLine, toggleMultiLine] = useState(
     selectedField.type === "string"
       ? selectedField.isMultiLine
@@ -230,6 +237,9 @@ const FieldConfig = props => {
   }
   function handleDateDefaultValue(e) {
     toggleDateDefaultValue(e.target.checked);
+  }
+  function handleDateDisablePast(e) {
+    toggleDateDisablePast(e.target.checked);
   }
   function handleMultiLineChanged(e) {
     toggleMultiLine(e.target.checked);
@@ -357,6 +367,7 @@ const FieldConfig = props => {
     if (selectedField.type === "dateTime") {
       obj["showCurrent"] = dateDefaultValue;
       obj["format"] = dateTimeFormat;
+      obj["disablePastDates"] = dateDisablePast;
     }
     if (selectedField.type === "location") {
       obj["defaultValue"] = {
@@ -700,29 +711,54 @@ const FieldConfig = props => {
                 </div>
               )}
               {selectedField.type === "dateTime" && (
-                <div className="custom_checkbox">
-                  <div className="left">
-                    <label className="checkBox">
-                      <input
-                        type="checkbox"
-                        id="dateShowCurrent"
-                        checked={dateDefaultValue}
-                        onChange={handleDateDefaultValue}
-                      />
-                      <span className="checkmark" />
-                    </label>
+                <>
+                  <div className="custom_checkbox">
+                    <div className="left">
+                      <label className="checkBox">
+                        <input
+                          type="checkbox"
+                          id="dateShowCurrent"
+                          checked={dateDefaultValue}
+                          onChange={handleDateDefaultValue}
+                        />
+                        <span className="checkmark" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label for="dateShowCurrent">
+                        {languageManager.translate("FIELD_DATE_SHOW_CURRENT")}
+                      </label>
+                      <label>
+                        {languageManager.translate(
+                          "FIELD_DATE_SHOW_CURRENT_INFO"
+                        )}
+                      </label>
+                    </div>
                   </div>
-                  <div className="right">
-                    <label for="dateShowCurrent">
-                      {languageManager.translate("FIELD_DATE_SHOW_CURRENT")}
-                    </label>
-                    <label>
-                      {languageManager.translate(
-                        "FIELD_DATE_SHOW_CURRENT_INFO"
-                      )}
-                    </label>
+                  <div className="custom_checkbox">
+                    <div className="left">
+                      <label className="checkBox">
+                        <input
+                          type="checkbox"
+                          id="dateDisablePast"
+                          checked={dateDisablePast}
+                          onChange={handleDateDisablePast}
+                        />
+                        <span className="checkmark" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label for="dateDisablePast">
+                        {languageManager.translate("FIELD_DATE_DISABLE_PAST")}
+                      </label>
+                      <label for="dateDisablePast">
+                        {languageManager.translate(
+                          "FIELD_DATE_DISABLE_PAST_INFO"
+                        )}
+                      </label>
+                    </div>
                   </div>
-                </div>
+                </>
               )}
               {selectedField.type === "string" && (
                 <div className="custom_checkbox">

@@ -110,7 +110,11 @@ const StringInput = props => {
         }
         defaultValue={true && initValue()}
         onChange={handleOnChange}
-        isValidDate={valid}
+        isValidDate={
+          field.disablePastDates !== undefined &&
+          field.disablePastDates === true &&
+          valid
+        }
       />
       <small className="form-text text-muted">
         {field.description[currentLang]}
