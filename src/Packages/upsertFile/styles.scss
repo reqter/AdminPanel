@@ -1,7 +1,7 @@
-.up-1wrapper {
+.up-file-wrapper {
   background: whitesmoke;
   min-height: 100vh;
-  .up-1header {
+  .up-file-header {
     position: fixed;
     height: 60px;
     background: white;
@@ -36,45 +36,22 @@
       }
     }
   }
-  .up-1content {
+  .up-file-content {
     padding-top: 80px;
     padding-bottom: 30px;
     main {
       width: 768px;
       margin: auto;
-      .up-1content-itemTypes {
-        background: white;
-        min-height: 300px;
-        padding: 20px;
-        box-shadow: 0 0 3px lightgray;
-        border-radius: 4px;
-        .listGroupItem {
-          border-bottom: 1px solid whitesmoke;
-          padding: 10px 0;
-        }
-      }
-      .up-1content-title {
+
+      .up-file-content-title {
         font-size: 25px;
         font-weight: 500;
         margin: 10px 0;
         color: gray;
       }
-      .up-1categoryBox {
-        height: 100px;
-        box-shadow: 0 0 3px lightgray;
-        margin-bottom: 30px;
+
+      .up-file-formInputs {
         background: white;
-        border-radius: 3px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 5%;
-        span {
-          font-size: 20px;
-          font-weight: 500;
-        }
-      }
-      .up-1formInputs {
         border-radius: 3px;
         background: white;
         box-shadow: 0 0 3px lightgray;
@@ -82,11 +59,10 @@
         .rowItem {
           margin: 20px 0;
         }
-
-        .actions {
+        .upf-actions {
           display: flex;
           flex-direction: row-reverse;
-          .btn {
+          button {
             margin-left: 10px;
           }
         }
@@ -107,7 +83,7 @@
           align-items: flex-end;
         }
       }
-      .up-1error-section {
+      .up-file-error-section {
         min-height: 250px;
         background: white;
         box-shadow: 0 0 3px lightgray;

@@ -85,3 +85,44 @@
     }
   }
 }
+
+.imageCropper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid whitesmoke;
+  background: whitesmoke;
+  .imageCropper-header {
+    height: 50px;
+    border-bottom: 1px solid whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      margin: 0 5px;
+    }
+  }
+  .imageCropper-content {
+    flex: 1;
+  }
+}
+.progress {
+  margin-bottom: 10px;
+}
+.editor-actions {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  .editor-actions-progress {
+    flex: 1;
+    padding: 0 10px;
+    .progress {
+      margin-top: 5px;
+      display: none
+    }
+  }
+  .editor-actions-btns {
+    button {
+      margin-left: 5px;
+    }
+  }
+}

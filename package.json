@@ -12,9 +12,11 @@
     "moment-timezone": "^0.5.25",
     "node-sass": "^4.11.0",
     "react": "^16.8.1",
+    "react-cropper-image-editor": "^1.0.9",
     "react-datetime": "^2.16.3",
     "react-dom": "^16.8.1",
     "react-draft-wysiwyg": "^1.13.2",
+    "react-email-editor": "^0.9.5",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.8",
     "react-select": "^2.4.2",
@@ -22,7 +24,8 @@
     "react-table": "^6.9.2",
     "react-transition-group": "^2.9.0",
     "reactstrap": "^7.1.0",
-    "source-map-explorer": "^1.8.0"
+    "source-map-explorer": "^1.8.0",
+    "styled-components": "^4.2.0"
   },
   "scripts": {
     "analyze": "source-map-explorer build/static/js/*.js",
