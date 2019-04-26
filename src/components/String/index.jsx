@@ -6,24 +6,23 @@ const StringInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
   const { field, formData } = props;
-  // چک کن ببین فرم دیتا با این اسم فیلد مقدار داره یا نه . الان فقط رو یه اینپوت ست کردم باید رو تک تک اینپوت های زبان ها ست بشه
-  const [input, setInput] = useState(
-    field.defaultValue ? field.defaultValue : ""
-  );
+  const [input, setInput] = useState();
 
   // set default value to form data in parent
-  useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (field.isRequired === true) props.init(field.name, false);
+  // }, []);
 
   // set value to input
   useEffect(() => {
     if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
+
       if (field.isTranslate) setInput(props.formData[field.name][currentLang]);
       else setInput(props.formData[field.name]);
     } else {
+      if (field.isRequired === true) props.init(field.name, false);
+
       if (field.defaultValue) {
         setInput(field.defaultValue);
         setValueToParentForm(field.defaultValue);

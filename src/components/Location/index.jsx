@@ -13,18 +13,14 @@ const StringInput = props => {
     field.defaultValue ? field.defaultValue.longitude : ""
   );
 
-  // set default value to form data in parent
-  useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
-
-  // set value to input
+  // set value to input update time and reset form time
   useEffect(() => {
     if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
+
       setValueToInput(props.formData[field.name]);
     } else {
+      if (field.isRequired === true) props.init(field.name, false);
       if (field.defaultValue) {
         setValueToInput(field.defaultValue);
         props.onChangeValue(field, field.defaultValue, true);

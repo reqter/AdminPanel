@@ -301,7 +301,7 @@ const Products = props => {
       setSelectedNode({});
     } else if (filter.type === "status") {
       status = undefined;
-      setSelectedNode({});
+      setSelectedStatus({});
     }
     filterData(text, contentTypeID, categoryID, status);
   }

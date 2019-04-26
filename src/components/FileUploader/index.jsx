@@ -31,14 +31,12 @@ const FileUploaderInput = props => {
     return [];
   });
 
-  useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
+
       let fs = [];
       fs.push({
         id: Math.random(),
@@ -48,6 +46,8 @@ const FileUploaderInput = props => {
       });
       setFiles(fs);
     } else {
+      if (field.isRequired === true) props.init(field.name, false);
+
       if (files.length > 0) {
         setFiles([]);
       }
@@ -77,9 +77,7 @@ const FileUploaderInput = props => {
           toggleIsUploading(false);
         }, 200);
       })
-      .onServerError(result => {
-        
-      })
+      .onServerError(result => {})
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .onProgress(result => {

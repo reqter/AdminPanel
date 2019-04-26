@@ -10,18 +10,13 @@ const NumberInput = props => {
     field.defaultValue ? field.defaultValue : ""
   );
 
-  // set default value to form data in parent
-  useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
-
-  // set value to input
   useEffect(() => {
     if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
+
       setInput(props.formData[field.name]);
     } else {
+      if (field.isRequired === true) props.init(field.name, false);
       if (field.defaultValue) {
         setInput(field.defaultValue);
         setValueToParentForm(field.defaultValue);

@@ -9,12 +9,11 @@ const MediaInput = props => {
   const [assetBrowser, toggleAssetBrowser] = useState(false);
   const [files, setFiles] = useState([]);
 
+  // set form value update time
   useEffect(() => {
-    if (field.isRequired === true) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-    // set form value update time
     if (formData[field.name] && formData[field.name].length > 0) {
+      if (field.isRequired === true) props.init(field.name, true);
+
       const d = formData[field.name].map(item => {
         item.id = Math.random();
         item.url = item;
@@ -22,14 +21,8 @@ const MediaInput = props => {
       });
       setFiles(d);
     } else {
+      if (field.isRequired === true) props.init(field.name, false);
       if (files.length > 0) setFiles([]);
-    }
-  }, []);
-
-  useEffect(() => {
-    // cheking form reset
-    if (Object.keys(props.formData).length === 0) {
-      setFiles([]);
     }
   }, [formData]);
 
@@ -53,7 +46,9 @@ const MediaInput = props => {
         id: Math.random(),
         url: field.isTranslate
           ? asset.url
-          : { [currentLang]: asset.url[currentLang] }
+          : {
+              [currentLang]: asset.url[currentLang],
+            },
       };
       if (field.isList !== undefined && field.isList) {
         const newFiles = [...files, obj];

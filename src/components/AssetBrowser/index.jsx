@@ -13,49 +13,49 @@ const fields = [
     name: "title",
     title: {
       en: "Title",
-      fa: "عنوان"
+      fa: "عنوان",
     },
     description: {
       en: "this will be apear on assets",
-      fa: "نام فایل برای نمایش در لیست"
+      fa: "نام فایل برای نمایش در لیست",
     },
     type: "string",
     isBase: true,
     isTranslate: true,
-    isRequired: true
+    isRequired: true,
   },
   {
     id: "2",
     name: "shortDesc",
     title: {
       en: "Short Description",
-      fa: "توضیحات"
+      fa: "توضیحات",
     },
     description: {
       en: "Short description of your file",
-      fa: "توضیح کوتاه برای فایل"
+      fa: "توضیح کوتاه برای فایل",
     },
     type: "string",
     isBase: true,
-    isTranslate: true
+    isTranslate: true,
   },
   {
     id: "3",
     name: "url",
     title: {
       fa: "Your File",
-      en: "Your File"
+      en: "Your File",
     },
     description: {
       fa: "",
-      en: "Click on file selector top choose your file"
+      en: "Click on file selector top choose your file",
     },
     type: "fileUploader",
     fileType: "image",
     isBase: true,
     isTranslate: true,
-    isRequired: true
-  }
+    isRequired: true,
+  },
 ];
 
 const AssetBrowser = props => {
@@ -78,10 +78,17 @@ const AssetBrowser = props => {
   }, [props.isOpen, tab]);
 
   useEffect(() => {
-    if (Object.keys(form).length > 0 && formValidation === undefined) {
+    if (Object.keys(form).length > 0 && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
-  }, [form]);
+  }, [formValidation]);
+
+  function checkFormValidation() {
+    for (const key in formValidation) {
+      if (formValidation[key] === false) return false;
+    }
+    return true;
+  }
 
   function closeModal() {
     props.onCloseModal();
@@ -104,7 +111,7 @@ const AssetBrowser = props => {
       .onOk(result => {
         dispatch({
           type: "SET_ASSETS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {})
@@ -122,16 +129,16 @@ const AssetBrowser = props => {
         id: Math.random().toString(),
         issuer: {
           fullName: "Saeed Padyab",
-          image: ""
+          image: "",
         },
-        issueDate: "19/01/2019 20:18"
+        issueDate: "19/01/2019 20:18",
       },
       name: form.name,
       title: form.title,
       shorDesc: form.shortDesc,
       status: "draft",
       url: form.url,
-      fileType: form.fileType
+      fileType: form.fileType,
     };
     addAsset()
       .onOk(result => {
@@ -152,8 +159,8 @@ const AssetBrowser = props => {
             type: "error",
             message: languageManager.translate(
               "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
-            )
-          }
+            ),
+          },
         });
       })
       .onBadRequest(result => {
@@ -163,8 +170,8 @@ const AssetBrowser = props => {
             type: "error",
             message: languageManager.translate(
               "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
-            )
-          }
+            ),
+          },
         });
       })
       .unAuthorized(result => {
@@ -172,8 +179,10 @@ const AssetBrowser = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("UPSERT_ASSET_ADD_UN_AUTHORIZED")
-          }
+            message: languageManager.translate(
+              "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+            ),
+          },
         });
       })
       .notFound(result => {
@@ -181,26 +190,26 @@ const AssetBrowser = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND")
-          }
+            message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND"),
+          },
         });
       })
       .call(obj);
   }
 
   //#region second tab
-  function setNameToFormValidation(name) {
+  function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
-        [name]: null,
-        ...prevFormValidation
+        [name]: value,
+        ...prevFormValidation,
       }));
     }
   }
   function handleOnChangeValue(field, value, isValid) {
     // add value to form
     let f = {
-      ...form
+      ...form,
     };
     const { name: key } = field;
     if (value === undefined) {
@@ -214,37 +223,41 @@ const AssetBrowser = props => {
       if (key === "url" && field.isBase) {
         f[key] = {
           en: value["en"],
-          fa: value["fa"]
+          fa: value["fa"],
         };
         f.fileType = value.fileType;
         f.name = value["name"];
         f["title"] = {
           en: value["name"],
-          fa: value["name"]
+          fa: value["name"],
         };
       } else f[key] = value;
     }
     setForm(f);
 
     // check validation
-    let obj = {
-      ...formValidation
-    };
-    if (isValid && obj) {
-      delete obj[key];
-      if (key === "url" && field.isBase) delete obj["title"];
-      if (Object.keys(obj).length === 0) {
-        setFormValidation(undefined);
-      } else {
-        setFormValidation(obj);
-      }
-    } else {
-      if (obj === undefined) {
-        obj = {};
-      }
-      obj[key] = null;
-      setFormValidation(obj);
-    }
+    setFormValidation(prevFormValidation => ({
+      ...prevFormValidation,
+      [key]: isValid,
+    }));
+    // let obj = {
+    //   ...formValidation
+    // };
+    // if (isValid && obj) {
+    //   delete obj[key];
+    //   if (key === "url" && field.isBase) delete obj["title"];
+    //   if (Object.keys(obj).length === 0) {
+    //     setFormValidation(undefined);
+    //   } else {
+    //     setFormValidation(obj);
+    //   }
+    // } else {
+    //   if (obj === undefined) {
+    //     obj = {};
+    //   }
+    //   obj[key] = null;
+    //   setFormValidation(obj);
+    // }
   }
   //#endregion second tab
 
@@ -255,7 +268,7 @@ const AssetBrowser = props => {
           <div
             className="tabItem"
             style={{
-              background: tab === 1 ? "white" : "whitesmoke"
+              background: tab === 1 ? "white" : "whitesmoke",
             }}
             onClick={() => changeTab(1)}
           >
@@ -264,7 +277,7 @@ const AssetBrowser = props => {
           <div
             className="tabItem"
             style={{
-              background: tab === 2 ? "white" : "whitesmoke"
+              background: tab === 2 ? "white" : "whitesmoke",
             }}
             onClick={() => changeTab(2)}
           >

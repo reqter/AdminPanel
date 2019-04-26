@@ -23,23 +23,16 @@ const RichTextInput = props => {
   const [assetBrowser, toggleAssetBrowser] = useState(false);
   const [input, setInput] = useState(EditorState.createEmpty());
 
-  //set default value to form data in parent
-  useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-    // if (field.defaultValue && !props.formData[field.name]) {
-    //   setValueToParentForm(field.defaultValue);
-    // }
-  }, []);
-
   //  set value to input
   useEffect(() => {
-    props.formData[field.name]
-      ? field.isTranslate
-        ? initValue(props.formData[field.name][currentLang])
-        : initValue(props.formData[field.name])
-      : initValue("<p></p>");
+    if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isTranslate) initValue(props.formData[field.name][currentLang]);
+      else initValue(props.formData[field.name]);
+    } else {
+      if (field.isRequired === true) props.init(field.name, false);
+      initValue("<p></p>");
+    }
   }, [formData]);
 
   function initValue(content) {

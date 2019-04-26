@@ -87,7 +87,14 @@ const fields = [
   },
 ];
 const translatableFields = ["string", "media", "richText"];
-const reservedWords = ["guid"];
+const reservedWords = [
+  "guid",
+  "sys",
+  "contentType",
+  "category",
+  "fields",
+  "status",
+];
 const AddNewField = props => {
   const [{}, dispatch] = useGlobalState();
   const { selectedContentType } = props;

@@ -7,7 +7,7 @@ import {
   filterUsers,
   activateUser,
   deactiveUser,
-  assignRoles
+  assignRoles,
 } from "./../../Api/userManagement-api";
 import { AssignRole } from "./../../components";
 
@@ -32,8 +32,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ROLES_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("USERS_ROLES_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -41,8 +41,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ROLES_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("USERS_ROLES_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -50,8 +50,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("USERS_ROLES_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("USERS_ROLES_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {})
@@ -61,7 +61,7 @@ const Users = props => {
       .onOk(result => {
         dispatch({
           type: "SET_USERS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -69,8 +69,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("USERS_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -78,8 +78,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("USERS_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -87,8 +87,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("USERS_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("USERS_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {})
@@ -103,7 +103,7 @@ const Users = props => {
       .onOk(result => {
         dispatch({
           type: "SET_USERS",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -111,8 +111,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("USERS_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -120,8 +120,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("USERS_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -129,8 +129,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("USERS_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("USERS_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {})
@@ -144,7 +144,7 @@ const Users = props => {
     setStatus(status);
     doFilter(selectedRole.name, status);
   }
-  
+
   function activate(item) {
     activateUser()
       .onOk(result => {
@@ -152,21 +152,22 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: languageManager.translate("USERS_ACTIVE_ON_OK")
-          }
+            message: languageManager.translate("USERS_ACTIVE_ON_OK"),
+          },
         });
         dispatch({
           type: "SET_USERS",
-          value: result
+          value: result,
         });
+        doFilter(selectedRole.name, selectedStatus);
       })
       .onServerError(result => {
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ACTIVE_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("USERS_ACTIVE_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -174,8 +175,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_ACTIVE_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("USERS_ACTIVE_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -183,8 +184,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("USERS_ACTIVE_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("USERS_ACTIVE_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {
@@ -192,8 +193,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("USERS_ACTIVE_NOT_FOUND")
-          }
+            message: languageManager.translate("USERS_ACTIVE_NOT_FOUND"),
+          },
         });
       })
       .call(item);
@@ -205,21 +206,24 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: languageManager.translate("USERS_DEACTIVE_ON_OK")
-          }
+            message: languageManager.translate("USERS_DEACTIVE_ON_OK"),
+          },
         });
         dispatch({
           type: "SET_USERS",
-          value: result
+          value: result,
         });
+        doFilter(selectedRole.name, selectedStatus);
       })
       .onServerError(result => {
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_DEACTIVE_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate(
+              "USERS_DEACTIVE_ON_SERVER_ERROR"
+            ),
+          },
         });
       })
       .onBadRequest(result => {
@@ -227,8 +231,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("USERS_DEACTIVE_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("USERS_DEACTIVE_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -236,8 +240,8 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("USERS_DEACTIVE_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("USERS_DEACTIVE_UN_AUTHORIZED"),
+          },
         });
       })
       .notFound(result => {
@@ -245,24 +249,24 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("USERS_DEACTIVE_NOT_FOUND")
-          }
+            message: languageManager.translate("USERS_DEACTIVE_NOT_FOUND"),
+          },
         });
       })
       .call(item);
   }
 
-function resetFilters() {
-  setStatus();
-  setRole({});
-  doFilter(undefined,undefined)
-}
-function openAssignRoleModal(user) {
-  setSelectedUser(user)
-  toggleAssignRoleModal(true)
-}
-  function closeAssignRoleModal(result) { 
-    toggleAssignRoleModal(false)
+  function resetFilters() {
+    setStatus();
+    setRole({});
+    doFilter(undefined, undefined);
+  }
+  function openAssignRoleModal(user) {
+    setSelectedUser(user);
+    toggleAssignRoleModal(true);
+  }
+  function closeAssignRoleModal(result) {
+    toggleAssignRoleModal(false);
     if (result) {
       assignRoles()
         .onOk(result => {
@@ -270,12 +274,12 @@ function openAssignRoleModal(user) {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: languageManager.translate("USERS_ASSIGN_ROLE_ON_OK")
-            }
+              message: languageManager.translate("USERS_ASSIGN_ROLE_ON_OK"),
+            },
           });
           dispatch({
             type: "SET_USERS",
-            value: result
+            value: result,
           });
         })
         .onServerError(result => {
@@ -283,8 +287,10 @@ function openAssignRoleModal(user) {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("USERS_ASSIGN_ROLE_ON_SERVER_ERROR")
-            }
+              message: languageManager.translate(
+                "USERS_ASSIGN_ROLE_ON_SERVER_ERROR"
+              ),
+            },
           });
         })
         .onBadRequest(result => {
@@ -292,8 +298,10 @@ function openAssignRoleModal(user) {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("USERS_ASSIGN_ROLE_ON_BAD_REQUEST")
-            }
+              message: languageManager.translate(
+                "USERS_ASSIGN_ROLE_ON_BAD_REQUEST"
+              ),
+            },
           });
         })
         .unAuthorized(result => {
@@ -301,8 +309,10 @@ function openAssignRoleModal(user) {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("USERS_ASSIGN_ROLE_UN_AUTHORIZED")
-            }
+              message: languageManager.translate(
+                "USERS_ASSIGN_ROLE_UN_AUTHORIZED"
+              ),
+            },
           });
         })
         .notFound(result => {
@@ -310,11 +320,11 @@ function openAssignRoleModal(user) {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("USERS_ASSIGN_ROLE_NOT_FOUND")
-            }
+              message: languageManager.translate("USERS_ASSIGN_ROLE_NOT_FOUND"),
+            },
           });
         })
-        .call(selectedUser.id,result);
+        .call(selectedUser.id, result);
     }
   }
   return (
@@ -345,7 +355,7 @@ function openAssignRoleModal(user) {
                     color:
                       selectedRole.name === undefined
                         ? "rgb(56,132,255)"
-                        : "black"
+                        : "black",
                   }}
                 >
                   <i className="icon icon-file-text-o" />
@@ -355,7 +365,8 @@ function openAssignRoleModal(user) {
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
-                      display: selectedRole.name === undefined ? "block" : "none"
+                      display:
+                        selectedRole.name === undefined ? "block" : "none",
                     }}
                   />
                 </div>
@@ -366,7 +377,9 @@ function openAssignRoleModal(user) {
                     onClick={() => handleRoleSelected(f)}
                     style={{
                       color:
-                        f.name === selectedRole.name ? "rgb(56,132,255)" : "black"
+                        f.name === selectedRole.name
+                          ? "rgb(56,132,255)"
+                          : "black",
                     }}
                   >
                     <i className="icon icon-file-text-o" />
@@ -374,7 +387,8 @@ function openAssignRoleModal(user) {
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
-                        display: f.name === selectedRole.name ? "block" : "none"
+                        display:
+                          f.name === selectedRole.name ? "block" : "none",
                       }}
                     />
                   </div>
@@ -389,7 +403,9 @@ function openAssignRoleModal(user) {
                   onClick={() => handleStatusSelected()}
                   style={{
                     color:
-                      selectedStatus === undefined ? "rgb(56,132,255)" : "black"
+                      selectedStatus === undefined
+                        ? "rgb(56,132,255)"
+                        : "black",
                   }}
                 >
                   <i className="icon icon-shield" />
@@ -399,7 +415,7 @@ function openAssignRoleModal(user) {
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
-                      display: selectedStatus === undefined ? "block" : "none"
+                      display: selectedStatus === undefined ? "block" : "none",
                     }}
                   />
                 </div>
@@ -408,7 +424,7 @@ function openAssignRoleModal(user) {
                   onClick={() => handleStatusSelected(true)}
                   style={{
                     color:
-                      selectedStatus === true ? "rgb(56,132,255)" : "black"
+                      selectedStatus === true ? "rgb(56,132,255)" : "black",
                   }}
                 >
                   <i className="icon icon-shield" />
@@ -416,7 +432,7 @@ function openAssignRoleModal(user) {
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
-                      display: selectedStatus === true ? "block" : "none"
+                      display: selectedStatus === true ? "block" : "none",
                     }}
                   />
                 </div>
@@ -425,9 +441,7 @@ function openAssignRoleModal(user) {
                   onClick={() => handleStatusSelected(false)}
                   style={{
                     color:
-                      selectedStatus === false
-                        ? "rgb(56,132,255)"
-                        : "black"
+                      selectedStatus === false ? "rgb(56,132,255)" : "black",
                   }}
                 >
                   <i className="icon icon-shield" />
@@ -435,7 +449,7 @@ function openAssignRoleModal(user) {
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
-                      display: selectedStatus === false ? "block" : "none"
+                      display: selectedStatus === false ? "block" : "none",
                     }}
                   />
                 </div>
@@ -470,7 +484,7 @@ function openAssignRoleModal(user) {
                       </td>
                       <td>
                         <div className="as-table-image">
-                          {user.profile && user.profile.avatar  ? (
+                          {user.profile && user.profile.avatar ? (
                             <img src={user.profile.avatar} alt="" />
                           ) : (
                             <div className="as-table-image-empty">No Image</div>
@@ -479,12 +493,8 @@ function openAssignRoleModal(user) {
                       </td>
                       <td>
                         <div className="as-table-name">
-                          <span className="name">
-                            {user.userName}
-                          </span>
-                          <span>
-                            {user.email}
-                          </span>
+                          <span className="name">{user.userName}</span>
+                          <span>{user.email}</span>
                         </div>
                       </td>
                       <td>
@@ -500,16 +510,17 @@ function openAssignRoleModal(user) {
                       <td>
                         <div className="as-table-status">
                           <span className="adge badge-primary">
-                            {user.status === true ? languageManager.translate("active") : languageManager.translate("inactive")}
-                            
+                            {user.status === true
+                              ? languageManager.translate("active")
+                              : languageManager.translate("inactive")}
                           </span>
                         </div>
                       </td>
 
                       <td>
-                        {user.status && user.status===true ? (
+                        {user.status && user.status === true ? (
                           <button
-                            className="btn btn-light"
+                            className="btn btn-light btn-sm"
                             onClick={() => deactivate(user)}
                           >
                             {translate("USERS_TABLE_DEACTIVATE_BTN")}
@@ -519,12 +530,12 @@ function openAssignRoleModal(user) {
                             className="btn btn-light btn-sm"
                             onClick={() => activate(user)}
                           >
-                              {translate("USERS_TABLE_ACTIVATE_BTN")}
+                            {translate("USERS_TABLE_ACTIVATE_BTN")}
                           </button>
                         )}
                         <button
                           className="btn btn-light btn-sm"
-                          onClick={()=>openAssignRoleModal(user)}
+                          onClick={() => openAssignRoleModal(user)}
                         >
                           {translate("USERS_TABLE_ASSIGN_ROLE_BTN")}
                         </button>
@@ -537,13 +548,14 @@ function openAssignRoleModal(user) {
           </div>
         </div>
       </div>
-      {
-        assignRoleModal && <AssignRole isOpen={assignRoleModal} 
-        onClose={closeAssignRoleModal}
-        headerTitle={languageManager.translate("USERS_ROLES_MODAL_TITLE")}
-        roles={selectedUser ? selectedUser.roles : []} 
+      {assignRoleModal && (
+        <AssignRole
+          isOpen={assignRoleModal}
+          onClose={closeAssignRoleModal}
+          headerTitle={languageManager.translate("USERS_ROLES_MODAL_TITLE")}
+          roles={selectedUser ? selectedUser.roles : []}
         />
-      }
+      )}
     </>
   );
 };

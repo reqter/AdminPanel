@@ -36,15 +36,12 @@ const KeyValueInput = props => {
     }
   }
 
-  // set default value to form data in parent
+  // set value to input update and reset form time
   useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
+    if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
+    } else if (field.isRequired === true) props.init(field.name, false);
 
-  // set value to input
-  useEffect(() => {
     setKey(Math.random());
     const defaultValue = getSelectedOption();
     if (defaultValue !== undefined) {

@@ -11,15 +11,15 @@ const ReferenceInput = props => {
 
   const [options, setOptions] = useState();
   const [values, setValues] = useState();
-  // set default value to form data in parent
-  useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
 
   // set value to selected otions
   useEffect(() => {
+    if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
+    } else {
+      if (field.isRequired === true) props.init(field.name, false);
+    }
+
     getByContentTypes()
       .onOk(result => {
         if (result) {

@@ -11,17 +11,15 @@ const BooleanComponent = props => {
   );
 
   // set default value to form data in parent
-  useEffect(() => {
-    if (field.isRequired !== undefined && field.isRequired) {
-      if (formData[field.name] === undefined) props.init(field.name);
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   // set value to input
   useEffect(() => {
     if (formData[field.name]) {
+      if (field.isRequired === true) props.init(field.name, true);
       setValue(props.formData[field.name]);
     } else {
+      if (field.isRequired === true) props.init(field.name, false);
       if (field.defaultValue) {
         setValue(field.defaultValue);
         setValueToParentForm(field.defaultValue);

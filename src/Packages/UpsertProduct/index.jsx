@@ -77,7 +77,7 @@ const UpsertProduct = props => {
     ) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
-  }, [form, category]);
+  }, [formValidation, category]);
 
   // methods
   function checkFormValidation() {
@@ -196,34 +196,27 @@ const UpsertProduct = props => {
       .call(id);
   }
 
-  function setNameToFormValidation(name) {
+  function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
-        [name]: false,
         ...prevFormValidation,
+        [name]: value,
       }));
     }
   }
   function handleOnChangeValue(field, value, isValid) {
     const { name: key } = field;
-    if (value !== undefined) {
-      // add value to form
-      setForm(prevState => ({
-        ...prevState,
-        [field.name]: value,
-      }));
-    }
-    if (isValid) {
-      setFormValidation(prevFormValidation => ({
-        ...prevFormValidation,
-        [key]: true,
-      }));
-    } else {
-      setFormValidation(prevFormValidation => ({
-        ...prevFormValidation,
-        [key]: false,
-      }));
-    }
+
+    // add value to form
+    setForm(prevState => ({
+      ...prevState,
+      [field.name]: value,
+    }));
+
+    setFormValidation(prevFormValidation => ({
+      ...prevFormValidation,
+      [key]: isValid,
+    }));
   }
   function showCatgoryModal() {
     toggleCategoryModal(true);
@@ -240,6 +233,7 @@ const UpsertProduct = props => {
         return (
           <String
             viewMode={viewMode}
+            updateMode={updateMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -446,11 +440,11 @@ const UpsertProduct = props => {
           } else {
             setFormData({});
             setForm({});
-            let n_obj = {};
-            for (const key in formValidation) {
-              n_obj[key] = false;
-            }
-            setFormValidation(n_obj);
+            // let n_obj = {};
+            // for (const key in formValidation) {
+            //   n_obj[key] = false;
+            // }
+            setFormValidation({});
           }
         })
         .onServerError(result => {

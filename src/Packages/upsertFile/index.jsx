@@ -101,7 +101,7 @@ const UpsertFile = props => {
     if (Object.keys(form).length > 0 && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
-  }, [form]);
+  }, [formValidation]);
 
   function checkFormValidation() {
     for (const key in formValidation) {
@@ -162,10 +162,10 @@ const UpsertFile = props => {
       })
       .call(id);
   }
-  function setNameToFormValidation(name) {
+  function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
-        [name]: false,
+        [name]: value,
         ...prevFormValidation,
       }));
     }
@@ -173,10 +173,6 @@ const UpsertFile = props => {
   function handleOnChangeValue(field, value, isValid) {
     // check validation
     const { name: key } = field;
-    setFormValidation(prevFormValidation => ({
-      ...prevFormValidation,
-      [key]: isValid,
-    }));
 
     // add value to form
     let f = {
@@ -205,6 +201,10 @@ const UpsertFile = props => {
     }
     setForm(f);
 
+    setFormValidation(prevFormValidation => ({
+      ...prevFormValidation,
+      [key]: isValid,
+    }));
     // let obj = { ...formValidation };
     // if (isValid && obj) {
     //   delete obj[key];
