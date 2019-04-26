@@ -35,6 +35,8 @@ export default {
   active: 'Active',
   inactive: 'InActive',
   ALL: 'All',
+  REMOVE: 'Remove',
+  DONT_REMOVE: "Don't Remove",
   // login
   LOGIN_TITLE: 'SignIn Reqter',
   LOGIN_EMAIL_INPUT_TITLE: 'Email Address',
@@ -143,6 +145,11 @@ export default {
   CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST: 'Bad request',
   CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED: 'Un Authorized',
   CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND: 'Not found',
+  CATEGORY_REMOVE_ALERT_TITLE: 'Remove Category',
+  CATEGORY_REMOVE_ALERT_MESSAGE: 'are you sure to remove the category ?',
+  CATEGORY_REMOVE_CONTENT_TYPE_ALERT_TITLE: 'Remove Content Type',
+  CATEGORY_REMOVE_CONTENT_TYPE_ALERT_MESSAGE:
+    'Are you sure to remove content type from category ?',
   // CONTENT TYPE
   CONTENT_TYPE_MODAL_HEADER_TITLE_NEW: 'Add New Content Type',
   CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW: 'Create',
@@ -163,7 +170,8 @@ export default {
   CONTENT_TYPE_ADD_FIELD_TITLE: 'Add New Field',
   CONTENT_TYPE_ADD_FIELD_MODAL_NAME: 'Name',
   CONTENT_TYPE_ADD_FIELD_MODAL_NAME_PLACEHOLDER: 'Enter name of your field',
-  CONTENT_TYPE_ADD_FIELD_MODAL_NAME_INFO: 'name can not be included space',
+  CONTENT_TYPE_ADD_FIELD_MODAL_NAME_INFO:
+    'Name can not be included space and created fields name',
   CONTENT_TYPE_ADD_FIELD_MODAL_TITLE: 'Title',
   CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_PLACEHOLDER: 'Enter field title',
   CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_INFO: 'Title will display all of places',
@@ -175,6 +183,11 @@ export default {
   CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_CONFIG_BTN: 'Create and configure',
   CONTENT_TYPE_ADD_FIELD_MODAL_CHNAGE_FIELD_BTN: 'Change Field Type',
   CONTENT_TYPE_ADD_FIELD_CHOOSEN: 'New',
+  CONTENT_TYPE_REMOVE_ALERT_TITLE: 'Remove Content Type',
+  CONTENT_TYPE_REMOVE_ALERT_MESSAGE: 'Are you sure to remove content type?',
+  CONTENT_TYPE_REMOVE_FIELD_ALERT_TITLE: 'Remove Field',
+  CONTENT_TYPE_REMOVE_FIELD_ALERT_MESSAGE: 'Are you sure to remove the field ?',
+
   FIELD_TYPE_RICH_TEXT: 'Rich Text',
   FIELD_TYPE_RICH_TEXT_INFO: 'Descriptive content ,for example blog post',
   FIELD_TYPE_TEXT: 'Text',
@@ -412,7 +425,16 @@ export default {
     'Your asset not found . it probebly has been removed or maybe you have entered wrong id of the asset',
   UPSERT_ASSET_ERROR_BOX_MEDIA_BTN: 'Media',
   UPSERT_ASSET_ERROR_BOX_REFRESH_BTN: 'Refresh',
-
+  ASSET_IMAGE_EDITOR_MOVE: 'Move Image',
+  ASSET_IMAGE_EDITOR_CROP: 'Crop',
+  ASSET_IMAGE_EDITOR_ZOOM_IN: 'Zoom In',
+  ASSET_IMAGE_EDITOR_ZOOM_OUT: 'Zoom Out',
+  ASSET_IMAGE_EDITOR_ROTATE_LEFT: 'Rotate Left',
+  ASSET_IMAGE_EDITOR_ROTATE_RIGHT: 'Rotate Right',
+  ASSET_IMAGE_EDITOR_FLIP_HORIZONTAL: 'Flip Horizontal',
+  ASSET_IMAGE_EDITOR_FLIP_VERTICAL: 'Flip Vertical',
+  ASSET_IMAGE_EDITOR_CROP_IMAGE: 'Crop',
+  ASSET_IMAGE_EDITOR_CLEAR: 'Clear',
   // COMPONENTS
   COMPONENTS_ASSET_BROWSER_HEADER: 'Choose your asset',
   ASSIGN_ROLE_MODAL_HEADER_TITLE: 'Assign role',

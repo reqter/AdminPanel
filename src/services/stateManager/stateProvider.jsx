@@ -2,7 +2,12 @@ import React from "react";
 import { StateProvider } from "./index";
 const Provider = props => {
   const initialState = {
-    isAuthenticated: true,
+    isAuthenticated:
+      localStorage.getItem("token") !== undefined &&
+      localStorage.getItem("token") !== null &&
+      localStorage.getItem("token").length > 0
+        ? true
+        : false,
     projectInfo: { name: "REQTER" },
     contentTypeTemlates: [],
     contentTypes: [],

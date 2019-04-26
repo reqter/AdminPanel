@@ -9,9 +9,9 @@ import {
   getContentTypes,
   deleteContentType,
   removeContentTypeField,
-  setAccessRight
+  setAccessRight,
 } from "./../../Api/contentType-api";
-import { AssignRole } from "../../components";
+import { AssignRole, Alert } from "../../components";
 
 const ItemTypes = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -23,7 +23,7 @@ const ItemTypes = props => {
       .onOk(result => {
         dispatch({
           type: "SET_CONTENT_TYPES",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -31,8 +31,8 @@ const ItemTypes = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -40,8 +40,8 @@ const ItemTypes = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -49,8 +49,8 @@ const ItemTypes = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
+          },
         });
       })
       .call();
@@ -67,7 +67,11 @@ const ItemTypes = props => {
   const [selectedField, setSelectedField] = useState();
   const [rightContent, toggleRightContent] = useState(false);
   const [assignRoleModal, toggleAssignRoleModal] = useState(false);
+  const [alertData, setAlertData] = useState();
 
+  function translate(key) {
+    return languageManager.translate(key);
+  }
   function openAddItemTypeModal() {
     setUpdateMode(false);
     toggleUpserItemTypeModal(true);
@@ -80,68 +84,86 @@ const ItemTypes = props => {
   }
 
   function removeItemType(selected) {
-    deleteContentType()
-      .onOk(result => {
-        if (
-          selectedContentType.sys &&
-          selected.sys.id === selectedContentType.sys.id
-        )
-          toggleRightContent(false);
-        dispatch({
-          type: "SET_CONTENT_TYPES",
-          value: result
-        });
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "success",
-            message: languageManager.translate("CONTENT_TYPE_REMOVE_ON_OK")
-          }
-        });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_ON_SERVER_ERROR"
+    setAlertData({
+      type: "error",
+      title: translate("CONTENT_TYPE_REMOVE_ALERT_TITLE"),
+      message: translate("CONTENT_TYPE_REMOVE_ALERT_MESSAGE"),
+      isAjaxCall: true,
+      okTitle: "Remove",
+      cancelTitle: "Don't remove",
+      onOk: () =>
+        deleteContentType()
+          .onOk(result => {
+            setAlertData();
+            if (
+              selectedContentType.sys &&
+              selected.sys.id === selectedContentType.sys.id
             )
-          }
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_ON_BAD_REQUEST"
-            )
-          }
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_UN_AUTHORIZED"
-            )
-          }
-        });
-      })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CONTENT_TYPE_REMOVE__NOT_FOUND")
-          }
-        });
-      })
-      .call(selected);
+              toggleRightContent(false);
+            dispatch({
+              type: "SET_CONTENT_TYPES",
+              value: result,
+            });
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("CONTENT_TYPE_REMOVE_ON_OK"),
+              },
+            });
+          })
+          .onServerError(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE__NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(selected),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
   }
   function closeRightContent() {
     toggleRightContent();
@@ -171,70 +193,85 @@ const ItemTypes = props => {
     toggleUpsertFieldModal(prevModal => !prevModal);
   }
   function handleRemoveField(field) {
-    removeContentTypeField()
-      .onOk(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "success",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_FIELD_ON_OK"
-            )
-          }
-        });
-        const f = [...fields].filter(item => item.sys.id !== field.sys.id);
-        setFields(f);
-        //dispatch({ type: "SET_FIELDS", value: f });
-        dispatch({
-          type: "SET_CONTENT_TYPES",
-          value: result
-        });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_FIELD_ON_SERVER_ERROR"
-            )
-          }
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_FIELD_ON_BAD_REQUEST"
-            )
-          }
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_FIELD_UN_AUTHORIZED"
-            )
-          }
-        });
-      })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_REMOVE_FIELD_NOT_FOUND"
-            )
-          }
-        });
-      })
-      .call(selectedContentType.sys.id, field.sys.id);
+    setAlertData({
+      type: "error",
+      title: translate("CONTENT_TYPE_REMOVE_FIELD_ALERT_TITLE"),
+      message: translate("CONTENT_TYPE_REMOVE_FIELD_ALERT_MESSAGE"),
+      isAjaxCall: true,
+      onOk: () =>
+        removeContentTypeField()
+          .onOk(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_FIELD_ON_OK"
+                ),
+              },
+            });
+            const f = [...fields].filter(item => item.sys.id !== field.sys.id);
+            setFields(f);
+            //dispatch({ type: "SET_FIELDS", value: f });
+            dispatch({
+              type: "SET_CONTENT_TYPES",
+              value: result,
+            });
+          })
+          .onServerError(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_FIELD_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_FIELD_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_FIELD_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_REMOVE_FIELD_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(selectedContentType.sys.id, field.sys.id),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
   }
   function closeFieldConfigModal(updatedField) {
     toggleShowFieldConfig(false);
@@ -266,12 +303,12 @@ const ItemTypes = props => {
               type: "success",
               message: languageManager.translate(
                 "CONTENT_TYPE_ASSIGN_ROLE_ON_OK"
-              )
-            }
+              ),
+            },
           });
           dispatch({
             type: "SET_USERS",
-            value: result
+            value: result,
           });
         })
         .onServerError(result => {
@@ -281,8 +318,8 @@ const ItemTypes = props => {
               type: "error",
               message: languageManager.translate(
                 "CONTENT_TYPE_ASSIGN_ROLE_SERVER_ERROR"
-              )
-            }
+              ),
+            },
           });
         })
         .onBadRequest(result => {
@@ -292,8 +329,8 @@ const ItemTypes = props => {
               type: "error",
               message: languageManager.translate(
                 "CONTENT_TYPE_ASSIGN_ROLE_ON_BAD_REQUEST"
-              )
-            }
+              ),
+            },
           });
         })
         .unAuthorized(result => {
@@ -303,8 +340,8 @@ const ItemTypes = props => {
               type: "warning",
               message: languageManager.translate(
                 "CONTENT_TYPE_ASSIGN_ROLE_UN_AUTHORIZED"
-              )
-            }
+              ),
+            },
           });
         })
         .notFound(result => {
@@ -314,8 +351,8 @@ const ItemTypes = props => {
               type: "warning",
               message: languageManager.translate(
                 "CONTENT_TYPE_ASSIGN_ROLE_NOT_FOUND"
-              )
-            }
+              ),
+            },
           });
         })
         .call(selectedContentType.sys.id, result);
@@ -330,10 +367,7 @@ const ItemTypes = props => {
             <span className="ct-header-description">{pageDescription}</span>
           </div>
           <div className="ct-header-right">
-            <button
-              className="btn btn-primary"
-              onClick={openAddItemTypeModal}
-            >
+            <button className="btn btn-primary" onClick={openAddItemTypeModal}>
               {languageManager.translate("CONTENT_TYPE_NEW_ITEM_BTN")}
             </button>
           </div>
@@ -353,14 +387,10 @@ const ItemTypes = props => {
             <div className="ct-content-right animated slideInRight faster">
               <div className="ct-content-right-header">
                 <span className="ct-right-header-title">
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODEL_HEADER_TITLE"
-                  )}
+                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_TITLE")}
                 </span>
                 <span className="ct-right-header-description">
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODEL_HEADER_DESC"
-                  )}
+                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_DESC")}
                 </span>
                 <span
                   className="icon-cross closeIcon"
@@ -474,6 +504,7 @@ const ItemTypes = props => {
       )}
       {upsertFieldModal && (
         <AddNewField
+          fields={fields}
           selectedContentType={selectedContentType}
           isOpen={upsertFieldModal}
           onCloseModal={result => closeAddFieldModal(result)}
@@ -499,107 +530,9 @@ const ItemTypes = props => {
           roles={selectedContentType ? selectedContentType.visibleTo : []}
         />
       )}
+      {alertData && <Alert data={alertData} />}
     </>
   );
 };
 
 export default ItemTypes;
-
-// {
-//   "sys": {
-//     "id": "3",
-//       "issuer": {
-//       "fullName": "Saeed Padyab",
-//         "image": ""
-//     },
-//     "issueDate": "19/01/2019 20:18"
-//   },
-//   "name": "userName",
-//     "title": {
-//     "fa": "نام کاربری",
-//       "en": "UserName"
-//   },
-//   "description": {
-//     "fa": "نام کاربری الزامی می باشد",
-//       "en": "Username is required"
-//   },
-//   "type": "string",
-//     "isBase": true,
-//       "isSystemField": true,
-//         "isRequired": true
-// },
-// {
-//   "sys": {
-//     "id": "4",
-//       "issuer": {
-//       "fullName": "Saeed Padyab",
-//         "image": ""
-//     },
-//     "issueDate": "19/01/2019 20:18"
-//   },
-//   "name": "password",
-//     "title": {
-//     "fa": "رمز عبور",
-//       "en": "Password"
-//   },
-//   "description": {
-//     "fa": "رمز عبور باید حداقل 6رقم باشد و ترکیبی از اعداد و نشانه ها و حروف کوچک وبزرگ",
-//       "en": "Password must be at least 6 character and includes capital letter and symbol and number"
-//   },
-//   "type": "string",
-//     "isBase": true,
-//       "isSystemField": true,
-//         "isRequired": true
-// },
-// {
-//   "sys": {
-//     "id": "5",
-//       "issuer": {
-//       "fullName": "Saeed Padyab",
-//         "image": ""
-//     },
-//     "issueDate": "19/01/2019 20:18"
-//   },
-//   "name": "roles",
-//     "title": {
-//     "fa": "نقش ها",
-//       "en": "Roles"
-//   },
-//   "description": {
-//     "fa": "",
-//       "en": "Roles of this user"
-//   },
-//   "type": "keyValue",
-//     "isSystemField": true,
-//       "isBase": true,
-//         "isRequired": true,
-//           "isList": true
-// },
-// {
-//   "sys": {
-//     "id": "6",
-//       "issuer": {
-//       "fullName": "Saeed Padyab",
-//         "image": ""
-//     },
-//     "issueDate": "19/01/2019 20:18"
-//   },
-//   "name": "status",
-//     "title": {
-//     "fa": "وضعیت",
-//       "en": "Status"
-//   },
-//   "description": {
-//     "fa": "وضعیت این کاربر",
-//       "en": "Status of this user"
-//   },
-//   "type": "keyValue",
-//     "options": [
-//       { "value": "active", "selected": true },
-//       { "value": "deactive" }
-//     ],
-//       "isList": false,
-//         "isSystemField": true,
-//           "isBase": true,
-//             "isRequired": true
-// },

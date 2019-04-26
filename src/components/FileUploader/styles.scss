@@ -86,24 +86,94 @@
   }
 }
 
+.myModal {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100vh;
+  height: 100%;
+}
 .imageCropper {
   display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
   flex-direction: column;
   border: 1px solid whitesmoke;
   background: whitesmoke;
+  z-index: 10001 !important;
   .imageCropper-header {
-    height: 50px;
-    border-bottom: 1px solid whitesmoke;
+    z-index: 10001;
+    height: 60px;
+    background: white;
+    box-shadow: 0px 0px 8px 2px lightgray;
     display: flex;
-    justify-content: center;
     align-items: center;
-    button {
-      margin: 0 5px;
+    padding: 0 20px;
+    .imageCropper-header-left {
+      button {
+        display: flex;
+        align-items: center;
+        i {
+          margin-right: 10px;
+        }
+      }
+    }
+    .imageCropper-header-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      span {
+        margin-left: 10px;
+      }
+    }
+    .imageCropper-header-right {
+      display: flex;
+      button {
+        margin-left: 10px;
+      }
+      .uploadBtn {
+        display: flex;
+        align-items: center;
+        i {
+          margin-right: 10px;
+        }
+      }
     }
   }
   .imageCropper-content {
-    flex: 1;
+    height: calc(100% - 70px);
   }
+  .imageActions {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5);
+    height: 30px;
+    bottom: 30px;
+    z-index: 10002;
+    left: 50%;
+    transform: translate(-50%);
+    display: flex;
+    color: white;
+    .imageActions-item {
+      width: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition-duration: 0.2s;
+      &:hover {
+        background: rgb(56, 132, 255);
+        transition-duration: 0.2s;
+      }
+    }
+  }
+}
+.cropper-wrap-box {
+  margin-top: 10px;
+  background: whitesmoke !important;
 }
 .progress {
   margin-bottom: 10px;
@@ -117,7 +187,7 @@
     padding: 0 10px;
     .progress {
       margin-top: 5px;
-      display: none
+      display: none;
     }
   }
   .editor-actions-btns {

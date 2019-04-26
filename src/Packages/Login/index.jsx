@@ -18,13 +18,14 @@ const Login = props => {
   function handlePasswordChanged(e) {
     setPassword(e.target.value);
   }
-  function navToForgotPass() {}
+
   function loginUser() {
     if (!spinner) {
       toggleSpinner(true);
       login()
         .onOk(result => {
           //toggleSpinner(false);
+          localStorage.setItem("token", result.access_token);
           dispatch({
             type: "SET_AUTHENTICATED",
             value: true,

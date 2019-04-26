@@ -1,8 +1,9 @@
 .up-file-wrapper {
   background: whitesmoke;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   .up-file-header {
-    position: fixed;
     height: 60px;
     background: white;
     top: 0;
@@ -12,7 +13,6 @@
     display: flex;
     padding: 0 3%;
     align-items: center;
-    z-index: 100;
     .btn {
       i {
         margin-right: 10px;
@@ -37,12 +37,13 @@
     }
   }
   .up-file-content {
-    padding-top: 80px;
+    flex: 1;
+    padding-top: 20px;
     padding-bottom: 30px;
+    overflow-y: auto;
     main {
       width: 768px;
       margin: auto;
-
       .up-file-content-title {
         font-size: 25px;
         font-weight: 500;

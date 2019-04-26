@@ -1,14 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
-import { languageManager, utility } from "../../services";
+import { languageManager, useGlobalState, utility } from "../../services";
 import AssetFile from "./../AssetFile";
 import ImageEditorModal from "./ImageEditorModal";
+import { uploadAssetFile } from "./../../Api/asset-api";
 
 const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
+  const [{}, dispatch] = useGlobalState();
+
   const [editorModal, toggleEditorModal] = useState(false);
   const { field, formData } = props;
+  const [image, setEditImage] = useState();
+  const [isUploading, toggleIsUploading] = useState(false);
+  const [progressPercentage, setPercentage] = useState("0");
+  const [selectedFile, setSelectedFile] = useState();
+
   const [files, setFiles] = useState(() => {
     if (formData[field.name]) {
       let fs = [];
@@ -47,35 +55,38 @@ const FileUploaderInput = props => {
   }, [formData]);
 
   function handleChange(event) {
-    if (event.target.files.length > 0) {
-      let obj = {
-        id: Math.random().toString(),
-        url: URL.createObjectURL(event.target.files[0]),
-        name: event.target.files[0].name,
-        fileType: event.target.files[0].type,
-      };
-      if (field.isList !== undefined && field.isList) {
-        let fs = [...files];
-        fs.push(obj);
-        setFiles(fs);
-        props.onChangeValue(field, fs, true);
-      } else {
-        let fs = [];
-        fs.push(obj);
-        setFiles(fs);
-
-        let f, l;
-        if (field.isTranslate) {
-          l = utility.applyeLangs(fs[0].url);
-          f = { ...fs[0], ...l };
+    if (!isUploading) {
+      if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        setSelectedFile(file);
+        if (file.type.includes("image")) {
+          toggleEditorModal(true);
+        } else {
+          toggleIsUploading(true);
+          uploadFile(file);
         }
-        props.onChangeValue(field, f, true);
       }
-      if (obj.fileType.includes("image")) toggleEditorModal(true);
-      else if (editorModal) toggleEditorModal(false);
     }
   }
-
+  function uploadFile(file) {
+    uploadAssetFile()
+      .onOk(result => {
+        const { file } = result;
+        addToList(file);
+        setTimeout(() => {
+          toggleIsUploading(false);
+        }, 200);
+      })
+      .onServerError(result => {
+        
+      })
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .onProgress(result => {
+        setPercentage(result);
+      })
+      .call(file);
+  }
   function removeFile(f) {
     const fs = files.filter(file => file.id !== f.id);
     setFiles(fs);
@@ -95,9 +106,34 @@ const FileUploaderInput = props => {
       props.onChangeValue(field.name, fs, true);
     }
   }
+  function addToList(file) {
+    let obj = {
+      id: Math.random().toString(),
+      url: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+      name: file.originalname,
+      fileType: file.mimetype,
+    };
+    if (field.isList !== undefined && field.isList) {
+      let fs = [...files];
+      fs.push(obj);
+      setFiles(fs);
+      props.onChangeValue(field, fs, true);
+    } else {
+      let fs = [];
+      fs.push(obj);
+      setFiles(fs);
+      let f, l;
+      if (field.isTranslate) {
+        l = utility.applyeLangs(fs[0].url);
+        f = { ...fs[0], ...l };
+      }
+      props.onChangeValue(field, f, true);
+    }
+  }
   function onCloseEditor(result) {
     toggleEditorModal(false);
     if (result) {
+      addToList(result);
     }
   }
   return (
@@ -105,7 +141,6 @@ const FileUploaderInput = props => {
       <div className="up-uploader">
         <span className="title">{field.title[currentLang]}</span>
         <span className="description">{field.description[currentLang]}</span>
-
         <div className="files">
           {files.map(file => (
             <div key={file.id} className="files-uploaded">
@@ -166,10 +201,27 @@ const FileUploaderInput = props => {
             )}
           </div>
         </div>
+        {isUploading && (
+          <>
+            <span style={{ marginBottom: 10 }}>{selectedFile.name}</span>
+            <div className="progress">
+              <div
+                className="progress-bar"
+                role="progressbar"
+                style={{ width: progressPercentage + "%" }}
+                aria-valuenow="25"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {progressPercentage + "%"}
+              </div>
+            </div>
+          </>
+        )}
       </div>
       {editorModal && (
         <ImageEditorModal
-          image={files[0].url}
+          image={selectedFile}
           isOpen={editorModal}
           onClose={onCloseEditor}
         />

@@ -55,7 +55,7 @@ const fields = [
     },
     description: {
       fa: "",
-      en: "Click on file selector top choose your file",
+      en: "Click on file selector to choose your file",
     },
     type: "fileUploader",
     mediaType: "file",
@@ -67,7 +67,6 @@ const fields = [
 
 const UpsertFile = props => {
   const [{}, dispatch] = useGlobalState();
-  const cropper = useRef(null);
   // variables
   const [updateMode, toggleUpdateMode] = useState();
   const [tab, changeTab] = useState(); // tab1 ; form , tab2 : errors
@@ -99,10 +98,17 @@ const UpsertFile = props => {
   }, [props.match.params.id]);
 
   useEffect(() => {
-    if (Object.keys(form).length > 0 && formValidation === undefined) {
+    if (Object.keys(form).length > 0 && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [form]);
+
+  function checkFormValidation() {
+    for (const key in formValidation) {
+      if (formValidation[key] === false) return false;
+    }
+    return true;
+  }
 
   // methods
   function getAssetItemById(id) {
@@ -159,15 +165,23 @@ const UpsertFile = props => {
   function setNameToFormValidation(name) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
-        [name]: null,
+        [name]: false,
         ...prevFormValidation,
       }));
     }
   }
   function handleOnChangeValue(field, value, isValid) {
-    // add value to form
-    let f = { ...form };
+    // check validation
     const { name: key } = field;
+    setFormValidation(prevFormValidation => ({
+      ...prevFormValidation,
+      [key]: isValid,
+    }));
+
+    // add value to form
+    let f = {
+      ...form,
+    };
     if (value === undefined) {
       delete f[key];
       if (key === "url" && field.isBase) {
@@ -191,23 +205,22 @@ const UpsertFile = props => {
     }
     setForm(f);
 
-    // check validation
-    let obj = { ...formValidation };
-    if (isValid && obj) {
-      delete obj[key];
-      if (key === "url" && field.isBase) delete obj["title"];
-      if (Object.keys(obj).length === 0) {
-        setFormValidation(undefined);
-      } else {
-        setFormValidation(obj);
-      }
-    } else {
-      if (obj === undefined) {
-        obj = {};
-      }
-      obj[key] = null;
-      setFormValidation(obj);
-    }
+    // let obj = { ...formValidation };
+    // if (isValid && obj) {
+    //   delete obj[key];
+    //   if (key === "url" && field.isBase) delete obj["title"];
+    //   if (Object.keys(obj).length === 0) {
+    //     setFormValidation(undefined);
+    //   } else {
+    //     setFormValidation(obj);
+    //   }
+    // } else {
+    //   if (obj === undefined) {
+    //     obj = {};
+    //   }
+    //   obj[key] = null;
+    //   setFormValidation(obj);
+    // }
   }
 
   function getFieldItem(field) {

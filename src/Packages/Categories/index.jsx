@@ -8,7 +8,7 @@ import {
   Form,
   FormGroup,
   Label,
-  Input
+  Input,
 } from "reactstrap";
 import "./styles.scss";
 import Tree from "./tree";
@@ -19,9 +19,9 @@ import {
   deleteCategory,
   addCategory,
   updateCategory,
-  removeContentTypeFromCategory
+  removeContentTypeFromCategory,
 } from "./../../Api/category-api";
-import AssetBrowser from "./../../components/AssetBrowser";
+import { AssetBrowser, Alert } from "./../../components";
 
 function useInput(defaultValue = "") {
   const [input, setInput] = useState(defaultValue);
@@ -41,7 +41,7 @@ const Categories = props => {
       .onOk(result => {
         dispatch({
           type: "SET_CATEGORIES",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -49,8 +49,8 @@ const Categories = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CATEGORY_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("CATEGORY_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -58,8 +58,8 @@ const Categories = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CATEGORY_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("CATEGORY_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -67,8 +67,8 @@ const Categories = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("CATEGORY_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("CATEGORY_UN_AUTHORIZED"),
+          },
         });
       })
       .call();
@@ -91,6 +91,7 @@ const Categories = props => {
   const [isManageCategory, setManageCategory] = useState(false);
   const [image, setImage] = useState();
   const [assetBrowser, toggleAssetBrowser] = useState(false);
+  const [alertData, setAlertData] = useState();
 
   useEffect(() => {
     if (upsertCategoryModal) {
@@ -98,6 +99,9 @@ const Categories = props => {
     }
   }, [upsertCategoryModal]);
 
+  function translate(key) {
+    return languageManager.translate(key);
+  }
   function initModalForm() {
     handleNameChanged("");
     handleDesciptionChanged("");
@@ -124,7 +128,7 @@ const Categories = props => {
 
   function newChildCategory(item) {
     setModal(prevModal => !prevModal);
-     setManageCategory(true);
+    setManageCategory(true);
     setSelectedCategory(item);
     setUpdateMode(false);
     setModalHeader(
@@ -159,15 +163,15 @@ const Categories = props => {
             id: Math.random(),
             issuer: {
               fullName: "Saeed Padyab",
-              image: ""
+              image: "",
             },
-            issueDate: "19/01/2019 20:18"
+            issueDate: "19/01/2019 20:18",
           },
           image: image,
           parentId: selectedCategory.sys.id,
           name: utility.applyeLangs(name),
           description: utility.applyeLangs(description),
-          type: "category"
+          type: "category",
         };
         addCategory()
           .onOk(result => {
@@ -175,15 +179,15 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "success",
-                message: languageManager.translate("CATEGORY_ADD_ON_OK")
-              }
+                message: languageManager.translate("CATEGORY_ADD_ON_OK"),
+              },
             });
             handleNameChanged("");
             handleDesciptionChanged("");
             setImage();
             dispatch({
               type: "SET_CATEGORIES",
-              value: result
+              value: result,
             });
           })
           .onServerError(result => {
@@ -193,8 +197,8 @@ const Categories = props => {
                 type: "error",
                 message: languageManager.translate(
                   "CATEGORY_ADD_ON_SERVER_ERROR"
-                )
-              }
+                ),
+              },
             });
           })
           .onBadRequest(result => {
@@ -204,8 +208,8 @@ const Categories = props => {
                 type: "error",
                 message: languageManager.translate(
                   "CATEGORY_ADD_ON_BAD_REQUEST"
-                )
-              }
+                ),
+              },
             });
           })
           .unAuthorized(result => {
@@ -213,8 +217,10 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: languageManager.translate("CATEGORY_ADD_UN_AUTHORIZED")
-              }
+                message: languageManager.translate(
+                  "CATEGORY_ADD_UN_AUTHORIZED"
+                ),
+              },
             });
           })
           .notFound(result => {
@@ -222,8 +228,8 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: languageManager.translate("CATEGORY_ADD_NOT_FOUND")
-              }
+                message: languageManager.translate("CATEGORY_ADD_NOT_FOUND"),
+              },
             });
           })
           .call(obj);
@@ -241,12 +247,12 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "success",
-                message: languageManager.translate("CATEGORY_UPDATE_ON_OK")
-              }
+                message: languageManager.translate("CATEGORY_UPDATE_ON_OK"),
+              },
             });
             dispatch({
               type: "SET_CATEGORIES",
-              value: result
+              value: result,
             });
             closeAddCategoryModal();
             setImage();
@@ -258,8 +264,8 @@ const Categories = props => {
                 type: "error",
                 message: languageManager.translate(
                   "CATEGORY_UPDATE_ON_SERVER_ERROR"
-                )
-              }
+                ),
+              },
             });
           })
           .onBadRequest(result => {
@@ -269,8 +275,8 @@ const Categories = props => {
                 type: "error",
                 message: languageManager.translate(
                   "CATEGORY_UPDATE_ON_BAD_REQUEST"
-                )
-              }
+                ),
+              },
             });
           })
           .unAuthorized(result => {
@@ -280,8 +286,8 @@ const Categories = props => {
                 type: "warning",
                 message: languageManager.translate(
                   "CATEGORY_UPDATE_UN_AUTHORIZED"
-                )
-              }
+                ),
+              },
             });
           })
           .notFound(result => {
@@ -289,8 +295,8 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: languageManager.translate("CATEGORY_UPDATE_NOT_FOUND")
-              }
+                message: languageManager.translate("CATEGORY_UPDATE_NOT_FOUND"),
+              },
             });
           })
           .call(newCategory);
@@ -301,14 +307,14 @@ const Categories = props => {
           id: Math.random(),
           issuer: {
             fullName: "Saeed Padyab",
-            image: ""
+            image: "",
           },
-          issueDate: "19/01/2019 20:18"
+          issueDate: "19/01/2019 20:18",
         },
         image: image,
         name: utility.applyeLangs(name),
         description: utility.applyeLangs(description),
-        type: "category"
+        type: "category",
       };
       addCategory()
         .onOk(result => {
@@ -317,12 +323,12 @@ const Categories = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: languageManager.translate("CATEGORY_ADD_ON_OK")
-            }
+              message: languageManager.translate("CATEGORY_ADD_ON_OK"),
+            },
           });
           dispatch({
             type: "SET_CATEGORIES",
-            value: result
+            value: result,
           });
         })
         .onServerError(result => {
@@ -330,8 +336,10 @@ const Categories = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CATEGORY_ADD_ON_SERVER_ERROR")
-            }
+              message: languageManager.translate(
+                "CATEGORY_ADD_ON_SERVER_ERROR"
+              ),
+            },
           });
         })
         .onBadRequest(result => {
@@ -339,8 +347,8 @@ const Categories = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CATEGORY_ADD_ON_BAD_REQUEST")
-            }
+              message: languageManager.translate("CATEGORY_ADD_ON_BAD_REQUEST"),
+            },
           });
         })
         .unAuthorized(result => {
@@ -348,8 +356,8 @@ const Categories = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("CATEGORY_ADD_UN_AUTHORIZED")
-            }
+              message: languageManager.translate("CATEGORY_ADD_UN_AUTHORIZED"),
+            },
           });
         })
         .notFound(result => {
@@ -357,8 +365,8 @@ const Categories = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CATEGORY_ADD_NOT_FOUND")
-            }
+              message: languageManager.translate("CATEGORY_ADD_NOT_FOUND"),
+            },
           });
         })
         .call(obj);
@@ -367,59 +375,78 @@ const Categories = props => {
   }
 
   function removeCategoryItem(selected) {
-    deleteCategory()
-      .onOk(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "success",
-            message: languageManager.translate("CATEGORY_REMOVE_ON_OK")
-          }
-        });
-        dispatch({
-          type: "SET_CATEGORIES",
-          value: result
-        });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CATEGORY_REMOVE_ON_SERVER_ERROR"
-            )
-          }
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CATEGORY_REMOVE_ON_BAD_REQUEST")
-          }
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("CATEGORY_REMOVE_UN_AUTHORIZED")
-          }
-        });
-      })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CATEGORY_REMOVE_NOT_FOUND")
-          }
-        });
-      })
-      .call(selected);
+    setAlertData({
+      type: "error",
+      title: translate("CATEGORY_REMOVE_ALERT_TITLE"),
+      message: translate("CATEGORY_REMOVE_ALERT_MESSAGE"),
+      isAjaxCall: true,
+      onOk: () =>
+        deleteCategory()
+          .onOk(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("CATEGORY_REMOVE_ON_OK"),
+              },
+            });
+            dispatch({
+              type: "SET_CATEGORIES",
+              value: result,
+            });
+          })
+          .onServerError(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate("CATEGORY_REMOVE_NOT_FOUND"),
+              },
+            });
+          })
+          .call(selected),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
   }
 
   // field
@@ -438,71 +465,86 @@ const Categories = props => {
     toggleUpsertItemTypeModal(prevModal => !prevModal);
   }
   function removeContentType(item) {
-    removeContentTypeFromCategory()
-      .onOk(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "success",
-            message: languageManager.translate(
-              "CATEGORY_REMOVE_CONTENT_TYPE_ON_OK"
-            )
-          }
-        });
-        handleRemoveContenType(result, item);
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"
-            )
-          }
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"
-            )
-          }
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate(
-              "CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"
-            )
-          }
-        });
-      })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"
-            )
-          }
-        });
-      })
-      .call(selectedCategory.sys.id, item.sys.id);
+    setAlertData({
+      type: "error",
+      title: translate("CATEGORY_REMOVE_CONTENT_TYPE_ALERT_TITLE"),
+      message: translate("CATEGORY_REMOVE_CONTENT_TYPE_ALERT_MESSAGE"),
+      isAjaxCall: true,
+      onOk: () =>
+        removeContentTypeFromCategory()
+          .onOk(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_CONTENT_TYPE_ON_OK"
+                ),
+              },
+            });
+            handleRemoveContenType(result, item);
+          })
+          .onServerError(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(selectedCategory.sys.id, item.sys.id),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
   }
   function handleRemoveContenType(result, itemType) {
     const m = itemTypes.filter(item => item.sys.id !== itemType.sys.id);
     setItemTypes(m);
     dispatch({
       type: "SET_CATEGORIES",
-      value: result
+      value: result,
     });
   }
   function handleAddContenType(result, itemType) {
@@ -511,7 +553,7 @@ const Categories = props => {
     setItemTypes(m);
     dispatch({
       type: "SET_CATEGORIES",
-      value: result
+      value: result,
     });
   }
   function removeImage() {
@@ -709,6 +751,7 @@ const Categories = props => {
           mediaType={"image"}
         />
       )}
+      {alertData && <Alert data={alertData} />}
     </>
   );
 };
