@@ -72,8 +72,9 @@ const MediaInput = props => {
     <>
       <div className="up-uploader">
         <span className="title">{field.title[currentLang]}</span>
-        <span className="description">{field.description[currentLang]}</span>
-
+        {field.description && field.description.length > 0 && (
+          <span className="description">{field.description[currentLang]}</span>
+        )}
         <div className="files">
           {files.map(file => (
             <div key={file.id} className="files-uploaded">

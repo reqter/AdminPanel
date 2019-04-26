@@ -23,7 +23,7 @@ const PopupAlert = props => {
       if (data.isAjaxCall) toggleSpinner(true);
       setTimeout(() => {
         data.onOk();
-      }, 1000);
+      }, 500);
     }
   }
   return data === undefined ? null : (
@@ -42,11 +42,7 @@ const PopupAlert = props => {
             <button className="btn btn-light" onClick={closeModal}>
               {data.cancelTitle || languageManager.translate("DONT_REMOVE")}
             </button>
-            <button
-              className="btn btn-primary"
-              onClick={okClicked}
-              ref={okBtn}
-            >
+            <button className="btn btn-primary" onClick={okClicked} ref={okBtn}>
               {spinner && <CircleSpinner show={spinner} size="small" />}
               {!spinner &&
                 (data.okTitle || languageManager.translate("REMOVE"))}

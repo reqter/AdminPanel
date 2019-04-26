@@ -370,10 +370,12 @@ const FieldConfig = props => {
       obj["disablePastDates"] = dateDisablePast;
     }
     if (selectedField.type === "location") {
-      obj["defaultValue"] = {
-        latitude: latitude,
-        longitude: longitude,
-      };
+      if (latitude.length > 0 && longitude.length > 0) {
+        obj["defaultValue"] = {
+          latitude: latitude,
+          longitude: longitude,
+        };
+      }
     }
     if (selectedField.type === "boolean") {
       obj["defaultValue"] = booleanDefaultValue;
