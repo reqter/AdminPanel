@@ -6,7 +6,7 @@ const StringInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
   const { field, formData } = props;
-  const [input, setInput] = useState();
+  const [input, setInput] = useState("");
 
   // set default value to form data in parent
   // useEffect(() => {
@@ -52,7 +52,6 @@ const StringInput = props => {
       <label>{field.title && field.title[currentLang]}</label>
       {field.isMultiLine !== undefined && field.isMultiLine ? (
         <textarea
-          type={field.appearance ? field.appearance : "text"}
           className="form-control up-form-stringInput-textArea"
           placeholder={field.title[currentLang]}
           value={input}

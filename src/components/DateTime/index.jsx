@@ -27,9 +27,8 @@ const StringInput = props => {
   useEffect(() => {
     if (formData[field.name]) {
       if (field.isRequired === true) props.init(field.name, true);
-      else {
-        if (field.isRequired === true) props.init(field.name, false);
-      }
+    } else {
+      if (field.isRequired === true) props.init(field.name, false);
     }
 
     const val = initValue();
@@ -73,14 +72,16 @@ const StringInput = props => {
   }
 
   function handleOnChange(e) {
-    const val = moment(e["_d"]).format(
-      !field.format || field.format === "dateTime"
-        ? "YYYY-MM-DD hh:mm A"
-        : field.format === "date"
-        ? "YYYY-MM-DD"
-        : "hh:mm A"
-    );
-    setValueToParentForm(val);
+    if (e["_d"]) {
+      const val = moment(e["_d"]).format(
+        !field.format || field.format === "dateTime"
+          ? "YYYY-MM-DD hh:mm A"
+          : field.format === "date"
+          ? "YYYY-MM-DD"
+          : "hh:mm A"
+      );
+      setValueToParentForm(val);
+    } else setValueToParentForm("");
   }
   var yesterday = Datetime.moment().subtract(1, "day");
   var valid = function(current) {
