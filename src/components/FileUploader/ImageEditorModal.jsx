@@ -217,84 +217,65 @@ const ImageEditorModal = props => {
           cropend={handleCropStart}
         />
       </div>
-      {!isCropped && (
-        <div className="imageActions">
-          <div
-            className="imageActions-item"
-            onClick={() => setDragMode("move")}
-            title={translate("ASSET_IMAGE_EDITOR_MOVE")}
-          >
-            <i className="icon-move" />
-          </div>
-          <div
-            className="imageActions-item"
-            onClick={() => setDragMode("crop")}
-            title={translate("ASSET_IMAGE_EDITOR_CROP")}
-          >
-            <i className="icon-crop-o" />
-          </div>
-          <div
-            className="imageActions-item"
-            onClick={() => setZoom(0.1)}
-            title={translate("ASSET_IMAGE_EDITOR_ZOOM_IN")}
-          >
-            <i className="icon-zoom-in" />
-          </div>
-          <div
-            className="imageActions-item"
-            onClick={() => setZoom(-0.1)}
-            title={translate("ASSET_IMAGE_EDITOR_ZOOM_OUT")}
-          >
-            <i className="icon-zoom-out" />
-          </div>
-          <div
-            className="imageActions-item"
-            onClick={() => rotate(-90)}
-            title={translate("ASSET_IMAGE_EDITOR_ROTATE_LEFT")}
-          >
-            <i className="icon-rotate-left" />
-          </div>
-          <div
-            className="imageActions-item"
-            onClick={() => rotate(90)}
-            title={translate("ASSET_IMAGE_EDITOR_ROTATE_RIGHT")}
-          >
-            <i className="icon-rotate-right" />
-          </div>
-          <div
-            className="imageActions-item"
-            onClick={() => flip("horizontal")}
-            title={translate("ASSET_IMAGE_EDITOR_FLIP_HORIZONTAL")}
-          >
-            <i className="icon-flip-horizontal" />
-          </div>
-          <div
-            className="imageActions-item"
-            onClick={() => flip("vertical")}
-            title={translate("ASSET_IMAGE_EDITOR_FLIP_VERTICAL")}
-          >
-            <i className="icon-flip-vertical" />
-          </div>
+      <div className="imageActions">
+        <div
+          className="imageActions-item"
+          onClick={() => setDragMode("move")}
+          title={translate("ASSET_IMAGE_EDITOR_MOVE")}
+        >
+          <i className="icon-move" />
         </div>
-      )}
+        <div
+          className="imageActions-item"
+          onClick={() => setDragMode("crop")}
+          title={translate("ASSET_IMAGE_EDITOR_CROP")}
+        >
+          <i className="icon-crop-o" />
+        </div>
+        <div
+          className="imageActions-item"
+          onClick={() => setZoom(0.1)}
+          title={translate("ASSET_IMAGE_EDITOR_ZOOM_IN")}
+        >
+          <i className="icon-zoom-in" />
+        </div>
+        <div
+          className="imageActions-item"
+          onClick={() => setZoom(-0.1)}
+          title={translate("ASSET_IMAGE_EDITOR_ZOOM_OUT")}
+        >
+          <i className="icon-zoom-out" />
+        </div>
+        <div
+          className="imageActions-item"
+          onClick={() => rotate(-90)}
+          title={translate("ASSET_IMAGE_EDITOR_ROTATE_LEFT")}
+        >
+          <i className="icon-rotate-left" />
+        </div>
+        <div
+          className="imageActions-item"
+          onClick={() => rotate(90)}
+          title={translate("ASSET_IMAGE_EDITOR_ROTATE_RIGHT")}
+        >
+          <i className="icon-rotate-right" />
+        </div>
+        <div
+          className="imageActions-item"
+          onClick={() => flip("horizontal")}
+          title={translate("ASSET_IMAGE_EDITOR_FLIP_HORIZONTAL")}
+        >
+          <i className="icon-flip-horizontal" />
+        </div>
+        <div
+          className="imageActions-item"
+          onClick={() => flip("vertical")}
+          title={translate("ASSET_IMAGE_EDITOR_FLIP_VERTICAL")}
+        >
+          <i className="icon-flip-vertical" />
+        </div>
+      </div>
     </div>
-    // <div className="editor-actions">
-    //   <div className="editor-actions-progress">
-    //     <div class="progress">
-    //       <div
-    //         className="progress-bar"
-    //         role="progressbar"
-    //         style={{ width: "56%" }}
-    //         aria-valuenow="25"
-    //         aria-valuemin="0"
-    //         aria-valuemax="100"
-    //       >
-    //         56%
-    //       </div>
-    //     </div>
-    //   </div>
-
-    // </div>
   );
 };
 export default ImageEditorModal;

@@ -69,11 +69,9 @@ const BooleanComponent = props => {
         </div>
         <div className="right">
           <label for={"chk" + field.sys.id}>{field.title[currentLang]}</label>
-          <label>
-            {field.description
-              ? field.description[currentLang]
-              : languageManager.translate("COMPONENT_DESCRIPTION")}
-          </label>
+          {field.description && field.description.length && (
+            <label>{field.description[currentLang]}</label>
+          )}
         </div>
       </div>
     );

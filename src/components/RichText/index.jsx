@@ -3,6 +3,7 @@ import {
   EditorState,
   convertToRaw,
   ContentState,
+  contentBlock,
   AtomicBlockUtils,
   Entity,
   RichUtils,
@@ -21,7 +22,7 @@ const RichTextInput = props => {
   const { field, formData } = props;
 
   const [assetBrowser, toggleAssetBrowser] = useState(false);
-  const [input, setInput] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   //  set value to input
   useEffect(() => {
@@ -42,7 +43,7 @@ const RichTextInput = props => {
       contentBlocks,
       entityMap
     );
-    setInput(EditorState.createWithContent(contentState));
+    setEditorState(EditorState.createWithContent(contentState));
   }
   function setValueToParentForm(inputValue) {
     let value;
@@ -58,7 +59,7 @@ const RichTextInput = props => {
     } else props.onChangeValue(field, value, true);
   }
   function handleOnChange(content) {
-    setInput(content);
+    setEditorState(content);
     setValueToParentForm(
       draftToHtml(convertToRaw(content.getCurrentContent()))
     );
@@ -68,19 +69,17 @@ const RichTextInput = props => {
     toggleAssetBrowser(true);
   }
   function _addMedia(url) {
-    const contentState = input.getCurrentContent();
+    const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
-      "image",
-      "IMMUTABLE",
-      {
-        src: url,
-      }
+      "IMAGE",
+      "MUTABLE",
+      { src: url }
     );
-
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.set(input, {
+    const newEditorState = EditorState.set(editorState, {
       currentContent: contentStateWithEntity,
     });
+
     return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, " ");
   }
   function handleChooseAsset(asset) {
@@ -105,7 +104,7 @@ const RichTextInput = props => {
         readOnly={props.viewMode}
         toolbarHidden={props.viewMode}
         blockRendererFn={mediaBlockRenderer}
-        editorState={input}
+        editorState={editorState}
         onEditorStateChange={handleOnChange}
         wrapperClassName="wrapper-class"
         editorClassName="editor-class"
@@ -127,7 +126,7 @@ const RichTextInput = props => {
             "link",
             "embedded",
             "emoji",
-            //"image",
+            // "image",
             "remove",
             "history",
           ],
@@ -152,14 +151,13 @@ const RichTextInput = props => {
 export default RichTextInput;
 
 const Media = props => {
-  const entity = Entity.get(props.block.getEntityAt(0));
-
+  const entity = props.contentState.getEntity(props.block.getEntityAt(0));
   const { src } = entity.getData();
   const type = entity.getType();
 
   let media;
-  if (type === "image") {
-    media = <img src={src} alt="" />;
+  if (type === "IMAGE") {
+    media = <img src={src} alt=""  />;
   }
 
   return media;
