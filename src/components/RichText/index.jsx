@@ -157,7 +157,7 @@ const Media = props => {
 
   let media;
   if (type === "IMAGE") {
-    media = <img src={src} alt=""  />;
+    media = <img src={src} alt="" style={{ width: "auto", height: "auto" }} />;
   }
 
   return media;

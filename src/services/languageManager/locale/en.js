@@ -45,7 +45,7 @@ export default {
   LOGIN_PASSWORD_INPUT: 'Password',
   LOGIN_PASSWORD_INPUT_PLACEHOLDER: 'Enter pssword',
   LOGIN_PASSWORD_INPUT_DESCRIPTION: 'Password must be at least 6 character',
-  LOGIN_SUBMIT_BTN: 'Submit',
+  LOGIN_SUBMIT_BTN: 'Login',
   LOGIN_FORGET_PASS: 'Forgot Your Password ?',
   LOGIN_SIGNUP_LINK_TITLE: 'New to REQTER ?',
   LOGIN_SIGNUP_LINK: 'Create an accout',
@@ -57,17 +57,26 @@ export default {
   LOGIN_NOT_FOUND: 'User not found',
   LOGIN_FORGOT_PASS: 'Forgot your password ?',
   // SIGNUP
-  SIGNUP_TITLE: 'Signup Reqter',
+  SIGNUP_TITLE: 'Sign Up Reqter',
   SIGNUP_LOGIN_LINK_TITLE: 'Have an account?',
   SIGNUP_LOGIN_LINK: 'Login',
+  SIGNUP_SUBMIT_BTN: 'Sign Up',
   SIGNUP_CONFIRM_PASSWORD_INPUT: 'Confirm Password',
   SIGNUP_CONFIRM_PASSWORD_INPUT_PLACEHOLDER: 'Confirm your password',
   SIGNUP_CONFIRM_PASSWORD_INPUT_DESCRIPTION:
     'Password must be at least 6 character',
   SIGNUP_SUCCESS_TITLE: 'Signup Success',
-  SIGNUP_SUCCESS_MESSAGE:
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+  SIGNUP_SUCCESS_MESSAGE:"Welcome to REQTER.Your account created successfully.back to login page and start editing your project ",
   SIGNUP_SUCCESS_BTN: 'Login',
+  SIGNUP_CREATING_TITLE: 'Creating your space',
+  SIGNUP_CREATING_MESSAGE: 'We are creating your space,please wait',
+  SIGNUP_ERROR_TITLE:"Sign Up Failed",
+  SIGNUP_ON_SERVER_ERROR:"Internal server error",
+  SIGNUP_BAD_REQUEST:"Bad request",
+  SIGNUP_UN_AUTHORIZED:"Un authorized",  
+  SIGNUP_NOT_FOUND:"Not found",
+  SIGNUP_ERROR_BTN: 'Back to sign up',
+
   // FORGOT PASS
   FORGOT_PASS_TITLE: 'Getting Password',
   FORGOT_PASS_MESSAGE:

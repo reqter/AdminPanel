@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { languageManager, useGlobalState } from "./../../services";
 import { signup } from "./../../Api/account-api";
 import { CircleSpinner } from "./../../components";
-import "./styles.scss"
+import "./styles.scss";
 
 const ForgotPassword = props => {
   const [{}, dispatch] = useGlobalState();
@@ -23,7 +23,8 @@ const ForgotPassword = props => {
   function handleEmailChanged(e) {
     setUserName(e.target.value);
   }
-  function signupUser() {
+  function signupUser(e) {
+    e.preventDefault();
     if (!spinner) {
       toggleSpinner(true);
       setTimeout(() => {
@@ -95,7 +96,7 @@ const ForgotPassword = props => {
         </div>
         <div className="formBody">
           {tab === 1 && (
-            <form>
+            <form onSubmit={signupUser}>
               <div className="message">
                 {languageManager.translate("FORGOT_PASS_MESSAGE")}
               </div>
@@ -120,9 +121,8 @@ const ForgotPassword = props => {
               </div>
 
               <button
-                type="button"
+                type="submit"
                 className="btn btn-primary btn-block btn-submit"
-                onClick={signupUser}
                 disabled={
                   userName === undefined || userName.length === undefined
                     ? true

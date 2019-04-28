@@ -5,7 +5,7 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from "reactstrap";
 import { languageManager } from "../../../../../../services";
 const ProfileWidget = props => {
@@ -15,6 +15,7 @@ const ProfileWidget = props => {
     toggleVisibility(prevState => !prevState);
   }
   function logout() {
+    localStorage.removeItem("token");
     history.replace("/login");
   }
   return (

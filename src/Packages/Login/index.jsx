@@ -19,7 +19,8 @@ const Login = props => {
     setPassword(e.target.value);
   }
 
-  function loginUser() {
+  function loginUser(e) {
+    e.preventDefault();
     if (!spinner) {
       toggleSpinner(true);
       login()
@@ -95,7 +96,7 @@ const Login = props => {
           </span>
         </div>
         <div className="formBody">
-          <form>
+          <form onSubmit={loginUser}>
             <div className="form-group">
               <label>
                 {languageManager.translate("LOGIN_EMAIL_INPUT_TITLE")}
@@ -141,9 +142,8 @@ const Login = props => {
               {languageManager.translate("LOGIN_FORGOT_PASS")}
             </button> */}
             <button
-              type="button"
+              type="submit"
               className="btn btn-primary btn-block btn-submit"
-              onClick={loginUser}
             >
               <CircleSpinner show={spinner} size="small" />
               {!spinner ? languageManager.translate("LOGIN_SUBMIT_BTN") : null}

@@ -13,6 +13,11 @@ const Signup = props => {
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
   const [repeatPass, setRepeatPassword] = useState();
+  const [secTabContent, setSecTabContent] = useState({
+    type: "creatingSpace",
+    title: languageManager.translate("SIGNUP_CREATING_TITLE"),
+    message: languageManager.translate("SIGNUP_CREATING_MESSAGE"),
+  });
 
   useEffect(() => {
     return () => {
@@ -30,56 +35,51 @@ const Signup = props => {
   function handleRepPasswordChanged(e) {
     setRepeatPassword(e.target.value);
   }
-  function signupUser() {
+  function signupUser(e) {
+    e.preventDefault();
+    changeTab(2);
     if (!spinner) {
       toggleSpinner(true);
-      setTimeout(() => {
-        toggleSpinner(false);
-        changeTab(2);
-      }, 1000);
-      return;
       signup()
         .onOk(result => {
-          changeTab(2);
+          setTimeout(() => {
+            setSecTabContent({
+              type: "success",
+              title: languageManager.translate("SIGNUP_SUCCESS_TITLE"),
+              message: languageManager.translate("SIGNUP_SUCCESS_MESSAGE"),
+            });
+          }, 100);
         })
         .onServerError(result => {
           toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate("LOGIN_ON_SERVER_ERROR"),
-            },
+          setSecTabContent({
+            type: "error",
+            title: languageManager.translate("SIGNUP_ERROR_TITLE"),
+            message: languageManager.translate("SIGNUP_ON_SERVER_ERROR"),
           });
         })
         .onBadRequest(result => {
           toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate("LOGIN_ON_BAD_REQUEST"),
-            },
+          setSecTabContent({
+            type: "error",
+            title: languageManager.translate("SIGNUP_ERROR_TITLE"),
+            message: languageManager.translate("SIGNUP_BAD_REQUEST"),
           });
         })
         .unAuthorized(result => {
           toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate("LOGIN_UN_AUTHORIZED"),
-            },
+          setSecTabContent({
+            type: "error",
+            title: languageManager.translate("SIGNUP_ERROR_TITLE"),
+            message: languageManager.translate("SIGNUP_UN_AUTHORIZED"),
           });
         })
         .notFound(result => {
           toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate("LOGIN_NOT_FOUND"),
-            },
+          setSecTabContent({
+            type: "error",
+            title: languageManager.translate("SIGNUP_ERROR_TITLE"),
+            message: languageManager.translate("SIGNUP_NOT_FOUND"),
           });
         })
         .call(userName, password);
@@ -90,6 +90,15 @@ const Signup = props => {
   function navToLogin() {
     props.history.push("login");
   }
+  function backToSignup(e) {
+    e.preventDefault();
+    changeTab(1);
+    setSecTabContent({
+      type: "creatingSpace",
+      title: languageManager.translate("SIGNUP_CREATING_TITLE"),
+      message: languageManager.translate("SIGNUP_CREATING_MESSAGE"),
+    });
+  }
   //#endregion second tab
   return (
     <div className="wrapper">
@@ -97,12 +106,12 @@ const Signup = props => {
         <div className="header">
           <span className="header-title">
             {tab === 1 && languageManager.translate("SIGNUP_TITLE")}
-            {tab === 2 && languageManager.translate("SIGNUP_SUCCESS_TITLE")}
+            {tab === 2 && secTabContent.title}
           </span>
         </div>
         <div className="formBody">
           {tab === 1 && (
-            <form>
+            <form onSubmit={signupUser}>
               <div className="form-group">
                 <label>
                   {languageManager.translate("LOGIN_EMAIL_INPUT_TITLE")}
@@ -161,9 +170,8 @@ const Signup = props => {
                 </small>
               </div>
               <button
-                type="button"
+                type="submit"
                 className="btn btn-primary btn-block btn-submit"
-                onClick={signupUser}
                 disabled={
                   repeatPass === undefined ||
                   password === undefined ||
@@ -174,23 +182,52 @@ const Signup = props => {
               >
                 <CircleSpinner show={spinner} size="small" />
                 {!spinner
-                  ? languageManager.translate("LOGIN_SUBMIT_BTN")
+                  ? languageManager.translate("SIGNUP_SUBMIT_BTN")
                   : null}
               </button>
             </form>
           )}
           {tab === 2 && (
             <div className="signupSuccess animated fadeIn">
-              <span className="welcomeMessage">
-                {languageManager.translate("SIGNUP_SUCCESS_MESSAGE")}
-              </span>
-              <button
-                type="button"
-                className="btn btn-primary btn-block btn-submit"
-                onClick={navToLogin}
-              >
-                {languageManager.translate("SIGNUP_SUCCESS_BTN")}
-              </button>
+              {secTabContent.type === "success" && (
+                <>
+                  <span className="welcomeMessage">
+                    {secTabContent.message}
+                  </span>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-block btn-submit"
+                    onClick={navToLogin}
+                  >
+                    {languageManager.translate("SIGNUP_SUCCESS_BTN")}
+                  </button>
+                </>
+              )}
+              {secTabContent.type === "error" && (
+                <>
+                  <div class="alert alert-danger" role="alert">
+                    {secTabContent.message}
+                    <br />
+                    <a href="" class="alert-link" onClick={backToSignup}>
+                      {languageManager.translate("SIGNUP_ERROR_BTN")}
+                    </a>
+                  </div>
+                  {/* <span className="alert alert-danger row" /> */}
+                  {/* <button
+                    type="button"
+                    className="btn btn-light btn-submit btn-block"
+                    
+                  /> */}
+                </>
+              )}
+              {secTabContent.type === "creatingSpace" && (
+                <div className="creatingSpace">
+                  <CircleSpinner show={true} size="large" />
+                  <span className="welcomeMessage">
+                    {secTabContent.message}
+                  </span>
+                </div>
+              )}
             </div>
           )}
         </div>
