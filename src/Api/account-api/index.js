@@ -53,7 +53,7 @@ export function login () {
           password: password
         })
       })
-      
+
       const status = rawResponse.status
       const result = await rawResponse.json()
       switch (status) {
@@ -156,8 +156,8 @@ export function signup () {
         body: JSON.stringify({
           username: userName,
           password: password,
-          first_name: 'saeed',
-          last_name: 'pdayab'
+          first_name: '',
+          last_name: ''
         })
       })
       const status = rawResponse.status
