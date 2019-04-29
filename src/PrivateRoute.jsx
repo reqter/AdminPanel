@@ -1,24 +1,30 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { useGlobalState } from "./services";
+import RouteHook from "react-route-hook";
+import { languageManager, useGlobalState } from "./services";
 import { getUserInfo } from "./Api/account-api";
+
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const [{ isAuthenticated, userInfo }, dispatch] = useGlobalState();
-
   function getUserDetail() {
     getUserInfo()
       .onOk(result => {
-        return <Route {...rest} />;
+        dispatch({
+          type: "SET_USERINFO",
+          value: result,
+        });
       })
-      .onServerError(result => {})
+      .onServerError(result => {
+
+      })
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(result => {})
       .call();
   }
-
+  debugger
   return isAuthenticated ? (
-    <Route {...rest} />
+    <RouteHook onEnter={userInfo === undefined ? getUserDetail() : undefined} {...rest} />
   ) : (
     <Route
       render={props => (

@@ -1,14 +1,13 @@
 import React from "react";
 import { StateProvider } from "./index";
+import storageManager from "./../storageManager";
 const Provider = props => {
+  const token = storageManager.getItem("token");
   const initialState = {
     isAuthenticated:
-      localStorage.getItem("token") !== undefined &&
-      localStorage.getItem("token") !== null &&
-      localStorage.getItem("token").length > 0
-        ? true
-        : false,
+      token !== undefined && token !== null && token.length > 0 ? true : false,
     projectInfo: { name: "REQTER" },
+    userInfo: undefined,
     contentTypeTemlates: [],
     contentTypes: [],
     fields: [],
@@ -49,6 +48,12 @@ const Provider = props => {
           isAuthenticated: action.value,
         };
         return auth;
+      case "SET_USERINFO":
+        const u = {
+          ...state,
+          userInfo: action.value,
+        };
+        return u;
       case "SET_CONTENT_TYPES":
         const s = {
           ...state,

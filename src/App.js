@@ -10,8 +10,8 @@ import Notifies from './components/Notifies'
 import Routes from './routes'
 import PrivateRoute from './PrivateRoute'
 
-const App = () => {
 
+const App = () => {
   return (
     <StateProvider>
       <BrowserRouter>
@@ -69,6 +69,7 @@ const App = () => {
                                 path={nestedRoute.path}
                                 render={props => {
                                   const NestedComponent = nestedRoute.component
+
                                   const p = {
                                     ...props,
                                     component: nestedRoute

@@ -7,15 +7,25 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { languageManager } from "../../../../../../services";
+import {
+  languageManager,
+  useGlobalState,
+  storageManager,
+} from "../../../../../../services";
 const ProfileWidget = props => {
   const { match, location, history } = props;
+  const [{ userInfo }, dispatch] = useGlobalState();
+
   const [dropDownVisibility, toggleVisibility] = useState(false);
   function toggle() {
     toggleVisibility(prevState => !prevState);
   }
   function logout() {
-    localStorage.removeItem("token");
+    storageManager.removeItem("token");
+    dispatch({
+      type: "SET_AUTHENTICATED",
+      value: false,
+    });
     history.replace("/login");
   }
   return (
@@ -23,9 +33,16 @@ const ProfileWidget = props => {
       <div className="left">
         <i className="icon-user" />
       </div>
+
       <div className="centerbox">
-        <span className="title">Saeed Padyab</span>
-        <span className="role">payabsaeed@gmail.com</span>
+        {userInfo && (
+          <>
+            <span className="title">
+              {userInfo.firstName + " " + userInfo.lastName}
+            </span>
+            <span className="role">{userInfo.email}</span>
+          </>
+        )}
       </div>
       <div className="right">
         <Dropdown isOpen={dropDownVisibility} toggle={toggle}>

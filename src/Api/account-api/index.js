@@ -53,6 +53,7 @@ export function login () {
           password: password
         })
       })
+      
       const status = rawResponse.status
       const result = await rawResponse.json()
       switch (status) {
@@ -487,7 +488,6 @@ export function changePassword () {
       }
     } catch (error) {
       _onServerError()
-
     }
   }
 
@@ -572,7 +572,12 @@ export function getUserInfo () {
       // const status = rawResponse.status
       // const result = await rawResponse.json()
       const status = 200
-      const result = {}
+      const result = {
+        email: 'saeed@admin.com',
+        firstName: 'saeed',
+        lastName: 'padyab',
+        spaces: [{}]
+      }
       switch (status) {
         case 200:
           _onOk(result)

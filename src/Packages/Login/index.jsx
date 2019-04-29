@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { languageManager, useGlobalState } from "./../../services";
+import {
+  languageManager,
+  useGlobalState,
+  storageManager,
+} from "./../../services";
 import { login } from "./../../Api/account-api";
 import { CircleSpinner } from "./../../components";
 import "./styles.scss";
@@ -26,12 +30,17 @@ const Login = props => {
       login()
         .onOk(result => {
           //toggleSpinner(false);
-          localStorage.setItem("token", result.access_token);
-          dispatch({
-            type: "SET_AUTHENTICATED",
-            value: true,
-          });
-          setRedirectToReferrer(true);
+          try {
+            storageManager.setItem("token", result.access_token);
+            dispatch({
+              type: "SET_AUTHENTICATED",
+              value: true,
+            });
+            setRedirectToReferrer(true);
+          } catch (error) {
+            console.log(error);
+          }
+          //localStorage.setItem("token", result.access_token);
         })
         .onServerError(result => {
           toggleSpinner(false);
