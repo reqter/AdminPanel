@@ -574,7 +574,7 @@ export function getUserInfo () {
       const status = 200
       const result = {
         email: 'saeed@admin.com',
-        firstName: 'saeed',
+        firstName: 'saeed12',
         lastName: 'padyab',
         spaces: [{}]
       }

@@ -28,6 +28,9 @@ const ProfileWidget = props => {
     });
     history.replace("/login");
   }
+  function showProfile() {
+    history.push("/panel/profile");
+  }
   return (
     <div className="profile-widget">
       <div className="left">
@@ -50,7 +53,7 @@ const ProfileWidget = props => {
             <i className="icon-more-h" />
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem>
+            <DropdownItem onClick={showProfile}>
               {languageManager.translate("HOME_SIDEBAR_PROFILE_PROFILE")}
             </DropdownItem>
             <DropdownItem>

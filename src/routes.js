@@ -11,6 +11,7 @@ import Products from './Packages/Products'
 import UpsertProduct from './Packages/UpsertProduct'
 import Assets from './Packages/Assets'
 import UploadFile from './Packages/upsertFile'
+import Profile from './Packages/Profile'
 
 function translate (key) {
   return languageManager.translate(key)
@@ -32,6 +33,7 @@ const routes = [
     component: ForgotPassword,
     isPublic: true
   },
+
   {
     path: '/panel',
     component: Home,
@@ -72,9 +74,17 @@ const routes = [
       {
         name: translate('HOME_SIDE_NAV_ASSETS_MANAGER'),
         icon: 'images',
-        path: '/panel/assets',
         desc: translate('HOME_SIDE_NAV_ASSETS_MANAGER_DESC'),
+        path: '/panel/assets',
         component: Assets,
+        isPublic: false
+      },
+      {
+        name: translate('HOME_SIDE_NAV_PROFILE'),
+        icon: 'user',
+        desc: translate('HOME_SIDE_NAV_PROFILE_DESC'),
+        path: '/panel/profile',
+        component: Profile,
         isPublic: false
       }
     ]

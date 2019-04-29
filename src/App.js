@@ -63,7 +63,7 @@ const App = () => {
                         nestedRoutes = (
                           <>
                             {route.routes.map(nestedRoute => (
-                              <PrivateRoute
+                              <Route
                                 exact
                                 key={nestedRoute.path}
                                 path={nestedRoute.path}

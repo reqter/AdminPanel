@@ -85,6 +85,8 @@ export default {
   // home
   BRAND_NAME: 'REQTER',
   HOME_NAVS_TITLE: 'Features',
+  HOME_SIDE_NAV_PROFILE:"Profile",
+  HOME_SIDE_NAV_PROFILE_DESC:"Manage your personal info",
   HOME_SIDE_NAV_MANAGET_USERS: 'Api Users',
   HOME_SIDE_NAV_MANAGE_USERS_DESC: 'Manage users of your apps',
   HOME_SIDE_NAV_CATEGRIES: 'Categories',

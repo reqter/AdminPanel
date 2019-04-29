@@ -7,7 +7,8 @@
         "title": {
           "en": "Users",
           "fa": "گاربران"
-        }
+        },
+        "allowEdit": true
       }
     ]
   },

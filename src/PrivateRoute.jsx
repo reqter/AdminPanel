@@ -7,6 +7,7 @@ import { getUserInfo } from "./Api/account-api";
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const [{ isAuthenticated, userInfo }, dispatch] = useGlobalState();
   function getUserDetail() {
+    console.log(1)
     getUserInfo()
       .onOk(result => {
         dispatch({
@@ -14,17 +15,17 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
           value: result,
         });
       })
-      .onServerError(result => {
-
-      })
+      .onServerError(result => {})
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(result => {})
       .call();
   }
-  debugger
   return isAuthenticated ? (
-    <RouteHook onEnter={userInfo === undefined ? getUserDetail() : undefined} {...rest} />
+    <Route
+      onEnter={userInfo === undefined ? getUserDetail() : undefined}
+      {...rest}
+    />
   ) : (
     <Route
       render={props => (
