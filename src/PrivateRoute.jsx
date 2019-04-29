@@ -7,7 +7,6 @@ import { getUserInfo } from "./Api/account-api";
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const [{ isAuthenticated, userInfo }, dispatch] = useGlobalState();
   function getUserDetail() {
-    console.log(1)
     getUserInfo()
       .onOk(result => {
         dispatch({

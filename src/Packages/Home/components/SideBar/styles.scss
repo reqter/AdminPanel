@@ -2,6 +2,9 @@
 @import "./../../../../styles/mixins.scss";
 
 .sideBar {
+  position: fixed;
+  left: 0;
+  height: 100%;
   width: var(--sideBar-width);
   background-color: white;
   //@include boxShadow(.5px 0 5px -2px #888);
@@ -9,6 +12,7 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid lightgray;
+  z-index: 100;
   .top {
     padding: 20px 0;
     border-bottom: 1px solid whitesmoke;

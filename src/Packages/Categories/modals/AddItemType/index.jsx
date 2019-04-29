@@ -192,7 +192,7 @@ const AddContentType = props => {
               </div>
             </div>
             <div className="itemTypeModal-right">
-              <label className="switch ">
+              <label className="switch">
                 <input
                   type="checkbox"
                   className="primary"
@@ -210,7 +210,8 @@ const AddContentType = props => {
               /> */}
             </div>
           </label>
-        ))}
+       
+       ))}
       </ModalBody>
     </Modal>
   );
