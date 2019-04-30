@@ -33,9 +33,15 @@ const ProfileWidget = props => {
   }
   return (
     <div className="profile-widget">
-      <div className="left">
-        <i className="icon-user" />
-      </div>
+      {userInfo && userInfo.avatar ? (
+        <div className="userImage">
+          <img src={userInfo.avatar} alt="" />
+        </div>
+      ) : (
+        <div className="left">
+          <i className="icon-user" />
+        </div>
+      )}
 
       <div className="centerbox">
         {userInfo && (

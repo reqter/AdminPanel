@@ -10,9 +10,13 @@ import UpdatePassword from "./modals/updatePassword";
 
 const Categories = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
-  const currentLang = languageManager.getCurrentLanguage().name;
 
   const [{ userInfo }, dispatch] = useGlobalState();
+
+  const dropRef = useRef(null);
+  const [dragging, setDragging] = useState(false);
+  const [eventsAdded, setEvents] = useState(false);
+
   const [updatePasswordModal, toggleUpdatePassModal] = useState(false);
 
   const [currentBox, setCurrentBox] = useState(1);
@@ -32,6 +36,13 @@ const Categories = props => {
 
   useEffect(() => {
     if (userInfo) {
+      let div = dropRef.current;
+
+      div.addEventListener("dragenter", handleDragIn);
+      div.addEventListener("dragleave", handleDragOut);
+      div.addEventListener("dragover", handleDrag);
+      div.addEventListener("drop", handleDrop);
+
       const { firstName, lastName, avatar } = userInfo;
       setFirstName(firstName);
       setLastName(lastName);
@@ -41,6 +52,14 @@ const Categories = props => {
           : "http://arunoommen.com/wp-content/uploads/2017/01/man-2_icon-icons.com_55041.png"
       );
     }
+
+    return () => {
+      let div = dropRef.current;
+      div.removeEventListener("dragenter", handleDragIn);
+      div.removeEventListener("dragleave", handleDragOut);
+      div.removeEventListener("dragover", handleDrag);
+      div.removeEventListener("drop", handleDrop);
+    };
   }, [userInfo]);
 
   function showBoxContent(num) {
@@ -67,8 +86,61 @@ const Categories = props => {
     });
   }
   function handleImageBrowsed(event) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
+    if (!isUploading) {
+      if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        if (file.type.includes("image")) uploadAvatar(file);
+      }
+    }
+  }
+  function showUpdatePassModal() {
+    toggleUpdatePassModal(true);
+  }
+  function handleCloseUpdatePass(result) {
+    toggleUpdatePassModal(false);
+  }
+
+  function handleDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function handleDragIn(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0)
+      setDragging(true);
+  }
+
+  function handleDragOut(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.includes("image")) {
+        uploadAvatar(file);
+      }
+      e.dataTransfer.clearData();
+    }
+  }
+
+  function updateProfileInfo() {
+    updateProfile()
+      .onOk(result => {})
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .call();
+  }
+  function uploadAvatar(file) {
+    if (!isUploading) {
       toggleIsUploading(true);
       uploadAssetFile()
         .onOk(result => {
@@ -78,32 +150,23 @@ const Categories = props => {
             "avatar",
             process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url
           );
-          updateProfileInfo();
+          //updateProfileInfo();
         })
-        .onServerError(result => {})
-        .onBadRequest(result => {})
-        .unAuthorized(result => {})
+        .onServerError(result => {
+          toggleIsUploading(false);
+        })
+        .onBadRequest(result => {
+          toggleIsUploading(false);
+        })
+        .unAuthorized(result => {
+          toggleIsUploading(false);
+        })
         .onProgress(result => {
           //setPercentage(result);
         })
         .call(file);
     }
   }
-  function showUpdatePassModal() {
-    toggleUpdatePassModal(true);
-  }
-  function handleCloseUpdatePass(result) {
-    toggleUpdatePassModal(false);
-  }
-  function updateProfileInfo() {
-    updateProfile()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .call();
-  }
-
   return (
     <>
       <div className="pro-wrapper">
@@ -138,7 +201,15 @@ const Categories = props => {
                       <img src={avatar} alt="" />
                     </div>
                   </div>
-                  <div className="uploadDropZone">
+                  <div
+                    className="uploadDropZone"
+                    ref={dropRef}
+                    style={{
+                      border: dragging
+                        ? "3px dashed lightgray"
+                        : "0.5px solid lightgray",
+                    }}
+                  >
                     <div className="dropText">
                       Drop your file here
                       <div className="dropLink">
@@ -149,8 +220,8 @@ const Categories = props => {
                   </div>
                 </div>
                 <div className="uploadInfo">
-                  <bold> Some tips</bold>: Use a photo or image rather than text
-                  and upload an image that is 132px square or larger.
+                  Some tips: Use a photo or image rather than text and upload an
+                  image that is 132px square or larger.
                 </div>
                 <div className="form-group">
                   <label>First Name</label>
