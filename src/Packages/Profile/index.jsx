@@ -4,7 +4,13 @@ import "./styles.scss";
 import { languageManager, useGlobalState, utility } from "../../services";
 import { CircleSpinner } from "../../components";
 import { uploadAssetFile } from "./../../Api/asset-api";
-import { updateProfile } from "./../../Api/account-api";
+import {
+  updateProfile,
+  changeAvatar,
+  changeNotification,
+  changePassword,
+  sendEmailActivation,
+} from "./../../Api/account-api";
 
 import UpdatePassword from "./modals/updatePassword";
 
@@ -36,14 +42,16 @@ const Categories = props => {
 
   useEffect(() => {
     if (userInfo) {
-      let div = dropRef.current;
+      if (dropRef.current) {
+        let div = dropRef.current;
 
-      div.addEventListener("dragenter", handleDragIn);
-      div.addEventListener("dragleave", handleDragOut);
-      div.addEventListener("dragover", handleDrag);
-      div.addEventListener("drop", handleDrop);
-
-      const { firstName, lastName, avatar } = userInfo;
+        div.addEventListener("dragenter", handleDragIn);
+        div.addEventListener("dragleave", handleDragOut);
+        div.addEventListener("dragover", handleDrag);
+        div.addEventListener("drop", handleDrop);
+      }
+      const { firstName, lastName, avatar, notification } = userInfo;
+      toggleNotification(notification ? notification : true);
       setFirstName(firstName);
       setLastName(lastName);
       setAvatar(
@@ -54,11 +62,13 @@ const Categories = props => {
     }
 
     return () => {
-      let div = dropRef.current;
-      div.removeEventListener("dragenter", handleDragIn);
-      div.removeEventListener("dragleave", handleDragOut);
-      div.removeEventListener("dragover", handleDrag);
-      div.removeEventListener("drop", handleDrop);
+      if (dropRef.current) {
+        let div = dropRef.current;
+        div.removeEventListener("dragenter", handleDragIn);
+        div.removeEventListener("dragleave", handleDragOut);
+        div.removeEventListener("dragover", handleDrag);
+        div.removeEventListener("drop", handleDrop);
+      }
     };
   }, [userInfo]);
 
@@ -75,7 +85,24 @@ const Categories = props => {
   }
   function handleNotification(e) {
     toggleNotification(e.target.checked);
-    submitUserInfo("notification", e.target.checked);
+    const value = e.target.checked;
+    changeNotification()
+      .onOk(result => {
+        submitUserInfo("notification", value);
+      })
+      .onServerError(result => {
+        toggleNotification(!value);
+      })
+      .onBadRequest(result => {
+        toggleNotification(!value);
+      })
+      .unAuthorized(result => {
+        toggleNotification(!value);
+      })
+      .notFound(result => {
+        toggleNotification(!value);
+      })
+      .call(false);
   }
   function submitUserInfo(key, value) {
     let u = { ...userInfo };
@@ -150,7 +177,6 @@ const Categories = props => {
             "avatar",
             process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url
           );
-          //updateProfileInfo();
         })
         .onServerError(result => {
           toggleIsUploading(false);
