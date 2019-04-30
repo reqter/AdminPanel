@@ -209,3 +209,10 @@ div::-moz-scrollbar-thumb:hover {
     font-weight: 500;
   }
 }
+
+.ajax-button {
+  display: flex;
+  span {
+    margin: 0 5px;
+  }
+}

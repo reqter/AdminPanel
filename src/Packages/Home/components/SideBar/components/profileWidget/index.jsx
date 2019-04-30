@@ -31,6 +31,9 @@ const ProfileWidget = props => {
   function showProfile() {
     history.push("/panel/profile");
   }
+  function showSettings() {
+    history.push("/panel/settings");
+  }
   return (
     <div className="profile-widget">
       {userInfo && userInfo.avatar ? (
@@ -62,7 +65,7 @@ const ProfileWidget = props => {
             <DropdownItem onClick={showProfile}>
               {languageManager.translate("HOME_SIDEBAR_PROFILE_PROFILE")}
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={showSettings}>
               {languageManager.translate("HOME_SIDEBAR_PROFILE_SETTINGS")}
             </DropdownItem>
             <DropdownItem onClick={logout}>

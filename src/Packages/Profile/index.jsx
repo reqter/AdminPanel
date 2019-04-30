@@ -9,12 +9,12 @@ import {
   changeAvatar,
   changeNotification,
   changePassword,
-  sendEmailActivation,
+  sendEmailConfirmation,
 } from "./../../Api/account-api";
 
 import UpdatePassword from "./modals/updatePassword";
 
-const Categories = props => {
+const Profile = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
 
   const [{ userInfo }, dispatch] = useGlobalState();
@@ -24,6 +24,8 @@ const Categories = props => {
   const [eventsAdded, setEvents] = useState(false);
 
   const [updatePasswordModal, toggleUpdatePassModal] = useState(false);
+  const [updateSpinner, toggleUpdateSpinner] = useState(false);
+  const [confirmEmailSpinner, toggleConfirmEmailSpinner] = useState(false);
 
   const [currentBox, setCurrentBox] = useState(1);
   const [isUploading, toggleIsUploading] = useState(false);
@@ -51,7 +53,7 @@ const Categories = props => {
         div.addEventListener("drop", handleDrop);
       }
       const { firstName, lastName, avatar, notification } = userInfo;
-      toggleNotification(notification ? notification : true);
+      toggleNotification(notification !== undefined ? notification : true);
       setFirstName(firstName);
       setLastName(lastName);
       setAvatar(
@@ -77,11 +79,9 @@ const Categories = props => {
   }
   function handleFirstName(e) {
     setFirstName(e.target.value);
-    submitUserInfo("firstName", e.target.value);
   }
   function handleLastName(e) {
     setLastName(e.target.value);
-    submitUserInfo("lastName", e.target.value);
   }
   function handleNotification(e) {
     toggleNotification(e.target.checked);
@@ -159,17 +159,38 @@ const Categories = props => {
   }
 
   function updateProfileInfo() {
-    updateProfile()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .call();
+    if (!updateSpinner) {
+      toggleUpdateSpinner(true);
+      updateProfile()
+        .onOk(result => {
+          toggleUpdateSpinner(false);
+          let u = { ...userInfo };
+          u["firstName"] = firstName;
+          u["lastName"] = lastName;
+          dispatch({
+            type: "SET_USERINFO",
+            value: u,
+          });
+        })
+        .onServerError(result => {
+          toggleUpdateSpinner(false);
+        })
+        .onBadRequest(result => {
+          toggleUpdateSpinner(false);
+        })
+        .unAuthorized(result => {
+          toggleUpdateSpinner(false);
+        })
+        .notFound(result => {
+          toggleUpdateSpinner(false);
+        })
+        .call(firstName, lastName);
+    }
   }
   function uploadAvatar(file) {
     if (!isUploading) {
       toggleIsUploading(true);
-      uploadAssetFile()
+      changeAvatar()
         .onOk(result => {
           const { file } = result;
           toggleIsUploading(false);
@@ -191,6 +212,29 @@ const Categories = props => {
           //setPercentage(result);
         })
         .call(file);
+    }
+  }
+  function confirmEmail() {
+    if (!confirmEmailSpinner) {
+      toggleConfirmEmailSpinner(true);
+      sendEmailConfirmation()
+        .onOk(result => {
+          toggleConfirmEmailSpinner(false);
+          submitUserInfo("emailConfirm", true);
+        })
+        .onServerError(result => {
+          toggleConfirmEmailSpinner(false);
+        })
+        .onBadRequest(result => {
+          toggleConfirmEmailSpinner(false);
+        })
+        .unAuthorized(result => {
+          toggleConfirmEmailSpinner(false);
+        })
+        .notFound(result => {
+          toggleConfirmEmailSpinner(false);
+        })
+        .call();
     }
   }
   return (
@@ -275,6 +319,15 @@ const Categories = props => {
                     Enter your last name
                   </small>
                 </div>
+                <div className="firstTabActions">
+                  <button
+                    className="btn btn-primary ajax-button"
+                    onClick={updateProfileInfo}
+                  >
+                    <CircleSpinner show={updateSpinner} size="small" />
+                    <span>Update</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -300,9 +353,30 @@ const Categories = props => {
                       </span>
                     </div>
                     <div className="right-switch">
-                      <button type="button" className="btn btn-primary btn-sm">
-                        Update your email
-                      </button>
+                      {userInfo && userInfo.emailConfirm === true && (
+                        <button
+                          type="button"
+                          className="btn btn-success btn-sm"
+                        >
+                          <span className="icon-checkmark" />
+                          &nbsp; Email Confirmed
+                        </button>
+                      )}
+                      {userInfo &&
+                        (userInfo.emailConfirm === undefined ||
+                          userInfo.emailConfirm === false) && (
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm ajax-button"
+                            onClick={confirmEmail}
+                          >
+                            <CircleSpinner
+                              show={confirmEmailSpinner}
+                              size="small"
+                            />
+                            <span> Send Confirmation</span>
+                          </button>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -311,7 +385,7 @@ const Categories = props => {
                     <div className="left-text">
                       <span className="left-text-title">Password</span>
                       <span className="left-text-description">
-                        Secure your GitBook account with a strong and unique
+                        Secure your REQTER account with a strong and unique
                         password.
                       </span>
                     </div>
@@ -375,4 +449,4 @@ const Categories = props => {
   );
 };
 
-export default Categories;
+export default Profile;

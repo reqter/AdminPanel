@@ -120,6 +120,11 @@
           font-size: 13px;
           margin-bottom: 15px;
         }
+        .firstTabActions {
+          display: flex;
+          flex-direction: row-reverse;
+
+        }
       }
     }
   }

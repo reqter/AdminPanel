@@ -66,15 +66,16 @@ export default {
   SIGNUP_CONFIRM_PASSWORD_INPUT_DESCRIPTION:
     'Password must be at least 6 character',
   SIGNUP_SUCCESS_TITLE: 'Signup Success',
-  SIGNUP_SUCCESS_MESSAGE:"Welcome to REQTER.Your account created successfully.back to login page and start editing your project ",
+  SIGNUP_SUCCESS_MESSAGE:
+    'Welcome to REQTER.Your account created successfully.back to login page and start editing your project ',
   SIGNUP_SUCCESS_BTN: 'Login',
   SIGNUP_CREATING_TITLE: 'Creating your space',
   SIGNUP_CREATING_MESSAGE: 'We are creating your space,please wait',
-  SIGNUP_ERROR_TITLE:"Sign Up Failed",
-  SIGNUP_ON_SERVER_ERROR:"Internal server error",
-  SIGNUP_BAD_REQUEST:"Bad request",
-  SIGNUP_UN_AUTHORIZED:"Un authorized",  
-  SIGNUP_NOT_FOUND:"Not found",
+  SIGNUP_ERROR_TITLE: 'Sign Up Failed',
+  SIGNUP_ON_SERVER_ERROR: 'Internal server error',
+  SIGNUP_BAD_REQUEST: 'Bad request',
+  SIGNUP_UN_AUTHORIZED: 'Un authorized',
+  SIGNUP_NOT_FOUND: 'Not found',
   SIGNUP_ERROR_BTN: 'Back to sign up',
 
   // FORGOT PASS
@@ -82,11 +83,20 @@ export default {
   FORGOT_PASS_MESSAGE:
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
   FORGOT_PASS_SEND_EMAIL_BTN: 'Send Code',
+  // profile
+  PROFILE_CHANGE_PASS_ON_OK:"Your password changed successfully.",
+  PROFILE_CHANGE_PASS_ON_SERVER_ERROR:"Internal server error",
+  PROFILE_CHANGE_PASS_ON_BAD_REQUEST:"Bad Request",
+  PROFILE_CHANGE_PASS_UN_AUTHORIZED:"Un authorized",
+  PROFILE_CHANGE_PASS_NOT_FOUND:"Not found",
+
   // home
   BRAND_NAME: 'REQTER',
   HOME_NAVS_TITLE: 'Features',
-  HOME_SIDE_NAV_PROFILE:"Profile",
-  HOME_SIDE_NAV_PROFILE_DESC:"Manage your personal info",
+  HOME_SIDE_NAV_PROFILE: 'Profile',
+  HOME_SIDE_NAV_PROFILE_DESC: 'Manage your personal info',
+  HOME_SIDE_NAV_SETTINGS: 'Settings',
+  HOME_SIDE_NAV_SETTINGS_DESC: 'Configure your space',
   HOME_SIDE_NAV_MANAGET_USERS: 'Api Users',
   HOME_SIDE_NAV_MANAGE_USERS_DESC: 'Manage users of your apps',
   HOME_SIDE_NAV_CATEGRIES: 'Categories',

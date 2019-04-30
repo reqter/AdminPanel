@@ -1,32 +1,91 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
-import { languageManager } from "../../../../services";
+import { languageManager, useGlobalState } from "../../../../services";
+import { changePassword } from "./../../../../Api/account-api";
+import { CircleSpinner } from "../../../../components";
 const UpdatePassword = props => {
-  const oldPass = useRef(null);
+  const [{}, dispatch] = useGlobalState();
 
+  const oldPassRef = useRef(null);
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [spinner, toggleSpinner] = useState(false);
   useEffect(() => {
-    oldPass.current.focus();
-  });
-
+    oldPassRef.current.focus();
+  }, []);
+  function showNotify(type, msg) {
+    dispatch({
+      type: "ADD_NOTIFY",
+      value: {
+        type: type,
+        message: msg,
+      },
+    });
+  }
   function closeModal() {
     props.onClose();
   }
-
+  function onSubmit() {
+    if (!spinner) {
+      toggleSpinner(true);
+      changePassword()
+        .onOk(result => {
+          closeModal();
+          showNotify(
+            "success",
+            languageManager.translate("PROFILE_CHANGE_PASS_ON_OK")
+          );
+        })
+        .onServerError(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("PROFILE_CHANGE_PASS_ON_SERVER_ERROR")
+          );
+        })
+        .onBadRequest(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("PROFILE_CHANGE_PASS_ON_BAD_REQUEST")
+          );
+        })
+        .unAuthorized(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("PROFILE_CHANGE_PASS_UN_AUTHORIZED")
+          );
+        })
+        .notFound(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
+          );
+        })
+        .call(oldPass, newPass);
+    }
+  }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal}>
       <ModalHeader toggle={closeModal}>New Password</ModalHeader>
       <ModalBody>
         <div className="c-category-modal-body">
-          <form>
+          <form id="changePassForm" onSubmit={onSubmit}>
             <div className="form-group">
               <label>{languageManager.translate("Old Password")}</label>
               <input
-                ref={oldPass}
+                ref={oldPassRef}
                 type="text"
                 className="form-control"
                 placeholder={languageManager.translate("old password")}
                 required
-                autoFocus
+                value={oldPass}
+                onChange={e => {
+                  setOldPass(e.target.value);
+                }}
               />
               <small className="form-text text-muted">
                 {languageManager.translate("enter your old password")}
@@ -39,6 +98,10 @@ const UpdatePassword = props => {
                 className="form-control"
                 placeholder={languageManager.translate("new password")}
                 required
+                value={newPass}
+                onChange={e => {
+                  setNewPass(e.target.value);
+                }}
               />
               <small className="form-text text-muted">
                 {languageManager.translate(
@@ -51,8 +114,14 @@ const UpdatePassword = props => {
               <input
                 type="text"
                 className="form-control"
-                placeholder={languageManager.translate("confirm your password")}
+                placeholder={languageManager.translate(
+                  "confirm your password"
+                )}
                 required
+                value={confirmPass}
+                onChange={e => {
+                  setConfirmPass(e.target.value);
+                }}
               />
               <small className="form-text text-muted">
                 {languageManager.translate(
@@ -67,8 +136,24 @@ const UpdatePassword = props => {
         <button onClick={closeModal} className="btn btn-secondary">
           {languageManager.translate("CANCEL")}
         </button>
-        <button type="submit" className="btn btn-primary">
-          Change
+        <button
+          type="submit"
+          className="btn btn-primary ajax-button"
+          form="changePassForm"
+          disabled={
+            oldPass === undefined ||
+            oldPass.length === 0 ||
+            newPass === undefined ||
+            newPass.length === 0 ||
+            confirmPass === undefined ||
+            confirmPass.length === 0 ||
+            confirmPass !== newPass
+              ? true
+              : false
+          }
+        >
+          <CircleSpinner show={spinner} size="small" />
+          <span>Change</span>
         </button>
       </ModalFooter>
     </Modal>

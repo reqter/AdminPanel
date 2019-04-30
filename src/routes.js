@@ -12,6 +12,7 @@ import UpsertProduct from './Packages/UpsertProduct'
 import Assets from './Packages/Assets'
 import UploadFile from './Packages/upsertFile'
 import Profile from './Packages/Profile'
+import Settings from './Packages/Settings'
 
 function translate (key) {
   return languageManager.translate(key)
@@ -85,6 +86,14 @@ const routes = [
         desc: translate('HOME_SIDE_NAV_PROFILE_DESC'),
         path: '/panel/profile',
         component: Profile,
+        isPublic: false
+      },
+      {
+        name: translate('HOME_SIDE_NAV_SETTINGS'),
+        icon: 'cog',
+        desc: translate('HOME_SIDE_NAV_SETTINGS_DESC'),
+        path: '/panel/settings',
+        component: Settings,
         isPublic: false
       }
     ]

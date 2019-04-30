@@ -563,20 +563,22 @@ export function updateProfile () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async userName => {
+  const _call = async (firstName, lastName) => {
     try {
-      const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
-      var rawResponse = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-      })
-      const status = rawResponse.status
-      const result = await rawResponse.json({
-        username: userName
-      })
+      // const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
+      // var rawResponse = await fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({})
+      // })
+      // const status = rawResponse.status
+      // const result = await rawResponse.json({
+      //   username: userName
+      // })
+      const status = 200
+      const result = {}
       switch (status) {
         case 200:
           _onOk(result)
@@ -897,20 +899,21 @@ export function changePassword () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async userName => {
+  const _call = async (oldPass, newPass) => {
     try {
-      const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
-      var rawResponse = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-      })
-      const status = rawResponse.status
-      const result = await rawResponse.json({
-        username: userName
-      })
+      // const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
+      // var rawResponse = await fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({})
+      // })
+      // const status = rawResponse.status
+      // const result = await rawResponse.json()
+      const status = 200
+      const result = {}
+
       switch (status) {
         case 200:
           _onOk(result)
@@ -963,7 +966,7 @@ export function changePassword () {
     }
   }
 }
-export function sendEmailActivation () {
+export function sendEmailConfirmation () {
   let _onOkCallBack
   function _onOk (result) {
     if (_onOkCallBack) {
@@ -1002,18 +1005,18 @@ export function sendEmailActivation () {
   }
   const _call = async userName => {
     try {
-      const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
-      var rawResponse = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-      })
-      const status = rawResponse.status
-      const result = await rawResponse.json({
-        username: userName
-      })
+      // const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
+      // var rawResponse = await fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({})
+      // })
+      // const status = rawResponse.status
+      // const result = await rawResponse.json()
+      const status = 200
+      const result = {}
       switch (status) {
         case 200:
           _onOk(result)
