@@ -473,7 +473,30 @@ export function getUserInfo () {
         email: 'saeed@admin.com',
         firstName: 'saeed12',
         lastName: 'padyab',
-        spaces: [{}]
+        spaces: [
+          {
+            name: 'space1',
+            roles: [
+              {
+                name: 'users',
+                title: {
+                  en: 'Users',
+                  fa: 'گاربران'
+                },
+                allowEdit: true
+              }
+            ],
+            locales: [
+              {
+                locale: 'en',
+                fallback: 'none',
+                includeInResponce: true,
+                editable: true,
+                requiredFields: true
+              }
+            ]
+          }
+        ]
       }
       switch (status) {
         case 200:

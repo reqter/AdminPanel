@@ -282,16 +282,20 @@ const Profile = props => {
                   >
                     <div className="dropText">
                       Drop your file here
-                      <div className="dropLink">
-                        <span> or Browse</span>
+                      <span>
+                        <a >or Browse</a>
                         <input type="file" onChange={handleImageBrowsed} />
-                      </div>
+                      </span>
+                      {/* <div className="dropLink">
+                        <span> </span>
+                        <input type="file" />
+                      </div> */}
                     </div>
                   </div>
                 </div>
                 <div className="uploadInfo">
-                  Some tips: Use a photo or image rather than text and upload an
-                  image that is 132px square or larger.
+                  Some tips: Use a photo or image rather than text and upload
+                  an image that is 132px square or larger.
                 </div>
                 <div className="form-group">
                   <label>First Name</label>

@@ -3,17 +3,17 @@ import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import { languageManager, useGlobalState } from "../../../../services";
 import { changePassword } from "./../../../../Api/account-api";
 import { CircleSpinner } from "../../../../components";
-const UpdatePassword = props => {
+const UpdateRole = props => {
   const [{}, dispatch] = useGlobalState();
 
-  const oldPassRef = useRef(null);
-  const [oldPass, setOldPass] = useState("");
-  const [newPass, setNewPass] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [allowEdit, toggleAllowEdit] = useState(false);
+  const [readOnly, toggleReadOnly] = useState(true);
+
   const [spinner, toggleSpinner] = useState(false);
-  useEffect(() => {
-    oldPassRef.current.focus();
-  }, []);
+  useEffect(() => {}, []);
+
   function showNotify(type, msg) {
     dispatch({
       type: "ADD_NOTIFY",
@@ -65,67 +65,76 @@ const UpdatePassword = props => {
             languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
           );
         })
-        .call(oldPass, newPass);
+        .call();
     }
   }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal}>
-      <ModalHeader toggle={closeModal}>New Password</ModalHeader>
+      <ModalHeader toggle={closeModal}>New Role</ModalHeader>
       <ModalBody>
-        <div className="c-category-modal-body">
+        <div className="settings-modal-body">
           <form id="changePassForm" onSubmit={onSubmit}>
             <div className="form-group">
-              <label>{languageManager.translate("Old Password")}</label>
+              <label>{languageManager.translate("Name")}</label>
               <input
-                ref={oldPassRef}
                 type="text"
                 className="form-control"
-                placeholder={languageManager.translate("old password")}
+                placeholder={languageManager.translate("enter a name ")}
                 required
-                value={oldPass}
+                value={name}
                 onChange={e => {
-                  setOldPass(e.target.value);
+                  setName(e.target.value);
                 }}
               />
               <small className="form-text text-muted">
-                {languageManager.translate("enter your old password")}
+                {languageManager.translate("Name of role should be unique")}
               </small>
             </div>
             <div className="form-group">
-              <label>{languageManager.translate("New Password")}</label>
+              <label>{languageManager.translate("Title")}</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder={languageManager.translate("new password")}
+                placeholder={languageManager.translate("enter a title")}
                 required
-                value={newPass}
+                value={title}
                 onChange={e => {
-                  setNewPass(e.target.value);
+                  setTitle(e.target.value);
                 }}
               />
               <small className="form-text text-muted">
-                {languageManager.translate(
-                  "password must be at least 6 charcter"
-                )}
+                {languageManager.translate("Diplay name of a role ")}
               </small>
             </div>
-            <div className="form-group">
-              <label>{languageManager.translate("Confirm Password")}</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder={languageManager.translate("confirm your password")}
-                required
-                value={confirmPass}
-                onChange={e => {
-                  setConfirmPass(e.target.value);
-                }}
-              />
-              <small className="form-text text-muted">
-                {languageManager.translate(
-                  "password must be at least 6 charcter"
-                )}
-              </small>
+            <div className="custom_checkbox">
+              <div className="left">
+                <label className="checkBox">
+                  <input type="checkbox" id="localization" />
+                  <span className="checkmark" />
+                </label>
+              </div>
+              <div className="right">
+                <label for="localization">
+                  {languageManager.translate("Allow Edit")}
+                </label>
+                <label>{languageManager.translate("Editing all of api")}</label>
+              </div>
+            </div>
+            <div className="custom_checkbox">
+              <div className="left">
+                <label className="checkBox">
+                  <input type="checkbox" id="localization" />
+                  <span className="checkmark" />
+                </label>
+              </div>
+              <div className="right">
+                <label for="localization">
+                  {languageManager.translate("Allow Read")}
+                </label>
+                <label>
+                  {languageManager.translate("Only read of contents")}
+                </label>
+              </div>
             </div>
           </form>
         </div>
@@ -138,23 +147,12 @@ const UpdatePassword = props => {
           type="submit"
           className="btn btn-primary ajax-button"
           form="changePassForm"
-          disabled={
-            oldPass === undefined ||
-            oldPass.length === 0 ||
-            newPass === undefined ||
-            newPass.length === 0 ||
-            confirmPass === undefined ||
-            confirmPass.length === 0 ||
-            confirmPass !== newPass
-              ? true
-              : false
-          }
         >
           <CircleSpinner show={spinner} size="small" />
-          <span>Change</span>
+          <span>Add Role</span>
         </button>
       </ModalFooter>
     </Modal>
   );
 };
-export default UpdatePassword;
+export default UpdateRole;

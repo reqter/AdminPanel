@@ -9,9 +9,16 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   function getUserDetail() {
     getUserInfo()
       .onOk(result => {
+        const spaceInfo = result.spaces[0];
+        delete result.spaces;
+        const userInfo = result;
         dispatch({
           type: "SET_USERINFO",
-          value: result,
+          value: userInfo,
+        });
+        dispatch({
+          type: "SET_SPACEINFO",
+          value: spaceInfo,
         });
       })
       .onServerError(result => {})

@@ -2,14 +2,13 @@ import React from "react";
 import "./styles.scss";
 import ProfileWidget from "./components/profileWidget";
 import SideLinks from "./components/SideLinks";
-import { languageManager, useGlobalState } from "./../../../../services";
+import { languageManager } from "./../../../../services";
 const SideBar = props => {
-  const [{ projectInfo }, dispatch] = useGlobalState();
   return (
     <div className="sideBar">
       <div className="top">
         <i className="icon-logo icon" />
-        <span className="title">{projectInfo.name}</span>
+        <span className="title">REQTER</span>
       </div>
       <ProfileWidget />
       <SideLinks links={props.links} />

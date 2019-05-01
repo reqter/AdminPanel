@@ -1,14 +1,30 @@
 {
-  "projectInfo": {
+  "space": {
     "name": "REQTER",
-    "roles": [
+    "locales": [
       {
-        "name": "users",
-        "title": {
-          "en": "Users",
-          "fa": "گاربران"
-        },
-        "allowEdit": true
+        "id": 1,
+        "locale": "English (United State) (en-US) Default",
+        "fallback": "none",
+        "inResponce": "enabled",
+        "editing": "enabled",
+        "requiredFields": "Content is required"
+      },
+      {
+        "id": 2,
+        "locale": "German (Germany) (de-DE)",
+        "fallback": "English",
+        "inResponce": "enabled",
+        "editing": "enabled",
+        "requiredFields": "Content is required"
+      },
+      {
+        "id": 3,
+        "locale": "Swedish (Sweden) (sw-SV) ",
+        "fallback": "English",
+        "inResponce": "enabled",
+        "editing": "enabled",
+        "requiredFields": "Content is required"
       }
     ]
   },

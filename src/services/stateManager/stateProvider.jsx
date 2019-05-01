@@ -6,7 +6,7 @@ const Provider = props => {
   const initialState = {
     isAuthenticated:
       token !== undefined && token !== null && token.length > 0 ? true : false,
-    projectInfo: { name: "REQTER" },
+    spaceInfo: undefined,
     userInfo: undefined,
     contentTypeTemlates: [],
     contentTypes: [],
@@ -38,6 +38,24 @@ const Provider = props => {
       },
     ],
     notifies: [],
+    sysLocales: [
+      {
+        name: "en",
+        title: "English (United State) (en-US)",
+      },
+      {
+        name: "fa",
+        title: "فارسی (ایران) (fa)",
+      },
+      {
+        name: "de",
+        title: "German (Germany) (de-DE)",
+      },
+      {
+        name: "sv",
+        title: "Swedish (Sweden) (sw-SV)",
+      },
+    ],
   };
 
   const reducer = (state, action) => {
@@ -54,6 +72,12 @@ const Provider = props => {
           userInfo: action.value,
         };
         return u;
+      case "SET_SPACEINFO":
+        const s_info = {
+          ...state,
+          spaceInfo: action.value,
+        };
+        return s_info;
       case "SET_CONTENT_TYPES":
         const s = {
           ...state,
