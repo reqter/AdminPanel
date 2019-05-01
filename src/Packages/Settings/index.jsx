@@ -122,7 +122,11 @@ const Settings = props => {
         />
       )}
       {upsertRoleModal && (
-        <UpsertRole isOpen={upsertRoleModal} onClose={toggleUpsertRoleModal} />
+        <UpsertRole
+          selectedRole={selectedRole}
+          isOpen={upsertRoleModal}
+          onClose={toggleUpsertRoleModal}
+        />
       )}
     </>
   );

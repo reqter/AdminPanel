@@ -10,10 +10,12 @@ const Locale = props => {
     return type === "name" ? "" : "none";
   }
   function removeLocale(locale) {
-    const s = spaceInfo.locales.filter(l => l.locale !== locale.locale);
+    const s_copy = { ...spaceInfo };
+    const r = s_copy.locales.filter(l => l.locale !== locale.locale);
+    s_copy["locales"] = r;
     dispatch({
       type: "SET_SPACEINFO",
-      value: s,
+      value: s_copy,
     });
     updateSpace()
       .onOk(result => {})

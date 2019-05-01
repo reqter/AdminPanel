@@ -7,10 +7,12 @@ const Locale = props => {
   const [{ spaceInfo }, dispatch] = useGlobalState();
 
   function removeRole(role) {
-    const s = spaceInfo.roles.filter(r => r.name !== role.name);
+    const s_copy = { ...spaceInfo };
+    const r = s_copy.roles.filter(r => r.name !== role.name);
+    s_copy["roles"] = r;
     dispatch({
       type: "SET_SPACEINFO",
-      value: s,
+      value: s_copy,
     });
     updateSpace()
       .onOk(result => {})
@@ -48,7 +50,7 @@ const Locale = props => {
                   <td>{role.title[currentLang]}</td>
                   <td>
                     <span className="badge badge-primary">
-                      {role.allowEdit === true && role.allowEdit === true
+                      {role.allowEdit === true && role.readOnly === true
                         ? "Read/Write"
                         : role.allowEdit === true
                         ? "Only Write"
