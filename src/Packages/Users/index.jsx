@@ -26,7 +26,7 @@ const Users = props => {
       const { roles } = spaceInfo;
       if (roles) setRoles(roles);
     }
-  }, []);
+  }, [spaceInfo]);
   useEffect(() => {
     // getRoles()
     //   .onOk(result => {
