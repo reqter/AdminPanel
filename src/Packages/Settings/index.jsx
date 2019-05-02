@@ -7,6 +7,7 @@ import { Locales, Roles } from "./contents";
 import "./contentStyles.scss";
 import UpsertLocale from "./modals/UpsertLocale";
 import UpsertRole from "./modals/UpsertRole";
+import WebHookCreation from "./modals/WebHook";
 
 const Settings = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
@@ -17,6 +18,7 @@ const Settings = props => {
   const [selectedLocale, setSelectedLocale] = useState();
   const [upsertRoleModal, toggleRoleModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState();
+  const [webHookModal, setWebHookModal] = useState(false);
 
   function toggleTab(tabName) {
     changeTab(tabName);
@@ -44,6 +46,9 @@ const Settings = props => {
     toggleUpsertRoleModal();
     setSelectedRole(role);
   }
+  function toggleWebHookModal() {
+    setWebHookModal(prevState => !prevState);
+  }
   return (
     <>
       <div className="se-wrapper">
@@ -69,8 +74,14 @@ const Settings = props => {
                 New Role
               </button>
             )}
-            {/* {tabContent === "apiKeys" && <div className="tabContent" />}
-            {tabContent === "webHooks" && <div className="tabContent" />} */}
+            {tabContent === "apiKeys" && (
+              <button className="btn btn-primary">New Api Key</button>
+            )}
+            {tabContent === "webHooks" && (
+              <button className="btn btn-primary" onClick={toggleWebHookModal}>
+                New WebHook
+              </button>
+            )}
           </div>
         </div>
         <div className="se-content">
@@ -127,6 +138,9 @@ const Settings = props => {
           isOpen={upsertRoleModal}
           onClose={toggleUpsertRoleModal}
         />
+      )}
+      {webHookModal && (
+        <WebHookCreation isOpen={webHookModal} onClose={toggleWebHookModal} />
       )}
     </>
   );
