@@ -31,6 +31,12 @@ const Locale = props => {
   return (
     <div className="tabContents animated fadeIn faster">
       <div className="tabContent">
+        {/* <div className="tabContent-header">
+          <span className="tabContent-header-title">Locale</span>
+          <span className="tabContent-header-desc">
+            Lorem ipsum has no many contribute
+          </span>
+        </div> */}
         <table className="table myTable">
           <thead>
             <tr>
@@ -47,7 +53,7 @@ const Locale = props => {
             {spaceInfo &&
               spaceInfo.locales &&
               spaceInfo.locales.map((locale, index) => (
-                <tr key={locale.id}>
+                <tr key={locale.name}>
                   <td>
                     <div className="myTable-number">{index + 1}</div>
                   </td>

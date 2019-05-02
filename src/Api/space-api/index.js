@@ -1,3 +1,5 @@
+const data = require('./../data.json')
+
 export function updateSpace () {
   let _onOkCallBack
   function _onOk (result) {

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import { languageManager } from "../../services";
 
-const StringInput = props => {
+const LocationInput = props => {
+  let autocomplete;
   const currentLang = languageManager.getCurrentLanguage().name;
+  const autocompleteInput = useRef(null);
 
   const { field, formData } = props;
   const [latitude, setLatitude] = useState(
@@ -55,13 +57,43 @@ const StringInput = props => {
     setLongitude(e.target.value);
     setValueToParentForm(latitude, e.target.value);
   }
-  return (
+  useEffect(() => {
+    // Declare Options For Autocomplete
+    var options = { types: [] };
+
+    // Initialize Google Autocomplete
+    /*global google*/
+    autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("autocomplete"),
+      { types: ["geocode"] }
+    );
+    // Fire Event when a suggested name is selected
+    autocomplete.addListener("place_changed", handlePlaceSelect);
+  }, []);
+
+  function handlePlaceSelect() {
+    let addressObject = autocomplete.getPlace();
+    let address = addressObject.address_components;
+
+    // Check if address is valid
+    if (address) {
+      console.log(address);
+      // Set State
+      // this.setState({
+      //   city: address[0].long_name,
+      //   query: addressObject.formatted_address,
+      // });
+    }
+  }
+  return field.appearance === undefined || field.appearance === "default" ? (
     <div className="form-group">
       <label>{field.title[currentLang]}</label>
       <div className="row">
         <div className="col">
           <input
-            type="number"
+            id="autocomplete"
+            ref={autocompleteInput}
+            type="text"
             className="form-control"
             placeholder={languageManager.translate("LATITUDE")}
             value={latitude}
@@ -84,7 +116,32 @@ const StringInput = props => {
         {field.description[currentLang]}
       </small>
     </div>
+  ) : (
+    <>
+      <div>
+        <script
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvoANIcfDjPaqEcZ5GAzQKEtbOWzpoFFs&libraries=places"
+          // onLoad={handleScriptLoad}
+        />
+      </div>
+      <div className="form-group">
+        <label>{field.title[currentLang]}</label>
+        <input
+          id="autocomplete"
+          ref={autocompleteInput}
+          type="text"
+          className="form-control"
+          placeholder={languageManager.translate("enter your address")}
+          // value={latitude}
+          // onChange={handleLatitudeChange}
+          readOnly={props.viewMode}
+        />
+        <small className="form-text text-muted">
+          {field.description[currentLang]}
+        </small>
+      </div>
+    </>
   );
 };
 
-export default StringInput;
+export default LocationInput;

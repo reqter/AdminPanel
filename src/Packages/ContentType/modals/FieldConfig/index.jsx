@@ -42,6 +42,7 @@ const fieldsApearance = {
     { name: "text", title: { en: "Text" }, apearance: "", selected: true },
     { name: "email", title: { en: "Email" }, apearance: "" },
     { name: "password", title: { en: "Password" }, apearance: "" },
+    { name: "url", title: { en: "URL" }, apearance: "" },
   ],
 };
 

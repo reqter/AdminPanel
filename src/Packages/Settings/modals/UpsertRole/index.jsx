@@ -117,7 +117,7 @@ const UpdateRole = props => {
   }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal}>
-      <ModalHeader toggle={closeModal}>New Role</ModalHeader>
+      <ModalHeader toggle={closeModal}>{updateMode ? "Update Role" : "New Role"}</ModalHeader>
       <ModalBody>
         <div className="settings-modal-body">
           <form id="upserRoleForm" onSubmit={onSubmit}>

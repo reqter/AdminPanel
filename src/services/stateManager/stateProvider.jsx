@@ -56,6 +56,7 @@ const Provider = props => {
         title: "Swedish (Sweden) (sw-SV)",
       },
     ],
+    apiKeys: [],
   };
 
   const reducer = (state, action) => {
@@ -78,6 +79,36 @@ const Provider = props => {
           spaceInfo: action.value,
         };
         return s_info;
+      case "SET_API_KEYS":
+        const apiKeys = {
+          ...state,
+          apiKeys: action.value,
+        };
+        return apiKeys;
+      case "ADD_API_KEY":
+        let apiKeys_add = [...state.apiKeys];
+        apiKeys_add.push(action.value);
+        return {
+          ...state,
+          apiKeys: apiKeys_add,
+        };
+      case "DELETE_API_KEY":
+        const apiKeys_delete = state.apiKeys.filter(
+          item => item.id !== action.value.id
+        );
+        return {
+          ...state,
+          apiKeys: apiKeys_delete,
+        };
+      case "UPDATE_API_KEY":
+        const apiKeys_up = state.apiKeys.map(item => {
+          if (item.id === action.value.id) item = action.value;
+          return item;
+        });
+        return {
+          ...state,
+          apiKeys: apiKeys_up,
+        };
       case "SET_CONTENT_TYPES":
         const s = {
           ...state,

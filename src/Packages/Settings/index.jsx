@@ -3,10 +3,11 @@ import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState, utility } from "../../services";
 import { CircleSpinner } from "../../components";
-import { Locales, Roles } from "./contents";
+import { Locales, Roles, ApiKeys } from "./contents";
 import "./contentStyles.scss";
 import UpsertLocale from "./modals/UpsertLocale";
 import UpsertRole from "./modals/UpsertRole";
+import UpsertApiKey from "./modals/UpsertApiKey";
 import WebHookCreation from "./modals/WebHook";
 
 const Settings = props => {
@@ -19,6 +20,8 @@ const Settings = props => {
   const [upsertRoleModal, toggleRoleModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState();
   const [webHookModal, setWebHookModal] = useState(false);
+  const [selectedApiKey, setSelectedApiKey] = useState();
+  const [upsertApiKeyModal, toggleApiKeyModal] = useState(false);
 
   function toggleTab(tabName) {
     changeTab(tabName);
@@ -46,6 +49,18 @@ const Settings = props => {
     toggleUpsertRoleModal();
     setSelectedRole(role);
   }
+
+  function handleEditApiKey(apiKey) {
+    toggleUpsertApiKeyModal();
+    setSelectedApiKey(apiKey);
+  }
+  function toggleUpsertApiKeyModal(result) {
+    toggleApiKeyModal(prevState => !prevState);
+    if (selectedApiKey) setSelectedApiKey();
+    if (result) {
+    }
+  }
+  // webhook
   function toggleWebHookModal() {
     setWebHookModal(prevState => !prevState);
   }
@@ -75,7 +90,12 @@ const Settings = props => {
               </button>
             )}
             {tabContent === "apiKeys" && (
-              <button className="btn btn-primary">New Api Key</button>
+              <button
+                className="btn btn-primary"
+                onClick={toggleUpsertApiKeyModal}
+              >
+                New Api Key
+              </button>
             )}
             {tabContent === "webHooks" && (
               <button className="btn btn-primary" onClick={toggleWebHookModal}>
@@ -121,7 +141,9 @@ const Settings = props => {
             <Locales onEditLocale={handleEditLocale} />
           )}
           {tabContent === "roles" && <Roles onEditRole={handleEditRole} />}
-          {tabContent === "apiKeys" && <div className="tabContent" />}
+          {tabContent === "apiKeys" && (
+            <ApiKeys onEditApiKey={handleEditApiKey} />
+          )}
           {tabContent === "webHooks" && <div className="tabContent" />}
         </div>
       </div>
@@ -137,6 +159,13 @@ const Settings = props => {
           selectedRole={selectedRole}
           isOpen={upsertRoleModal}
           onClose={toggleUpsertRoleModal}
+        />
+      )}
+      {upsertApiKeyModal && (
+        <UpsertApiKey
+          selectedApiKey={selectedApiKey}
+          isOpen={upsertApiKeyModal}
+          onClose={toggleUpsertApiKeyModal}
         />
       )}
       {webHookModal && (
