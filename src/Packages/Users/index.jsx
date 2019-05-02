@@ -13,7 +13,7 @@ import { AssignRole } from "./../../components";
 
 const Users = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ users }, dispatch] = useGlobalState();
+  const [{ users, spaceInfo }, dispatch] = useGlobalState();
 
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [selectedRole, setRole] = useState({});
@@ -21,41 +21,46 @@ const Users = props => {
   const [assignRoleModal, toggleAssignRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
-
   useEffect(() => {
-    getRoles()
-      .onOk(result => {
-        setRoles(result);
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("USERS_ROLES_ON_SERVER_ERROR"),
-          },
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("USERS_ROLES_ON_BAD_REQUEST"),
-          },
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("USERS_ROLES_UN_AUTHORIZED"),
-          },
-        });
-      })
-      .notFound(result => {})
-      .call();
+    if (spaceInfo) {
+      const { roles } = spaceInfo;
+      if (roles) setRoles(roles);
+    }
+  }, []);
+  useEffect(() => {
+    // getRoles()
+    //   .onOk(result => {
+    //     setRoles(result);
+    //   })
+    //   .onServerError(result => {
+    //     dispatch({
+    //       type: "ADD_NOTIFY",
+    //       value: {
+    //         type: "error",
+    //         message: languageManager.translate("USERS_ROLES_ON_SERVER_ERROR"),
+    //       },
+    //     });
+    //   })
+    //   .onBadRequest(result => {
+    //     dispatch({
+    //       type: "ADD_NOTIFY",
+    //       value: {
+    //         type: "error",
+    //         message: languageManager.translate("USERS_ROLES_ON_BAD_REQUEST"),
+    //       },
+    //     });
+    //   })
+    //   .unAuthorized(result => {
+    //     dispatch({
+    //       type: "ADD_NOTIFY",
+    //       value: {
+    //         type: "warning",
+    //         message: languageManager.translate("USERS_ROLES_UN_AUTHORIZED"),
+    //       },
+    //     });
+    //   })
+    //   .notFound(result => {})
+    //   .call();
 
     getUsers()
       .onOk(result => {
