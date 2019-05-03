@@ -42,12 +42,12 @@ const ApiKeys = props => {
   return (
     <div className="tabContents animated fadeIn faster">
       <div className="tabContent">
-        {/* <div className="tabContent-header">
-          <span className="tabContent-header-title">Api Keys</span>
+        <div className="tabContent-header">
+          <span className="tabContent-header-title">Keys</span>
           <span className="tabContent-header-desc">
             Lorem ipsum has no many contribute
           </span>
-        </div> */}
+        </div>
         <table className="table myTable">
           <thead>
             <tr>

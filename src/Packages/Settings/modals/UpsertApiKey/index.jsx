@@ -282,7 +282,7 @@ const UpsertApiKey = props => {
                   </p>
                 </div>
                 <div className="form-group">
-                  <label>{languageManager.translate("Client ID")}</label>
+                  <label>{languageManager.translate("Api Key")}</label>
                   <div className="input-group">
                     <input
                       type="text"
@@ -295,7 +295,7 @@ const UpsertApiKey = props => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>{languageManager.translate("Client Secret")}</label>
+                  <label>{languageManager.translate("Api Secret")}</label>
                   <div className="input-group">
                     <input
                       type="text"

@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu,
+} from "reactstrap";
 import "./styles.scss";
 import { languageManager, useGlobalState, utility } from "../../services";
 import { CircleSpinner } from "../../components";
@@ -9,19 +14,23 @@ import UpsertLocale from "./modals/UpsertLocale";
 import UpsertRole from "./modals/UpsertRole";
 import UpsertApiKey from "./modals/UpsertApiKey";
 import WebHookCreation from "./modals/WebHook";
+import CustomWebhook from "./modals/CustomWebHook";
 
 const Settings = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
 
   const [{ userInfo }, dispatch] = useGlobalState();
+
   const [tabContent, changeTab] = useState("locales");
   const [upsertLocalModal, toggleLocaleModal] = useState(false);
   const [selectedLocale, setSelectedLocale] = useState();
   const [upsertRoleModal, toggleRoleModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState();
   const [webHookModal, setWebHookModal] = useState(false);
+  const [customWebhookModal, setCustomWebHookModal] = useState(false);
   const [selectedApiKey, setSelectedApiKey] = useState();
   const [upsertApiKeyModal, toggleApiKeyModal] = useState(false);
+  const [newWebHookDropDown, toggleWebHookDropDown] = useState(false);
 
   function toggleTab(tabName) {
     changeTab(tabName);
@@ -64,6 +73,9 @@ const Settings = props => {
   function toggleWebHookModal() {
     setWebHookModal(prevState => !prevState);
   }
+  function toggleCustomWebhookModal() {
+    setCustomWebHookModal(prevState => !prevState);
+  }
   return (
     <>
       <div className="se-wrapper">
@@ -98,9 +110,29 @@ const Settings = props => {
               </button>
             )}
             {tabContent === "webHooks" && (
-              <button className="btn btn-primary" onClick={toggleWebHookModal}>
-                New WebHook
-              </button>
+              <Dropdown
+                isOpen={newWebHookDropDown}
+                toggle={() => toggleWebHookDropDown(prevState => !prevState)}
+              >
+                <DropdownToggle
+                  className="btn btn-primary"
+                  caret
+                  color="primary"
+                >
+                  New WebHook
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={toggleCustomWebhookModal}>
+                    {languageManager.translate("Custom WebHook")}
+                  </DropdownItem>
+                  <DropdownItem onClick={toggleWebHookModal}>
+                    {languageManager.translate("From Templates")}
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              // <button className="btn btn-primary" onClick={toggleWebHookModal}>
+              //   New WebHook
+              // </button>
             )}
           </div>
         </div>
@@ -126,7 +158,7 @@ const Settings = props => {
               }
               onClick={() => toggleTab("apiKeys")}
             >
-              Api Keys
+              Keys
             </div>
             <div
               className={
@@ -170,6 +202,12 @@ const Settings = props => {
       )}
       {webHookModal && (
         <WebHookCreation isOpen={webHookModal} onClose={toggleWebHookModal} />
+      )}
+      {customWebhookModal && (
+        <CustomWebhook
+          isOpen={customWebhookModal}
+          onClose={toggleCustomWebhookModal}
+        />
       )}
     </>
   );

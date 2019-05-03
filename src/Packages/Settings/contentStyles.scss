@@ -58,12 +58,13 @@
       }
     }
     thead {
-      background: rgb(230, 230, 230);
+     // background: rgb(230, 230, 230);
       border: none;
       th {
         font-weight: 500;
         font-size: 14px;
         border-width: 1.5px;
+        border-right: .5px solid lightgray;
       }
     }
     tbody {

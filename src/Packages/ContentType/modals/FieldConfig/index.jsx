@@ -1179,6 +1179,7 @@ const FieldConfig = props => {
                     >
                       <i className="icon-plus" />
                     </button>
+                 
                   </>
                 )}
               </div>
