@@ -28,6 +28,11 @@ const WebHookCreating = props => {
   const [{ spaceInfo }, dispatch] = useGlobalState();
 
   const [spinner, toggleSpinner] = useState(false);
+  const [tab, changeTab] = useState(1);
+  const [selectedTemplate, setSelectedTemplate] = useState();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
   useEffect(() => {}, []);
 
   function showNotify(type, msg) {
@@ -42,29 +47,85 @@ const WebHookCreating = props => {
   function closeModal() {
     props.onClose();
   }
+  function handleSelectTemplate(item) {
+    setSelectedTemplate(item);
+    changeTab(2);
+  }
   function onSubmit(e) {
     e.preventDefault();
   }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal} size="lg">
-      <ModalHeader toggle={closeModal}>WebHook Templates</ModalHeader>
+      <ModalHeader toggle={closeModal}>
+        {tab === 1 && "WebHook Templates"}
+        {tab === 2 && "Complete Info"}
+      </ModalHeader>
       <ModalBody>
         <div className="webhooksBody">
-          <div className="fristTab">
-            {list.map(item => (
-              <div className="webhookItem">
-                <div className="w-top">
-                  <img src={item.icon} alt="" />
+          {tab === 1 && (
+            <div className="fristTab">
+              {list.map(item => (
+                <div
+                  className="webhookItem"
+                  onClick={() => handleSelectTemplate(item)}
+                >
+                  <div className="w-top">
+                    <img src={item.icon} alt="" />
+                  </div>
+                  <div className="w-bottom">
+                    <span>{item.title[currentLang]}</span>
+                    <span>{item.description}</span>
+                  </div>
                 </div>
-                <div className="w-bottom">
-                  <span>{item.title[currentLang]}</span>
-                  <span>{item.description}</span>
-                </div>
+              ))}
+            </div>
+          )}
+          {tab === 2 && (
+            <>
+              <div className="form-group">
+                <label>{languageManager.translate("Name")}</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder={languageManager.translate(
+                    "enter a name for your webhook"
+                  )}
+                  value={name}
+                  onChange={e => {
+                    setName(e.target.value);
+                  }}
+                />
+                <small className="form-text text-muted">
+                  {languageManager.translate("name is required")}
+                </small>
               </div>
-            ))}
-          </div>
+              <div className="form-group">
+                <label>{languageManager.translate("Description")}</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder={languageManager.translate(
+                    "enter a short description"
+                  )}
+                  value={description}
+                  onChange={e => {
+                    setDescription(e.target.value);
+                  }}
+                />
+                <small className="form-text text-muted">
+                  {languageManager.translate("name is required")}
+                </small>
+              </div>
+            </>
+          )}
         </div>
       </ModalBody>
+      {tab === 2 && (
+        <ModalFooter>
+          <button className="btn btn-secondary">Cancel</button>
+          <button className="btn btn-primary">Create</button>
+        </ModalFooter>
+      )}
     </Modal>
   );
 };
