@@ -142,6 +142,14 @@ const Provider = props => {
           ...state,
           users: action.value,
         };
+      case "DELETE_USER":
+        const users_delete = state.users.filter(
+          item => item.id !== action.value.id
+        );
+        return {
+          ...state,
+          users: users_delete,
+        };
       case "SET_ASSETS":
         return {
           ...state,

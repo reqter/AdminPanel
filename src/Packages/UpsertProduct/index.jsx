@@ -533,7 +533,7 @@ const UpsertProduct = props => {
                 {contentTypes.map(c => (
                   <div key={c.id} className="listGroupItem">
                     <div className="treeItem">
-                      {c.images === undefined || c.images.length === 0 ? (
+                      {c.media === undefined || c.media.length === 0 ? (
                         <div className="treeItem-icon">
                           <div className="contentIcon">
                             <i className="icon-item-type" />
@@ -541,7 +541,7 @@ const UpsertProduct = props => {
                         </div>
                       ) : (
                         <div className="treeItem-img">
-                          <img src={c.images[0][currentLang]} alt="" />
+                          <img src={c.media[0][currentLang]} alt="" />
                         </div>
                       )}
                       <div className="treeItem-text">

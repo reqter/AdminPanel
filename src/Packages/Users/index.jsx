@@ -8,8 +8,9 @@ import {
   activateUser,
   deactiveUser,
   assignRoles,
+  deleteUser,
 } from "./../../Api/userManagement-api";
-import { AssignRole } from "./../../components";
+import { AssignRole, Alert } from "./../../components";
 
 const Users = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -21,6 +22,8 @@ const Users = props => {
   const [assignRoleModal, toggleAssignRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
+  const [alertData, setAlertData] = useState();
+
   useEffect(() => {
     if (spaceInfo) {
       const { roles } = spaceInfo;
@@ -266,6 +269,90 @@ const Users = props => {
     setRole({});
     doFilter(undefined, undefined);
   }
+  function addNewUser() {
+    props.history.push("/users/new");
+  }
+  function updateUser(user) {
+    props.history.push("/users/edit/" + user.id);
+  }
+  function removeUser(user) {
+    setAlertData({
+      type: "error",
+      title: "Remove User",
+      message: "Are you sure to remove?",
+      isAjaxCall: true,
+      okTitle: "Remove",
+      cancelTitle: "Don't remove",
+      onOk: () =>
+        deleteUser()
+          .onOk(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("User deleted successfullu"),
+              },
+            });
+            dispatch({
+              type: "DELETE_USER",
+              value: user,
+            });
+          })
+          .onServerError(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "USERS_ASSIGN_ROLE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "USERS_ASSIGN_ROLE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "USERS_ASSIGN_ROLE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            setAlertData();
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "USERS_ASSIGN_ROLE_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(user),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
+  }
   function openAssignRoleModal(user) {
     setSelectedUser(user);
     toggleAssignRoleModal(true);
@@ -346,7 +433,7 @@ const Users = props => {
           <div className="as-content-left">
             <div className="left-text">{translate("USERS_FILTER_TITLE")}</div>
             <div className="left-btnContent">
-              <button className="btn btn-primary" onClick={resetFilters}>
+              <button className="btn btn-primary" onClick={addNewUser}>
                 {translate("USERS_FILTER_BTN_TEXT")}
               </button>
             </div>
@@ -544,6 +631,18 @@ const Users = props => {
                         >
                           {translate("USERS_TABLE_ASSIGN_ROLE_BTN")}
                         </button>
+                        <button
+                          className="btn btn-light btn-sm"
+                          onClick={() => updateUser(user)}
+                        >
+                          {translate("Edit")}
+                        </button>
+                        <button
+                          className="btn btn-light btn-sm"
+                          onClick={() => removeUser(user)}
+                        >
+                          <i className="icon-bin" />
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -561,6 +660,7 @@ const Users = props => {
           roles={selectedUser ? selectedUser.roles : []}
         />
       )}
+      {alertData && <Alert data={alertData} />}
     </>
   );
 };

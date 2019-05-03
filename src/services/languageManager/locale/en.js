@@ -337,7 +337,7 @@ export default {
 
   // USERS
   USERS_FILTER_TITLE: 'Filter & Add New File',
-  USERS_FILTER_BTN_TEXT: 'Reset Filters',
+  USERS_FILTER_BTN_TEXT: 'Add New User',
   USERS_FILTER_BY_ROLE: 'Filter Users by Role',
   USERS_FILTER_BY_ROLE_ALL: 'All Roles',
   USERS_FILTER_BY_STATUS_ALL: 'All Users',

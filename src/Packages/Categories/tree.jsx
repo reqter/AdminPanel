@@ -123,7 +123,7 @@ class Tree extends Component {
                 >
                   <i className="icon-pencil" />
                 </button>
-                {(node.children === undefined ||
+                {/* {(node.children === undefined ||
                   node.children.length === 0) && (
                   <button
                     className="btn btn-light treeItem-action"
@@ -137,7 +137,7 @@ class Tree extends Component {
                       {languageManager.translate("CATEGROES_CONTENT_TYPES")}
                     </span>
                   </button>
-                )}
+                )} */}
                 {(node.itemTypes === undefined ||
                   node.itemTypes.length === 0) && (
                   <button

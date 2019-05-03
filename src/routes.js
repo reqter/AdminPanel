@@ -13,6 +13,7 @@ import Assets from './Packages/Assets'
 import UploadFile from './Packages/upsertFile'
 import Profile from './Packages/Profile'
 import Settings from './Packages/Settings'
+import UpsertUser from "./Packages/upsertUser";
 
 function translate (key) {
   return languageManager.translate(key)
@@ -111,6 +112,16 @@ const routes = [
   {
     path: '/contents/view/:id',
     component: UpsertProduct,
+    isPublic: false
+  },
+   {
+    path: '/users/new',
+    component: UpsertUser,
+    isPublic: false
+  },
+  {
+    path: '/users/edit/:id',
+    component: UpsertUser,
     isPublic: false
   },
   {

@@ -340,7 +340,7 @@ export function addUser () {
     const status = 200
     switch (status) {
       case 200:
-        _onOk()
+        _onOk(obj)
         break
       case 400:
         _onBadRequest()

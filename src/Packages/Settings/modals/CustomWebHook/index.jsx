@@ -38,7 +38,7 @@ const CustomWebHook = props => {
     setPayLoadType(e.target.value);
   }
   function closeModal() {
-    //props.closeModal();
+    props.onClose();
   }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal} size="lg">
@@ -223,7 +223,6 @@ const CustomWebHook = props => {
                       <th />
                       <th>Create</th>
                       <th>Save</th>
-                      <th>Autosave</th>
                       <th>Archive</th>
                       <th>Unarchive</th>
                       <th>Publish</th>
@@ -233,120 +232,7 @@ const CustomWebHook = props => {
                     <tbody>
                       <tr>
                         <td>
-                          <div className="title"> Content Type</div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="title">Entry</div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
+                          <div className="title">Content</div>
                         </td>
                         <td>
                           <div className="chk">
@@ -521,18 +407,6 @@ const CustomWebHook = props => {
                             </div>
                           </div>
                         </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
                       </tr>
                       <tr>
                         <td>
@@ -550,18 +424,7 @@ const CustomWebHook = props => {
                             </div>
                           </div>
                         </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
+
                         <td>
                           <div className="chk">
                             <div className="custom_checkbox">
@@ -639,51 +502,6 @@ const CustomWebHook = props => {
                   </table>
                 </div>
               )}
-              <div className="customWebhook-filters">
-                <div className="filters-title">Filters</div>
-                <div className="filters-message">
-                  This webhook will trigger only for entities matching the
-                  filters defined below.
-                </div>
-                <div className="filter-content">
-                  {filters.map((item, index) => (
-                    <div className="options" key={index}>
-                      <div className="leftInput">
-                        <select className="form-control">
-                          <option>
-                            Environment ID (sys.environment.sys.id)
-                          </option>
-                          <option>
-                            Content Typ ID (sys.contentType.sys.id)
-                          </option>
-                          <option>Entity ID (sys.entity.sys.id)</option>
-                        </select>
-                      </div>
-                      <div className="centerInput">
-                        <select className="form-control">
-                          <option>equals</option>
-                          <option>not equals</option>
-                          <option>in</option>
-                          <option>not in</option>
-                          <option>regexp</option>
-                          <option>not regexp</option>
-                        </select>
-                      </div>
-                      <div className="centerInput">
-                        <input type="text" className="form-control" />
-                      </div>
-                      <div className="rightInput">
-                        <button className="btn btn-light">
-                          <i className="icon-bin" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  <button className="btn btn-primary btn-plus btn-sm">
-                    <i className="icon-plus" />
-                  </button>
-                </div>
-              </div>
             </>
           )}
           {tab === 3 && (
@@ -867,7 +685,7 @@ const CustomWebHook = props => {
                 </div>
               </div>
               {payloadType === "custom" && (
-                <div className="form-group" style={{marginTop: 35,}}>
+                <div className="form-group" style={{ marginTop: 35 }}>
                   <textarea className="form-control" />
                   <small className="form-text text-muted">
                     {languageManager.translate(
