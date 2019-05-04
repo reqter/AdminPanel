@@ -54,7 +54,7 @@ const UpsertFile = props => {
       } else {
         const obj = {
           type: "wrongUrl",
-          message: languageManager.translate("UPSERT_ASSET_WRONG_URL"),
+          message: languageManager.translate("Url is wrong to open edit page"),
         };
         // url is wrong
         changeTab(2);
@@ -124,7 +124,7 @@ const UpsertFile = props => {
         const obj = {
           type: "NOT_FOUND",
           message: languageManager.translate(
-            "UPSERT_ASSET_GET_BY_ID_NOT_FOUND"
+            "Selected user has not found , it maybe has remvoed please try with valid user"
           ),
         };
         changeTab(2);
@@ -161,7 +161,7 @@ const UpsertFile = props => {
   }
 
   function upsertItem(closePage) {
-    if (updateMode) { 
+    if (updateMode) {
       updateUser()
         .onOk(result => {
           dispatch({
@@ -364,10 +364,12 @@ const UpsertFile = props => {
                     "UPSERT_ASSET_ERROR_BOX_REFRESH_BTN"
                   )}
                 </button>
-                <button className="btn btn-light" onClick={backToUsers}>
-                  {languageManager.translate(
-                    "UPSERT_ASSET_ERROR_BOX_MEDIA_BTN"
-                  )}
+                <button
+                  className="btn btn-light"
+                  onClick={backToUsers}
+                  style={{ marginLeft: 10 }}
+                >
+                  {languageManager.translate("Users")}
                 </button>
               </div>
             </div>
