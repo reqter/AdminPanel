@@ -109,6 +109,14 @@ const Settings = props => {
                 New Api Key
               </button>
             )}
+            {tabContent === "pipeline" && (
+              <button
+                className="btn btn-primary"
+                onClick={toggleUpsertApiKeyModal}
+              >
+                New PipeLine
+              </button>
+            )}
             {tabContent === "webHooks" && (
               <Dropdown
                 isOpen={newWebHookDropDown}
@@ -159,6 +167,14 @@ const Settings = props => {
               onClick={() => toggleTab("apiKeys")}
             >
               Keys
+            </div>
+            <div
+              className={
+                "tabItem " + (tabContent === "pipeline" ? "active" : "")
+              }
+              onClick={() => toggleTab("pipeline")}
+            >
+              PipeLines
             </div>
             <div
               className={
