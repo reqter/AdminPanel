@@ -1,20 +1,26 @@
+import React from 'react'
 import { languageManager } from './services'
+
+import withResolver from './hoc/withResolver'
 
 import Login from './Packages/Login'
 import Signup from './Packages/Signup'
 import ForgotPassword from './Packages/ForgotPassword'
-import Home from './Packages/Home'
+import HomeComponent from './Packages/Home'
 import Categories from './Packages/Categories'
 import ContentType from './Packages/ContentType'
 import Users from './Packages/Users'
 import Products from './Packages/Products'
 import UpsertProduct from './Packages/UpsertProduct'
 import Assets from './Packages/Assets'
-import AddAsset from './Packages/upsertFile'
-import UpdateAsset from './Packages/upsertFile'
+import UpdateFile from './Packages/upsertFile'
 import Profile from './Packages/Profile'
 import Settings from './Packages/Settings'
 import UpsertUser from './Packages/upsertUser'
+
+const Home = withResolver(HomeComponent)
+const AddAsset = withResolver(UpdateFile)
+const EditAsset = withResolver(UpdateFile)
 
 function translate (key) {
   return languageManager.translate(key)
@@ -41,7 +47,6 @@ const routes = [
     path: '/panel',
     component: Home,
     isPublic: false,
-    isSync: true,
     routes: [
       {
         name: translate('HOME_SIDE_NAV_CONTENT_TYPE'),
@@ -104,44 +109,37 @@ const routes = [
   {
     path: '/contents/new',
     component: UpsertProduct,
-    isPublic: false,
-    isSync: true
+    isPublic: false
   },
   {
     path: '/contents/edit/:id',
     component: UpsertProduct,
-    isPublic: false,
-    isSync: true
+    isPublic: false
   },
   {
     path: '/contents/view/:id',
     component: UpsertProduct,
-    isPublic: false,
-    isSync: true
+    isPublic: false
   },
   {
     path: '/users/new',
     component: UpsertUser,
-    isPublic: false,
-    isSync: true
+    isPublic: false
   },
   {
     path: '/users/edit/:id',
     component: UpsertUser,
-    isPublic: false,
-    isSync: true
+    isPublic: false
   },
   {
     path: '/addAsset',
     component: AddAsset,
-    isPublic: false,
-    isSync: true
+    isPublic: false
   },
   {
     path: '/editAsset/:id',
-    component: UpdateAsset,
-    isPublic: true,
-    isSync: true
+    component: EditAsset,
+    isPublic: true
   }
 ]
 export default routes

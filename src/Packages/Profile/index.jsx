@@ -294,10 +294,6 @@ const Profile = props => {
                         <a>or Browse</a>
                         <input type="file" onChange={handleImageBrowsed} />
                       </span>
-                      {/* <div className="dropLink">
-                        <span> </span>
-                        <input type="file" />
-                      </div> */}
                     </div>
                   </div>
                 </div>
