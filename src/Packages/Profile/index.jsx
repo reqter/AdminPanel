@@ -365,7 +365,7 @@ const Profile = props => {
                       </span>
                     </div>
                     <div className="right-switch">
-                      {userInfo && userInfo.emailConfirm === true && (
+                      {userInfo && userInfo.emailConfirmed === true && (
                         <button
                           type="button"
                           className="btn btn-success btn-sm"

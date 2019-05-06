@@ -9,6 +9,8 @@ const getUserInfo_url =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_GET_USER_INFO
 const updateProfileURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_UPDATE_PROFILE
+const confirmEmailURL =
+  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CONFIRM_EMAIL
 
 export function login () {
   let _onOkCallBack
@@ -1003,21 +1005,21 @@ export function sendEmailConfirmation () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async userName => {
+  const _call = async () => {
     try {
-      // const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
-      // var rawResponse = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({})
-      // })
-      // const status = rawResponse.status
-      // const result = await rawResponse.json()
-      const status = 200
-      const result = {}
+      const url = confirmEmailURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
+        case 201:
         case 200:
           _onOk(result)
           break
