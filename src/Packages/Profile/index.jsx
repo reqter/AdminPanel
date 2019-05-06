@@ -33,10 +33,10 @@ const Profile = props => {
     userInfo ? userInfo.notification : true
   );
   const [firstName, setFirstName] = useState(
-    userInfo ? userInfo.profile.first_name : ""
+    userInfo ? userInfo.profile.first_name : undefined
   );
   const [lastName, setLastName] = useState(
-    userInfo ? userInfo.profile.last_name : ""
+    userInfo ? userInfo.profile.last_name : undefined
   );
   const [avatar, setAvatar] = useState(
     userInfo
@@ -54,10 +54,11 @@ const Profile = props => {
         div.addEventListener("dragover", handleDrag);
         div.addEventListener("drop", handleDrop);
       }
-      const { firstName, lastName, avatar, notification } = userInfo.profile;
-      toggleNotification(notification !== undefined ? notification : true);
-      setFirstName(firstName);
-      setLastName(lastName);
+      const { first_name, last_name, avatar } = userInfo.profile;
+      const { notification } = userInfo;
+      toggleNotification(notification ? notification : true);
+      setFirstName(first_name ? first_name : "");
+      setLastName(last_name ? last_name : "");
       setAvatar(
         avatar
           ? avatar
@@ -90,7 +91,7 @@ const Profile = props => {
     const value = e.target.checked;
     changeNotification()
       .onOk(result => {
-         let u = { ...userInfo };
+        let u = { ...userInfo };
         u.profile["notification"] = value;
         dispatch({
           type: "SET_USERINFO",
@@ -222,12 +223,12 @@ const Profile = props => {
       sendEmailConfirmation()
         .onOk(result => {
           toggleConfirmEmailSpinner(false);
-            let u = { ...userInfo };
-            u["emailConfirmed"] = true;
-            dispatch({
-              type: "SET_USERINFO",
-              value: u,
-            });
+          let u = { ...userInfo };
+          u["emailConfirmed"] = true;
+          dispatch({
+            type: "SET_USERINFO",
+            value: u,
+          });
         })
         .onServerError(result => {
           toggleConfirmEmailSpinner(false);

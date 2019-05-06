@@ -7,6 +7,8 @@ const signup_url =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_SIGNUP_URL
 const getUserInfo_url =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_GET_USER_INFO
+const updateProfileURL =
+  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_UPDATE_PROFILE
 
 export function login () {
   let _onOkCallBack
@@ -467,7 +469,7 @@ export function getUserInfo () {
         method: 'GET',
         headers: {
           authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         }
       })
       const status = rawResponse.status
@@ -560,22 +562,23 @@ export function updateProfile () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async (firstName, lastName) => {
+  const _call = async (first_name, last_name) => {
     try {
-      // const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
-      // var rawResponse = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({})
-      // })
-      // const status = rawResponse.status
-      // const result = await rawResponse.json({
-      //   username: userName
-      // })
-      const status = 200
-      const result = {}
+      const url = updateProfileURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          first_name,
+          last_name
+        })
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
         case 200:
           _onOk(result)
