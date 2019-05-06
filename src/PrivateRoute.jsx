@@ -29,7 +29,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   }
   return isAuthenticated ? (
     <Route
-      onEnter={userInfo === undefined ? getUserDetail() : undefined}
       {...rest}
     />
   ) : (

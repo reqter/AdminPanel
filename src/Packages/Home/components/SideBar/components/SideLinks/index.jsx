@@ -13,12 +13,12 @@ const NavLinks = props => {
       path: "/panel/contentType",
       desc: translate("HOME_SIDE_NAV_CONTENT_TYPE_DEC")
     },
-    {
-      name: translate("HOME_SIDE_NAV_CATEGRIES"),
-      icon: "category",
-      path: "/panel/categories",
-      desc: translate("HOME_SIDE_NAV_CATEGORIES_DEC")
-    },
+    // {
+    //   name: translate("HOME_SIDE_NAV_CATEGRIES"),
+    //   icon: "category",
+    //   path: "/panel/categories",
+    //   desc: translate("HOME_SIDE_NAV_CATEGORIES_DEC")
+    // },
     {
       name: translate("HOME_SIDE_NAV_PRODUCTS"),
       icon: "product",
@@ -38,12 +38,12 @@ const NavLinks = props => {
     //   path: "/home/quotes",
     //   desc: translate("HOME_SIDE_NAV_QUOTES_DESC")
     // },
-    {
-      name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
-      icon: "users",
-      path: "/panel/users",
-      desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC")
-    },
+    // {
+    //   name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
+    //   icon: "users",
+    //   path: "/panel/users",
+    //   desc: translate("HOME_SIDE_NAV_MANAGE_USERS_DESC")
+    // },
     {
       name: translate("HOME_SIDE_NAV_ASSETS_MANAGER"),
       icon: "images",

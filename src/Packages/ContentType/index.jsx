@@ -17,16 +17,18 @@ const ItemTypes = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
   const [{ contentTypes }, dispatch] = useGlobalState();
-
+  const [spinner, setSpinner] = useState(true);
   useEffect(() => {
     getContentTypes()
       .onOk(result => {
+        setSpinner(false)
         dispatch({
           type: "SET_CONTENT_TYPES",
           value: result,
         });
       })
       .onServerError(result => {
+        setSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -36,6 +38,7 @@ const ItemTypes = props => {
         });
       })
       .onBadRequest(result => {
+        setSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -45,6 +48,7 @@ const ItemTypes = props => {
         });
       })
       .unAuthorized(result => {
+        setSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -367,30 +371,62 @@ const ItemTypes = props => {
             <span className="ct-header-description">{pageDescription}</span>
           </div>
           <div className="ct-header-right">
-            <button className="btn btn-primary" onClick={openAddItemTypeModal}>
+            <button
+              className="btn btn-primary"
+              onClick={openAddItemTypeModal}
+            >
               {languageManager.translate("CONTENT_TYPE_NEW_ITEM_BTN")}
             </button>
           </div>
         </div>
         <div className="ct-content">
           <div className="ct-content-left">
-            <List
-              rightContent={rightContent}
-              data={contentTypes}
-              handleEditType={selected => editItemType(selected)}
-              handleDeleteType={selected => removeItemType(selected)}
-              handleShowFields={selected => showFields(selected)}
-              onSelectAccessRight={selected => openAssignRoleModal(selected)}
-            />
+            {spinner ? (
+              <>
+                <div className="skeleton">
+                  <div className="post">
+                    <div className="avatar" />
+                    <div className="lines">
+                      <div className="line" />
+                      <div className="line" />
+                    </div>
+                  </div>
+                </div>
+                <div className="skeleton">
+                  <div className="post">
+                    <div className="avatar" />
+                    <div className="lines">
+                      <div className="line" />
+                      <div className="line" />
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <List
+                rightContent={rightContent}
+                data={contentTypes}
+                handleEditType={selected => editItemType(selected)}
+                handleDeleteType={selected => removeItemType(selected)}
+                handleShowFields={selected => showFields(selected)}
+                onSelectAccessRight={selected =>
+                  openAssignRoleModal(selected)
+                }
+              />
+            )}
           </div>
           {rightContent && (
             <div className="ct-content-right animated slideInRight faster">
               <div className="ct-content-right-header">
                 <span className="ct-right-header-title">
-                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_TITLE")}
+                  {languageManager.translate(
+                    "CONTENT_TYPE_MODEL_HEADER_TITLE"
+                  )}
                 </span>
                 <span className="ct-right-header-description">
-                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_DESC")}
+                  {languageManager.translate(
+                    "CONTENT_TYPE_MODEL_HEADER_DESC"
+                  )}
                 </span>
                 <span
                   className="icon-cross closeIcon"

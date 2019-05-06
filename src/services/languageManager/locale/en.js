@@ -2,7 +2,7 @@ export default {
   // COMMON
   BACK: 'Back',
   draft: 'Draft',
-  archived: 'Archive',
+  archived: 'Archived',
   changed: 'Changed',
   published: 'Published',
   NAME: 'Name',
@@ -428,13 +428,13 @@ export default {
   ASSET_DELETE_NOT_FOUND: 'File not found.make sure to choose content ',
   UPSERT_ASSET_UPDATE_ON_OK: 'the asset is updated successfully',
   UPSERT_ASSET_UPDATE_ON_SERVER_ERROR:
-    'nternal server error . please make a call with adminstrator ',
+    'Internal server error',
   UPSERT_ASSET_UPDATE_ON_BAD_REQUEST: '',
   UPSERT_ASSET_UPDATE_UN_AUTHORIZED: '',
-  UPSERT_ASSET_UPDATE_NOT_FOUND: 'll',
+  UPSERT_ASSET_UPDATE_NOT_FOUND: 'Not found asset',
   UPSERT_ASSET_ADD_ON_OK: 'New asset is added successfully',
   UPSERT_ASSET_ADD_ON_SERVER_ERROR:
-    'nternal server error . please make a call with adminstrator ',
+    'Internal server error . please make a call with adminstrator ',
   UPSERT_ASSET_ADD_ON_BAD_REQUEST: '',
   UPSERT_ASSET_ADD_UN_AUTHORIZED: '',
   UPSERT_ASSET_ADD_NOT_FOUND: '',

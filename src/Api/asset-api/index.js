@@ -1,5 +1,23 @@
+import { storageManager } from './../../services'
 const config = process.env
-const upload_url = config.REACT_APP_FILE_UPLOADER_URL
+const getURL = config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_GET
+const addURL = config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_ADD
+const updateURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_UPDATE
+const deleteURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_DELETE
+const getAssetByIdURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_GET_BY_ID
+const publishURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_PUBLISH
+const unPublishURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_UN_PUBLISH
+const archiveURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_ARCHIVE
+const unArchiveURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_UN_ARCHIVE
+const filterURL =
+  config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_FILTER
 
 const data = require('./../data.json')
 
@@ -40,85 +58,96 @@ export function filterAssets () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (
-    all,
-    image = false,
-    video = false,
-    audio = false,
-    pdf = false,
-    spreadsheet = false,
-    state = undefined
-  ) {
-    let result
-    if (all && state === undefined) {
-      result = data.assets
-    } else if (all && state) {
-      result = [...data.assets].filter(item => item.status === state)
-    } else {
-      result = [...data.assets].filter(item => {
-        if (image) {
-          if (state) {
-            if (item.status === state) {
-              if (item.fileType.toLowerCase().includes('image')) return true
-            }
-          } else if (item.fileType.toLowerCase().includes('image')) return true
+  const _call = async (spaceId, fileType, assetStatus) => {
+    try {
+      let url = filterURL
+      if (fileType !== undefined) {
+        url = url + '?fileType=' + fileType
+      }
+      if (assetStatus !== undefined) {
+        url = url + '?status=' + assetStatus
+      }
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
         }
-        if (video) {
-          if (state) {
-            if (item.status === state) {
-              if (item.fileType.toLowerCase().includes('video')) return true
-            }
-          } else if (item.fileType.toLowerCase().includes('video')) return true
-        }
-        if (audio) {
-          if (state) {
-            if (item.status === state) {
-              if (item.fileType.toLowerCase().includes('audio')) return true
-            }
-          } else if (item.fileType.toLowerCase().includes('audio')) return true
-        }
-        if (pdf) {
-          if (state) {
-            if (item.status === state) {
-              if (item.fileType.toLowerCase().includes('pdf')) return true
-            }
-          } else if (item.fileType.toLowerCase().includes('pdf')) return true
-        }
-        if (spreadsheet) {
-          if (state) {
-            if (item.status === state) {
-              if (item.fileType.toLowerCase().includes('spreadsheet')) {
-                return true
-              }
-            }
-          } else if (item.fileType.toLowerCase().includes('spreadsheet')) {
-            return true
-          }
-        }
-        return false
       })
-    }
 
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
-    }
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
+    //   let result
+    // if (all && state === undefined) {
+    //   result = data.assets
+    // } else if (all && state) {
+    //   result = [...data.assets].filter(item => item.status === state)
+    // } else {
+    //   result = [...data.assets].filter(item => {
+    //     if (image) {
+    //       if (state) {
+    //         if (item.status === state) {
+    //           if (item.fileType.toLowerCase().includes('image')) return true
+    //         }
+    //       } else if (item.fileType.toLowerCase().includes('image')) return true
+    //     }
+    //     if (video) {
+    //       if (state) {
+    //         if (item.status === state) {
+    //           if (item.fileType.toLowerCase().includes('video')) return true
+    //         }
+    //       } else if (item.fileType.toLowerCase().includes('video')) return true
+    //     }
+    //     if (audio) {
+    //       if (state) {
+    //         if (item.status === state) {
+    //           if (item.fileType.toLowerCase().includes('audio')) return true
+    //         }
+    //       } else if (item.fileType.toLowerCase().includes('audio')) return true
+    //     }
+    //     if (pdf) {
+    //       if (state) {
+    //         if (item.status === state) {
+    //           if (item.fileType.toLowerCase().includes('pdf')) return true
+    //         }
+    //       } else if (item.fileType.toLowerCase().includes('pdf')) return true
+    //     }
+    //     if (spreadsheet) {
+    //       if (state) {
+    //         if (item.status === state) {
+    //           if (item.fileType.toLowerCase().includes('spreadsheet')) {
+    //             return true
+    //           }
+    //         }
+    //       } else if (item.fileType.toLowerCase().includes('spreadsheet')) {
+    //         return true
+    //       }
+    //     }
+    //     return false
+    //   })
+    // }
   }
 
   return {
@@ -187,30 +216,41 @@ export function getAssets () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (name, contentType, category) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-    const result = data.assets
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest(result)
-        break
-      case 401:
-        _unAuthorized(result)
-        break
-      case 404:
-        _notFound(result)
-        break
-      case 500:
-        _onServerError(result)
-        break
-      default:
-        break
-    }
+  const _call = async spaceId => {
+    try {
+      const url = getURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        }
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {
@@ -279,33 +319,42 @@ export function addAsset () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-
-    //
-
-    data.assets.push(obj)
-
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk()
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+  const _call = async (spaceId, asset) => {
+    try {
+      const url = addURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId || '5c6b37785a4a69808852bc4d'
+        },
+        body: JSON.stringify(asset)
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
     }
   }
 
@@ -374,41 +423,59 @@ export function updateAsset () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, asset) => {
+    try {
+      const url = updateURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: asset.id,
+          name: asset.name,
+          title: asset.title,
+          description: asset.description,
+          url: asset.url,
+          fileType: asset.fileType
+        })
+      })
 
-    //
-
-    const result = data.assets.map(item => {
-      if (item.sys.id === obj.sys.id) {
-        return { ...item, ...obj }
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
       }
-      return item
-    })
-    data.assets = result
-
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+    } catch (error) {
+      _onServerError(error)
     }
   }
+  //   const result = data.assets.map(item => {
+  //     if (item.sys.id === obj.sys.id) {
+  //       return { ...item, ...obj }
+  //     }
+  //     return item
+  //   })
+  //   data.assets = result
 
   return {
     call: _call,
@@ -475,36 +542,49 @@ export function deleteAsset () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await 500Response.json();
+  const _call = async (spaceId, assetId) => {
+    try {
+      const url = deleteURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: '5c6b37785a4a69808852bc4d'
+        },
+        body: JSON.stringify({
+          id: assetId
+        })
+      })
 
-    //
-
-    const result = data.assets.filter(item => item.sys.id !== obj.sys.id)
-    data.assets = result
-
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
-    }
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
+  // const result = data.assets.filter(item => item.sys.id !== obj.sys.id)
+  // data.assets = result
+
+  // const status = 200
 
   return {
     call: _call,
@@ -571,32 +651,42 @@ export function getAssetById () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (id) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, assetId) => {
+    try {
+      const url = getAssetByIdURL + '?id=' + assetId
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId || '5c6b37785a4a69808852bc4d'
+        }
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      // const result = data.assets.find(item => item.sys.id === id)
 
-    const result = data.assets.find(item => item.sys.id === id)
-    let status = 200
-    if (!result) status = 404
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
-    }
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {
@@ -664,39 +754,47 @@ export function publish () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (id) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, assetId) => {
+    try {
+      const url = publishURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: '5c6b37785a4a69808852bc4d'
+        },
+        body: JSON.stringify({
+          id: assetId
+        })
+      })
 
-    //
-
-    const result = data.assets.map(item => {
-      if (item.sys.id === id) item.status = 'publish'
-      return item
-    })
-    data.assets = result
-    let status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
     }
   }
-
   return {
     call: _call,
     onOk: function (callback) {
@@ -762,36 +860,45 @@ export function unPublish () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (id) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, assetId) => {
+    try {
+      const url = unPublishURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: '5c6b37785a4a69808852bc4d'
+        },
+        body: JSON.stringify({
+          id: assetId
+        })
+      })
 
-    //
-
-    const result = data.assets.map(item => {
-      if (item.sys.id === id) item.status = 'archive'
-      return item
-    })
-    data.assets = result
-    let status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
     }
   }
 
@@ -860,36 +967,45 @@ export function archive () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (id) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, assetId) => {
+    try {
+      const url = archiveURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: '5c6b37785a4a69808852bc4d'
+        },
+        body: JSON.stringify({
+          id: assetId
+        })
+      })
 
-    //
-
-    const result = data.assets.map(item => {
-      if (item.sys.id === id) item.status = 'archive'
-      return item
-    })
-    data.assets = result
-    let status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
     }
   }
 
@@ -958,36 +1074,45 @@ export function unArchive () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (id) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, assetId) => {
+    try {
+      const url = unArchiveURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: '5c6b37785a4a69808852bc4d'
+        },
+        body: JSON.stringify({
+          id: assetId
+        })
+      })
 
-    //
-
-    const result = data.assets.map(item => {
-      if (item.sys.id === id) item.status = 'draft'
-      return item
-    })
-    data.assets = result
-    let status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
     }
   }
 
@@ -1064,11 +1189,11 @@ export function uploadAssetFile () {
     }
   }
 
-  const _call = async file => {
+  const _call = async (file, spaceId) => {
     try {
       var xhr = new XMLHttpRequest()
-      const url = process.env.REACT_APP_FILE_UPLOADER_URL
-      const token = localStorage.getItem('token')
+      const url = config.REACT_APP_FILE_UPLOADER_URL
+      const token = storageManager.getItem('token')
 
       xhr.open('POST', url)
       xhr.onload = () => {
@@ -1109,6 +1234,7 @@ export function uploadAssetFile () {
         }
       }
       xhr.setRequestHeader('authorization', 'Bearer ' + token)
+      xhr.setRequestHeader('spaceId', spaceId || '5c6b37785a4a69808852bc4d')
       // xhr.setRequestHeader('content-type', 'multipart/form-data')
       await xhr.send(formdata)
     } catch (error) {}

@@ -23,7 +23,7 @@ const Provider = props => {
       },
       {
         id: "1",
-        name: "archvied",
+        name: "archived",
         icon: "icon-archive",
       },
       {
@@ -61,6 +61,14 @@ const Provider = props => {
 
   const reducer = (state, action) => {
     switch (action.type) {
+      case "LOGOUT":
+        const logout = {
+          ...state,
+          isAuthenticated: false,
+          spaceInfo: undefined,
+          userInfo: undefined,
+        };
+        return logout;
       case "SET_AUTHENTICATED":
         const auth = {
           ...state,
@@ -154,6 +162,54 @@ const Provider = props => {
         return {
           ...state,
           assets: action.value,
+        };
+      case "DELETE_ASSET":
+        const assets_delete = state.assets.filter(
+          item => item._id !== action.value._id
+        );
+        return {
+          ...state,
+          assets: assets_delete,
+        };
+      case "ARCHIVE_ASSET":
+        const assets_archive = state.assets.map(item => {
+          if (item._id === action.value._id) item.status = action.value.status;
+          return item;
+        });
+
+        return {
+          ...state,
+          users: assets_archive,
+        };
+      case "UN_ARCHIVE_ASSET":
+        const assets_unarchive = state.assets.map(item => {
+          if (item._id === action.value._id) item.status = action.value.status;
+          return item;
+        });
+
+        return {
+          ...state,
+          users: assets_unarchive,
+        };
+      case "PUBLISH_ASSET":
+        const assets_publish = state.assets.map(item => {
+          if (item._id === action.value._id) item.status = action.value.status;
+          return item;
+        });
+
+        return {
+          ...state,
+          users: assets_publish,
+        };
+      case "UN_PUBLISH_ASSET":
+        const assets_unpublish = state.assets.map(item => {
+          if (item._id === action.value._id) item.status = action.value.status;
+          return item;
+        });
+
+        return {
+          ...state,
+          users: assets_unpublish,
         };
       case "ADD_NOTIFY":
         let newItem = { ...action.value };

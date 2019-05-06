@@ -23,7 +23,7 @@ const ProfileWidget = props => {
   function logout() {
     storageManager.removeItem("token");
     dispatch({
-      type: "SET_AUTHENTICATED",
+      type: "LOGOUT",
       value: false,
     });
     history.replace("/login");
@@ -36,9 +36,9 @@ const ProfileWidget = props => {
   }
   return (
     <div className="profile-widget">
-      {userInfo && userInfo.avatar ? (
+      {userInfo && userInfo.profile.avatar ? (
         <div className="userImage">
-          <img src={userInfo.avatar} alt="" />
+          <img src={userInfo.profile.avatar} alt="" />
         </div>
       ) : (
         <div className="left">
@@ -50,9 +50,11 @@ const ProfileWidget = props => {
         {userInfo && (
           <>
             <span className="title">
-              {userInfo.firstName + " " + userInfo.lastName}
+              {(userInfo.profile.first_name || "...") +
+                " " +
+                (userInfo.profile.last_name || "...")}
             </span>
-            <span className="role">{userInfo.email}</span>
+            <span className="role">{userInfo.username}</span>
           </>
         )}
       </div>

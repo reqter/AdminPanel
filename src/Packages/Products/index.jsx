@@ -32,29 +32,29 @@ const Products = props => {
         );
       },
     },
-    {
-      width: 100,
-      Header: () => <div className="p-header-td">Media</div>,
-      //show: false,
-      headerStyle: {
-        display: "block",
-      },
-      accessor: "fields.thumbnail",
-      Cell: props => {
-        return (
-          <div className="p-image">
-            {props.value && props.value.length > 0 ? (
-              getAssetUi(props.value[0][currentLang])
-            ) : (
-              <div className="p-thumbnail-file empty">
-                {/* <i className="file-text" /> */}
-                empty
-              </div>
-            )}
-          </div>
-        );
-      },
-    },
+    // {
+    //   width: 100,
+    //   Header: () => <div className="p-header-td">Media</div>,
+    //   //show: false,
+    //   headerStyle: {
+    //     display: "block",
+    //   },
+    //   accessor: "fields.thumbnail",
+    //   Cell: props => {
+    //     return (
+    //       <div className="p-image">
+    //         {props.value && props.value.length > 0 ? (
+    //           getAssetUi(props.value[0][currentLang])
+    //         ) : (
+    //           <div className="p-thumbnail-file empty">
+    //             {/* <i className="file-text" /> */}
+    //             empty
+    //           </div>
+    //         )}
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       Header: () => <div className="p-header-td">Name</div>,
       //show: false,
@@ -102,21 +102,21 @@ const Products = props => {
         );
       },
     },
-    {
-      Header: () => <div className="p-header-td">Category</div>,
-      //show: false,
-      headerStyle: {
-        display: "block",
-      },
-      accessor: "category",
-      Cell: props => (
-        <div className="p-contentType">
-          <span className="badge badge-light">
-            {props.value ? props.value.name[currentLang] : ""}
-          </span>
-        </div>
-      ),
-    },
+    // {
+    //   Header: () => <div className="p-header-td">Category</div>,
+    //   //show: false,
+    //   headerStyle: {
+    //     display: "block",
+    //   },
+    //   accessor: "category",
+    //   Cell: props => (
+    //     <div className="p-contentType">
+    //       <span className="badge badge-light">
+    //         {props.value ? props.value.name[currentLang] : ""}
+    //       </span>
+    //     </div>
+    //   ),
+    // },
     {
       Header: () => <div className="p-header-td">Status</div>,
       //show: false,

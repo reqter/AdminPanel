@@ -93,28 +93,20 @@ const Settings = props => {
                 New Locale
               </button>
             )}
-            {tabContent === "roles" && (
+            {/* {tabContent === "roles" && (
               <button
                 className="btn btn-primary"
                 onClick={toggleUpsertRoleModal}
               >
                 New Role
               </button>
-            )}
+            )} */}
             {tabContent === "apiKeys" && (
               <button
                 className="btn btn-primary"
                 onClick={toggleUpsertApiKeyModal}
               >
                 New Api Key
-              </button>
-            )}
-            {tabContent === "pipeline" && (
-              <button
-                className="btn btn-primary"
-                onClick={toggleUpsertApiKeyModal}
-              >
-                New PipeLine
               </button>
             )}
             {tabContent === "webHooks" && (
@@ -154,12 +146,12 @@ const Settings = props => {
             >
               Locales
             </div>
-            <div
+            {/* <div
               className={"tabItem " + (tabContent === "roles" ? "active" : "")}
               onClick={() => toggleTab("roles")}
             >
               Roles
-            </div>
+            </div> */}
             <div
               className={
                 "tabItem " + (tabContent === "apiKeys" ? "active" : "")
@@ -167,14 +159,6 @@ const Settings = props => {
               onClick={() => toggleTab("apiKeys")}
             >
               Keys
-            </div>
-            <div
-              className={
-                "tabItem " + (tabContent === "pipeline" ? "active" : "")
-              }
-              onClick={() => toggleTab("pipeline")}
-            >
-              PipeLines
             </div>
             <div
               className={

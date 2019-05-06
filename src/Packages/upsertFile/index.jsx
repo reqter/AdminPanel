@@ -12,6 +12,7 @@ import {
   KeyValue,
   RichText,
   FileUploader,
+  CircleSpinner,
 } from "./../../components";
 
 const fields = [
@@ -33,9 +34,9 @@ const fields = [
   },
   {
     id: "2",
-    name: "shortDesc",
+    name: "description",
     title: {
-      en: "Short Description",
+      en: "Description",
       fa: "توضیحات",
     },
     description: {
@@ -66,13 +67,15 @@ const fields = [
 ];
 
 const UpsertFile = props => {
-  const [{}, dispatch] = useGlobalState();
+  const [{ spaceInfo }, dispatch] = useGlobalState();
   // variables
   const [updateMode, toggleUpdateMode] = useState();
   const [tab, changeTab] = useState(); // tab1 ; form , tab2 : errors
   const [error, setError] = useState();
+  const [spinner, toggleSpinner] = useState(false);
+  const [closeSpinner, toggleCloseSpinner] = useState(false);
   const [formData, setFormData] = useState({});
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState();
   const [formValidation, setFormValidation] = useState();
   const [isFormValid, toggleIsValidForm] = useState();
 
@@ -98,7 +101,7 @@ const UpsertFile = props => {
   }, [props.match.params.id]);
 
   useEffect(() => {
-    if (Object.keys(form).length > 0 && checkFormValidation()) {
+    if (form && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [formValidation]);
@@ -114,9 +117,9 @@ const UpsertFile = props => {
   function getAssetItemById(id) {
     getAssetById()
       .onOk(result => {
-        changeTab(1);
-        setFormData(result);
         setForm(result);
+        setFormData(result);
+        changeTab(1);
       })
       .onServerError(result => {
         const obj = {
@@ -160,7 +163,7 @@ const UpsertFile = props => {
         changeTab(2);
         setError(obj);
       })
-      .call(id);
+      .call(spaceInfo ? spaceInfo.id : undefined, id);
   }
   function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
@@ -191,7 +194,7 @@ const UpsertFile = props => {
           en: value["en"],
           fa: value["fa"],
         };
-        f.fileType = value.fileType;
+        f.fileType = value.fileType.split("/")[0];
         f.name = value["name"];
         f["title"] = {
           en: value["name"],
@@ -205,22 +208,6 @@ const UpsertFile = props => {
       ...prevFormValidation,
       [key]: isValid,
     }));
-    // let obj = { ...formValidation };
-    // if (isValid && obj) {
-    //   delete obj[key];
-    //   if (key === "url" && field.isBase) delete obj["title"];
-    //   if (Object.keys(obj).length === 0) {
-    //     setFormValidation(undefined);
-    //   } else {
-    //     setFormValidation(obj);
-    //   }
-    // } else {
-    //   if (obj === undefined) {
-    //     obj = {};
-    //   }
-    //   obj[key] = null;
-    //   setFormValidation(obj);
-    // }
   }
 
   function getFieldItem(field) {
@@ -315,146 +302,196 @@ const UpsertFile = props => {
   }
 
   function upsertItem(closePage) {
-    if (updateMode) {
-      updateAsset()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: languageManager.translate("UPSERT_ASSET_UPDATE_ON_OK"),
-            },
-          });
-          if (closePage) {
-            backToAssets();
-          } else {
-            setFormData({});
-            setFormValidation();
-          }
-        })
-        .onServerError(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_ON_SERVER_ERROR"
-              ),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_ON_BAD_REQUEST"
-              ),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_UN_AUTHORIZED"
-              ),
-            },
-          });
-        })
-        .notFound(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ASSET_UPDATE_NOT_FOUND"
-              ),
-            },
-          });
-        })
-        .call(form);
-    } else {
-      const obj = {
-        sys: {
-          id: Math.random().toString(),
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: "",
-          },
-          issueDate: "19/01/2019 20:18",
-        },
-        name: form.name,
-        title: form.title,
-        shorDesc: form.shortDesc,
-        status: "draft",
-        url: form.url,
-        fileType: form.fileType,
-      };
-      addAsset()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: languageManager.translate("UPSERT_ASSET_ADD_ON_OK"),
-            },
-          });
-          if (closePage) {
-            backToAssets();
-          } else {
-            setFormData({});
-            setForm({});
-            const newObj = { ...formValidation };
-            setFormValidation(newObj);
-          }
-        })
-        .onServerError(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
-              ),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
-              ),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ASSET_ADD_UN_AUTHORIZED"
-              ),
-            },
-          });
-        })
-        .notFound(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND"),
-            },
-          });
-        })
-        .call(obj);
+    if (!spinner) {
+      if (closePage) {
+        toggleCloseSpinner(true);
+      } else {
+        toggleSpinner(true);
+      }
+      if (updateMode) {
+        updateAsset()
+          .onOk(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("UPSERT_ASSET_UPDATE_ON_OK"),
+              },
+            });
+            if (closePage) {
+              backToAssets();
+            } else {
+              setFormData({});
+              setFormValidation();
+            }
+          })
+          .onServerError(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_UPDATE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_UPDATE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_UPDATE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_UPDATE_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(spaceInfo.id, form);
+      } else {
+        const obj = {
+          name: form.name,
+          title: form.title,
+          description: form.shortDesc,
+          url: form.url,
+          fileType: form.fileType,
+        };
+        addAsset()
+          .onOk(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("UPSERT_ASSET_ADD_ON_OK"),
+              },
+            });
+            if (closePage) {
+              backToAssets();
+            } else {
+              setFormData({});
+              setForm({});
+              const newObj = { ...formValidation };
+              setFormValidation(newObj);
+            }
+          })
+          .onServerError(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            if (closePage) {
+              toggleCloseSpinner(false);
+            } else {
+              toggleSpinner(false);
+            }
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(spaceInfo.id, obj);
+      }
     }
   }
   function refreshCurrentPage() {
@@ -497,25 +534,29 @@ const UpsertFile = props => {
                 <div className="upf-actions">
                   {!updateMode && (
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary ajax-button"
                       onClick={() => upsertItem(false)}
                       disabled={!isFormValid}
                     >
-                      Save & New
+                      <CircleSpinner show={spinner} size="small" />
+                      <span>Save & New</span>
                     </button>
                   )}
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary ajax-button"
                     onClick={() => upsertItem(true)}
                     disabled={!isFormValid}
                   >
-                    {updateMode ? "Update & Close" : "Save & Close"}
+                    <CircleSpinner show={closeSpinner} size="small" />
+                    <span>
+                      {updateMode ? "Update & Close" : "Save & Close"}
+                    </span>
                   </button>
                 </div>
               </div>
             </>
           )}
-          {tab === 2 && (
+          {tab === 2 && error && (
             <div className="up-file-formInputs animated fadeIn errorsBox">
               <div className="alert alert-danger">{error.message}</div>
               <div className="actions">

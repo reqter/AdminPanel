@@ -47,7 +47,7 @@ const filters = [
 
 const Assets = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ assets, status }, dispatch] = useGlobalState();
+  const [{ assets, status, spaceInfo }, dispatch] = useGlobalState();
 
   useEffect(() => {
     getAssets()
@@ -76,6 +76,7 @@ const Assets = props => {
         });
       })
       .unAuthorized(result => {
+        props.history.replace("/login");
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -85,129 +86,68 @@ const Assets = props => {
         });
       })
       .notFound(result => {})
-      .call();
+      .call(spaceInfo.id);
   }, []);
 
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [selectedFileType, setFileType] = useState(filters[0]);
   const [selectedStatus, setStatus] = useState({});
-  const [showAlert, toggleAlert] = useState(false);
   const [alertData, setAlertData] = useState();
 
   function translate(key) {
     return languageManager.translate(key);
   }
-  function getTypeFilters(item) {
-    return {
-      all: item.name === "all" ? true : false,
-      image: item.name === "image" ? true : false,
-      video: item.name === "video" ? true : false,
-      audio: item.name === "audio" ? true : false,
-      pdf: item.name === "pdf" ? true : false,
-      spreadsheet: item.name === "spreadsheet" ? true : false,
-    };
+  function doFilter(fileType, status) {
+    filterAssets()
+      .onOk(result => {
+        dispatch({
+          type: "SET_ASSETS",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
+          },
+        });
+      })
+      .notFound(result => {})
+      .call(spaceInfo.id, fileType === "all" ? undefined : fileType, status);
   }
   function handleFileTypeClick(selected) {
     setFileType(selected);
-    const typeFilters = getTypeFilters(selected);
-    filterAssets()
-      .onOk(result => {
-        dispatch({
-          type: "SET_ASSETS",
-          value: result,
-        });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
-          },
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
-          },
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
-          },
-        });
-      })
-      .notFound(result => {})
-      .call(
-        typeFilters.all,
-        typeFilters.image,
-        typeFilters.video,
-        typeFilters.audio,
-        typeFilters.pdf,
-        typeFilters.spreadsheet,
-        selectedStatus.name
-      );
+    doFilter(selected.name, selectedStatus.name);
   }
   function handleStatusClick(selected) {
     setStatus(selected);
-    const typeFilters = getTypeFilters(selectedFileType);
-    filterAssets()
-      .onOk(result => {
-        dispatch({
-          type: "SET_ASSETS",
-          value: result,
-        });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
-          },
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
-          },
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
-          },
-        });
-      })
-      .notFound(result => {})
-      .call(
-        typeFilters.all,
-        typeFilters.image,
-        typeFilters.video,
-        typeFilters.audio,
-        typeFilters.pdf,
-        typeFilters.spreadsheet,
-        selected.name
-      );
+    doFilter(selectedFileType.name, selected.name);
   }
   function openUploader() {
     props.history.push("/addAsset");
   }
   function openUploaderForEdit(file) {
-    props.history.push(`/editAsset/${file.sys.id}`);
+    props.history.push(`/editAsset/${file._id}`);
   }
   function showRemoveAlert(item) {
     setAlertData({
@@ -224,6 +164,7 @@ const Assets = props => {
     });
   }
   function removeAsset(item) {
+    const deletedItem = item;
     deleteAsset()
       .onOk(result => {
         setAlertData();
@@ -235,8 +176,8 @@ const Assets = props => {
           },
         });
         dispatch({
-          type: "SET_ASSETS",
-          value: result,
+          type: "DELETE_ASSET",
+          value: deletedItem,
         });
       })
       .onServerError(result => {
@@ -274,48 +215,228 @@ const Assets = props => {
         dispatch({
           type: "ADD_NOTIFY",
           value: {
-            type: "warning",
+            type: "error",
             message: languageManager.translate("ASSET_DELETE_NOT_FOUND"),
           },
         });
       })
-      .call(item);
+      .call(spaceInfo ? spaceInfo.id : undefined, item._id);
   }
-  function archive(file) {
+  function archiveAsset(file) {
     archive()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(result => {})
-      .call(file.id);
+      .onOk(result => {
+        doFilter(selectedFileType.name, selectedStatus.name);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The asset is archived"),
+          },
+        });
+        dispatch({
+          type: "ARCHIVE_ASSET",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, file._id);
   }
-  function unArchive(file) {
+  function unArchiveAsset(file) {
     unArchive()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(result => {})
-      .call(file.id);
+      .onOk(result => {
+        doFilter(selectedFileType.name, selectedStatus.name);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The asset is unarchived"),
+          },
+        });
+        dispatch({
+          type: "UN_ARCHIVE_ASSET",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, file._id);
   }
-  function publish(file) {
+  function publishAsset(file) {
     publish()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(result => {})
-      .call(file.id);
+      .onOk(result => {
+        doFilter(selectedFileType.name, selectedStatus.name);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The asset is published"),
+          },
+        });
+        dispatch({
+          type: "PUBLISH_ASSET",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, file._id);
   }
-  function unPublish(file) {
+  function unPublishAsset(file) {
     unPublish()
-      .onOk(result => {})
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(result => {})
-      .call(file.id);
+      .onOk(result => {
+        doFilter(selectedFileType.name, selectedStatus.name);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The asset is unpublished"),
+          },
+        });
+        dispatch({
+          type: "UN_PUBLISH_ASSET",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, file._id);
   }
 
   return (
@@ -462,19 +583,47 @@ const Assets = props => {
                       </td>
                       <td>
                         {file.status === "draft" ? (
-                          <button className="btn btn-light btn-sm">
-                            {translate("ARCHIVE")}
-                          </button>
+                          <>
+                            <button
+                              className="btn btn-light btn-sm"
+                              onClick={() => publishAsset(file)}
+                            >
+                              {translate("PUBLISH")}
+                            </button>
+                            <button
+                              className="btn btn-light btn-sm"
+                              onClick={() => archiveAsset(file)}
+                            >
+                              {translate("ARCHIVE")}
+                            </button>
+                          </>
                         ) : file.status === "changed" ? (
-                          <button className="btn btn-light btn-sm">
-                            {translate("PUBLISH")}
-                          </button>
+                          <>
+                            <button
+                              className="btn btn-light btn-sm"
+                              onClick={() => publishAsset(file)}
+                            >
+                              {translate("PUBLISH")}
+                            </button>
+                            <button
+                              className="btn btn-light btn-sm"
+                              onClick={() => archiveAsset(file)}
+                            >
+                              {translate("ARCHIVE")}
+                            </button>
+                          </>
                         ) : file.status === "archived" ? (
-                          <button className="btn btn-light btn-sm">
+                          <button
+                            className="btn btn-light btn-sm"
+                            onClick={() => unArchiveAsset(file)}
+                          >
                             {translate("UN_ARCHIVE")}
                           </button>
                         ) : file.status === "published" ? (
-                          <button className="btn btn-light btn-sm">
+                          <button
+                            className="btn btn-light btn-sm"
+                            onClick={() => unPublishAsset(file)}
+                          >
                             {translate("UN_PUBLISH")}
                           </button>
                         ) : (

@@ -815,7 +815,7 @@ export function getContentById () {
       result.contentType = data.contentTypes.find(
         item => item.sys.id === result.contentType.id
       )
-      result.category = findCategory(data.categories, result.category.id)
+    //  result.category = findCategory(data.categories, result.category.id)
     } else {
       status = 404
     }

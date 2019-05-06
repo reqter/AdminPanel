@@ -10,10 +10,11 @@ import Users from './Packages/Users'
 import Products from './Packages/Products'
 import UpsertProduct from './Packages/UpsertProduct'
 import Assets from './Packages/Assets'
-import UploadFile from './Packages/upsertFile'
+import AddAsset from './Packages/upsertFile'
+import UpdateAsset from './Packages/upsertFile'
 import Profile from './Packages/Profile'
 import Settings from './Packages/Settings'
-import UpsertUser from "./Packages/upsertUser";
+import UpsertUser from './Packages/upsertUser'
 
 function translate (key) {
   return languageManager.translate(key)
@@ -40,6 +41,7 @@ const routes = [
     path: '/panel',
     component: Home,
     isPublic: false,
+    isSync: true,
     routes: [
       {
         name: translate('HOME_SIDE_NAV_CONTENT_TYPE'),
@@ -102,37 +104,44 @@ const routes = [
   {
     path: '/contents/new',
     component: UpsertProduct,
-    isPublic: false
+    isPublic: false,
+    isSync: true
   },
   {
     path: '/contents/edit/:id',
     component: UpsertProduct,
-    isPublic: false
+    isPublic: false,
+    isSync: true
   },
   {
     path: '/contents/view/:id',
     component: UpsertProduct,
-    isPublic: false
+    isPublic: false,
+    isSync: true
   },
-   {
+  {
     path: '/users/new',
     component: UpsertUser,
-    isPublic: false
+    isPublic: false,
+    isSync: true
   },
   {
     path: '/users/edit/:id',
     component: UpsertUser,
-    isPublic: false
+    isPublic: false,
+    isSync: true
   },
   {
     path: '/addAsset',
-    component: UploadFile,
-    isPublic: false
+    component: AddAsset,
+    isPublic: false,
+    isSync: true
   },
   {
     path: '/editAsset/:id',
-    component: UploadFile,
-    isPublic: true
+    component: UpdateAsset,
+    isPublic: true,
+    isSync: true
   }
 ]
 export default routes

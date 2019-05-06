@@ -1,8 +1,13 @@
+import { storageManager } from './../../services'
+
 const config = process.env
 const login_url =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_LOGIN_URL
 const signup_url =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_SIGNUP_URL
+const getUserInfo_url =
+  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_GET_USER_INFO
+
 export function login () {
   let _onOkCallBack
   function _onOk (result) {
@@ -456,48 +461,17 @@ export function getUserInfo () {
   }
   const _call = async () => {
     try {
-      // const url = login_url
-      // const token = localStorage.getItem('token')
-      // var rawResponse = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     authorization: 'Bearer ' + token,
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({})
-      // })
-      // const status = rawResponse.status
-      // const result = await rawResponse.json()
-      const status = 200
-      const result = {
-        email: 'saeed@admin.com',
-        firstName: 'saeed12',
-        lastName: 'padyab',
-        spaces: [
-          {
-            name: 'space1',
-            roles: [
-              {
-                name: 'users',
-                title: {
-                  en: 'Users',
-                  fa: 'گاربران'
-                },
-                allowEdit: true
-              }
-            ],
-            locales: [
-              {
-                locale: 'en',
-                fallback: 'none',
-                includeInResponce: true,
-                editable: true,
-                requiredFields: true
-              }
-            ]
-          }
-        ]
-      }
+      const url = getUserInfo_url
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        }
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
         case 200:
           _onOk(result)

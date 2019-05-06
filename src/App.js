@@ -9,7 +9,7 @@ import Notifies from './components/Notifies'
 
 import Routes from './routes'
 import PrivateRoute from './PrivateRoute'
-
+import Resolver from './hoc/AsyncContainer'
 
 const App = () => {
   return (
@@ -81,7 +81,16 @@ const App = () => {
                           </>
                         )
                       }
-                      return <Component {...props} routes={nestedRoutes} />
+
+                      return route.isSync ? (
+                        <Resolver
+                          cmp={route.component}
+                          {...props}
+                          routes={nestedRoutes}
+                        />
+                      ) : (
+                        <Component {...props} routes={nestedRoutes} />
+                      )
                     }}
                   />
                 )

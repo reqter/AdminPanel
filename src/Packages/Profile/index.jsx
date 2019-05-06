@@ -33,12 +33,14 @@ const Profile = props => {
     userInfo ? userInfo.notification : true
   );
   const [firstName, setFirstName] = useState(
-    userInfo ? userInfo.first_name : ""
+    userInfo ? userInfo.profile.first_name : ""
   );
-  const [lastName, setLastName] = useState(userInfo ? userInfo.last_name : "");
+  const [lastName, setLastName] = useState(
+    userInfo ? userInfo.profile.last_name : ""
+  );
   const [avatar, setAvatar] = useState(
     userInfo
-      ? userInfo.avatar
+      ? userInfo.profile.avatar
       : "http://arunoommen.com/wp-content/uploads/2017/01/man-2_icon-icons.com_55041.png"
   );
 
@@ -52,7 +54,7 @@ const Profile = props => {
         div.addEventListener("dragover", handleDrag);
         div.addEventListener("drop", handleDrop);
       }
-      const { firstName, lastName, avatar, notification } = userInfo;
+      const { firstName, lastName, avatar, notification } = userInfo.profile;
       toggleNotification(notification !== undefined ? notification : true);
       setFirstName(firstName);
       setLastName(lastName);
@@ -88,7 +90,12 @@ const Profile = props => {
     const value = e.target.checked;
     changeNotification()
       .onOk(result => {
-        submitUserInfo("notification", value);
+         let u = { ...userInfo };
+        u.profile["notification"] = value;
+        dispatch({
+          type: "SET_USERINFO",
+          value: u,
+        });
       })
       .onServerError(result => {
         toggleNotification(!value);
@@ -103,14 +110,6 @@ const Profile = props => {
         toggleNotification(!value);
       })
       .call(false);
-  }
-  function submitUserInfo(key, value) {
-    let u = { ...userInfo };
-    u[key] = value;
-    dispatch({
-      type: "SET_USERINFO",
-      value: u,
-    });
   }
   function handleImageBrowsed(event) {
     if (!isUploading) {
@@ -165,8 +164,8 @@ const Profile = props => {
         .onOk(result => {
           toggleUpdateSpinner(false);
           let u = { ...userInfo };
-          u["firstName"] = firstName;
-          u["lastName"] = lastName;
+          u.profile["first_name"] = firstName;
+          u.profile["last_name"] = lastName;
           dispatch({
             type: "SET_USERINFO",
             value: u,
@@ -194,10 +193,13 @@ const Profile = props => {
         .onOk(result => {
           const { file } = result;
           toggleIsUploading(false);
-          submitUserInfo(
-            "avatar",
-            process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url
-          );
+          let u = { ...userInfo };
+          u.profile["avatar"] =
+            process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url;
+          dispatch({
+            type: "SET_USERINFO",
+            value: u,
+          });
         })
         .onServerError(result => {
           toggleIsUploading(false);
@@ -220,7 +222,12 @@ const Profile = props => {
       sendEmailConfirmation()
         .onOk(result => {
           toggleConfirmEmailSpinner(false);
-          submitUserInfo("emailConfirm", true);
+            let u = { ...userInfo };
+            u["emailConfirmed"] = true;
+            dispatch({
+              type: "SET_USERINFO",
+              value: u,
+            });
         })
         .onServerError(result => {
           toggleConfirmEmailSpinner(false);
@@ -283,7 +290,7 @@ const Profile = props => {
                     <div className="dropText">
                       Drop your file here
                       <span>
-                        <a >or Browse</a>
+                        <a>or Browse</a>
                         <input type="file" onChange={handleImageBrowsed} />
                       </span>
                       {/* <div className="dropLink">
@@ -294,8 +301,8 @@ const Profile = props => {
                   </div>
                 </div>
                 <div className="uploadInfo">
-                  Some tips: Use a photo or image rather than text and upload
-                  an image that is 132px square or larger.
+                  Some tips: Use a photo or image rather than text and upload an
+                  image that is 132px square or larger.
                 </div>
                 <div className="form-group">
                   <label>First Name</label>
@@ -367,8 +374,8 @@ const Profile = props => {
                         </button>
                       )}
                       {userInfo &&
-                        (userInfo.emailConfirm === undefined ||
-                          userInfo.emailConfirm === false) && (
+                        (userInfo.emailConfirmed === undefined ||
+                          userInfo.emailConfirmed === false) && (
                           <button
                             type="button"
                             className="btn btn-primary btn-sm ajax-button"

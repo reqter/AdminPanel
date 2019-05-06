@@ -72,8 +72,9 @@ const UpsertProduct = props => {
   useEffect(() => {
     if (
       Object.keys(form).length > 0 &&
-      checkFormValidation() &&
-      category !== undefined
+      checkFormValidation()
+      //  &&
+      // category !== undefined
     ) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
@@ -145,7 +146,7 @@ const UpsertProduct = props => {
             setContentType(result.contentType);
             const c_fields = result.contentType.fields;
             setFields(c_fields.sort((a, b) => a.index - b.index));
-            setCategory(result.category);
+           // setCategory(result.category);
           }
         } else {
           toggleTab(3);
@@ -206,13 +207,11 @@ const UpsertProduct = props => {
   }
   function handleOnChangeValue(field, value, isValid) {
     const { name: key } = field;
-
     // add value to form
     setForm(prevState => ({
       ...prevState,
       [field.name]: value,
     }));
-
     setFormValidation(prevFormValidation => ({
       ...prevFormValidation,
       [key]: isValid,
@@ -360,10 +359,10 @@ const UpsertProduct = props => {
         title: contentType.title,
       },
       //category:category.id,
-      category: {
-        id: category.sys.id,
-        name: category.name,
-      },
+      // category: {
+      //   id: category.sys.id,
+      //   name: category.name,
+      // },
       fields: form,
     };
     if (updateMode) {
@@ -571,11 +570,7 @@ const UpsertProduct = props => {
           {tab === 2 && (
             <>
               <div className="up-content-title">
-                {updateMode
-                  ? "Edit "
-                  : viewMode
-                  ? "View"
-                  : "Add New " + contentType.title[currentLang]}
+                {updateMode ? "Edit " : viewMode ? "View" : "Add New "}
               </div>
               <div className="up-categoryBox animated fadeIn">
                 {category &&
@@ -591,11 +586,12 @@ const UpsertProduct = props => {
                     </div>
                   ))}
                 <span>
-                  {category ? category.name[currentLang] : "Choose a category"}
+                  {contentType && contentType.title[currentLang]}
+                  {/* {category ? category.name[currentLang] : "Choose a category"} */}
                 </span>
                 {!viewMode && (
-                  <button className="btn btn-link" onClick={showCatgoryModal}>
-                    Change category
+                  <button className="btn btn-link" onClick={() => changeTab(1)}>
+                    Change content type
                   </button>
                 )}
               </div>
