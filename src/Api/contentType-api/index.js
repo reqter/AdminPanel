@@ -9,7 +9,8 @@ const updateURL =
 const removeURL =
   config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_REMOVE
 const getByIdURL =
-  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_BY_ID
+  config.REACT_APP_CONTENT_TYPE_BASE_URL +
+  config.REACT_APP_CONTENT_TYPE_GET_BY_ID
 
 const data = require('./../data.json')
 export function getTemplates () {
@@ -242,46 +243,45 @@ export function addContentType () {
       _onConnectionErrorCallBack(result)
     }
   }
- const _call = async (spaceId, contentType) => {
-  try {
-    const url = addURL
-    const token = storageManager.getItem('token')
-    var rawResponse = await fetch(url, {
-      method: 'POST',
-      headers: {
-        authorization: 'Bearer ' + token,
-        'Content-Type': 'application/json',
-        spaceId: spaceId
-      },
-      body: JSON.stringify(contentType)
-    })
+  const _call = async (spaceId, contentType) => {
+    try {
+      const url = addURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify(contentType)
+      })
 
-    const status = rawResponse.status
-    const result = await rawResponse.json()
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
     }
-  } catch (error) {
-    _onServerError(error)
   }
-}
-
 
   return {
     call: _call,
@@ -348,39 +348,55 @@ export function updateContentType () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, contentType) => {
+    try {
+      const url = updateURL
+      const token = storageManager.getItem('token')
+      
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: contentType._id,
+          name: contentType.name,
+          title: contentType.title,
+          description: contentType.description,
+          versioning: contentType.versioning,
+          template: contentType.template,
+          media: contentType.media,
+          fields: contentType.fields,
+          allowCustomFields: contentType.allowCustomFields
+        })
+      })
 
-    //
+      const status = rawResponse.status
+      const result = await rawResponse.json()
 
-    const result = data.contentTypes.map(item => {
-      if (item.sys.id === obj.sys.id) {
-        item = obj
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
       }
-      return item
-    })
-    data.contentTypes = result
-
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+    } catch (error) {
+      _onServerError(error)
     }
   }
 
@@ -449,35 +465,44 @@ export function deleteContentType () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, id) => {
+    try {
+      const url = removeURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id
+        })
+      })
 
-    //
-
-    const result = data.contentTypes.filter(item => item.sys.id !== obj.sys.id)
-    data.contentTypes = result
-
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
-    }
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {

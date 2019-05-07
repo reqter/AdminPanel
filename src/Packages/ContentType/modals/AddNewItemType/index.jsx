@@ -17,12 +17,13 @@ import {
 } from "./../../../../Api/contentType-api";
 import AssetBrowser from "./../../../../components/AssetBrowser";
 import "./styles.scss";
+import { CircleSpinner } from "../../../../components";
 
 const UpsertTemplate = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ contentTypeTemlates, spaceInfo }, dispatch] = useGlobalState();
   const nameInput = useRef(null);
-
+  const [spinner, setSpinner] = useState(false);
   const { updateMode } = props;
   const submitBtnText = !updateMode
     ? languageManager.translate("CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW")
@@ -144,6 +145,9 @@ const UpsertTemplate = props => {
     return newArr;
   }
   function upsertItemType() {
+    if (!spinner) {
+      setSpinner(true)
+    
     if (updateMode) {
       let obj = {};
       for (const key in selectedContentType) {
@@ -153,8 +157,8 @@ const UpsertTemplate = props => {
       obj["title"] = utility.applyeLangs(title);
       obj["description"] = utility.applyeLangs(description);
       obj["media"] = media;
-      obj["enableVersioning"] = versioning;
-      obj["enableAccessRight"] = accessRight;
+      obj["versioning"] = versioning;
+      obj["accessRight"] = accessRight;
       if (!accessRight) delete obj["visibleTo"];
 
       updateContentType()
@@ -167,7 +171,7 @@ const UpsertTemplate = props => {
             },
           });
           dispatch({
-            type: "SET_CONTENT_TYPES",
+            type: "UPDATE_CONTENT_TYPE",
             value: result,
           });
           props.onCloseModal(obj);
@@ -216,7 +220,7 @@ const UpsertTemplate = props => {
             },
           });
         })
-        .call(obj);
+        .call(spaceInfo.id, obj);
     } else {
       let obj = {
         name: name,
@@ -280,6 +284,7 @@ const UpsertTemplate = props => {
         .call(spaceInfo.id, obj);
     }
   }
+}
   function removeFile(image) {
     const m = media.filter(item => item.id !== image.id);
     setMedia(m);
@@ -483,9 +488,9 @@ const UpsertTemplate = props => {
       </ModalBody>
       {tab !== 1 ? (
         <ModalFooter>
-          <Button
+          <button
             type="submit"
-            color="primary"
+            className="btn btn-primary ajax-button"
             onClick={upsertItemType}
             disabled={
               name.length > 0 && title.length > 0 && !name.includes(" ")
@@ -493,8 +498,9 @@ const UpsertTemplate = props => {
                 : true
             }
           >
+            <CircleSpinner show={spinner} size="small" />
             {submitBtnText}
-          </Button>
+          </button>
           {!updateMode && (
             <Button color="secondary" onClick={backToTemplates}>
               {languageManager.translate("CONTENT_TYPE_MODAL_TEMPLATE_BTN")}

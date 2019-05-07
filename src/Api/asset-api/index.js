@@ -552,7 +552,7 @@ export function deleteAsset () {
         headers: {
           authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
-          spaceId: '5c6b37785a4a69808852bc4d'
+          spaceId: spaceId
         },
         body: JSON.stringify({
           id: assetId

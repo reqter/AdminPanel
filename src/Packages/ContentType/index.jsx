@@ -101,12 +101,12 @@ const ItemTypes = props => {
             setAlertData();
             if (
               selectedContentType.sys &&
-              selected.sys.id === selectedContentType.sys.id
+              selected._id === selectedContentType._id
             )
               toggleRightContent(false);
             dispatch({
-              type: "SET_CONTENT_TYPES",
-              value: result,
+              type: "DELETE_CONTENT_TYPE",
+              value: selected,
             });
             dispatch({
               type: "ADD_NOTIFY",
@@ -163,7 +163,7 @@ const ItemTypes = props => {
               },
             });
           })
-          .call(selected),
+          .call(spaceInfo.id, selected._id),
       onCancel: () => {
         setAlertData();
       },
@@ -381,7 +381,7 @@ const ItemTypes = props => {
             {spinner ? (
               <RowSkeleton />
             ) : !contentTypes || contentTypes.length === 0 ? (
-              <div className="emptyContenType">
+              <div className="emptyContenType animated fadeIn">
                 <i className="icon-empty-box-open icon" />
                 <span className="title">Empty List!</span>
                 <span className="info">

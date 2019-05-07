@@ -130,6 +130,23 @@ const Provider = props => {
           ...state,
           contentTypes: c_add,
         };
+      case "UPDATE_CONTENT_TYPE":
+        const s_up = state.contentTypes.map(item => {
+          if (item._id === action.value._id) item = action.value;
+          return item;
+        });
+        return {
+          ...state,
+          contentTypes: s_up,
+        };
+      case "DELETE_CONTENT_TYPE":
+        const s_delete = state.contentTypes.filter(
+          item => item._id !== action.value._id
+        );
+        return {
+          ...state,
+          contentTypes: s_delete,
+        };
       case "SET_CONTENT_TEMPLATES":
         const c_t = {
           ...state,
