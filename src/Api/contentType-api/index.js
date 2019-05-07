@@ -1,3 +1,16 @@
+import { storageManager } from './../../services'
+const config = process.env
+const getAllURL =
+  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
+const addURL =
+  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_ADD
+const updateURL =
+  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_UPDATE
+const removeURL =
+  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_REMOVE
+const getByIdURL =
+  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_BY_ID
+
 const data = require('./../data.json')
 export function getTemplates () {
   let _onOkCallBack
@@ -127,30 +140,41 @@ export function getContentTypes () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (name, contentType, category) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-    const result = data.contentTypes
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest(result)
-        break
-      case 401:
-        _unAuthorized(result)
-        break
-      case 404:
-        _notFound(result)
-        break
-      case 500:
-        _onServerError(result)
-        break
-      default:
-        break
-    }
+  const _call = async spaceId => {
+    try {
+      const url = getAllURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        }
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {
@@ -218,18 +242,25 @@ export function addContentType () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-
-    //
-
-    data.contentTypes.push(obj)
-
-    const status = 200
+ const _call = async (spaceId, contentType) => {
+  try {
+    const url = addURL
+    const token = storageManager.getItem('token')
+    var rawResponse = await fetch(url, {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        spaceId: spaceId || '5c6b37785a4a69808852bc4d'
+      },
+      body: JSON.stringify(contentType)
+    })
+    
+    const status = rawResponse.status
+    const result = await rawResponse.json()
     switch (status) {
       case 200:
-        _onOk(data.contentTypes)
+        _onOk(result)
         break
       case 400:
         _onBadRequest()
@@ -246,7 +277,11 @@ export function addContentType () {
       default:
         break
     }
+  } catch (error) {
+    _onServerError(error)
   }
+}
+
 
   return {
     call: _call,

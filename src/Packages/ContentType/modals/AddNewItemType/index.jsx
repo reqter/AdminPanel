@@ -20,7 +20,7 @@ import "./styles.scss";
 
 const UpsertTemplate = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ contentTypeTemlates }, dispatch] = useGlobalState();
+  const [{ contentTypeTemlates, spaceInfo }, dispatch] = useGlobalState();
   const nameInput = useRef(null);
 
   const { updateMode } = props;

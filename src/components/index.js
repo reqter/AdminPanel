@@ -14,6 +14,7 @@ import Reference from './reference'
 import AssignRole from './AssignRole'
 import CircleSpinner from './CircleSpinner'
 import Alert from './PopupAlert'
+import RowSkeleton from "./RowSkeleton";
 
 export {
   Alert,
@@ -31,5 +32,6 @@ export {
   String,
   FileUploader,
   AssetBrowser,
-  CircleSpinner
+  CircleSpinner,
+  RowSkeleton
 }

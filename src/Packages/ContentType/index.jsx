@@ -11,17 +11,17 @@ import {
   removeContentTypeField,
   setAccessRight,
 } from "./../../Api/contentType-api";
-import { AssignRole, Alert } from "../../components";
+import { AssignRole, Alert, RowSkeleton } from "../../components";
 
 const ItemTypes = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
 
-  const [{ contentTypes }, dispatch] = useGlobalState();
+  const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
   const [spinner, setSpinner] = useState(true);
   useEffect(() => {
     getContentTypes()
       .onOk(result => {
-        setSpinner(false)
+        setSpinner(false);
         dispatch({
           type: "SET_CONTENT_TYPES",
           value: result,
@@ -57,7 +57,7 @@ const ItemTypes = props => {
           },
         });
       })
-      .call();
+      .call(spaceInfo.id);
   }, []);
 
   const { name: pageTitle, desc: pageDescription } = props.component;
@@ -67,7 +67,7 @@ const ItemTypes = props => {
   const [upsertItemTypeModal, toggleUpserItemTypeModal] = useState(false);
   const [selectedContentType, setItemType] = useState({});
   const [updateMode, setUpdateMode] = useState();
-  const [fields, setFields] = useState([]);
+  const [fields, setFields] = useState();
   const [selectedField, setSelectedField] = useState();
   const [rightContent, toggleRightContent] = useState(false);
   const [assignRoleModal, toggleAssignRoleModal] = useState(false);
@@ -177,7 +177,7 @@ const ItemTypes = props => {
   function showFields(item) {
     if (!rightContent) toggleRightContent(true);
     setItemType(item);
-    setFields([...item.fields]);
+    if (item.fields && item.fields.length > 0) setFields([...item.fields]);
     //dispatch({ type: "SET_FIELDS", value: [...item.fields] });
   }
   function closeAddFieldModal(result) {
@@ -371,10 +371,7 @@ const ItemTypes = props => {
             <span className="ct-header-description">{pageDescription}</span>
           </div>
           <div className="ct-header-right">
-            <button
-              className="btn btn-primary"
-              onClick={openAddItemTypeModal}
-            >
+            <button className="btn btn-primary" onClick={openAddItemTypeModal}>
               {languageManager.translate("CONTENT_TYPE_NEW_ITEM_BTN")}
             </button>
           </div>
@@ -382,26 +379,21 @@ const ItemTypes = props => {
         <div className="ct-content">
           <div className="ct-content-left">
             {spinner ? (
-              <>
-                <div className="skeleton">
-                  <div className="post">
-                    <div className="avatar" />
-                    <div className="lines">
-                      <div className="line" />
-                      <div className="line" />
-                    </div>
-                  </div>
-                </div>
-                <div className="skeleton">
-                  <div className="post">
-                    <div className="avatar" />
-                    <div className="lines">
-                      <div className="line" />
-                      <div className="line" />
-                    </div>
-                  </div>
-                </div>
-              </>
+              <RowSkeleton />
+            ) : !contentTypes || contentTypes.length === 0 ? (
+              <div className="emptyContenType">
+                <i className="icon-empty-box-open icon" />
+                <span className="title">Empty List!</span>
+                <span className="info">
+                  You have not created any content types yet.
+                </span>
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={openAddItemTypeModal}
+                >
+                  New Content Type
+                </button>
+              </div>
             ) : (
               <List
                 rightContent={rightContent}
@@ -409,9 +401,7 @@ const ItemTypes = props => {
                 handleEditType={selected => editItemType(selected)}
                 handleDeleteType={selected => removeItemType(selected)}
                 handleShowFields={selected => showFields(selected)}
-                onSelectAccessRight={selected =>
-                  openAssignRoleModal(selected)
-                }
+                onSelectAccessRight={selected => openAssignRoleModal(selected)}
               />
             )}
           </div>
@@ -419,14 +409,10 @@ const ItemTypes = props => {
             <div className="ct-content-right animated slideInRight faster">
               <div className="ct-content-right-header">
                 <span className="ct-right-header-title">
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODEL_HEADER_TITLE"
-                  )}
+                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_TITLE")}
                 </span>
                 <span className="ct-right-header-description">
-                  {languageManager.translate(
-                    "CONTENT_TYPE_MODEL_HEADER_DESC"
-                  )}
+                  {languageManager.translate("CONTENT_TYPE_MODEL_HEADER_DESC")}
                 </span>
                 <span
                   className="icon-cross closeIcon"
@@ -448,7 +434,7 @@ const ItemTypes = props => {
                     fields.map(field => (
                       <div
                         className="fieldItem"
-                        key={field.sys.id}
+                        key={field._id}
                         // style={{
                         //   display: !selectedContentType.allowCustomFields
                         //     ? field.isBase
