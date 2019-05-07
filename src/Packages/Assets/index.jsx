@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
-import { AssetFile, Alert } from "./../../components";
+import { AssetFile, Alert, CircleSpinner } from "./../../components";
 import {
   getAssets,
   deleteAsset,
@@ -48,16 +48,19 @@ const filters = [
 const Assets = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ assets, status, spaceInfo }, dispatch] = useGlobalState();
+  const [spinner, toggleSpinner] = useState(true);
 
   useEffect(() => {
     getAssets()
       .onOk(result => {
+        toggleSpinner(false);
         dispatch({
           type: "SET_ASSETS",
           value: result,
         });
       })
       .onServerError(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -67,6 +70,7 @@ const Assets = props => {
         });
       })
       .onBadRequest(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -85,7 +89,9 @@ const Assets = props => {
           },
         });
       })
-      .notFound(result => {})
+      .notFound(result => {
+        toggleSpinner(false);
+      })
       .call(spaceInfo.id);
   }, []);
 
@@ -98,14 +104,17 @@ const Assets = props => {
     return languageManager.translate(key);
   }
   function doFilter(fileType, status) {
+    toggleSpinner(true);
     filterAssets()
       .onOk(result => {
+        toggleSpinner(false);
         dispatch({
           type: "SET_ASSETS",
           value: result,
         });
       })
       .onServerError(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -115,6 +124,7 @@ const Assets = props => {
         });
       })
       .onBadRequest(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -124,6 +134,7 @@ const Assets = props => {
         });
       })
       .unAuthorized(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -132,7 +143,9 @@ const Assets = props => {
           },
         });
       })
-      .notFound(result => {})
+      .notFound(result => {
+        toggleSpinner(false);
+      })
       .call(spaceInfo.id, fileType === "all" ? undefined : fileType, status);
   }
   function handleFileTypeClick(selected) {
@@ -517,7 +530,8 @@ const Assets = props => {
           </div>
           <div className="as-content-right">
             <div className="header">
-              {translate("ASSET_TABLE_HEADER_ALL_ASSETS")}
+              {translate("ASSET_TABLE_HEADER_ALL_ASSETS")}&nbsp;&nbsp;
+              <CircleSpinner show={spinner} size="small" />
             </div>
             <div className="rightTable">
               <table className="table">
