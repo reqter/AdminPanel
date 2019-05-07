@@ -5,12 +5,12 @@ import { languageManager } from "../../services";
 class Tree extends Component {
   state = {
     selected: {},
-    currentLang: languageManager.getCurrentLanguage().name
+    currentLang: languageManager.getCurrentLanguage().name,
   };
   static getDerivedStateFromProps(props, current_state) {
     if (!props.rightContent) {
       return {
-        selected: {}
+        selected: {},
       };
     }
     return null;
@@ -36,7 +36,7 @@ class Tree extends Component {
                 ? this.state.selected.sys.id === node.sys.id
                   ? "lightgray"
                   : "white"
-                : "white"
+                : "white",
             }}
             className={`treeItemParent ${
               parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
@@ -46,7 +46,7 @@ class Tree extends Component {
               <div
                 className="treeItem"
                 style={{
-                  paddingLeft: `${15 * lvl}px`
+                  paddingLeft: `${15 * lvl}px`,
                 }}
               >
                 {node.children && node.children.length > 0 ? (
@@ -58,9 +58,9 @@ class Tree extends Component {
                       onClick={this.toggle}
                     >
                       {this.state[id] ? (
-                        <span className="icon-caret-down" id={id}/>
+                        <span className="icon-caret-down" id={id} />
                       ) : (
-                          <span className="icon-caret-right" id={id}/>
+                        <span className="icon-caret-right" id={id} />
                       )}
                     </div>
                     {node.image !== undefined ? (
@@ -162,9 +162,11 @@ class Tree extends Component {
   };
 
   render() {
-    return <ListGroup>{this.mapper(this.props.data)}</ListGroup>;
+    const { data } = this.props;
+    return data && data.length > 0 ? (
+      <ListGroup>{this.mapper(data)}</ListGroup>
+    ) : null;
   }
 }
 
 export default Tree;
-

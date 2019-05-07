@@ -1,4 +1,3 @@
-import React from 'react'
 import { languageManager } from './services'
 
 import withResolver from './hoc/withResolver'

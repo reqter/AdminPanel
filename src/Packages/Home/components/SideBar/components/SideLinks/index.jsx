@@ -13,12 +13,12 @@ const NavLinks = props => {
       path: "/panel/contentType",
       desc: translate("HOME_SIDE_NAV_CONTENT_TYPE_DEC")
     },
-    // {
-    //   name: translate("HOME_SIDE_NAV_CATEGRIES"),
-    //   icon: "category",
-    //   path: "/panel/categories",
-    //   desc: translate("HOME_SIDE_NAV_CATEGORIES_DEC")
-    // },
+    {
+      name: translate("HOME_SIDE_NAV_CATEGRIES"),
+      icon: "category",
+      path: "/panel/categories",
+      desc: translate("HOME_SIDE_NAV_CATEGORIES_DEC")
+    },
     {
       name: translate("HOME_SIDE_NAV_PRODUCTS"),
       icon: "product",

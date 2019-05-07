@@ -435,7 +435,7 @@ export function updateAsset () {
           spaceId: spaceId
         },
         body: JSON.stringify({
-          id: asset.id,
+          id: asset._id,
           name: asset.name,
           title: asset.title,
           description: asset.description,

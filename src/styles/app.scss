@@ -216,3 +216,30 @@ div::-moz-scrollbar-thumb:hover {
     margin: 0 5px;
   }
 }
+
+.rosolverError {
+  background: white;
+  width: 500px;
+  height: 300px;
+  margin: auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  box-shadow: 0 0 5px lightgray;
+  .icon {
+    font-size: 60px;
+  }
+  .title {
+    font-size: 30px;
+    margin: 10px 0;
+  }
+  .info {
+    margin-bottom: 10px;
+  }
+}

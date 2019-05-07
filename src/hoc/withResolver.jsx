@@ -7,6 +7,10 @@ const widthResolver = WrappedComponent => {
   return props => {
     const [{ userInfo }, dispatch] = useGlobalState();
     const [loading, toggleLoading] = useState(userInfo ? false : true);
+    const [error, setError] = useState();
+    function refresh() {
+      window.location.reload();
+    }
     if (!userInfo) {
       getUserInfo()
         .onOk(result => {
@@ -24,9 +28,11 @@ const widthResolver = WrappedComponent => {
           toggleLoading(false);
         })
         .onServerError(result => {
+          setError("Internal server error");
           toggleLoading(false);
         })
         .onBadRequest(result => {
+          setError("Bad request");
           toggleLoading(false);
         })
         .unAuthorized(result => {
@@ -35,9 +41,36 @@ const widthResolver = WrappedComponent => {
         .notFound(result => {
           toggleLoading(false);
         })
+        .onRequestError(result => {
+          setError(
+            "There is an error which has occured in the request.try again "
+          );
+          toggleLoading(false);
+        })
+        .unKnownError(result => {
+          setError(
+            "There is an error which has occured in the request.try again "
+          );
+          toggleLoading(false);
+        })
         .call();
     }
-    return !loading ? <WrappedComponent {...props} /> : <div />;
+    return !loading ? (
+      error ? (
+        <div className="rosolverError animated fadeIn">
+          <i className="icon-empty-box-open icon" />
+          <span className="title">Error has occured!</span>
+          <span className="info">{error}</span>
+          <button className="btn btn-sm btn-primary" onClick={refresh}>
+            Refresh
+          </button>
+        </div>
+      ) : (
+        <WrappedComponent {...props} />
+      )
+    ) : (
+      <div />
+    );
   };
 };
 

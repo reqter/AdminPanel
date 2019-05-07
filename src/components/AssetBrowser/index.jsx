@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "reactstrap/es/Modal";
 import String from "./../String";
 import FileUploader from "./../FileUploader";
-import { AssetFile } from "./../../components";
-import { languageManager, utility, useGlobalState } from "./../../services";
+import { AssetFile, CircleSpinner } from "./../../components";
+import { languageManager, useGlobalState } from "./../../services";
 import "./styles.scss";
 
-import { filterAssets, getAssets, addAsset } from "./../../Api/asset-api";
+import { filterAssets, addAsset } from "./../../Api/asset-api";
 const fields = [
   {
     id: "1",
@@ -26,9 +26,9 @@ const fields = [
   },
   {
     id: "2",
-    name: "shortDesc",
+    name: "description",
     title: {
-      en: "Short Description",
+      en: "Description",
       fa: "توضیحات",
     },
     description: {
@@ -48,10 +48,10 @@ const fields = [
     },
     description: {
       fa: "",
-      en: "Click on file selector top choose your file",
+      en: "Click on file selector to choose your file",
     },
     type: "fileUploader",
-    fileType: "image",
+    mediaType: "file",
     isBase: true,
     isTranslate: true,
     isRequired: true,
@@ -60,13 +60,15 @@ const fields = [
 
 const AssetBrowser = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ assets }, dispatch] = useGlobalState();
+  const [{ assets, spaceInfo }, dispatch] = useGlobalState();
   const [isOpen, toggleModal] = useState(props.isOpen);
   const [tab, changeTab] = useState(1);
   const [formData, setFormData] = useState({});
   const [form, setForm] = useState({});
   const [formValidation, setFormValidation] = useState();
   const [isValidForm, toggleIsValidForm] = useState();
+  const [spinner, toggleSpinner] = useState(false);
+  const [closeSpinner, toggleCloseSpinner] = useState(false);
 
   useEffect(() => {
     if (tab === 1) {
@@ -94,18 +96,12 @@ const AssetBrowser = props => {
     props.onCloseModal();
   }
   function getAssetFiles() {
-    const all =
+    const fileType =
       props.mediaType === undefined ||
       props.mediaType.length === 0 ||
-      props.mediaType.includes("file")
-        ? true
-        : false;
-    const image = props.mediaType.includes("image") ? true : false;
-    const video = props.mediaType.includes("video") ? true : false;
-    const audio = props.mediaType.includes("audio") ? true : false;
-    const pdf = props.mediaType.includes("pdf") ? true : false;
-    const spreadsheet =
-      props.mediaType.includes("spreadsheet") !== -1 ? true : false;
+      props.mediaType.length === "all"
+        ? undefined
+        : props.mediaType;
 
     filterAssets()
       .onOk(result => {
@@ -114,52 +110,12 @@ const AssetBrowser = props => {
           value: result,
         });
       })
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(result => {})
-      .call(all, image, video, audio, pdf, spreadsheet, undefined);
-  }
-  function chooseFile(file) {
-    props.onCloseModal(file);
-  }
-  function upsertItem(choose) {
-    const obj = {
-      sys: {
-        id: Math.random().toString(),
-        issuer: {
-          fullName: "Saeed Padyab",
-          image: "",
-        },
-        issueDate: "19/01/2019 20:18",
-      },
-      name: form.name,
-      title: form.title,
-      shorDesc: form.shortDesc,
-      status: "draft",
-      url: form.url,
-      fileType: form.fileType,
-    };
-    addAsset()
-      .onOk(result => {
-        if (choose) {
-          //chooseFile(obj);
-          changeTab(1);
-        } else {
-          setFormData({});
-          setForm({});
-          const newObj = { ...formValidation };
-          setFormValidation(newObj);
-        }
-      })
       .onServerError(result => {
         dispatch({
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate(
-              "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
-            ),
+            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
           },
         });
       })
@@ -168,9 +124,7 @@ const AssetBrowser = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate(
-              "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
-            ),
+            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
           },
         });
       })
@@ -179,24 +133,120 @@ const AssetBrowser = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate(
-              "UPSERT_ASSET_ADD_UN_AUTHORIZED"
-            ),
+            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
           },
         });
       })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND"),
-          },
-        });
-      })
-      .call(obj);
+      .notFound(result => {})
+      .call(fileType, "published");
+  }
+  function chooseFile(file) {
+    props.onCloseModal(file);
   }
 
+  function upsertItem(closePage) {
+    if (!spinner) {
+      if (closePage) {
+        toggleCloseSpinner(true);
+      } else {
+        toggleSpinner(true);
+      }
+
+      const obj = {
+        name: form.name,
+        title: form.title,
+        description: form.shortDesc,
+        url: form.url,
+        fileType: form.fileType,
+      };
+      addAsset()
+        .onOk(result => {
+          if (closePage) {
+            toggleCloseSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ASSET_ADD_ON_OK"),
+            },
+          });
+          if (closePage) {
+            changeTab(1);
+          } else {
+            setFormData({});
+            setForm({});
+            const newObj = { ...formValidation };
+            setFormValidation(newObj);
+          }
+        })
+        .onServerError(result => {
+          if (closePage) {
+            toggleCloseSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          if (closePage) {
+            toggleCloseSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          if (closePage) {
+            toggleCloseSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .notFound(result => {
+          if (closePage) {
+            toggleCloseSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND"),
+            },
+          });
+        })
+        .call(spaceInfo.id, obj);
+    }
+  }
   //#region second tab
   function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
@@ -344,17 +394,19 @@ const AssetBrowser = props => {
             </div>
             <div className="actions">
               <button
-                className="btn btn-primary"
+                className="btn btn-primary ajax-button"
                 onClick={() => upsertItem(false)}
                 disabled={!isValidForm}
               >
+                <CircleSpinner show={spinner} size="small" />
                 Save & New
               </button>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary ajax-button"
                 onClick={() => upsertItem(true)}
                 disabled={!isValidForm}
               >
+                <CircleSpinner show={closeSpinner} size="small" />
                 Save & Back
               </button>
             </div>

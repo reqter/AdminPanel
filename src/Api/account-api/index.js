@@ -457,12 +457,25 @@ export function getUserInfo () {
       _notFoundCallBack(result)
     }
   }
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
+    }
+  }
   let _onConnectionErrorCallBack
   function _onConnectionError (result) {
     if (_onConnectionErrorCallBack) {
       _onConnectionErrorCallBack(result)
     }
   }
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
+
   const _call = async () => {
     try {
       const url = getUserInfo_url
@@ -493,9 +506,12 @@ export function getUserInfo () {
           _onServerError()
           break
         default:
+          _unKnownError(result)
           break
       }
-    } catch (error) {}
+    } catch (error) {
+      _onRequestError(error)
+    }
   }
 
   return {
@@ -522,6 +538,14 @@ export function getUserInfo () {
     },
     onConnectionError: function (callback) {
       _onConnectionErrorCallBack = callback
+      return this
+    },
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
       return this
     }
   }
