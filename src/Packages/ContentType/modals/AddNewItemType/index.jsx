@@ -55,10 +55,10 @@ const UpsertTemplate = props => {
   );
   const [assetBrowser, toggleAssetBrowser] = useState(false);
   const [versioning, toggleVersioning] = useState(
-    selectedContentType ? selectedContentType.enableVersioning : false
+    selectedContentType ? selectedContentType.versioning : false
   );
   const [accessRight, toggleAccessRight] = useState(
-    selectedContentType ? selectedContentType.enableAccessRight : false
+    selectedContentType ? selectedContentType.accessRight : false
   );
 
   useEffect(() => {
@@ -219,24 +219,15 @@ const UpsertTemplate = props => {
         .call(obj);
     } else {
       let obj = {
-        sys: {
-          id: Math.random(),
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: "",
-          },
-          issueDate: "19/01/2019 20:18",
-        },
         name: name,
         title: utility.applyeLangs(title),
         description: utility.applyeLangs(description),
         media: media,
         fields: [...selectedTemplate.fields],
-        type: "contentType",
         template: selectedTemplate.name,
         allowCustomFields: selectedTemplate.allowCustomFields,
-        enableVersioning: versioning,
-        enableAccessRight: accessRight,
+        versioning: versioning,
+        //        accessRight: accessRight,
       };
       addContentType()
         .onOk(result => {
@@ -248,7 +239,7 @@ const UpsertTemplate = props => {
             },
           });
           dispatch({
-            type: "SET_CONTENT_TYPES",
+            type: "ADD_CONTENT_TYPE",
             value: result,
           });
           props.onCloseModal(obj);
@@ -286,15 +277,8 @@ const UpsertTemplate = props => {
             },
           });
         })
-        .call(obj);
+        .call(spaceInfo.id, obj);
     }
-
-    // const obj = {
-    //   selectedTemplate: selectedTemplate,
-    //   name: name,
-    //   title: utility.applyeLangs(title),
-    //   description: utility.applyeLangs(description)
-    // };
   }
   function removeFile(image) {
     const m = media.filter(item => item.id !== image.id);

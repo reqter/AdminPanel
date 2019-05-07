@@ -251,11 +251,11 @@ export function addContentType () {
       headers: {
         authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
-        spaceId: spaceId || '5c6b37785a4a69808852bc4d'
+        spaceId: spaceId
       },
       body: JSON.stringify(contentType)
     })
-    
+
     const status = rawResponse.status
     const result = await rawResponse.json()
     switch (status) {

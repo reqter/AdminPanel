@@ -123,6 +123,13 @@ const Provider = props => {
           contentTypes: action.value,
         };
         return s;
+      case "ADD_CONTENT_TYPE":
+        let c_add = [...state.contentTypes];
+        c_add.push(action.value);
+        return {
+          ...state,
+          contentTypes: c_add,
+        };
       case "SET_CONTENT_TEMPLATES":
         const c_t = {
           ...state,
