@@ -65,7 +65,8 @@ export function filterAssets () {
         url = url + '?fileType=' + fileType
       }
       if (assetStatus !== undefined) {
-        url = url + '?status=' + assetStatus
+        if (fileType !== undefined) url = url + '&status=' + assetStatus
+        else url = url + '?status=' + assetStatus
       }
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {
