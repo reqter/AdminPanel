@@ -352,7 +352,7 @@ export function updateContentType () {
     try {
       const url = updateURL
       const token = storageManager.getItem('token')
-      
+
       var rawResponse = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -369,7 +369,9 @@ export function updateContentType () {
           template: contentType.template,
           media: contentType.media,
           fields: contentType.fields,
-          allowCustomFields: contentType.allowCustomFields
+          allowCustomFields: contentType.allowCustomFields,
+          accessRight: contentType.accessRight,
+          categoriation: contentType.categoriation
         })
       })
 

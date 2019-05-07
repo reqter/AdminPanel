@@ -61,6 +61,9 @@ const UpsertTemplate = props => {
   const [accessRight, toggleAccessRight] = useState(
     selectedContentType ? selectedContentType.accessRight : false
   );
+  const [categorization, toggleCategorization] = useState(
+    selectedContentType ? selectedContentType.categorization : false
+  );
 
   useEffect(() => {
     getTemplates()
@@ -146,145 +149,147 @@ const UpsertTemplate = props => {
   }
   function upsertItemType() {
     if (!spinner) {
-      setSpinner(true)
-    
-    if (updateMode) {
-      let obj = {};
-      for (const key in selectedContentType) {
-        obj[key] = selectedContentType[key];
-      }
-      obj["name"] = name;
-      obj["title"] = utility.applyeLangs(title);
-      obj["description"] = utility.applyeLangs(description);
-      obj["media"] = media;
-      obj["versioning"] = versioning;
-      obj["accessRight"] = accessRight;
-      if (!accessRight) delete obj["visibleTo"];
+      setSpinner(true);
 
-      updateContentType()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: languageManager.translate("CONTENT_TYPE_UPDATE_ON_OK"),
-            },
-          });
-          dispatch({
-            type: "UPDATE_CONTENT_TYPE",
-            value: result,
-          });
-          props.onCloseModal(obj);
-        })
-        .onServerError(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "CONTENT_TYPE_UPDATE_ON_SERVER_ERROR"
-              ),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "CONTENT_TYPE_UPDATE_ON_BAD_REQUEST"
-              ),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "CONTENT_TYPE_UPDATE_UN_AUTHORIZED"
-              ),
-            },
-          });
-        })
-        .notFound(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "CONTENT_TYPE_UPDATE_NOT_FOUND"
-              ),
-            },
-          });
-        })
-        .call(spaceInfo.id, obj);
-    } else {
-      let obj = {
-        name: name,
-        title: utility.applyeLangs(title),
-        description: utility.applyeLangs(description),
-        media: media,
-        fields: [...selectedTemplate.fields],
-        template: selectedTemplate.name,
-        allowCustomFields: selectedTemplate.allowCustomFields,
-        versioning: versioning,
-        //        accessRight: accessRight,
-      };
-      addContentType()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: languageManager.translate("CONTENT_TYPE_ADD_ON_OK"),
-            },
-          });
-          dispatch({
-            type: "ADD_CONTENT_TYPE",
-            value: result,
-          });
-          props.onCloseModal(obj);
-        })
-        .onServerError(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "CONTENT_TYPE_ADD_ON_SERVER_ERROR"
-              ),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "CONTENT_TYPE_ADD_ON_BAD_REQUEST"
-              ),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "CONTENT_TYPE_ADD_UN_AUTHORIZED"
-              ),
-            },
-          });
-        })
-        .call(spaceInfo.id, obj);
+      if (updateMode) {
+        let obj = {};
+        for (const key in selectedContentType) {
+          obj[key] = selectedContentType[key];
+        }
+        obj["name"] = name;
+        obj["title"] = utility.applyeLangs(title);
+        obj["description"] = utility.applyeLangs(description);
+        obj["media"] = media;
+        obj["versioning"] = versioning;
+        obj["accessRight"] = accessRight;
+        obj["categorization"] = categorization;
+        if (!accessRight) delete obj["visibleTo"];
+
+        updateContentType()
+          .onOk(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("CONTENT_TYPE_UPDATE_ON_OK"),
+              },
+            });
+            dispatch({
+              type: "UPDATE_CONTENT_TYPE",
+              value: result,
+            });
+            props.onCloseModal(obj);
+          })
+          .onServerError(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_UPDATE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_UPDATE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_UPDATE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_UPDATE_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(spaceInfo.id, obj);
+      } else {
+        let obj = {
+          name: name,
+          title: utility.applyeLangs(title),
+          description: utility.applyeLangs(description),
+          media: media,
+          fields: [...selectedTemplate.fields],
+          template: selectedTemplate.name,
+          allowCustomFields: selectedTemplate.allowCustomFields,
+          versioning: versioning,
+          accessRight: accessRight,
+          categorization: categorization,
+        };
+        addContentType()
+          .onOk(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("CONTENT_TYPE_ADD_ON_OK"),
+              },
+            });
+            dispatch({
+              type: "ADD_CONTENT_TYPE",
+              value: result,
+            });
+            props.onCloseModal(obj);
+          })
+          .onServerError(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_ADD_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_ADD_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "CONTENT_TYPE_ADD_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .call(spaceInfo.id, obj);
+      }
     }
   }
-}
   function removeFile(image) {
     const m = media.filter(item => item.id !== image.id);
     setMedia(m);
@@ -306,6 +311,9 @@ const UpsertTemplate = props => {
   }
   function handleAccessRightChanged(e) {
     toggleAccessRight(e.target.checked);
+  }
+  function handleChangeCategorization(e) {
+    toggleCategorization(e.target.checked);
   }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
@@ -433,6 +441,7 @@ const UpsertTemplate = props => {
                     </label>
                   </div>
                 </div>
+
                 <div className="custom_checkbox col">
                   <div className="left">
                     <label className="checkBox">
@@ -455,6 +464,28 @@ const UpsertTemplate = props => {
                   </div>
                 </div>
               </div>
+              <div className="custom_checkbox">
+                <div className="left">
+                  <label className="checkBox">
+                    <input
+                      type="checkbox"
+                      id="categorize"
+                      checked={categorization}
+                      onChange={handleChangeCategorization}
+                    />
+                    <span className="checkmark" />
+                  </label>
+                </div>
+                <div className="right">
+                  <label for="categorize">
+                    Enable categorization of this content type
+                  </label>
+                  <label for="categorize">
+                    This content type can categorize entering data
+                  </label>
+                </div>
+              </div>
+
               <div className="up-uploader">
                 <span className="title">
                   {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_TITLE")}

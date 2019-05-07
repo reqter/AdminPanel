@@ -15,14 +15,14 @@ const List = props => {
       {props.data &&
         props.data.map(listItem => (
           <ListGroupItem
-            key={listItem.sys.id}
+            key={listItem._id}
             className="listGroupItem"
             style={{
               backgroundColor: selected.sys
-                ? selected.sys.id === listItem.sys.id
+                ? selected._id === listItem._id
                   ? "lightgray"
                   : "white"
-                : "white"
+                : "white",
             }}
           >
             <div className="treeItem">
