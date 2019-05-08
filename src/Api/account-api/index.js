@@ -11,6 +11,11 @@ const updateProfileURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_UPDATE_PROFILE
 const confirmEmailURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CONFIRM_EMAIL
+  const changeAvatarURL =
+  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_AVATAR
+const changePasswrodURL =
+  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_PASSWORD
+
 
 export function login () {
   let _onOkCallBack
@@ -695,61 +700,45 @@ export function changeAvatar () {
       _onConnectionErrorCallBack(result)
     }
   }
-  let _onProgressCallBack
-  function _onProgress (result) {
-    if (_onProgressCallBack) {
-      _onProgressCallBack(result)
-    }
-  }
 
-  const _call = async file => {
+  const _call = async avatar => {
     try {
-      var xhr = new XMLHttpRequest()
-      const url = process.env.REACT_APP_FILE_UPLOADER_URL
-      const token = localStorage.getItem('token')
-
-      xhr.open('POST', url)
-      xhr.onload = () => {
-        const status = xhr.status
-        const result = JSON.parse(xhr.response)
-        switch (status) {
-          case 200:
-            _onOk(result)
-            break
-          case 400:
-            _onBadRequest(result)
-            break
-          case 401:
-            _unAuthorized(result)
-            break
-          case 404:
-            _onBadRequest(result)
-            break
-          case 500:
-            _onServerError(result)
-            break
-          default:
-            break
-        }
+      const url = changeAvatarURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          avatar
+        })
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
       }
-      var formdata = new FormData()
-      // formdata.append('file', file)
-      formdata.append('file', file, file.name)
-      // formdata.append('id', _id)
-
-      if (xhr.upload) {
-        xhr.upload.onprogress = event => {
-          if (event.lengthComputable) {
-            _onProgress(
-              Math.round((event.loaded / event.total) * 100).toString()
-            )
-          }
-        }
-      }
-      xhr.setRequestHeader('authorization', 'Bearer ' + token)
-      // xhr.setRequestHeader('content-type', 'multipart/form-data')
-      await xhr.send(formdata)
-    } catch (error) {}
+    } catch (error) {
+      _onServerError()
+    }
   }
 
   return {
@@ -776,10 +765,6 @@ export function changeAvatar () {
     },
     onConnectionError: function (callback) {
       _onConnectionErrorCallBack = callback
-      return this
-    },
-    onProgress: function (callback) {
-      _onProgressCallBack = callback
       return this
     }
   }

@@ -190,17 +190,34 @@ const Profile = props => {
   function uploadAvatar(file) {
     if (!isUploading) {
       toggleIsUploading(true);
-      changeAvatar()
+      uploadAssetFile()
         .onOk(result => {
           const { file } = result;
-          toggleIsUploading(false);
-          let u = { ...userInfo };
-          u.profile["avatar"] =
-            process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url;
-          dispatch({
-            type: "SET_USERINFO",
-            value: u,
-          });
+          debugger
+          changeAvatar()
+            .onOk(result => {
+              toggleIsUploading(false);
+              let u = { ...userInfo };
+              u.profile["avatar"] =
+                process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url;
+              dispatch({
+                type: "SET_USERINFO",
+                value: u,
+              });
+            })
+            .onServerError(result => {
+              toggleIsUploading(false);
+            })
+            .onBadRequest(result => {
+              toggleIsUploading(false);
+            })
+            .unAuthorized(result => {
+              toggleIsUploading(false);
+            })
+            .notFound(result => {
+              toggleIsUploading(false);
+            })
+            .call(file.url);
         })
         .onServerError(result => {
           toggleIsUploading(false);
