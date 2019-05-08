@@ -71,13 +71,11 @@ const AssetBrowser = props => {
   const [closeSpinner, toggleCloseSpinner] = useState(false);
 
   useEffect(() => {
-    if (tab === 1) {
-      getAssetFiles();
-    }
+    getAssetFiles();
     return () => {
       if (!props.isOpen) toggleModal(false);
     };
-  }, [props.isOpen, tab]);
+  }, []);
 
   useEffect(() => {
     if (Object.keys(form).length > 0 && checkFormValidation()) {
@@ -138,7 +136,7 @@ const AssetBrowser = props => {
         });
       })
       .notFound(result => {})
-      .call(fileType, "published");
+      .call(spaceInfo.id, fileType, undefined);
   }
   function chooseFile(file) {
     props.onCloseModal(file);
@@ -175,6 +173,7 @@ const AssetBrowser = props => {
           });
           if (closePage) {
             changeTab(1);
+            getAssetFiles();
           } else {
             setFormData({});
             setForm({});
@@ -275,7 +274,7 @@ const AssetBrowser = props => {
           en: value["en"],
           fa: value["fa"],
         };
-        f.fileType = value.fileType;
+        f.fileType = value.fileType.split("/")[0];
         f.name = value["name"];
         f["title"] = {
           en: value["name"],
@@ -290,24 +289,6 @@ const AssetBrowser = props => {
       ...prevFormValidation,
       [key]: isValid,
     }));
-    // let obj = {
-    //   ...formValidation
-    // };
-    // if (isValid && obj) {
-    //   delete obj[key];
-    //   if (key === "url" && field.isBase) delete obj["title"];
-    //   if (Object.keys(obj).length === 0) {
-    //     setFormValidation(undefined);
-    //   } else {
-    //     setFormValidation(obj);
-    //   }
-    // } else {
-    //   if (obj === undefined) {
-    //     obj = {};
-    //   }
-    //   obj[key] = null;
-    //   setFormValidation(obj);
-    // }
   }
   //#endregion second tab
 
