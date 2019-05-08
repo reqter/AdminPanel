@@ -21,7 +21,7 @@ import {
   updateCategory,
   removeContentTypeFromCategory,
 } from "./../../Api/category-api";
-import { AssetBrowser, Alert } from "./../../components";
+import { AssetBrowser, Alert, RowSkeleton } from "./../../components";
 
 function useInput(defaultValue = "") {
   const [input, setInput] = useState(defaultValue);
@@ -35,16 +35,19 @@ const Categories = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ categories }, dispatch] = useGlobalState();
-
+  const [spinner, toggleSpinner] = useState(true);
   useEffect(() => {
+    
     getCategories()
       .onOk(result => {
+        toggleSpinner(false)
         dispatch({
           type: "SET_CATEGORIES",
           value: result,
         });
       })
       .onServerError(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -54,6 +57,7 @@ const Categories = props => {
         });
       })
       .onBadRequest(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -63,6 +67,7 @@ const Categories = props => {
         });
       })
       .unAuthorized(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -168,7 +173,7 @@ const Categories = props => {
             issueDate: "19/01/2019 20:18",
           },
           image: image,
-          parentId: selectedCategory.sys.id,
+          parentId: selectedCategory._id,
           name: utility.applyeLangs(name),
           description: utility.applyeLangs(description),
           type: "category",
@@ -303,14 +308,6 @@ const Categories = props => {
       }
     } else {
       const obj = {
-        sys: {
-          id: Math.random(),
-          issuer: {
-            fullName: "Saeed Padyab",
-            image: "",
-          },
-          issueDate: "19/01/2019 20:18",
-        },
         image: image,
         name: utility.applyeLangs(name),
         description: utility.applyeLangs(description),
@@ -533,14 +530,14 @@ const Categories = props => {
               },
             });
           })
-          .call(selectedCategory.sys.id, item.sys.id),
+          .call(selectedCategory._id, item._id),
       onCancel: () => {
         setAlertData();
       },
     });
   }
   function handleRemoveContenType(result, itemType) {
-    const m = itemTypes.filter(item => item.sys.id !== itemType.sys.id);
+    const m = itemTypes.filter(item => item._id !== itemType._id);
     setItemTypes(m);
     dispatch({
       type: "SET_CATEGORIES",
@@ -584,14 +581,32 @@ const Categories = props => {
         </div>
         <div className="c-content">
           <div className="c-content-left">
-            <Tree
-              rightContent={rightContent}
-              data={categories}
-              handleNewCategory={selected => newChildCategory(selected)}
-              handleEditCategory={selected => editCategory(selected)}
-              handleDeleteCategory={selected => removeCategoryItem(selected)}
-              handleItemTypes={selected => showItemTypes(selected)}
-            />
+            {spinner ? (
+              <RowSkeleton />
+            ) : !categories || categories.length === 0 ? (
+              <div className="emptyContenType animated fadeIn">
+                <i className="icon-empty-box-open icon" />
+                <span className="title">Empty List!</span>
+                <span className="info">
+                  You have not created any category yet.
+                </span>
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={toggleModal}
+                >
+                  New Category
+                </button>
+              </div>
+            ) : (
+              <Tree
+                rightContent={rightContent}
+                data={categories}
+                handleNewCategory={selected => newChildCategory(selected)}
+                handleEditCategory={selected => editCategory(selected)}
+                handleDeleteCategory={selected => removeCategoryItem(selected)}
+                handleItemTypes={selected => showItemTypes(selected)}
+              />
+            )}
           </div>
           {rightContent && (
             <div className="c-content-right animated slideInRight faster">
@@ -615,7 +630,7 @@ const Categories = props => {
                 <div className="fieldsContent">
                   {itemTypes &&
                     itemTypes.map(item => (
-                      <div className="fieldItem" key={item.sys.id}>
+                      <div className="fieldItem" key={item._id}>
                         <div className="fieldItem-icon">
                           <i className="icon-more-h" />
                         </div>
