@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Editor } from "react-draft-wysiwyg";
-import "./../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./styles.scss";
 import { useGlobalState, languageManager } from "./../../services";
 import {
@@ -25,7 +23,10 @@ import {
 const UpsertProduct = props => {
   let selectedItem;
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ categories, contentTypes, contents }, dispatch] = useGlobalState();
+  const [
+    { categories, contentTypes, contents, spaceInfo },
+    dispatch,
+  ] = useGlobalState();
 
   // variables
   const [updateMode, toggleUpdateMode] = useState(
@@ -123,7 +124,7 @@ const UpsertProduct = props => {
         };
         setError(obj);
       })
-      .call();
+      .call(spaceInfo.id);
   }
   function getItemById(id) {
     getContentById()

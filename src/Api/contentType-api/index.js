@@ -153,7 +153,6 @@ export function getContentTypes () {
           spaceId: spaceId
         }
       })
-
       const status = rawResponse.status
       const result = await rawResponse.json()
       switch (status) {
@@ -398,7 +397,7 @@ export function updateContentType () {
           break
       }
     } catch (error) {
-      _onServerError(error)
+      
     }
   }
 
@@ -482,7 +481,6 @@ export function deleteContentType () {
           id
         })
       })
-
       const status = rawResponse.status
       const result = await rawResponse.json()
       switch (status) {

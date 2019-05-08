@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Modal, ModalFooter } from "reactstrap";
 import { languageManager, useGlobalState, utility } from "../../../../services";
-import { updateField } from "./../../../../Api/contentType-api";
+import { updateContentType } from "./../../../../Api/contentType-api";
 import "./styles.scss";
+import { CircleSpinner } from "../../../../components";
 
 const acceptedMediaTypes = [
   {
@@ -50,9 +51,10 @@ const FieldConfig = props => {
   //#region variables
   const { selectedContentType } = props;
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ contentTypes }, dispatch] = useGlobalState();
+  const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
   const { selectedField } = props;
 
+  const [spinner, toggleSpinner] = useState(false);
   const [fieldsUI, setFieldsUI] = useState(() => {
     if (fieldsApearance[selectedField.type] === undefined) return undefined;
     let items = JSON.parse(JSON.stringify(fieldsApearance[selectedField.type]));
@@ -129,7 +131,7 @@ const FieldConfig = props => {
             for (let j = 0; j < referencesData.length; j++) {
               for (let i = 0; i < selectedField.references.length; i++) {
                 const r_id = selectedField.references[i];
-                if (referencesData[j].sys.id === r_id) {
+                if (referencesData[j]._id === r_id) {
                   referencesData[j].selected = true;
                 }
               }
@@ -283,7 +285,7 @@ const FieldConfig = props => {
   }
   function handleRefSelect(item) {
     const conts = refContentTypes.map(c => {
-      if (item.sys.id === c.sys.id) {
+      if (item._id === c._id) {
         c.selected = !c.selected;
       }
       return c;
@@ -343,132 +345,141 @@ const FieldConfig = props => {
     }
   }
   function update() {
-    let obj = {
-      ...selectedField,
-    };
-    obj["title"] = utility.applyeLangs(title);
-    obj["isTranslate"] = translation;
-    obj["isRequired"] = isRequired;
-    obj["appearance"] = !fieldsUI
-      ? selectedField.appearance
+    if (!spinner) {
+      toggleSpinner(true);
+      let obj = {
+        ...selectedField,
+      };
+      obj["title"] = utility.applyeLangs(title);
+      obj["isTranslate"] = translation;
+      obj["isRequired"] = isRequired;
+      obj["appearance"] = !fieldsUI
         ? selectedField.appearance
-        : "default"
-      : fieldsUI.find(ui => ui.selected).name;
-    if (helpText.length > 0) obj["helpText"] = utility.applyeLangs(helpText);
-    if (selectedField.type !== "media" && selectedField.type !== "richText") {
-      obj["inVisible"] = inVisible;
-    }
-    if (selectedField.type === "string") {
-      if (textDefaultValue.length > 0) obj["defaultValue"] = textDefaultValue;
-      obj["isMultiLine"] = isMultiLine;
-    }
-    if (selectedField.type === "number" && numberDefaultValue.length > 0) {
-      obj["defaultValue"] = numberDefaultValue;
-    }
-    if (selectedField.type === "dateTime") {
-      obj["showCurrent"] = dateDefaultValue;
-      obj["format"] = dateTimeFormat;
-      obj["disablePastDates"] = dateDisablePast;
-    }
-    if (selectedField.type === "location") {
-      if (latitude.length > 0 && longitude.length > 0) {
-        obj["defaultValue"] = {
-          latitude: latitude,
-          longitude: longitude,
-        };
+          ? selectedField.appearance
+          : "default"
+        : fieldsUI.find(ui => ui.selected).name;
+      if (helpText.length > 0) obj["helpText"] = utility.applyeLangs(helpText);
+      if (selectedField.type !== "media" && selectedField.type !== "richText") {
+        obj["inVisible"] = inVisible;
       }
-    }
-    if (selectedField.type === "boolean") {
-      obj["defaultValue"] = booleanDefaultValue;
-    }
-    if (selectedField.type === "keyValue") {
-      obj["isList"] = pickerType === "single" ? false : true;
-      obj["options"] = options.filter(item => item.value.length > 0);
-    }
-    if (selectedField.type === "media") {
-      obj["isList"] = imageUploadMethod === "oneFile" ? false : true;
-      obj["mediaType"] = mediaTypeVisibility
-        ? mediaType !== undefined
-          ? mediaType.name
-          : "file"
-        : "file";
-    } else if (selectedField.type === "reference") {
-      obj["isList"] = referenceChooseType === "single" ? false : true;
-      let arr = [];
-      for (let i = 0; i < refContentTypes.length; i++) {
-        const item = refContentTypes[i];
-        if (item.selected === true) {
-          arr.push(item.sys.id);
+      if (selectedField.type === "string") {
+        if (textDefaultValue.length > 0) obj["defaultValue"] = textDefaultValue;
+        obj["isMultiLine"] = isMultiLine;
+      }
+      if (selectedField.type === "number" && numberDefaultValue.length > 0) {
+        obj["defaultValue"] = numberDefaultValue;
+      }
+      if (selectedField.type === "dateTime") {
+        obj["showCurrent"] = dateDefaultValue;
+        obj["format"] = dateTimeFormat;
+        obj["disablePastDates"] = dateDisablePast;
+      }
+      if (selectedField.type === "location") {
+        if (latitude.length > 0 && longitude.length > 0) {
+          obj["defaultValue"] = {
+            latitude: latitude,
+            longitude: longitude,
+          };
         }
       }
-      obj["references"] = arr;
+      if (selectedField.type === "boolean") {
+        obj["defaultValue"] = booleanDefaultValue;
+      }
+      if (selectedField.type === "keyValue") {
+        obj["isList"] = pickerType === "single" ? false : true;
+        obj["options"] = options.filter(item => item.value.length > 0);
+      }
+      if (selectedField.type === "media") {
+        obj["isList"] = imageUploadMethod === "oneFile" ? false : true;
+        obj["mediaType"] = mediaTypeVisibility
+          ? mediaType !== undefined
+            ? mediaType.name
+            : "file"
+          : "file";
+      } else if (selectedField.type === "reference") {
+        obj["isList"] = referenceChooseType === "single" ? false : true;
+        let arr = [];
+        for (let i = 0; i < refContentTypes.length; i++) {
+          const item = refContentTypes[i];
+          if (item.selected === true) {
+            arr.push(item._id);
+          }
+        }
+        obj["references"] = arr;
+      }
+      const newContentType = { ...selectedContentType };
+      const newFields = newContentType.fields.map(f => {
+        if (f.name === selectedField.name) f = obj;
+        return f;
+      });
+      newContentType.fields = newFields;
+      updateContentType()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_FIELD_ON_OK"
+              ),
+            },
+          });
+          dispatch({
+            type: "UPDATE_CONTENT_TYPE",
+            value: result,
+          });
+          props.onCloseModal(obj);
+        })
+        .onServerError(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .notFound(result => {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND"
+              ),
+            },
+          });
+        })
+        .call(spaceInfo.id, newContentType);
     }
-    updateField()
-      .onOk(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "success",
-            message: languageManager.translate(
-              "CONTENT_TYPE_UPDATE_FIELD_ON_OK"
-            ),
-          },
-        });
-        const data = result.map(item => {
-          delete item.selected;
-          return item;
-        });
-        dispatch({
-          type: "SET_CONTENT_TYPES",
-          value: data,
-        });
-        props.onCloseModal(obj);
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST"
-            ),
-          },
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
-            ),
-          },
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate(
-              "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
-            ),
-          },
-        });
-      })
-      .notFound(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate(
-              "CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND"
-            ),
-          },
-        });
-      })
-      .call(selectedContentType.sys.id, obj);
   }
   //#endregion methods
   return (
@@ -1021,7 +1032,7 @@ const FieldConfig = props => {
                               "btn btn-sm " +
                               (item.selected ? "btn-primary" : "btn-light")
                             }
-                            key={item.sys.id}
+                            key={item._id}
                             onClick={() => handleRefSelect(item)}
                           >
                             {item.title[currentLang]}
@@ -1179,7 +1190,6 @@ const FieldConfig = props => {
                     >
                       <i className="icon-plus" />
                     </button>
-                 
                   </>
                 )}
               </div>
@@ -1188,7 +1198,8 @@ const FieldConfig = props => {
         </div>
         <ModalFooter>
           <button className="btn btn-primary" onClick={update}>
-            Save
+            <CircleSpinner show={spinner} size="small" />
+            {!spinner && "Save"}
           </button>
           <button className="btn btn-secondary" onClick={closeModal}>
             Close

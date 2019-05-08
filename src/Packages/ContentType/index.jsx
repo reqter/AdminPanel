@@ -10,6 +10,7 @@ import {
   deleteContentType,
   removeContentTypeField,
   setAccessRight,
+  updateContentType,
 } from "./../../Api/contentType-api";
 import { AssignRole, Alert, RowSkeleton } from "../../components";
 
@@ -99,10 +100,7 @@ const ItemTypes = props => {
         deleteContentType()
           .onOk(result => {
             setAlertData();
-            if (
-              selectedContentType.sys &&
-              selected._id === selectedContentType._id
-            )
+            if (selected._id === selectedContentType._id)
               toggleRightContent(false);
             dispatch({
               type: "DELETE_CONTENT_TYPE",
@@ -153,6 +151,7 @@ const ItemTypes = props => {
             });
           })
           .notFound(result => {
+            setAlertData();
             dispatch({
               type: "ADD_NOTIFY",
               value: {
@@ -202,8 +201,11 @@ const ItemTypes = props => {
       title: translate("CONTENT_TYPE_REMOVE_FIELD_ALERT_TITLE"),
       message: translate("CONTENT_TYPE_REMOVE_FIELD_ALERT_MESSAGE"),
       isAjaxCall: true,
-      onOk: () =>
-        removeContentTypeField()
+      onOk: () => {
+        const newContentType = { ...selectedContentType };
+        const f = [...fields].filter(item => item._id !== field._id);
+        newContentType.fields = f;
+        updateContentType()
           .onOk(result => {
             setAlertData();
             dispatch({
@@ -215,11 +217,9 @@ const ItemTypes = props => {
                 ),
               },
             });
-            const f = [...fields].filter(item => item.sys.id !== field.sys.id);
             setFields(f);
-            //dispatch({ type: "SET_FIELDS", value: f });
             dispatch({
-              type: "SET_CONTENT_TYPES",
+              type: "UPDATE_CONTENT_TYPE",
               value: result,
             });
           })
@@ -271,7 +271,8 @@ const ItemTypes = props => {
               },
             });
           })
-          .call(selectedContentType.sys.id, field.sys.id),
+          .call(spaceInfo.id, newContentType);
+      },
       onCancel: () => {
         setAlertData();
       },
@@ -281,8 +282,7 @@ const ItemTypes = props => {
     toggleShowFieldConfig(false);
     if (updatedField) {
       const newFields = fields.map(item => {
-        if (item.sys.id === updatedField.sys.id) return updatedField;
-
+        if (item.name === updatedField.name) return updatedField;
         return item;
       });
       setFields(newFields);
@@ -359,7 +359,7 @@ const ItemTypes = props => {
             },
           });
         })
-        .call(selectedContentType.sys.id, result);
+        .call(selectedContentType._id, result);
     }
   }
   return (

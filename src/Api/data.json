@@ -11,14 +11,6 @@
       "icon": "icon-database",
       "fields": [
         {
-          "sys": {
-            "id": "1",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "name",
           "title": {
             "en": "Name",
@@ -34,14 +26,6 @@
           "isRequired": true
         },
         {
-          "sys": {
-            "id": "2",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "shortDesc",
           "title": {
             "fa": "Short Description",
@@ -70,14 +54,6 @@
       "allowCustomFields": true,
       "fields": [
         {
-          "sys": {
-            "id": "1",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "name",
           "title": {
             "en": "Name",
@@ -93,14 +69,6 @@
           "isRequired": true
         },
         {
-          "sys": {
-            "id": "2",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "shortDesc",
           "title": {
             "fa": "Short Description",
@@ -115,14 +83,6 @@
           "isTranslate": true
         },
         {
-          "sys": {
-            "id": "3",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "media",
           "title": {
             "fa": "رسانه",
@@ -138,14 +98,6 @@
           "isTranslate": true
         },
         {
-          "sys": {
-            "id": "4",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "body",
           "title": {
             "en": "Body",
@@ -171,14 +123,6 @@
       "icon": "icon-images",
       "fields": [
         {
-          "sys": {
-            "id": "1",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "name",
           "title": {
             "en": "Name",
@@ -194,14 +138,6 @@
           "isRequired": true
         },
         {
-          "sys": {
-            "id": "2",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "shortDesc",
           "title": {
             "fa": "Short Description",
@@ -216,14 +152,6 @@
           "isTranslate": true
         },
         {
-          "sys": {
-            "id": "3",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "cover",
           "title": {
             "fa": "تصویر گالری",
@@ -241,14 +169,6 @@
           "isBase": true
         },
         {
-          "sys": {
-            "id": "4",
-            "issuer": {
-              "fullName": "Saeed Padyab",
-              "image": ""
-            },
-            "issueDate": "19/01/2019 20:18"
-          },
           "name": "gallery",
           "title": {
             "en": "Gallery",

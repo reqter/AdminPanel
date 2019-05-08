@@ -10,7 +10,7 @@ import Categories from './Packages/Categories'
 import ContentType from './Packages/ContentType'
 import Users from './Packages/Users'
 import Products from './Packages/Products'
-import UpsertProduct from './Packages/UpsertProduct'
+import UpsertContent from './Packages/UpsertProduct'
 import Assets from './Packages/Assets'
 import UpdateFile from './Packages/upsertFile'
 import Profile from './Packages/Profile'
@@ -20,6 +20,9 @@ import UpsertUser from './Packages/upsertUser'
 const Home = withResolver(HomeComponent)
 const AddAsset = withResolver(UpdateFile)
 const EditAsset = withResolver(UpdateFile)
+const AddContent = withResolver(UpsertContent)
+const EditContent = withResolver(UpsertContent)
+const ViewContent = withResolver(UpsertContent)
 
 function translate (key) {
   return languageManager.translate(key)
@@ -107,17 +110,17 @@ const routes = [
   },
   {
     path: '/contents/new',
-    component: UpsertProduct,
+    component: AddContent,
     isPublic: false
   },
   {
     path: '/contents/edit/:id',
-    component: UpsertProduct,
+    component: EditContent,
     isPublic: false
   },
   {
     path: '/contents/view/:id',
-    component: UpsertProduct,
+    component: ViewContent,
     isPublic: false
   },
   {

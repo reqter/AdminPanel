@@ -11,8 +11,8 @@ import {
   Input,
 } from "reactstrap";
 import { languageManager, utility, useGlobalState } from "../../../../services";
-import { CheckBox } from "./../../../../components";
-import { addFieldToContentType } from "./../../../../Api/contentType-api";
+import { CheckBox, CircleSpinner } from "./../../../../components";
+import { updateContentType } from "./../../../../Api/contentType-api";
 import "./styles.scss";
 
 const fields = [
@@ -96,7 +96,7 @@ const reservedWords = [
   "status",
 ];
 const AddNewField = props => {
-  const [{}, dispatch] = useGlobalState();
+  const [{ spaceInfo }, dispatch] = useGlobalState();
   const { selectedContentType } = props;
 
   const [isOpen, toggleModal] = useState(true);
@@ -110,6 +110,8 @@ const AddNewField = props => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [translation, toggleTranslation] = useState(false);
+  const [spinner, toggleSpinner] = useState(false);
+  const [configSpinner, toggleConfigSpinner] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -135,9 +137,11 @@ const AddNewField = props => {
     //nameInput.current.focus(); // focus after changing tab on first input
   }
   function backToFields(params) {
-    const title = languageManager.translate("CONTENT_TYPE_ADD_FIELD_CHOOSEN");
-    setAddFieldHeaderTitle(title);
-    changeTab(1);
+    if (!spinner && !configSpinner) {
+      const title = languageManager.translate("CONTENT_TYPE_ADD_FIELD_CHOOSEN");
+      setAddFieldHeaderTitle(title);
+      changeTab(1);
+    }
   }
   function handleNameChanged(e) {
     setName(e.target.value);
@@ -150,71 +154,91 @@ const AddNewField = props => {
   }
 
   function addField(e, showConfig) {
-    const obj = {
-      sys: {
-        id: Math.random().toString(),
-        issuer: {
-          fullName: "Saeed Padyab",
-          image: "",
-        },
-        issueDate: "19/01/2019 20:18",
-      },
-      name: name,
-      title: utility.applyeLangs(title),
-      description: utility.applyeLangs(description),
-      type: selectedField.name,
-      isTranslate: translation,
-      appearance: selectedField.appearance,
-    };
-    addFieldToContentType()
-      .onOk(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "success",
-            message: languageManager.translate("CONTENT_TYPE_ADD_FIELD_ON_OK"),
-          },
-        });
-        dispatch({
-          type: "SET_CONTENT_TYPES",
-          value: result,
-        });
-        props.onCloseModal({ field: obj, showConfig: showConfig });
-      })
-      .onServerError(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_ADD_FIELD_ON_SERVER_ERROR"
-            ),
-          },
-        });
-      })
-      .onBadRequest(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate(
-              "CONTENT_TYPE_ADD_FIELD_ON_BAD_REQUEST"
-            ),
-          },
-        });
-      })
-      .unAuthorized(result => {
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate(
-              "CONTENT_TYPE_ADD_FIELD_UN_AUTHORIZED"
-            ),
-          },
-        });
-      })
-      .call(selectedContentType.sys.id, obj);
+    if (!spinner && !configSpinner) {
+      if (showConfig) {
+        toggleConfigSpinner(true);
+      } else {
+        toggleSpinner(true);
+      }
+      const obj = {
+        _id: Math.random().toString(),
+        name: name,
+        title: utility.applyeLangs(title),
+        description: utility.applyeLangs(description),
+        type: selectedField.name,
+        isTranslate: translation,
+        appearance: selectedField.appearance,
+      };
+      const newContentType = { ...selectedContentType };
+      if (newContentType.fields === undefined) newContentType.fields = [];
+      newContentType.fields.push(obj);
+      updateContentType()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ADD_FIELD_ON_OK"
+              ),
+            },
+          });
+          dispatch({
+            type: "UPDATE_CONTENT_TYPE",
+            value: result,
+          });
+          props.onCloseModal({ field: obj, showConfig: showConfig });
+        })
+        .onServerError(result => {
+          if (showConfig) {
+            toggleConfigSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ADD_FIELD_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          if (showConfig) {
+            toggleConfigSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ADD_FIELD_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          if (showConfig) {
+            toggleConfigSpinner(false);
+          } else {
+            toggleSpinner(false);
+          }
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ADD_FIELD_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .call(spaceInfo.id, newContentType);
+    }
   }
   function addField_configure() {
     addField(undefined, true);
@@ -343,9 +367,11 @@ const AddNewField = props => {
                 : true
             }
           >
-            {languageManager.translate(
-              "CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_BTN"
-            )}
+            <CircleSpinner show={spinner} size="small" />
+            {!spinner &&
+              languageManager.translate(
+                "CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_BTN"
+              )}
           </Button>
           <Button
             color="primary"
@@ -360,9 +386,11 @@ const AddNewField = props => {
                 : true
             }
           >
-            {languageManager.translate(
-              "CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_CONFIG_BTN"
-            )}
+            <CircleSpinner show={configSpinner} size="small" />
+            {!configSpinner &&
+              languageManager.translate(
+                "CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_CONFIG_BTN"
+              )}
           </Button>
           <Button color="secondary" onClick={backToFields}>
             {languageManager.translate(
