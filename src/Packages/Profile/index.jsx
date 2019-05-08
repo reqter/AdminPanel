@@ -222,25 +222,55 @@ const Profile = props => {
       toggleConfirmEmailSpinner(true);
       sendEmailConfirmation()
         .onOk(result => {
-          toggleConfirmEmailSpinner(false);
-          let u = { ...userInfo };
-          u["emailConfirmed"] = true;
           dispatch({
-            type: "SET_USERINFO",
-            value: u,
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate(
+                "PROFILE_EMAIL_CONFRIMATION_ON_OK"
+              ),
+            },
           });
+          toggleConfirmEmailSpinner(false);
         })
         .onServerError(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "PROFILE_EMAIL_CONFRIMATION_ON_SERVER_ERROR"
+              ),
+            },
+          });
           toggleConfirmEmailSpinner(false);
         })
         .onBadRequest(result => {
           toggleConfirmEmailSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "PROFILE_EMAIL_CONFRIMATION_BAD_REQUEST"
+              ),
+            },
+          });
         })
         .unAuthorized(result => {
           toggleConfirmEmailSpinner(false);
         })
         .notFound(result => {
           toggleConfirmEmailSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "PROFILE_EMAIL_CONFRIMATION_NOT_FOUND"
+              ),
+            },
+          });
         })
         .call();
     }
@@ -382,7 +412,7 @@ const Profile = props => {
                               show={confirmEmailSpinner}
                               size="small"
                             />
-                            <span> Send Confirmation</span>
+                            {!confirmEmailSpinner && "Send Confirmation"}
                           </button>
                         )}
                     </div>
