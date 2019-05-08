@@ -278,7 +278,6 @@ export function addCategory () {
           break
       }
     } catch (error) {
-      _onServerError(error)
     }
   }
 
@@ -377,7 +376,7 @@ export function updateCategory () {
           spaceId: spaceId
         },
         body: JSON.stringify({
-          id: category._id,
+          id: category.id,
           name: category.name,
           shortDesc: category.shortDesc,
           longDesc: category.longDesc,
@@ -410,16 +409,6 @@ export function updateCategory () {
       }
     } catch (error) {}
   }
-
-  // function updateNodeInList (list, node) {
-  //   for (let i = 0; i < list.length; i++) {
-  //     if (list[i].sys.id === node.sys.id) {
-  //       list[i] = node
-  //     }
-  //     if (list[i].children) updateNodeInList(list[i].children, node)
-  //   }
-  // }
-  // updateNodeInList(data.categories, node)
 
   return {
     call: _call,
@@ -524,17 +513,6 @@ export function deleteCategory () {
       }
     } catch (error) {}
   }
-
-  // function deleteNodeInList (list, node) {
-  //   for (let i = 0; i < list.length; i++) {
-  //     if (list[i].sys.id === node.sys.id) {
-  //       list.splice(i, 1)
-  //       return
-  //     }
-  //     if (list[i].children) deleteNodeInList(list[i].children, node)
-  //   }
-  // }
-  // deleteNodeInList(data.categories, node)
 
   return {
     call: _call,

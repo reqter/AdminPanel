@@ -164,6 +164,13 @@ const Provider = props => {
           ...state,
           categories: action.value,
         };
+      case "ADD_CATEGORY":
+        let cat_add = [...state.categories];
+        cat_add.push(action.value);
+        return {
+          ...state,
+          categories: cat_add,
+        };
       case "SET_CONTENTS":
         return {
           ...state,
@@ -197,7 +204,8 @@ const Provider = props => {
         };
       case "ARCHIVE_ASSET":
         const assets_archive = state.assets.map(item => {
-          if (item._id === action.value._id) item.status = action.value.status;
+          if (item._id === action.value._id)
+            item.status = action.value.status;
           return item;
         });
 
@@ -207,7 +215,8 @@ const Provider = props => {
         };
       case "UN_ARCHIVE_ASSET":
         const assets_unarchive = state.assets.map(item => {
-          if (item._id === action.value._id) item.status = action.value.status;
+          if (item._id === action.value._id)
+            item.status = action.value.status;
           return item;
         });
 
@@ -217,7 +226,8 @@ const Provider = props => {
         };
       case "PUBLISH_ASSET":
         const assets_publish = state.assets.map(item => {
-          if (item._id === action.value._id) item.status = action.value.status;
+          if (item._id === action.value._id)
+            item.status = action.value.status;
           return item;
         });
 
@@ -227,7 +237,8 @@ const Provider = props => {
         };
       case "UN_PUBLISH_ASSET":
         const assets_unpublish = state.assets.map(item => {
-          if (item._id === action.value._id) item.status = action.value.status;
+          if (item._id === action.value._id)
+            item.status = action.value.status;
           return item;
         });
 

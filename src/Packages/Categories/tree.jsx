@@ -49,7 +49,7 @@ class Tree extends Component {
                   paddingLeft: `${15 * lvl}px`,
                 }}
               >
-                {node.children && node.children.length > 0 ? (
+                {node.childs && node.childs.length > 0 ? (
                   <>
                     <div
                       className="btnCategoryCollapse"
@@ -65,7 +65,10 @@ class Tree extends Component {
                     </div>
                     {node.image !== undefined ? (
                       <div className="treeItem-img">
-                        <img src={node.image[this.state.currentLang]} alt="" />
+                        <img
+                          src={node.image[this.state.currentLang]}
+                          alt=""
+                        />
                       </div>
                     ) : (
                       <div className="treeItem-icon">
@@ -81,7 +84,10 @@ class Tree extends Component {
                       <i className="icon-circle-o" />
                     </button>
                     <div className="treeItem-img">
-                      <img src={node.image[this.state.currentLang]} alt="" />
+                      <img
+                        src={node.image[this.state.currentLang]}
+                        alt=""
+                      />
                     </div>
                   </>
                 ) : (
@@ -96,35 +102,39 @@ class Tree extends Component {
                     </div>
                   </>
                 )}
-
                 <div className="treeItem-text">
                   <span className="treeItem-name">
                     {node.name[this.state.currentLang]}
                   </span>
                   <span className="treeItem-desc">
-                    {node.description[this.state.currentLang] ||
-                      "Lorem ipsum dolor sit amet, consectetur"}
+                    {node.shortDesc
+                      ? node.shortDesc[this.state.currentLang].length > 0
+                        ? node.shortDesc[this.state.currentLang]
+                        : "Lorem ipsum dolor sit amet, consectetur"
+                      : "Lorem ipsum dolor sit amet, consectetur"}
                   </span>
                 </div>
-                {(node.children === undefined ||
-                  node.children.length === 0) && (
+                {/* hoverAction */}
+                {(node.childs === undefined ||
+                  node.childs.length === 0) && (
                   <button
-                    className="btn btn-light treeItem-action hoverAction"
+                    className="btn btn-light treeItem-action "
                     size="xs"
                     onClick={() => this.props.handleDeleteCategory(node)}
                   >
                     <i className="icon-bin" />
                   </button>
                 )}
+                {/* hoverAction */}
                 <button
-                  className="btn btn-light treeItem-action hoverAction"
+                  className="btn btn-light treeItem-action "
                   size="xs"
                   onClick={() => this.props.handleEditCategory(node)}
                 >
                   <i className="icon-pencil" />
                 </button>
-                {/* {(node.children === undefined ||
-                  node.children.length === 0) && (
+                {/* {(node.childs === undefined ||
+                  node.childs.length === 0) && (
                   <button
                     className="btn btn-light treeItem-action"
                     size="xs"
@@ -145,15 +155,18 @@ class Tree extends Component {
                     size="xs"
                     onClick={() => this.props.handleNewCategory(node)}
                   >
-                    <i className="icon-plus" style={{ fontWeight: "bold" }} />
+                    <i
+                      className="icon-plus"
+                      style={{ fontWeight: "bold" }}
+                    />
                   </button>
                 )}
               </div>
             }
           </ListGroupItem>
-          {node.children && (
+          {node.childs && (
             <Collapse isOpen={this.state[id]}>
-              {this.mapper(node.children, id, (lvl || 0) + 1)}
+              {this.mapper(node.childs, id, (lvl || 0) + 1)}
             </Collapse>
           )}
         </>
