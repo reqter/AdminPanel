@@ -441,8 +441,30 @@ const UpsertTemplate = props => {
                     </label>
                   </div>
                 </div>
-
                 <div className="custom_checkbox col">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="categorize"
+                        checked={categorization}
+                        onChange={handleChangeCategorization}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label for="categorize">
+                      Enable categorization of this content type
+                    </label>
+                    <label for="categorize">
+                      This content type can categorize entering data
+                    </label>
+                  </div>
+                </div>
+              </div>
+              {/*
+                          <div className="custom_checkbox col">
                   <div className="left">
                     <label className="checkBox">
                       <input
@@ -463,29 +485,8 @@ const UpsertTemplate = props => {
                     </label>
                   </div>
                 </div>
-              </div>
-              <div className="custom_checkbox">
-                <div className="left">
-                  <label className="checkBox">
-                    <input
-                      type="checkbox"
-                      id="categorize"
-                      checked={categorization}
-                      onChange={handleChangeCategorization}
-                    />
-                    <span className="checkmark" />
-                  </label>
-                </div>
-                <div className="right">
-                  <label for="categorize">
-                    Enable categorization of this content type
-                  </label>
-                  <label for="categorize">
-                    This content type can categorize entering data
-                  </label>
-                </div>
-              </div>
-
+    
+               */}
               <div className="up-uploader">
                 <span className="title">
                   {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
