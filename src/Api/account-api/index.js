@@ -11,11 +11,10 @@ const updateProfileURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_UPDATE_PROFILE
 const confirmEmailURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CONFIRM_EMAIL
-  const changeAvatarURL =
+const changeAvatarURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_AVATAR
 const changePasswrodURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_PASSWORD
-
 
 export function login () {
   let _onOkCallBack
@@ -912,18 +911,21 @@ export function changePassword () {
   }
   const _call = async (oldPass, newPass) => {
     try {
-      // const url = 'https://reqter-adminapi.herokuapp.com/auth/register'
-      // var rawResponse = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({})
-      // })
-      // const status = rawResponse.status
-      // const result = await rawResponse.json()
-      const status = 200
-      const result = {}
+      const url = changePasswrodURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          oldpassword: oldPass,
+          newpassword: newPass
+        })
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
 
       switch (status) {
         case 200:
@@ -945,7 +947,6 @@ export function changePassword () {
           break
       }
     } catch (error) {
-      _onServerError()
     }
   }
 

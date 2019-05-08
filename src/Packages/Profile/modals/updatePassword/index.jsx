@@ -26,7 +26,8 @@ const UpdatePassword = props => {
   function closeModal() {
     props.onClose();
   }
-  function onSubmit() {
+  function onSubmit(e) {
+    e.preventDefault();
     if (!spinner) {
       toggleSpinner(true);
       changePassword()
@@ -78,7 +79,7 @@ const UpdatePassword = props => {
               <label>{languageManager.translate("Old Password")}</label>
               <input
                 ref={oldPassRef}
-                type="text"
+                type="password"
                 className="form-control"
                 placeholder={languageManager.translate("old password")}
                 required
@@ -94,7 +95,7 @@ const UpdatePassword = props => {
             <div className="form-group">
               <label>{languageManager.translate("New Password")}</label>
               <input
-                type="text"
+                type="password"
                 className="form-control"
                 placeholder={languageManager.translate("new password")}
                 required
@@ -112,7 +113,7 @@ const UpdatePassword = props => {
             <div className="form-group">
               <label>{languageManager.translate("Confirm Password")}</label>
               <input
-                type="text"
+                type="password"
                 className="form-control"
                 placeholder={languageManager.translate("confirm your password")}
                 required
@@ -136,7 +137,7 @@ const UpdatePassword = props => {
         </button>
         <button
           type="submit"
-          className="btn btn-primary ajax-button"
+          className="btn btn-primary"
           form="changePassForm"
           disabled={
             oldPass === undefined ||
@@ -151,7 +152,7 @@ const UpdatePassword = props => {
           }
         >
           <CircleSpinner show={spinner} size="small" />
-          <span>Change</span>
+          {!spinner && <span>Change</span>}
         </button>
       </ModalFooter>
     </Modal>
