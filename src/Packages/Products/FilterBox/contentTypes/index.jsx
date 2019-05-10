@@ -3,16 +3,15 @@ import { languageManager, useGlobalState, utility } from "../../../../services";
 import { getContentTypes } from "./../../../../Api/content-api";
 const ContentTypeFilter = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ contentTypes }, dispatch] = useGlobalState();
+  const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
   const [selected, setSelected] = useState({});
-
   useEffect(() => {
-    if (contentTypes.length === 0) {
+    if (contentTypes === undefined || contentTypes.length === 0) {
       getContentTypes()
         .onOk(result => {
           dispatch({
             type: "SET_CONTENT_TYPES",
-            value: result
+            value: result,
           });
         })
         .onServerError(result => {
@@ -20,8 +19,10 @@ const ContentTypeFilter = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR")
-            }
+              message: languageManager.translate(
+                "CONTENT_TYPE_ON_SERVER_ERROR"
+              ),
+            },
           });
         })
         .onBadRequest(result => {
@@ -29,8 +30,8 @@ const ContentTypeFilter = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST")
-            }
+              message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
+            },
           });
         })
         .unAuthorized(result => {
@@ -38,12 +39,14 @@ const ContentTypeFilter = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED")
-            }
+              message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
+            },
           });
         })
-        .call();
+        .call(spaceInfo.id);
     }
+  }, []);
+  useEffect(() => {
     if (Object.keys(selected).length > 0) {
       const c = props.filters.find(item => item.type === "contentType");
       if (!c) {
@@ -60,7 +63,7 @@ const ContentTypeFilter = props => {
   }
   return (
     <div className="filterBox">
-      <div className="filter-header">Item Types</div>
+      <div className="filter-header">Content Types</div>
       <div className="filter-body">
         {contentTypes.map(listItem => (
           <div
@@ -88,7 +91,7 @@ const ContentTypeFilter = props => {
                   ? selected.sys.id === listItem.sys.id
                     ? "rgb(56,132,255)"
                     : "gray"
-                  : "gray"
+                  : "gray",
               }}
             >
               {listItem.title[currentLang]}

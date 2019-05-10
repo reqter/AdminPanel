@@ -72,12 +72,12 @@ const fields = [
     icon: "icon-file-text-o",
     appearance: "default",
   },
-  // {
-  //   name: "jsonObject",
-  //   title: languageManager.translate("FIELD_TYPE_OBJECT"),
-  //   description: languageManager.translate("FIELD_TYPE_OBJECT_INFO"),
-  //   icon: "icon-json-file"
-  // },
+  {
+    name: "jsonObject",
+    title: languageManager.translate("FIELD_TYPE_OBJECT"),
+    description: languageManager.translate("FIELD_TYPE_OBJECT_INFO"),
+    icon: "icon-json-file"
+  },
   {
     name: "reference",
     title: languageManager.translate("FIELD_TYPE_REFERENCE"),

@@ -10,6 +10,7 @@ import { CircleSpinner } from "./../../components";
 import "./styles.scss";
 
 const Login = props => {
+
   const [{}, dispatch] = useGlobalState();
   const [spinner, toggleSpinner] = useState(false);
   const [userName, setUserName] = useState();
@@ -78,7 +79,7 @@ const Login = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("LOGIN_NOT_FOUND"),
+              message: result.error ? result.error : languageManager.translate("LOGIN_NOT_FOUND"),
             },
           });
         })

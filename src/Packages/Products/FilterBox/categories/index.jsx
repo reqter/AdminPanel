@@ -4,16 +4,16 @@ import { getCategories } from "./../../../../Api/content-api";
 
 const Tree = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [{ categories }, dispatch] = useGlobalState();
+  const [{ categories, spaceInfo }, dispatch] = useGlobalState();
   const [selected, setSelected] = useState({});
   const [idState, setId] = useState({});
   useEffect(() => {
-    if (categories.length === 0) {
+    if (!categories || categories.length === 0) {
       getCategories()
         .onOk(result => {
           dispatch({
             type: "SET_CATEGORIES",
-            value: result
+            value: result,
           });
         })
         .onServerError(result => {
@@ -21,8 +21,8 @@ const Tree = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CATEGORY_ON_SERVER_ERROR")
-            }
+              message: languageManager.translate("CATEGORY_ON_SERVER_ERROR"),
+            },
           });
         })
         .onBadRequest(result => {
@@ -30,8 +30,8 @@ const Tree = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CATEGORY_ON_BAD_REQUEST")
-            }
+              message: languageManager.translate("CATEGORY_ON_BAD_REQUEST"),
+            },
           });
         })
         .unAuthorized(result => {
@@ -39,12 +39,14 @@ const Tree = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("CATEGORY_UN_AUTHORIZED")
-            }
+              message: languageManager.translate("CATEGORY_UN_AUTHORIZED"),
+            },
           });
         })
-        .call();
+        .call(spaceInfo.id);
     }
+  }, []);
+  useEffect(() => {
     if (Object.keys(selected).length > 0) {
       const c = props.filters.find(item => item.type === "category");
       if (!c) {
@@ -81,7 +83,7 @@ const Tree = props => {
                 ? selected.sys.id === node.sys.id
                   ? "rgb(56,132,255)"
                   : "gray"
-                : "gray"
+                : "gray",
             }}
           >
             {node.children ? (
@@ -115,7 +117,7 @@ const Tree = props => {
                 </div>
                 <ul
                   style={{
-                    display: idState[id] ? "block" : "none"
+                    display: idState[id] ? "block" : "none",
                   }}
                 >
                   {mapper(node.children, id, (lvl || 0) + 1)}
@@ -156,7 +158,7 @@ const Tree = props => {
             <i className="icon-right-chevron chevron" />
             All Categories
           </li> */}
-          {categories !== undefined && categories.length && mapper(categories)}
+          {categories !== undefined && categories.length>0 && mapper(categories)}
         </ul>
       </div>
     </div>

@@ -1169,9 +1169,9 @@ const FieldConfig = props => {
                             <i
                               className="icon-checkmark"
                               style={{
-                                visibility: item.selected
-                                  ? "visible"
-                                  : "hidden",
+                                opacity: item.selected
+                                  ? "1"
+                                  : ".2",
                               }}
                             />
                           </button>

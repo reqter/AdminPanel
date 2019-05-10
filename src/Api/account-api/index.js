@@ -74,16 +74,16 @@ export function login () {
           _onOk(result)
           break
         case 400:
-          _onBadRequest()
+          _onBadRequest(result)
           break
         case 401:
-          _unAuthorized()
+          _unAuthorized(result)
           break
         case 404:
-          _notFound()
+          _notFound(result)
           break
         case 500:
-          _onServerError()
+          _onServerError(result)
           break
         default:
           break
@@ -735,8 +735,7 @@ export function changeAvatar () {
         default:
           break
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   return {
@@ -945,8 +944,7 @@ export function changePassword () {
         default:
           break
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   return {

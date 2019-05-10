@@ -7,6 +7,9 @@ const getAllURL =
   config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
 const getByIdURL =
   config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_BY_ID
+const filterURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_FILTER
+
 const addURL =
   config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_ADD
 const updateURL =
@@ -24,8 +27,9 @@ const unPublishURL =
 
 const getContentTypesURL =
   config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
+const getCategoriesURL =
+  config.REACT_APP_CATEGORIES_BASE_URL + config.REACT_APP_CATEGORIES_GET_ALL
 
-const currentLang = languageManager.getCurrentLanguage().name
 const data = require('./../data.json')
 
 export function filterContents () {
@@ -65,25 +69,63 @@ export function filterContents () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (name, contentType, category, status) {
-    const f_data = data.contents.filter(item => {
-      if (name && name.length > 0) {
-        if (!item.fields.name[currentLang].toLowerCase().includes(name)) {
-          return false
+  const _call = async (spaceId, name, contentType, category, contentStatus) => {
+    try {
+      let url = filterURL
+      if (contentType !== undefined) {
+        url = url + '?contentType=' + contentType
+      }
+      if (category !== undefined) {
+        if (contentType !== undefined) url = url + '&category=' + category
+        else url = url + '?category=' + category
+      }
+      if (contentStatus !== undefined) {
+        if (contentType !== undefined && category !== undefined) {
+          url = url + '&status=' + contentStatus
+        } else url = url + '?status=' + contentStatus
+      }
+      if (name !== undefined && name.length > 0) {
+        if (
+          contentType !== undefined &&
+          category !== undefined &&
+          contentStatus !== undefined
+        ) {
+          url = url + '&name=' + name
+        } else url = url + '?name=' + name
+      }
+
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
         }
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
       }
-      if (contentType) {
-        if (item.contentType.id !== contentType) return false
-      }
-      if (category) {
-        if (item.category.id !== category) return false
-      }
-      if (status) {
-        if (item.status !== status) return false
-      }
-      return true
-    })
-    _onOk(f_data)
+    } catch (error) {}
   }
 
   return {
@@ -459,30 +501,40 @@ export function getCategories () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (name, contentType, category) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-    const result = data.categories
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest(result)
-        break
-      case 401:
-        _unAuthorized(result)
-        break
-      case 404:
-        _notFound(result)
-        break
-      case 500:
-        _onServerError(result)
-        break
-      default:
-        break
-    }
+  const _call = async spaceId => {
+    try {
+      const url = getCategoriesURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        }
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {
@@ -513,6 +565,7 @@ export function getCategories () {
     }
   }
 }
+
 export function addContent () {
   let _onOkCallBack
   function _onOk (result) {

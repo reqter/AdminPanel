@@ -348,10 +348,10 @@ const Products = props => {
     let f = dataFilters.filter(item => item.type !== filter.type);
     setFilters(f);
     let text = searchText;
-    let contentTypeID = selectedContentType.sys
-      ? selectedContentType.sys.id
+    let contentTypeID = selectedContentType
+      ? selectedContentType._id
       : undefined;
-    let categoryID = selectedNode.sys ? selectedNode.sys.id : undefined;
+    let categoryID = selectedNode ? selectedNode._id : undefined;
     let status = selectedStatus.name;
     if (filter.type === "text") {
       text = undefined;
@@ -375,8 +375,8 @@ const Products = props => {
 
     filterData(
       searchText,
-      selectedContentType.sys ? selectedContentType.sys.id : undefined,
-      selectedNode.sys ? selectedNode.sys.id : undefined,
+      selectedContentType ? selectedContentType._id : undefined,
+      selectedNode ? selectedNode._id : undefined,
       selectedStatus.name
     );
   }
@@ -387,8 +387,8 @@ const Products = props => {
     setSelectedContentType(selected);
     filterData(
       searchText,
-      selected.sys.id,
-      selectedNode.sys ? selectedNode.sys.id : undefined,
+      selected._id,
+      selectedNode ? selectedNode._id : undefined,
       selectedStatus.name
     );
   }
@@ -401,8 +401,8 @@ const Products = props => {
 
     filterData(
       searchText,
-      selectedContentType.sys ? selectedContentType.sys.id : undefined,
-      selected.sys.id,
+      selectedContentType ? selectedContentType._id : undefined,
+      selected._id,
       selectedStatus.name
     );
   }
@@ -415,12 +415,12 @@ const Products = props => {
 
     filterData(
       searchText,
-      selectedContentType.sys ? selectedContentType.sys.id : undefined,
-      selectedNode.sys ? selectedNode.sys.id : undefined,
+      selectedContentType ? selectedContentType._id : undefined,
+      selectedNode ? selectedNode._id : undefined,
       selected.name
     );
   }
-  
+
   function filterData(text, contentTypeId, categoryId, status) {
     filterContents()
       .onOk(result => {
@@ -456,7 +456,7 @@ const Products = props => {
           },
         });
       })
-      .call(text, contentTypeId, categoryId, status);
+      .call(spaceInfo.id, text, contentTypeId, categoryId, status);
   }
   function handleDeleteRow(row) {
     setAlertData({
