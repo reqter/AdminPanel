@@ -345,7 +345,7 @@ const Products = props => {
     }
   }
   function removeFilter(filter) {
-    let f = dataFilters.filter(item => item.type !== filter.type);
+    let f = dataFilters.filter(item => item.sys.type !== filter.sys.type);
     setFilters(f);
     let text = searchText;
     let contentTypeID = selectedContentType
@@ -353,24 +353,25 @@ const Products = props => {
       : undefined;
     let categoryID = selectedNode ? selectedNode._id : undefined;
     let status = selectedStatus.name;
-    if (filter.type === "text") {
+    if (filter.sys.type === "text") {
       text = undefined;
       setSearchText("");
-    } else if (filter.type === "contentType") {
+    } else if (filter.sys.type === "contentType") {
       contentTypeID = undefined;
       setSelectedContentType({});
-    } else if (filter.type === "category") {
+    } else if (filter.sys.type === "category") {
       categoryID = undefined;
       setSelectedNode({});
-    } else if (filter.type === "status") {
+    } else if (filter.sys.type === "status") {
       status = undefined;
       setSelectedStatus({});
     }
     filterData(text, contentTypeID, categoryID, status);
   }
   function handleSearchChanged() {
-    let f = [...dataFilters].filter(item => item.type !== "text");
-    if (searchText.length !== 0) f.push({ type: "text", title: searchText });
+    let f = [...dataFilters].filter(item => item.sys.type !== "text");
+    if (searchText.length !== 0)
+      f.push({ sys: { type: "text" }, title: searchText });
     setFilters(f);
 
     filterData(
@@ -381,7 +382,7 @@ const Products = props => {
     );
   }
   function handleContentTypeSelect(selected) {
-    let f = dataFilters.filter(item => item.type !== "contentType");
+    let f = dataFilters.filter(item => item.sys.type !== "contentType");
     f.push(selected);
     setFilters(f);
     setSelectedContentType(selected);
@@ -394,7 +395,7 @@ const Products = props => {
   }
 
   function handleClickCategory(selected) {
-    let f = dataFilters.filter(item => item.type !== "category");
+    let f = dataFilters.filter(item => item.sys.type !== "category");
     f.push(selected);
     setFilters(f);
     setSelectedNode(selected);
@@ -407,8 +408,8 @@ const Products = props => {
     );
   }
   function handleStatusSelected(selected) {
-    let f = dataFilters.filter(item => item.type !== "status");
-    selected.type = "status";
+    let f = dataFilters.filter(item => item.sys.type !== "status");
+    selected.sys = { type: "status" };
     f.push(selected);
     setFilters(f);
     setSelectedStatus(selected);
@@ -813,7 +814,7 @@ const Products = props => {
                     {dataFilters.map(filter => (
                       <div key={filter.id} className="filterItem">
                         <span className="filterText">
-                          {filter.type === "status"
+                          {filter.sys.type === "status"
                             ? languageManager.translate(filter.name)
                             : filter.title !== undefined
                             ? filter.title.en !== undefined

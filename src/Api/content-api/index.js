@@ -71,29 +71,28 @@ export function filterContents () {
   }
   const _call = async (spaceId, name, contentType, category, contentStatus) => {
     try {
-      let url = filterURL
-      if (contentType !== undefined) {
-        url = url + '?contentType=' + contentType
-      }
-      if (category !== undefined) {
-        if (contentType !== undefined) url = url + '&category=' + category
-        else url = url + '?category=' + category
-      }
-      if (contentStatus !== undefined) {
-        if (contentType !== undefined && category !== undefined) {
-          url = url + '&status=' + contentStatus
-        } else url = url + '?status=' + contentStatus
-      }
-      if (name !== undefined && name.length > 0) {
-        if (
-          contentType !== undefined &&
-          category !== undefined &&
-          contentStatus !== undefined
-        ) {
-          url = url + '&name=' + name
-        } else url = url + '?name=' + name
+      let url = filterURL + '?'
+      if (contentType !== undefined) url = url + 'contentType=' + contentType
+
+      if (url[url.length - 1] !== '?') url = url + '&'
+
+      if (category !== undefined) url = url + 'category=' + category
+
+      if (url[url.length - 1] !== '?' && url[url.length - 1] !== '&') {
+        url = url + '&'
       }
 
+      if (contentStatus !== undefined) url = url + 'status=' + contentStatus
+
+      if (url[url.length - 1] !== '?' && url[url.length - 1] !== '&') {
+        url = url + '&'
+      }
+
+      if (name !== undefined && name.length > 0) url = url + 'name=' + name
+
+      if (url[url.length - 1] === '?') url = url.substring(0, url.length - 1)
+
+      if (url[url.length - 1] === '&') url = url.substring(0, url.length - 1)
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {
         method: 'GET',
