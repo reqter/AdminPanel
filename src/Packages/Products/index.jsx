@@ -529,7 +529,7 @@ const Products = props => {
               },
             });
           })
-          .call(spaceInfo.id, row.original.id);
+          .call(spaceInfo.id, row.original._id);
       },
       onCancel: () => {
         setAlertData();

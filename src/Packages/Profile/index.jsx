@@ -8,7 +8,6 @@ import {
   updateProfile,
   changeAvatar,
   changeNotification,
-  changePassword,
   sendEmailConfirmation,
 } from "./../../Api/account-api";
 

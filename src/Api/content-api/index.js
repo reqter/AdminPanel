@@ -6,23 +6,24 @@ const config = process.env
 const getAllURL =
   config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
 const getByIdURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_BY_ID
 const addURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
-
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_ADD
 const updateURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
-
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_UPDATE
 const deleteURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_DELETE
 const archiveURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_ARCHIVE
 const unArchiveURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_UN_ARCHIVE
 const publishURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_PUBLISH
 const unPublishURL =
-  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_UN_PUBLISH
+
+const getContentTypesURL =
+  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
 
 const currentLang = languageManager.getCurrentLanguage().name
 const data = require('./../data.json')
@@ -358,7 +359,7 @@ export function getContentTypes () {
   }
   const _call = async spaceId => {
     try {
-      const url = getAllURL
+      const url = getContentTypesURL
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {
         method: 'GET',
@@ -368,7 +369,6 @@ export function getContentTypes () {
           spaceId: spaceId
         }
       })
-
       const status = rawResponse.status
       const result = await rawResponse.json()
       switch (status) {
@@ -692,8 +692,7 @@ export function updateContent () {
         default:
           break
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   return {
@@ -761,45 +760,48 @@ export function deleteContent () {
       _onConnectionErrorCallBack(result)
     }
   }
-const _call = async (spaceId, contentId) => {
-  try {
-    const url = deleteURL
-    const token = storageManager.getItem('token')
-    var rawResponse = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        authorization: 'Bearer ' + token,
-        'Content-Type': 'application/json',
-        spaceId: spaceId
-      },
-      body: JSON.stringify({
-        id: contentId
+  const _call = async (spaceId, contentId) => {
+    try {
+      const url = deleteURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: contentId
+        })
       })
-    })
 
-    const status = rawResponse.status
-    const result = await rawResponse.json()
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      debugger
+
     }
-  } catch (error) {}
-}
+  }
 
   return {
     call: _call,
@@ -1015,8 +1017,7 @@ export function publish () {
         default:
           break
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
   return {
     call: _call,
@@ -1227,8 +1228,7 @@ export function archive () {
         default:
           break
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   return {

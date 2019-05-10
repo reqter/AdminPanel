@@ -94,38 +94,38 @@ const UpsertProduct = props => {
   function getContentTypesList() {
     getContentTypes()
       .onOk(result => {
-        toggleTab(1);
         dispatch({
           type: "SET_CONTENT_TYPES",
           value: result,
         });
+        toggleTab(1);
       })
       .onServerError(result => {
-        toggleTab(3);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "contentType",
           message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR"),
         };
         setError(obj);
+        toggleTab(3);
       })
       .onBadRequest(result => {
-        toggleTab(3);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "contentType",
           message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
         };
         setError(obj);
+        toggleTab(3);
       })
       .unAuthorized(result => {
-        toggleTab(3);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "contentType",
           message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
         };
         setError(obj);
+        toggleTab(3);
       })
       .call(spaceInfo.id);
   }
@@ -352,10 +352,14 @@ const UpsertProduct = props => {
     if (!spinner && !closeSpinner) {
       if (closePage) toggleCloseSpinner(true);
       else toggleSpinner(true);
-
       const obj = {
-        contentType: contentType.id,
-        category: contentType.categorization === true ? category.id : null,
+        contentType: contentType._id,
+        category:
+          contentType.categorization === true
+            ? category
+              ? category._id
+              : null
+            : null,
         fields: form,
       };
       if (updateMode) {
@@ -498,7 +502,7 @@ const UpsertProduct = props => {
             });
           })
           .call(spaceInfo.id, obj);
-        }
+      }
     }
   }
   return (
