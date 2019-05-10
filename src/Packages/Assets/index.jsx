@@ -643,6 +643,7 @@ const Assets = props => {
                         ) : (
                           ""
                         )}
+                        
                         {file.status !== "published" &&
                           file.status !== "archived" && (
                             <button

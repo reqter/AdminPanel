@@ -22,7 +22,7 @@ class Tree extends Component {
   };
   mapper = (nodes, parentId, lvl) => {
     return nodes.map((node, index) => {
-      const id = `${node.sys.id}-${parentId ? parentId : "top"}`.replace(
+      const id = `${node._id}-${parentId ? parentId : "top"}`.replace(
         /[^a-zA-Z0-9-_]/g,
         ""
       );
@@ -32,8 +32,8 @@ class Tree extends Component {
             style={{
               zIndex: 0,
               padding: 10,
-              background: this.state.selected.sys
-                ? this.state.selected.sys.id === node.sys.id
+              background: this.state.selected
+                ? this.state.selected._id === node._id
                   ? "lightgray"
                   : "white"
                 : "white",
@@ -49,7 +49,7 @@ class Tree extends Component {
                   paddingLeft: `${15 * lvl}px`,
                 }}
               >
-                {node.childs && node.childs.length > 0 ? (
+                {node.items && node.items.length > 0 ? (
                   <>
                     <div
                       className="btnCategoryCollapse"
@@ -115,8 +115,8 @@ class Tree extends Component {
                   </span>
                 </div>
                 {/* hoverAction */}
-                {(node.childs === undefined ||
-                  node.childs.length === 0) && (
+                {(node.items === undefined ||
+                  node.items.length === 0) && (
                   <button
                     className="btn btn-light treeItem-action "
                     size="xs"
@@ -133,8 +133,8 @@ class Tree extends Component {
                 >
                   <i className="icon-pencil" />
                 </button>
-                {/* {(node.childs === undefined ||
-                  node.childs.length === 0) && (
+                {/* {(node.items === undefined ||
+                  node.items.length === 0) && (
                   <button
                     className="btn btn-light treeItem-action"
                     size="xs"
@@ -164,9 +164,9 @@ class Tree extends Component {
               </div>
             }
           </ListGroupItem>
-          {node.childs && (
+          {node.items && (
             <Collapse isOpen={this.state[id]}>
-              {this.mapper(node.childs, id, (lvl || 0) + 1)}
+              {this.mapper(node.items, id, (lvl || 0) + 1)}
             </Collapse>
           )}
         </>

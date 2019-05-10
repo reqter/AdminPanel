@@ -19,8 +19,6 @@ const unArchiveURL =
 const filterURL =
   config.REACT_APP_ASSET_BASE_URL + config.REACT_APP_ASSET_FILTER
 
-const data = require('./../data.json')
-
 export function filterAssets () {
   let _onOkCallBack
   function _onOk (result) {
@@ -470,13 +468,6 @@ export function updateAsset () {
       _onServerError(error)
     }
   }
-  //   const result = data.assets.map(item => {
-  //     if (item.sys.id === obj.sys.id) {
-  //       return { ...item, ...obj }
-  //     }
-  //     return item
-  //   })
-  //   data.assets = result
 
   return {
     call: _call,
@@ -764,7 +755,7 @@ export function publish () {
         headers: {
           authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
-          spaceId: '5c6b37785a4a69808852bc4d'
+          spaceId: spaceId
         },
         body: JSON.stringify({
           id: assetId
@@ -870,7 +861,7 @@ export function unPublish () {
         headers: {
           authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
-          spaceId: '5c6b37785a4a69808852bc4d'
+          spaceId: spaceId
         },
         body: JSON.stringify({
           id: assetId
@@ -977,7 +968,7 @@ export function archive () {
         headers: {
           authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
-          spaceId: '5c6b37785a4a69808852bc4d'
+          spaceId: spaceId
         },
         body: JSON.stringify({
           id: assetId
@@ -1084,7 +1075,7 @@ export function unArchive () {
         headers: {
           authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
-          spaceId: '5c6b37785a4a69808852bc4d'
+          spaceId: spaceId
         },
         body: JSON.stringify({
           id: assetId
@@ -1235,7 +1226,7 @@ export function uploadAssetFile () {
         }
       }
       xhr.setRequestHeader('authorization', 'Bearer ' + token)
-      xhr.setRequestHeader('spaceId', spaceId || '5c6b37785a4a69808852bc4d')
+      xhr.setRequestHeader('spaceId', spaceId)
       // xhr.setRequestHeader('content-type', 'multipart/form-data')
       await xhr.send(formdata)
     } catch (error) {}

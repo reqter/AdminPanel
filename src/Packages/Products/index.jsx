@@ -6,6 +6,10 @@ import {
   getContents,
   filterContents,
   deleteContent,
+  publish,
+  unPublish,
+  archive,
+  unArchive,
 } from "./../../Api/content-api";
 import "./styles.scss";
 
@@ -140,6 +144,7 @@ const Products = props => {
       },
       clickable: false,
       Cell: props => {
+        const { status } = props.original;
         return (
           <div className="p-actions">
             <button
@@ -148,15 +153,61 @@ const Products = props => {
             >
               Edit
             </button>
-            {props.original.status !== "published" &&
-              props.original.status !== "archived" && (
+            {status !== "published" && status !== "archived" && (
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => handleDeleteRow(props)}
+              >
+                <i className="icon-bin" />
+              </button>
+            )}
+            {status === "draft" ? (
+              <>
                 <button
                   className="btn btn-light btn-sm"
-                  onClick={() => handleDeleteRow(props)}
+                  onClick={() => publishContent(props)}
                 >
-                  <i className="icon-bin" />
+                  {languageManager.translate("PUBLISH")}
                 </button>
-              )}
+                <button
+                  className="btn btn-light btn-sm"
+                  onClick={() => archiveContent(props)}
+                >
+                  {languageManager.translate("ARCHIVE")}
+                </button>
+              </>
+            ) : status === "changed" ? (
+              <>
+                <button
+                  className="btn btn-light btn-sm"
+                  onClick={() => publishContent(props)}
+                >
+                  {languageManager.translate("PUBLISH")}
+                </button>
+                <button
+                  className="btn btn-light btn-sm"
+                  onClick={() => archiveContent(props)}
+                >
+                  {languageManager.translate("ARCHIVE")}
+                </button>
+              </>
+            ) : status === "archived" ? (
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => unArchiveContent(props)}
+              >
+                {languageManager.translate("UN_ARCHIVE")}
+              </button>
+            ) : status === "published" ? (
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => unPublishContent(props)}
+              >
+                {languageManager.translate("UN_PUBLISH")}
+              </button>
+            ) : (
+              ""
+            )}
           </div>
         );
       },
@@ -165,10 +216,14 @@ const Products = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
 
   // variables
-  const [{ contents, categories, contentTypes }, dispatch] = useGlobalState();
+  const [
+    { contents, categories, contentTypes, spaceInfo },
+    dispatch,
+  ] = useGlobalState();
 
   const tableBox = useRef(null);
 
+  const [spinner, toggleSpinner] = useState(true);
   const [leftContent, toggleLeftContent] = useState(false);
   const [alertData, setAlertData] = useState();
 
@@ -182,14 +237,20 @@ const Products = props => {
   const [dataFilters, setFilters] = useState([]);
 
   useEffect(() => {
+    loadContents();
+  }, []);
+
+  function loadContents() {
     getContents()
       .onOk(result => {
         dispatch({
           type: "SET_CONTENTS",
           value: result,
         });
+        toggleSpinner(false);
       })
       .onServerError(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -199,6 +260,7 @@ const Products = props => {
         });
       })
       .onBadRequest(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -208,6 +270,7 @@ const Products = props => {
         });
       })
       .unAuthorized(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -216,8 +279,8 @@ const Products = props => {
           },
         });
       })
-      .call();
-  }, []);
+      .call(spaceInfo.id);
+  }
   // methods
   const imgs = ["jpg", "jpeg", "gif", "bmp", "png"];
   const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
@@ -357,6 +420,7 @@ const Products = props => {
       selected.name
     );
   }
+  
   function filterData(text, contentTypeId, categoryId, status) {
     filterContents()
       .onOk(result => {
@@ -402,13 +466,14 @@ const Products = props => {
       isAjaxCall: true,
       okTitle: "Remove",
       cancelTitle: "Don't remove",
-      onOk: () =>
+      onOk: () => {
+        const deleted = row.original;
         deleteContent()
           .onOk(result => {
             setAlertData();
             dispatch({
-              type: "SET_CONTENTS",
-              value: result,
+              type: "DELETE_CONTENT",
+              value: deleted,
             });
             dispatch({
               type: "ADD_NOTIFY",
@@ -464,7 +529,8 @@ const Products = props => {
               },
             });
           })
-          .call(row.original),
+          .call(spaceInfo.id, row.original.id);
+      },
       onCancel: () => {
         setAlertData();
       },
@@ -472,15 +538,228 @@ const Products = props => {
   }
   function handleEditRow(row) {
     props.history.push({
-      pathname: `/contents/edit/${row.original.sys.id}`,
+      pathname: `/contents/edit/${row.original._id}`,
     });
   }
   function viewContent(row) {
     props.history.push({
-      pathname: `/contents/view/${row.sys.id}`,
+      pathname: `/contents/view/${row._id}`,
       viewMode: true,
     });
   }
+  function archiveContent(row) {
+    archive()
+      .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The content is archived"),
+          },
+        });
+        dispatch({
+          type: "CHANGE_CONTENT_STATUS",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, row.original._id);
+  }
+  function unArchiveContent(row) {
+    unArchive()
+      .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The content is unarchived"),
+          },
+        });
+        dispatch({
+          type: "CHANGE_CONTENT_STATUS",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, row.original._id);
+  }
+  function publishContent(row) {
+    publish()
+      .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The content is published"),
+          },
+        });
+        dispatch({
+          type: "CHANGE_CONTENT_STATUS",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, row.original._id);
+  }
+  function unPublishContent(row) {
+    unPublish()
+      .onOk(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "success",
+            message: languageManager.translate("The content is unpublished"),
+          },
+        });
+        dispatch({
+          type: "CHANGE_CONTENT_STATUS",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Internal server error"),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Bad request"),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Un Authorized"),
+          },
+        });
+      })
+      .notFound(result => {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate("Asset not found"),
+          },
+        });
+      })
+      .call(spaceInfo.id, row.original._id);
+  }
+
   return (
     <>
       <div className="p-wrapper">

@@ -43,13 +43,13 @@ const widthResolver = WrappedComponent => {
         })
         .onRequestError(result => {
           setError(
-            "There is an error which has occured in the request.try again "
+            "There is an error which has occured in the request.\ntry again "
           );
           toggleLoading(false);
         })
         .unKnownError(result => {
           setError(
-            "There is an error which has occured in the request.try again "
+            "There is an error which has occured in the request.\ntry again "
           );
           toggleLoading(false);
         })
@@ -61,7 +61,7 @@ const widthResolver = WrappedComponent => {
           <i className="icon-empty-box-open icon" />
           <span className="title">Error has occured!</span>
           <span className="info">{error}</span>
-          <button className="btn btn-sm btn-primary" onClick={refresh}>
+          <button className="btn btn-primary" onClick={refresh}>
             Refresh
           </button>
         </div>
@@ -69,7 +69,10 @@ const widthResolver = WrappedComponent => {
         <WrappedComponent {...props} />
       )
     ) : (
-      <div />
+      <div className="loaderBox">
+        <div class="loader" />
+        Loading ...
+      </div>
     );
   };
 };

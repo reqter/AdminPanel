@@ -1,7 +1,28 @@
-import { languageManager ,storageManager} from './../../services'
+import { languageManager, storageManager } from './../../services'
 const config = process.env
+// const getAllURL =
+//   config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
+
 const getAllURL =
-  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+const getByIdURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+const addURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+
+const updateURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+
+const deleteURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+const archiveURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+const unArchiveURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+const publishURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
+const unPublishURL =
+  config.REACT_APP_CONTENTS_BASE_URL + config.REACT_APP_CONTENTS_GET_ALL
 
 const currentLang = languageManager.getCurrentLanguage().name
 const data = require('./../data.json')
@@ -233,30 +254,41 @@ export function getContents () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (name, contentType, category) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-    const result = data.contents
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest(result)
-        break
-      case 401:
-        _unAuthorized(result)
-        break
-      case 404:
-        _notFound(result)
-        break
-      case 500:
-        _onServerError(result)
-        break
-      default:
-        break
-    }
+  const _call = async spaceId => {
+    try {
+      const url = getAllURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        }
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {
@@ -518,34 +550,41 @@ export function addContent () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-
-    //
-
-    data.contents.push(obj)
-
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk()
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
-    }
+  const _call = async (spaceId, content) => {
+    try {
+      const url = addURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify(content)
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {
@@ -613,39 +652,47 @@ export function updateContent () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+  const _call = async (spaceId, content) => {
+    try {
+      const url = updateURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: content._id,
+          contentType: content.contentType,
+          category: content.category,
+          fields: content.fields
+        })
+      })
 
-    //
-
-    const result = data.contents.map(item => {
-      if (item.sys.id === obj.sys.id) {
-        return { ...item, ...obj }
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
       }
-      return item
-    })
-    data.contents = result
-
-    const status = 200
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
+    } catch (error) {
     }
   }
 
@@ -714,16 +761,24 @@ export function deleteContent () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (obj) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
+const _call = async (spaceId, contentId) => {
+  try {
+    const url = deleteURL
+    const token = storageManager.getItem('token')
+    var rawResponse = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        spaceId: spaceId
+      },
+      body: JSON.stringify({
+        id: contentId
+      })
+    })
 
-    //
-
-    const result = data.contents.filter(item => item.sys.id !== obj.sys.id)
-    data.contents = result
-
-    const status = 200
+    const status = rawResponse.status
+    const result = await rawResponse.json()
     switch (status) {
       case 200:
         _onOk(result)
@@ -743,7 +798,8 @@ export function deleteContent () {
       default:
         break
     }
-  }
+  } catch (error) {}
+}
 
   return {
     call: _call,
@@ -831,7 +887,7 @@ export function getContentById () {
       result.contentType = data.contentTypes.find(
         item => item.sys.id === result.contentType.id
       )
-    //  result.category = findCategory(data.categories, result.category.id)
+      //  result.category = findCategory(data.categories, result.category.id)
     } else {
       status = 404
     }
@@ -853,6 +909,432 @@ export function getContentById () {
         break
       default:
         break
+    }
+  }
+
+  return {
+    call: _call,
+    onOk: function (callback) {
+      _onOkCallBack = callback
+      return this
+    },
+    onServerError: function (callback) {
+      _onServerErrorCallBack = callback
+      return this
+    },
+    onBadRequest: function (callback) {
+      _onBadRequestCallBack = callback
+      return this
+    },
+    notFound: function (callback) {
+      _notFoundCallBack = callback
+      return this
+    },
+    unAuthorized: function (callback) {
+      _unAuthorizedCallBack = callback
+      return this
+    },
+    onConnectionError: function (callback) {
+      _onConnectionErrorCallBack = callback
+      return this
+    }
+  }
+}
+
+export function publish () {
+  let _onOkCallBack
+  function _onOk (result) {
+    if (_onOkCallBack) {
+      _onOkCallBack(result)
+    }
+  }
+  let _onServerErrorCallBack
+  function _onServerError (result) {
+    if (_onServerErrorCallBack) {
+      _onServerErrorCallBack(result)
+    }
+  }
+  let _onBadRequestCallBack
+  function _onBadRequest (result) {
+    if (_onBadRequestCallBack) {
+      _onBadRequestCallBack(result)
+    }
+  }
+  let _unAuthorizedCallBack
+  function _unAuthorized (result) {
+    if (_unAuthorizedCallBack) {
+      _unAuthorizedCallBack(result)
+    }
+  }
+  let _notFoundCallBack
+  function _notFound (result) {
+    if (_notFoundCallBack) {
+      _notFoundCallBack(result)
+    }
+  }
+  let _onConnectionErrorCallBack
+  function _onConnectionError (result) {
+    if (_onConnectionErrorCallBack) {
+      _onConnectionErrorCallBack(result)
+    }
+  }
+  const _call = async (spaceId, assetId) => {
+    try {
+      const url = publishURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: assetId
+        })
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+    }
+  }
+  return {
+    call: _call,
+    onOk: function (callback) {
+      _onOkCallBack = callback
+      return this
+    },
+    onServerError: function (callback) {
+      _onServerErrorCallBack = callback
+      return this
+    },
+    onBadRequest: function (callback) {
+      _onBadRequestCallBack = callback
+      return this
+    },
+    notFound: function (callback) {
+      _notFoundCallBack = callback
+      return this
+    },
+    unAuthorized: function (callback) {
+      _unAuthorizedCallBack = callback
+      return this
+    },
+    onConnectionError: function (callback) {
+      _onConnectionErrorCallBack = callback
+      return this
+    }
+  }
+}
+export function unPublish () {
+  let _onOkCallBack
+  function _onOk (result) {
+    if (_onOkCallBack) {
+      _onOkCallBack(result)
+    }
+  }
+  let _onServerErrorCallBack
+  function _onServerError (result) {
+    if (_onServerErrorCallBack) {
+      _onServerErrorCallBack(result)
+    }
+  }
+  let _onBadRequestCallBack
+  function _onBadRequest (result) {
+    if (_onBadRequestCallBack) {
+      _onBadRequestCallBack(result)
+    }
+  }
+  let _unAuthorizedCallBack
+  function _unAuthorized (result) {
+    if (_unAuthorizedCallBack) {
+      _unAuthorizedCallBack(result)
+    }
+  }
+  let _notFoundCallBack
+  function _notFound (result) {
+    if (_notFoundCallBack) {
+      _notFoundCallBack(result)
+    }
+  }
+  let _onConnectionErrorCallBack
+  function _onConnectionError (result) {
+    if (_onConnectionErrorCallBack) {
+      _onConnectionErrorCallBack(result)
+    }
+  }
+  const _call = async (spaceId, contentId) => {
+    try {
+      const url = unPublishURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: contentId
+        })
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
+    }
+  }
+
+  return {
+    call: _call,
+    onOk: function (callback) {
+      _onOkCallBack = callback
+      return this
+    },
+    onServerError: function (callback) {
+      _onServerErrorCallBack = callback
+      return this
+    },
+    onBadRequest: function (callback) {
+      _onBadRequestCallBack = callback
+      return this
+    },
+    notFound: function (callback) {
+      _notFoundCallBack = callback
+      return this
+    },
+    unAuthorized: function (callback) {
+      _unAuthorizedCallBack = callback
+      return this
+    },
+    onConnectionError: function (callback) {
+      _onConnectionErrorCallBack = callback
+      return this
+    }
+  }
+}
+export function archive () {
+  let _onOkCallBack
+  function _onOk (result) {
+    if (_onOkCallBack) {
+      _onOkCallBack(result)
+    }
+  }
+  let _onServerErrorCallBack
+  function _onServerError (result) {
+    if (_onServerErrorCallBack) {
+      _onServerErrorCallBack(result)
+    }
+  }
+  let _onBadRequestCallBack
+  function _onBadRequest (result) {
+    if (_onBadRequestCallBack) {
+      _onBadRequestCallBack(result)
+    }
+  }
+  let _unAuthorizedCallBack
+  function _unAuthorized (result) {
+    if (_unAuthorizedCallBack) {
+      _unAuthorizedCallBack(result)
+    }
+  }
+  let _notFoundCallBack
+  function _notFound (result) {
+    if (_notFoundCallBack) {
+      _notFoundCallBack(result)
+    }
+  }
+  let _onConnectionErrorCallBack
+  function _onConnectionError (result) {
+    if (_onConnectionErrorCallBack) {
+      _onConnectionErrorCallBack(result)
+    }
+  }
+  const _call = async (spaceId, contentId) => {
+    try {
+      const url = archiveURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: contentId
+        })
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+    }
+  }
+
+  return {
+    call: _call,
+    onOk: function (callback) {
+      _onOkCallBack = callback
+      return this
+    },
+    onServerError: function (callback) {
+      _onServerErrorCallBack = callback
+      return this
+    },
+    onBadRequest: function (callback) {
+      _onBadRequestCallBack = callback
+      return this
+    },
+    notFound: function (callback) {
+      _notFoundCallBack = callback
+      return this
+    },
+    unAuthorized: function (callback) {
+      _unAuthorizedCallBack = callback
+      return this
+    },
+    onConnectionError: function (callback) {
+      _onConnectionErrorCallBack = callback
+      return this
+    }
+  }
+}
+export function unArchive () {
+  let _onOkCallBack
+  function _onOk (result) {
+    if (_onOkCallBack) {
+      _onOkCallBack(result)
+    }
+  }
+  let _onServerErrorCallBack
+  function _onServerError (result) {
+    if (_onServerErrorCallBack) {
+      _onServerErrorCallBack(result)
+    }
+  }
+  let _onBadRequestCallBack
+  function _onBadRequest (result) {
+    if (_onBadRequestCallBack) {
+      _onBadRequestCallBack(result)
+    }
+  }
+  let _unAuthorizedCallBack
+  function _unAuthorized (result) {
+    if (_unAuthorizedCallBack) {
+      _unAuthorizedCallBack(result)
+    }
+  }
+  let _notFoundCallBack
+  function _notFound (result) {
+    if (_notFoundCallBack) {
+      _notFoundCallBack(result)
+    }
+  }
+  let _onConnectionErrorCallBack
+  function _onConnectionError (result) {
+    if (_onConnectionErrorCallBack) {
+      _onConnectionErrorCallBack(result)
+    }
+  }
+  const _call = async (spaceId, contentId) => {
+    try {
+      const url = unArchiveURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: contentId
+        })
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {
+      _onServerError(error)
     }
   }
 

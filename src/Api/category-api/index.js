@@ -376,7 +376,7 @@ export function updateCategory () {
           spaceId: spaceId
         },
         body: JSON.stringify({
-          id: category.id,
+          id: category._id,
           name: category.name,
           shortDesc: category.shortDesc,
           longDesc: category.longDesc,

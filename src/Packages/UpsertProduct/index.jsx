@@ -18,6 +18,7 @@ import {
   KeyValue,
   RichText,
   Reference,
+  CircleSpinner,
 } from "./../../components";
 
 const UpsertProduct = props => {
@@ -49,6 +50,8 @@ const UpsertProduct = props => {
   const [formValidation, setFormValidation] = useState();
   const [error, setError] = useState({});
   const [isValidForm, toggleIsValidForm] = useState(false);
+  const [spinner, toggleSpinner] = useState(false);
+  const [closeSpinner, toggleCloseSpinner] = useState(false);
 
   useEffect(() => {
     if (updateMode || viewMode) {
@@ -131,7 +134,6 @@ const UpsertProduct = props => {
       .onOk(result => {
         if (result) {
           if (result.contentType === undefined) {
-            toggleTab(3);
             const obj = {
               type: "CONTEN_TYPE_UNDEFINED",
               sender: "getItemById",
@@ -140,14 +142,15 @@ const UpsertProduct = props => {
               ),
             };
             setError(obj);
+            toggleTab(3);
           } else {
-            if (tab !== 2) toggleTab(2);
             setFormData(result.fields);
             setForm(result.fields);
             setContentType(result.contentType);
             const c_fields = result.contentType.fields;
             setFields(c_fields.sort((a, b) => a.index - b.index));
             // setCategory(result.category);
+            if (tab !== 2) toggleTab(2);
           }
         } else {
           toggleTab(3);
@@ -346,153 +349,156 @@ const UpsertProduct = props => {
     props.history.push("/panel/contentType");
   }
   function upsertItem(closePage) {
-    const obj = {
-      sys: {
-        id: updateMode ? props.match.params.id : Math.random().toString(),
-        issuer: {
-          id: "1",
-          fullName: "Saeed Padyab",
-          image: "",
-        },
-        issueDate: "19/01/2019 20:18",
-      },
-      //contentType: contentType.id,
-      contentType: {
-        id: contentType.sys.id,
-        name: contentType.name,
-        title: contentType.title,
-      },
-      //category:category.id,
-      // category: {
-      //   id: category.sys.id,
-      //   name: category.name,
-      // },
-      fields: form,
-    };
-    if (updateMode) {
-      obj["status"] = "changed";
-      updateContent()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
-            },
-          });
-          backToProducts();
-        })
-        .onServerError(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
-              ),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
-              ),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
-              ),
-            },
-          });
-        })
-        .notFound(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ITEM_UPDATE_NOT_FOUND"
-              ),
-            },
-          });
-        })
-        .call(obj);
-    } else {
-      obj["status"] = "draft";
-      addContent()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
-            },
-          });
-          if (closePage) {
+    if (!spinner && !closeSpinner) {
+      if (closePage) toggleCloseSpinner(true);
+      else toggleSpinner(true);
+
+      const obj = {
+        contentType: contentType.id,
+        category: contentType.categorization === true ? category.id : null,
+        fields: form,
+      };
+      if (updateMode) {
+        updateContent()
+          .onOk(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
+              },
+            });
             backToProducts();
-          } else {
-            setFormData({});
-            setForm({});
-            // let n_obj = {};
-            // for (const key in formValidation) {
-            //   n_obj[key] = false;
-            // }
-            setFormValidation({});
-          }
-        })
-        .onServerError(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
-              ),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
-              ),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
-              ),
-            },
-          });
-        })
-        .notFound(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
-            },
-          });
-        })
-        .call(obj);
+          })
+          .onServerError(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "UPSERT_ITEM_UPDATE_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(spaceInfo.id, obj);
+      } else {
+        addContent()
+          .onOk(result => {
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "success",
+                message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
+              },
+            });
+            if (closePage) {
+              backToProducts();
+            } else {
+              if (closePage) toggleCloseSpinner(false);
+              else toggleSpinner(false);
+              setFormData({});
+              setForm({});
+              // let n_obj = {};
+              // for (const key in formValidation) {
+              //   n_obj[key] = false;
+              // }
+              setFormValidation({});
+            }
+          })
+          .onServerError(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "UPSERT_ITEM_ADD_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
+              },
+            });
+          })
+          .call(spaceInfo.id, obj);
+        }
     }
   }
   return (
@@ -630,7 +636,8 @@ const UpsertProduct = props => {
                         onClick={() => upsertItem(false)}
                         disabled={!isValidForm}
                       >
-                        Save & New
+                        <CircleSpinner show={spinner} size="small" />
+                        {!spinner && "Save & New"}
                       </button>
                     )}
                     <button
@@ -638,7 +645,9 @@ const UpsertProduct = props => {
                       onClick={() => upsertItem(true)}
                       disabled={!isValidForm}
                     >
-                      {updateMode ? "Update & Close" : "Save & Close"}
+                      <CircleSpinner show={closeSpinner} size="small" />
+                      {!closeSpinner &&
+                        (updateMode ? "Update & Close" : "Save & Close")}
                     </button>
                   </div>
                 )}
@@ -647,7 +656,7 @@ const UpsertProduct = props => {
           )}
           {tab === 3 && (
             <div className="up-formInputs animated fadeIn errorsBox">
-              <div className="alert alert-danger">{error.message}</div>
+              <div className="alert alert-danger">{error && error.message}</div>
               <div className="actions">
                 {error.sender === "contentType" && (
                   <button className="btn btn-light">

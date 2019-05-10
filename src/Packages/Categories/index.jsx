@@ -42,7 +42,36 @@ const Categories = props => {
   const [{ categories, spaceInfo }, dispatch] = useGlobalState();
   const [spinner, toggleSpinner] = useState(true);
   const [upsertSpinner, toggleUpsertSpinner] = useState(false);
+
+  // variables and handlers
+  const nameInput = useRef(null);
+  const [upsertCategoryModal, setModal] = useState(false);
+  const [upsertItemTypeModal, toggleUpsertItemTypeModal] = useState(false);
+
+  const [name, handleNameChanged] = useInput("");
+  const [description, handleDesciptionChanged] = useInput("");
+
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [itemTypes, setItemTypes] = useState([]);
+  const [updateMode, setUpdateMode] = useState();
+  const [modalHeaderTitle, setModalHeader] = useState("");
+  const [modalUpsertBtn, setModalUpsertBtnText] = useState("");
+  const [rightContent, toggleRightContent] = useState(false);
+  const [isManageCategory, setManageCategory] = useState(false);
+  const [image, setImage] = useState();
+  const [assetBrowser, toggleAssetBrowser] = useState(false);
+  const [alertData, setAlertData] = useState();
+
   useEffect(() => {
+    loadCategories();
+  }, []);
+  useEffect(() => {
+    if (upsertCategoryModal) {
+      nameInput.current.focus();
+    }
+  }, [upsertCategoryModal]);
+
+  function loadCategories() {
     getCategories()
       .onOk(result => {
         toggleSpinner(false);
@@ -82,33 +111,7 @@ const Categories = props => {
         });
       })
       .call(spaceInfo.id);
-  }, []);
-
-  // variables and handlers
-  const nameInput = useRef(null);
-  const [upsertCategoryModal, setModal] = useState(false);
-  const [upsertItemTypeModal, toggleUpsertItemTypeModal] = useState(false);
-
-  const [name, handleNameChanged] = useInput("");
-  const [description, handleDesciptionChanged] = useInput("");
-
-  const [selectedCategory, setSelectedCategory] = useState();
-  const [itemTypes, setItemTypes] = useState([]);
-  const [updateMode, setUpdateMode] = useState();
-  const [modalHeaderTitle, setModalHeader] = useState("");
-  const [modalUpsertBtn, setModalUpsertBtnText] = useState("");
-  const [rightContent, toggleRightContent] = useState(false);
-  const [isManageCategory, setManageCategory] = useState(false);
-  const [image, setImage] = useState();
-  const [assetBrowser, toggleAssetBrowser] = useState(false);
-  const [alertData, setAlertData] = useState();
-
-  useEffect(() => {
-    if (upsertCategoryModal) {
-      nameInput.current.focus();
-    }
-  }, [upsertCategoryModal]);
-
+  }
   function translate(key) {
     return languageManager.translate(key);
   }
@@ -131,6 +134,7 @@ const Categories = props => {
     toggleModal();
     setManageCategory(false);
     setImage();
+    loadCategories()
   }
   function closeRightContent() {
     toggleRightContent(false);
@@ -167,33 +171,34 @@ const Categories = props => {
   }
   function addNodeInList(list, node) {
     for (let i = 0; i < list.length; i++) {
-      if (list[i].id === node.parentId) {
-        if (list[i].childs === undefined) {
-          list[i].childs = [];
+      if (list[i]._id === node.parentId) {
+        if (list[i].items === undefined) {
+          list[i].items = [];
         }
-        list[i].childs.push(node);
+        list[i].items.push(node);
       }
-      if (list[i].childs) addNodeInList(list[i].childs, node);
+      if (list[i].items) addNodeInList(list[i].items, node);
     }
   }
 
   function deleteNodeInList(list, node) {
     for (let i = 0; i < list.length; i++) {
-      if (list[i].id === node.id) {
+      if (list[i]._id === node._id) {
         list.splice(i, 1);
         return;
       }
-      if (list[i].childs) deleteNodeInList(list[i].childs, node);
+      if (list[i].items) deleteNodeInList(list[i].items, node);
     }
   }
   function updateNodeInList(list, node) {
     for (let i = 0; i < list.length; i++) {
-      if (list[i].id === node.id) {
+      if (list[i]._id === node._id) {
         list[i] = node;
       }
-      if (list[i].childs) updateNodeInList(list[i].childs, node);
+      if (list[i].items) updateNodeInList(list[i].items, node);
     }
   }
+
   function upsertCategory() {
     if (!upsertSpinner) {
       toggleUpsertSpinner(true);
@@ -202,7 +207,7 @@ const Categories = props => {
         if (!updateMode) {
           const obj = {
             image: image,
-            parentId: selectedCategory.id,
+            parentId: selectedCategory._id,
             name: utility.applyeLangs(name),
             shortDesc: utility.applyeLangs(description),
           };
@@ -219,12 +224,6 @@ const Categories = props => {
               handleNameChanged("");
               handleDesciptionChanged("");
               setImage(undefined);
-              const newCategories = [...categories];
-              addNodeInList(newCategories, result);
-              dispatch({
-                type: "SET_CATEGORIES",
-                value: newCategories,
-              });
             })
             .onServerError(result => {
               toggleUpsertSpinner(false);
@@ -290,12 +289,6 @@ const Categories = props => {
                   type: "success",
                   message: languageManager.translate("CATEGORY_UPDATE_ON_OK"),
                 },
-              });
-              const newCategories = [...categories];
-              updateNodeInList(newCategories, result);
-              dispatch({
-                type: "SET_CATEGORIES",
-                value: newCategories,
               });
               closeAddCategoryModal();
               setImage(undefined);
@@ -367,10 +360,6 @@ const Categories = props => {
                 message: languageManager.translate("CATEGORY_ADD_ON_OK"),
               },
             });
-            dispatch({
-              type: "ADD_CATEGORY",
-              value: result,
-            });
           })
           .onServerError(result => {
             toggleUpsertSpinner(false);
@@ -431,7 +420,6 @@ const Categories = props => {
       message: translate("CATEGORY_REMOVE_ALERT_MESSAGE"),
       isAjaxCall: true,
       onOk: () => {
-        const deleteItem = selected;
         deleteCategory()
           .onOk(result => {
             setAlertData();
@@ -442,13 +430,7 @@ const Categories = props => {
                 message: languageManager.translate("CATEGORY_REMOVE_ON_OK"),
               },
             });
-            const newCategories = [...categories];
-
-            deleteNodeInList(newCategories, deleteItem);
-            dispatch({
-              type: "SET_CATEGORIES",
-              value: newCategories,
-            });
+            loadCategories();
           })
           .onServerError(result => {
             setAlertData();
@@ -496,7 +478,7 @@ const Categories = props => {
               },
             });
           })
-          .call(spaceInfo.id, selected.id);
+          .call(spaceInfo.id, selected._id);
       },
       onCancel: () => {
         setAlertData();
@@ -588,7 +570,7 @@ const Categories = props => {
               },
             });
           })
-          .call(selectedCategory.id, item._id),
+          .call(selectedCategory._id, item._id),
       onCancel: () => {
         setAlertData();
       },

@@ -176,6 +176,24 @@ const Provider = props => {
           ...state,
           contents: action.value,
         };
+      case "DELETE_CONTENT":
+        const content_delete = state.contents.filter(
+          item => item._id !== action.value._id
+        );
+        return {
+          ...state,
+          contents: content_delete,
+        };
+      case "CHANGE_CONTENT_STATUS":
+        const content_status = state.contents.map(item => {
+          if (item._id === action.value._id) item.status = action.value.status;
+          return item;
+        });
+
+        return {
+          ...state,
+          contents: content_status,
+        };
       case "SET_USERS":
         return {
           ...state,
@@ -204,47 +222,43 @@ const Provider = props => {
         };
       case "ARCHIVE_ASSET":
         const assets_archive = state.assets.map(item => {
-          if (item._id === action.value._id)
-            item.status = action.value.status;
+          if (item._id === action.value._id) item.status = action.value.status;
           return item;
         });
 
         return {
           ...state,
-          users: assets_archive,
+          assets: assets_archive,
         };
       case "UN_ARCHIVE_ASSET":
         const assets_unarchive = state.assets.map(item => {
-          if (item._id === action.value._id)
-            item.status = action.value.status;
+          if (item._id === action.value._id) item.status = action.value.status;
           return item;
         });
 
         return {
           ...state,
-          users: assets_unarchive,
+          assets: assets_unarchive,
         };
       case "PUBLISH_ASSET":
         const assets_publish = state.assets.map(item => {
-          if (item._id === action.value._id)
-            item.status = action.value.status;
+          if (item._id === action.value._id) item.status = action.value.status;
           return item;
         });
 
         return {
           ...state,
-          users: assets_publish,
+          assets: assets_publish,
         };
       case "UN_PUBLISH_ASSET":
         const assets_unpublish = state.assets.map(item => {
-          if (item._id === action.value._id)
-            item.status = action.value.status;
+          if (item._id === action.value._id) item.status = action.value.status;
           return item;
         });
 
         return {
           ...state,
-          users: assets_unpublish,
+          assets: assets_unpublish,
         };
       case "ADD_NOTIFY":
         let newItem = { ...action.value };
