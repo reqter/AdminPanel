@@ -736,7 +736,6 @@ export function changeAvatar () {
           break
       }
     } catch (error) {
-      _onServerError()
     }
   }
 

@@ -193,13 +193,11 @@ const Profile = props => {
       uploadAssetFile()
         .onOk(result => {
           const { file } = result;
-          debugger
           changeAvatar()
             .onOk(result => {
               toggleIsUploading(false);
               let u = { ...userInfo };
-              u.profile["avatar"] =
-                process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url;
+              u.profile["avatar"] = file.url;
               dispatch({
                 type: "SET_USERINFO",
                 value: u,
