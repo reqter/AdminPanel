@@ -70,7 +70,7 @@ const widthResolver = WrappedComponent => {
       )
     ) : (
       <div className="loaderBox">
-        <div class="loader" />
+        <div className="loader" />
         Loading ...
       </div>
     );

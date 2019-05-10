@@ -22,7 +22,6 @@ import {
 } from "./../../components";
 
 const UpsertProduct = props => {
-  let selectedItem;
   const currentLang = languageManager.getCurrentLanguage().name;
   const [
     { categories, contentTypes, contents, spaceInfo },
@@ -38,7 +37,6 @@ const UpsertProduct = props => {
       : false
   );
   const [viewMode] = useState(props.match.url.includes("view") ? true : false);
-
   const [tab, toggleTab] = useState();
   const [categoryModal, toggleCategoryModal] = useState(false);
   const [category, setCategory] = useState();
@@ -198,7 +196,7 @@ const UpsertProduct = props => {
         };
         setError(obj);
       })
-      .call(id);
+      .call(spaceInfo.id, id);
   }
 
   function setNameToFormValidation(name, value) {
@@ -352,17 +350,18 @@ const UpsertProduct = props => {
     if (!spinner && !closeSpinner) {
       if (closePage) toggleCloseSpinner(true);
       else toggleSpinner(true);
-      const obj = {
-        contentType: contentType._id,
-        category:
-          contentType.categorization === true
-            ? category
-              ? category._id
-              : null
-            : null,
-        fields: form,
-      };
       if (updateMode) {
+        const obj = {
+          _id: props.match.params.id,
+          contentType: contentType._id,
+          category:
+            contentType.categorization === true
+              ? category
+                ? category._id
+                : null
+              : null,
+          fields: form,
+        };
         updateContent()
           .onOk(result => {
             dispatch({
@@ -428,6 +427,16 @@ const UpsertProduct = props => {
           })
           .call(spaceInfo.id, obj);
       } else {
+        const obj = {
+          contentType: contentType._id,
+          category:
+            contentType.categorization === true
+              ? category
+                ? category._id
+                : null
+              : null,
+          fields: form,
+        };
         addContent()
           .onOk(result => {
             dispatch({

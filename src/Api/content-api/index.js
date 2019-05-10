@@ -799,7 +799,6 @@ export function deleteContent () {
       }
     } catch (error) {
       debugger
-
     }
   }
 
@@ -868,50 +867,41 @@ export function getContentById () {
       _onConnectionErrorCallBack(result)
     }
   }
-  function _call (id) {
-    // const status = rawResponse.status;
-    // const result = await rawResponse.json();
-    function findCategory (list, id) {
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].sys.id === id) {
-          return list[i]
+  const _call = async (spaceId, contentId) => {
+    try {
+      const url = getByIdURL + '?id=' + contentId
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
         }
-        if (list[i].children) return findCategory(list[i].children, id)
-      }
-    }
+      })
 
-    //
-    const item = data.contents.find(item => item.sys.id === id)
-    let status
-    let result = item !== undefined ? { ...item } : undefined
-    if (result) {
-      status = 200
-      result.contentType = data.contentTypes.find(
-        item => item.sys.id === result.contentType.id
-      )
-      //  result.category = findCategory(data.categories, result.category.id)
-    } else {
-      status = 404
-    }
-    switch (status) {
-      case 200:
-        _onOk(result)
-        break
-      case 400:
-        _onBadRequest()
-        break
-      case 401:
-        _unAuthorized()
-        break
-      case 404:
-        _notFound()
-        break
-      case 500:
-        _onServerError()
-        break
-      default:
-        break
-    }
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          break
+      }
+    } catch (error) {}
   }
 
   return {
