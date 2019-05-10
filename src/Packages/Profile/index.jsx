@@ -29,7 +29,7 @@ const Profile = props => {
   const [currentBox, setCurrentBox] = useState(1);
   const [isUploading, toggleIsUploading] = useState(false);
   const [notification, toggleNotification] = useState(
-    userInfo ? userInfo.notification : true
+    userInfo ? userInfo.profile.notification : true
   );
   const [firstName, setFirstName] = useState(
     userInfo ? userInfo.profile.first_name : undefined
@@ -53,9 +53,8 @@ const Profile = props => {
         div.addEventListener("dragover", handleDrag);
         div.addEventListener("drop", handleDrop);
       }
-      const { first_name, last_name, avatar } = userInfo.profile;
-      const { notification } = userInfo;
-      toggleNotification(notification ? notification : true);
+      const { first_name, last_name, avatar, notification } = userInfo.profile;
+      toggleNotification(notification !== undefined ? notification : true);
       setFirstName(first_name ? first_name : "");
       setLastName(last_name ? last_name : "");
       setAvatar(
@@ -85,32 +84,7 @@ const Profile = props => {
   function handleLastName(e) {
     setLastName(e.target.value);
   }
-  function handleNotification(e) {
-    toggleNotification(e.target.checked);
-    const value = e.target.checked;
-    changeNotification()
-      .onOk(result => {
-        let u = { ...userInfo };
-        u.profile["notification"] = value;
-        dispatch({
-          type: "SET_USERINFO",
-          value: u,
-        });
-      })
-      .onServerError(result => {
-        toggleNotification(!value);
-      })
-      .onBadRequest(result => {
-        toggleNotification(!value);
-      })
-      .unAuthorized(result => {
-        toggleNotification(!value);
-      })
-      .notFound(result => {
-        toggleNotification(!value);
-      })
-      .call(false);
-  }
+
   function handleImageBrowsed(event) {
     if (!isUploading) {
       if (event.target.files.length > 0) {
@@ -288,6 +262,32 @@ const Profile = props => {
         })
         .call();
     }
+  }
+  function handleNotification(e) {
+    toggleNotification(e.target.checked);
+    const value = e.target.checked;
+    changeNotification()
+      .onOk(result => {
+        // let u = { ...userInfo };
+        // u.profile["notification"] = value;
+        dispatch({
+          type: "SET_USERINFO",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+        toggleNotification(!value);
+      })
+      .onBadRequest(result => {
+        toggleNotification(!value);
+      })
+      .unAuthorized(result => {
+        toggleNotification(!value);
+      })
+      .notFound(result => {
+        toggleNotification(!value);
+      })
+      .call(e.target.checked);
   }
   return (
     <>

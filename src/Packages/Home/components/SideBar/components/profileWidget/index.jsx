@@ -50,9 +50,13 @@ const ProfileWidget = props => {
         {userInfo && (
           <>
             <span className="title">
-              {(userInfo.profile.first_name || "...") +
-                " " +
-                (userInfo.profile.last_name || "...")}
+              {(!userInfo.profile.first_name ||
+                userInfo.profile.first_name.length === 0) &&
+              (!userInfo.profile.last_name || userInfo.profile.last_name.length)
+                ? "Your Name"
+                : userInfo.profile.first_name +
+                  " " +
+                  userInfo.profile.last_name}
             </span>
             <span className="role">{userInfo.username}</span>
           </>

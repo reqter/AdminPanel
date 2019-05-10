@@ -76,10 +76,12 @@ const Provider = props => {
         };
         return auth;
       case "SET_USERINFO":
-        if (action.value.profile && action.value.profile.avatar)
-          action.value.profile.avatar =
-            process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL +
-            action.value.profile.avatar;
+        if (action.value.profile && action.value.profile.avatar) {
+          if (action.value.profile.avatar)
+            action.value.profile.avatar =
+              process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL +
+              action.value.profile.avatar;
+        }
         const u = {
           ...state,
           userInfo: action.value,

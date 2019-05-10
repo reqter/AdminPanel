@@ -15,6 +15,8 @@ const changeAvatarURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_AVATAR
 const changePasswrodURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_PASSWORD
+const changeNotificationURL =
+  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_NOTIFICATION
 
 export function login () {
   let _onOkCallBack
@@ -804,22 +806,22 @@ export function changeNotification () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async () => {
+  const _call = async notification => {
     try {
-      // const url = login_url
-      // const token = localStorage.getItem('token')
-      // var rawResponse = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     authorization: 'Bearer ' + token,
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({})
-      // })
-      // const status = rawResponse.status
-      // const result = await rawResponse.json()
-      const status = 200
-      const result = {}
+      const url = changeNotificationURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "notification" : notification
+        })
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
         case 200:
           _onOk(result)
@@ -839,7 +841,8 @@ export function changeNotification () {
         default:
           break
       }
-    } catch (error) {}
+    } catch (error) {
+    }
   }
 
   return {
