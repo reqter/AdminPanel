@@ -56,7 +56,7 @@ const ContentTypeFilter = props => {
   }, [props.filters]);
 
   function handleClick(item) {
-    if (selected.sys === undefined || item.sys.id !== selected.sys.id) {
+    if (item._id !== selected._id) {
       setSelected(item);
       props.onContentTypeSelect(item);
     }
@@ -68,7 +68,7 @@ const ContentTypeFilter = props => {
         {contentTypes.map(listItem => (
           <div
             className="filter-list-item"
-            key={listItem.sys.id}
+            key={listItem._id}
             onClick={() => handleClick(listItem)}
           >
             {listItem.media !== undefined && listItem.media.length > 0 ? (
@@ -87,11 +87,8 @@ const ContentTypeFilter = props => {
             <div
               className="item-name"
               style={{
-                color: selected.sys
-                  ? selected.sys.id === listItem.sys.id
-                    ? "rgb(56,132,255)"
-                    : "gray"
-                  : "gray",
+                color:
+                  selected._id === listItem._id ? "rgb(56,132,255)" : "gray",
               }}
             >
               {listItem.title[currentLang]}

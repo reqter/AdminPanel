@@ -60,7 +60,7 @@ const Tree = props => {
     n_s[id] = !idState[id];
     setId(n_s);
     if (node.children === undefined || node.children.length === 0) {
-      if (selected.sys === undefined || node.sys.id !== selected.sys.id) {
+      if (node._id !== selected._id) {
         setSelected(node);
         props.onCategorySelect(node);
       }
@@ -69,7 +69,7 @@ const Tree = props => {
   function mapper(nodes, parentId, lvl) {
     return nodes.map((node, index) => {
       if (node.type !== "contentType") {
-        const id = `${node.sys.id}-${parentId ? parentId : "top"}`.replace(
+        const id = `${node._id}-${parentId ? parentId : "top"}`.replace(
           /[^a-zA-Z0-9-_]/g,
           ""
         );
@@ -79,11 +79,7 @@ const Tree = props => {
             className="animated fadeIn faster"
             style={{
               paddingLeft: `${25 * lvl}px`,
-              color: selected.sys
-                ? selected.sys.id === node.sys.id
-                  ? "rgb(56,132,255)"
-                  : "gray"
-                : "gray",
+              color: selected._id === node._id ? "rgb(56,132,255)" : "gray",
             }}
           >
             {node.children ? (
@@ -158,7 +154,9 @@ const Tree = props => {
             <i className="icon-right-chevron chevron" />
             All Categories
           </li> */}
-          {categories !== undefined && categories.length>0 && mapper(categories)}
+          {categories !== undefined &&
+            categories.length > 0 &&
+            mapper(categories)}
         </ul>
       </div>
     </div>

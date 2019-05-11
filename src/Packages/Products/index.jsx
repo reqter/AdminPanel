@@ -235,6 +235,7 @@ const Products = props => {
 
   const [columns, setColumns] = useState(baseFieldColumnsConfig.slice());
   const [dataFilters, setFilters] = useState([]);
+  const [dataStatus, toggleDataStatus] = useState(false);
 
   useEffect(() => {
     loadContents();
@@ -429,6 +430,7 @@ const Products = props => {
           type: "SET_CONTENTS",
           value: result,
         });
+        if (dataStatus) toggleDataStatus(false);
       })
       .onServerError(result => {
         dispatch({
@@ -548,6 +550,17 @@ const Products = props => {
       viewMode: true,
     });
   }
+
+  useEffect(() => {
+    if (dataStatus) {
+      filterData(
+        searchText,
+        selectedContentType ? selectedContentType._id : undefined,
+        selectedNode ? selectedNode._id : undefined,
+        selectedStatus.name
+      );
+    }
+  }, [dataStatus]);
   function archiveContent(row) {
     archive()
       .onOk(result => {
@@ -558,10 +571,11 @@ const Products = props => {
             message: languageManager.translate("The content is archived"),
           },
         });
-        dispatch({
-          type: "CHANGE_CONTENT_STATUS",
-          value: result,
-        });
+        toggleDataStatus(true);
+        // dispatch({
+        //   type: "CHANGE_CONTENT_STATUS",
+        //   value: result,
+        // });
       })
       .onServerError(result => {
         dispatch({
@@ -611,10 +625,11 @@ const Products = props => {
             message: languageManager.translate("The content is unarchived"),
           },
         });
-        dispatch({
-          type: "CHANGE_CONTENT_STATUS",
-          value: result,
-        });
+        toggleDataStatus(true);
+        // dispatch({
+        //   type: "CHANGE_CONTENT_STATUS",
+        //   value: result,
+        // });
       })
       .onServerError(result => {
         dispatch({
@@ -664,10 +679,12 @@ const Products = props => {
             message: languageManager.translate("The content is published"),
           },
         });
-        dispatch({
-          type: "CHANGE_CONTENT_STATUS",
-          value: result,
-        });
+        toggleDataStatus(true);
+
+        // dispatch({
+        //   type: "CHANGE_CONTENT_STATUS",
+        //   value: result,
+        // });
       })
       .onServerError(result => {
         dispatch({
@@ -717,10 +734,11 @@ const Products = props => {
             message: languageManager.translate("The content is unpublished"),
           },
         });
-        dispatch({
-          type: "CHANGE_CONTENT_STATUS",
-          value: result,
-        });
+        toggleDataStatus(true);
+        // dispatch({
+        //   type: "CHANGE_CONTENT_STATUS",
+        //   value: result,
+        // });
       })
       .onServerError(result => {
         dispatch({
