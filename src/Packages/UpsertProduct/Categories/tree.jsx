@@ -6,13 +6,13 @@ class Tree extends Component {
   state = {
     selected: {},
     hasContentType: false,
-    currentLang: languageManager.getCurrentLanguage().name
+    currentLang: languageManager.getCurrentLanguage().name,
   };
 
   static getDerivedStateFromProps(props, current_state) {
     if (!props.leftContent) {
       return {
-        selected: {}
+        selected: {},
       };
     }
     return null;
@@ -23,8 +23,8 @@ class Tree extends Component {
   };
   mapper = (nodes, parentId, lvl) => {
     return nodes.map((node, index) => {
-      if (node.type === "category") {
-        const id = `${node.sys.id}-${parentId ? parentId : "top"}`.replace(
+      if (node.sys.type === "category") {
+        const id = `${node._id}-${parentId ? parentId : "top"}`.replace(
           /[^a-zA-Z0-9-_]/g,
           ""
         );
@@ -35,11 +35,8 @@ class Tree extends Component {
               style={{
                 zIndex: 0,
                 padding: 10,
-                background: this.state.selected.sys
-                  ? this.state.selected.sys.id === node.sys.id
-                    ? "lightgray"
-                    : "white"
-                  : "white"
+                background:
+                  this.state.selected._id === node._id ? "lightgray" : "white",
               }}
               className={`treeItemParent ${
                 parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
@@ -49,10 +46,10 @@ class Tree extends Component {
                 <div
                   className="treeItem"
                   style={{
-                    paddingLeft: `${15 * lvl}px`
+                    paddingLeft: `${15 * lvl}px`,
                   }}
                 >
-                  {node.children && node.children.length > 0 ? (
+                  {node.items && node.items.length > 0 ? (
                     <>
                       <div
                         className="btnCategoryCollapse"
@@ -107,12 +104,13 @@ class Tree extends Component {
                       {node.name[this.state.currentLang]}
                     </span>
                     <span className="treeItem-desc">
-                      {node.description[this.state.currentLang] ||
-                        "Lorem ipsum dolor sit amet, consectetur"}
+                      {node.description
+                        ? node.description[this.state.currentLang]
+                        : "Lorem ipsum dolor sit amet, consectetur"}
                     </span>
                   </div>
-                  {(node.children === undefined ||
-                    node.children.length === 0) && (
+                  {(node.items === undefined ||
+                    node.items.length === 0) && (
                     <button
                       className="btn btn-light treeItem-action"
                       size="xs"
@@ -129,9 +127,9 @@ class Tree extends Component {
                 </div>
               }
             </ListGroupItem>
-            {node.children && (
+            {node.items && (
               <Collapse isOpen={this.state[id]}>
-                {this.mapper(node.children, id, (lvl || 0) + 1)}
+                {this.mapper(node.items, id, (lvl || 0) + 1)}
               </Collapse>
             )}
           </>
@@ -143,7 +141,8 @@ class Tree extends Component {
   };
 
   render() {
-    return <ListGroup>{this.mapper(this.props.data)}</ListGroup>;
+    const { data } = this.props;
+    return data ? <ListGroup>{this.mapper(this.props.data)}</ListGroup> : null;
   }
 }
 

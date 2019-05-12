@@ -6,14 +6,14 @@ import { useGlobalState, languageManager } from "../../../services";
 import { getCategories } from "./../../../Api/content-api";
 
 const Categories = props => {
-  const [{ categories }, dispatch] = useGlobalState();
+  const [{ categories, spaceInfo }, dispatch] = useGlobalState();
 
   useEffect(() => {
     getCategories()
       .onOk(result => {
         dispatch({
           type: "SET_CATEGORIES",
-          value: result
+          value: result,
         });
       })
       .onServerError(result => {
@@ -21,8 +21,8 @@ const Categories = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CATEGORY_ON_SERVER_ERROR")
-          }
+            message: languageManager.translate("CATEGORY_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -30,8 +30,8 @@ const Categories = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("CATEGORY_ON_BAD_REQUEST")
-          }
+            message: languageManager.translate("CATEGORY_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -39,11 +39,11 @@ const Categories = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("CATEGORY_UN_AUTHORIZED")
-          }
+            message: languageManager.translate("CATEGORY_UN_AUTHORIZED"),
+          },
         });
       })
-      .call();
+      .call(spaceInfo.id);
   });
   function handleRowSelect(selected) {
     props.onCloseModal(selected);

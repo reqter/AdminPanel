@@ -72,13 +72,11 @@ const UpsertProduct = props => {
     changeTab(2);
   }, [contentType]);
   useEffect(() => {
-    if (
-      Object.keys(form).length > 0 &&
-      checkFormValidation()
-      //  &&
-      // category !== undefined
-    ) {
-      toggleIsValidForm(true);
+    if (Object.keys(form).length > 0 && checkFormValidation()) {
+      if (contentType.categorization === true) {
+        if (category !== undefined && category !== null)
+          toggleIsValidForm(true);
+      } else toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [formValidation, category]);
 
@@ -147,7 +145,9 @@ const UpsertProduct = props => {
             setContentType(result.contentType);
             const c_fields = result.contentType.fields;
             setFields(c_fields.sort((a, b) => a.index - b.index));
-            // setCategory(result.category);
+            if (result.contentType.categorization === true)
+              setCategory(result.category);
+
             if (tab !== 2) toggleTab(2);
           }
         } else {
@@ -625,14 +625,28 @@ const UpsertProduct = props => {
                     </div>
                   ))}
                 <span>
-                  {contentType && contentType.title[currentLang]}
-                  {/* {category ? category.name[currentLang] : "Choose a category"} */}
+                  {contentType.categorization === true
+                    ? category
+                      ? category.name[currentLang]
+                      : viewMode
+                      ? "This content dosen't have category"
+                      : "Choose a category"
+                    : contentType.title[currentLang]}
                 </span>
-                {!viewMode && (
-                  <button className="btn btn-link" onClick={() => changeTab(1)}>
-                    Change content type
-                  </button>
-                )}
+                {!viewMode ? (
+                  contentType.categorization === true ? (
+                    <button className="btn btn-link" onClick={showCatgoryModal}>
+                      {category ? "Change Category" : "Choose a category"}
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-link"
+                      onClick={() => changeTab(1)}
+                    >
+                      Change content type
+                    </button>
+                  )
+                ) : null}
               </div>
               <div className="up-formInputs animated fadeIn">
                 {fields &&

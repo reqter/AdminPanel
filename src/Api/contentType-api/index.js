@@ -370,7 +370,7 @@ export function updateContentType () {
           fields: contentType.fields,
           allowCustomFields: contentType.allowCustomFields,
           accessRight: contentType.accessRight,
-          categoriation: contentType.categoriation
+          categorization: contentType.categorization
         })
       })
 
