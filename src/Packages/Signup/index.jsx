@@ -7,14 +7,14 @@ import "./styles.scss";
 
 const Signup = props => {
   const [{}, dispatch] = useGlobalState();
-  const [tab, changeTab] = useState(2);
+  const [tab, changeTab] = useState(1);
 
   const [spinner, toggleSpinner] = useState(false);
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
   const [repeatPass, setRepeatPassword] = useState();
   const [secTabContent, setSecTabContent] = useState({
-    type: "success",
+    type: "creatingSpace",
     title: languageManager.translate("SIGNUP_CREATING_TITLE"),
     message: languageManager.translate("SIGNUP_CREATING_MESSAGE"),
   });
@@ -195,10 +195,9 @@ const Signup = props => {
                   <span className="welcomeMessage">
                     {/* {secTabContent.message} */}
                   </span>
-                  <div className="succssIcon">
+                  <div className="succssIcon animated fadeIn">
                     <i className="icon-empty-box-open " />
-                    Welcome to REQTER.Your account created successfully.back
-                    to login page and start editing your project
+                    {secTabContent.message}
                   </div>
                   <button
                     type="button"
@@ -211,19 +210,20 @@ const Signup = props => {
               )}
               {secTabContent.type === "error" && (
                 <>
-                  <div class="alert alert-danger" role="alert">
+                  <div className="succssIcon">
+                    <i
+                      className="icon-empty-box-open "
+                      style={{ color: "red" }}
+                    />
                     {secTabContent.message}
-                    <br />
-                    <a href="" class="alert-link" onClick={backToSignup}>
-                      {languageManager.translate("SIGNUP_ERROR_BTN")}
-                    </a>
                   </div>
-                  {/* <span className="alert alert-danger row" /> */}
-                  {/* <button
+                  <button
                     type="button"
-                    className="btn btn-light btn-submit btn-block"
-                    
-                  /> */}
+                    className="btn btn-primary btn-block"
+                    onClick={backToSignup}
+                  >
+                    Return to sign up
+                  </button>
                 </>
               )}
               {secTabContent.type === "creatingSpace" && (

@@ -59,7 +59,7 @@ const Tree = props => {
     let n_s = { ...idState };
     n_s[id] = !idState[id];
     setId(n_s);
-    if (node.children === undefined || node.children.length === 0) {
+    if (node.items === undefined || node.items.length === 0) {
       if (node._id !== selected._id) {
         setSelected(node);
         props.onCategorySelect(node);
@@ -82,7 +82,7 @@ const Tree = props => {
               color: selected._id === node._id ? "rgb(56,132,255)" : "gray",
             }}
           >
-            {node.children ? (
+            {node.items ? (
               <>
                 <div>
                   {idState[id] ? (
@@ -116,7 +116,7 @@ const Tree = props => {
                     display: idState[id] ? "block" : "none",
                   }}
                 >
-                  {mapper(node.children, id, (lvl || 0) + 1)}
+                  {mapper(node.items, id, (lvl || 0) + 1)}
                 </ul>
               </>
             ) : (
