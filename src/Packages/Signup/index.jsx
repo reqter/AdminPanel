@@ -102,11 +102,12 @@ const Signup = props => {
   //#endregion second tab
   return (
     <div className="wrapper">
-      <div className="center">
+      <div className="center signUp-center">
         <div className="header">
           <span className="header-title">
             {tab === 1 && languageManager.translate("SIGNUP_TITLE")}
-            {tab === 2 && secTabContent.title}
+            {/* {tab === 2 && secTabContent.title} */}
+            {tab === 2 && "Signup Success"}
           </span>
         </div>
         <div className="formBody">
