@@ -94,6 +94,7 @@ const AssetBrowser = props => {
     props.onCloseModal();
   }
   function getAssetFiles() {
+    debugger
     const fileType =
       props.mediaType === undefined ||
       props.mediaType.length === 0 ||
