@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import { languageManager, useGlobalState } from "../../../../services";
-import { updateSpace } from "../../../../Api/space-api";
+import { setLocales } from "../../../../Api/space-api";
 import { CircleSpinner } from "../../../../components";
 
 const UpsertLocale = props => {
@@ -10,7 +10,7 @@ const UpsertLocale = props => {
 
   const selectedLocale =
     props.selectedLocale != undefined ? props.selectedLocale : undefined;
-  const [locales, setLocales] = useState([]);
+  const [locales, setUserLocales] = useState([]);
 
   const [localeName, setLocale] = useState();
   const [fallback, setFallback] = useState(
@@ -45,7 +45,7 @@ const UpsertLocale = props => {
           d.push(sysLocale);
         }
       }
-      setLocales(d);
+      setUserLocales(d);
     }
   }, []);
 
@@ -75,80 +75,80 @@ const UpsertLocale = props => {
     });
   }
   function closeModal() {
-    props.onClose();
+    if (!spinner) props.onClose();
   }
   function onSubmit(e) {
     e.preventDefault();
-    const s = { ...spaceInfo };
-    if (updateMode) {
-      for (let i = 0; i < s.locales.length; i++) {
-        const locale = s.locales[i];
-        if (locale.locale === selectedLocale.locale) {
-          locale.fallback = fallback;
-          locale.includeInResponce = includeReaponce;
-          locale.editable = editable;
-          locale.requiredFields = required;
-          break;
-        }
-      }
-    } else {
-      if (s.locales === undefined) {
-        s.locales = [];
-      }
-      s.locales.push({
-        locale: localeName,
-        fallback: fallback,
-        includeInResponce: includeReaponce,
-        editable: editable,
-        requiredFields: required,
-      });
-    }
-    dispatch({
-      type: "SET_SPACEINFO",
-      value: s,
-    });
-    closeModal();
-    // if (!spinner) {
-    //   toggleSpinner(true);
-    //   updateSpace()
-    //     .onOk(result => {
+    if (!spinner) {
+      toggleSpinner(true);
 
-    //       closeModal();
-    //       showNotify(
-    //         "success",
-    //         languageManager.translate("SETTINGS_ADD_LOCALE_ON_OK")
-    //       );
-    //     })
-    //     .onServerError(result => {
-    //       toggleSpinner(false);
-    //       showNotify(
-    //         "error",
-    //         languageManager.translate("SETTINGS_ADD_LOCALE_ON_SERVER_ERROR")
-    //       );
-    //     })
-    //     .onBadRequest(result => {
-    //       toggleSpinner(false);
-    //       showNotify(
-    //         "error",
-    //         languageManager.translate("SETTINGS_ADD_LOCALE_ON_BAD_REQUEST")
-    //       );
-    //     })
-    //     .unAuthorized(result => {
-    //       toggleSpinner(false);
-    //       showNotify(
-    //         "error",
-    //         languageManager.translate("SETTINGS_ADD_LOCALE_UN_AUTHORIZED")
-    //       );
-    //     })
-    //     .notFound(result => {
-    //       toggleSpinner(false);
-    //       showNotify(
-    //         "error",
-    //         languageManager.translate("SETTINGS_ADD_LOCALE_NOT_FOUND")
-    //       );
-    //     })
-    //     .call();
-    // }
+      const s = { ...spaceInfo };
+      if (updateMode) {
+        for (let i = 0; i < s.locales.length; i++) {
+          const locale = s.locales[i];
+          if (locale.locale === selectedLocale.locale) {
+            locale.fallback = fallback;
+            locale.includeInResponce = includeReaponce;
+            locale.editable = editable;
+            locale.requiredFields = required;
+            break;
+          }
+        }
+      } else {
+        if (s.locales === undefined) {
+          s.locales = [];
+        }
+        s.locales.push({
+          locale: localeName,
+          fallback: fallback,
+          includeInResponce: includeReaponce,
+          editable: editable,
+          requiredFields: required,
+        });
+      }
+
+      setLocales()
+        .onOk(result => {
+          closeModal();
+          showNotify(
+            "success",
+            languageManager.translate("SETTINGS_ADD_LOCALE_ON_OK")
+          );
+          dispatch({
+            type: "SET_SPACEINFO",
+            value: result,
+          });
+        })
+        .onServerError(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("SETTINGS_ADD_LOCALE_ON_SERVER_ERROR")
+          );
+        })
+        .onBadRequest(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("SETTINGS_ADD_LOCALE_ON_BAD_REQUEST")
+          );
+        })
+        .unAuthorized(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("SETTINGS_ADD_LOCALE_UN_AUTHORIZED")
+          );
+        })
+        .notFound(result => {
+          toggleSpinner(false);
+          showNotify(
+            "error",
+            languageManager.translate("SETTINGS_ADD_LOCALE_NOT_FOUND")
+          );
+        })
+        .call(spaceInfo.id, s.locales);
+    }
   }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal} size="lg">
@@ -186,7 +186,7 @@ const UpsertLocale = props => {
                 value={fallback}
               >
                 <option value="" />
-                {locales.map(locale => (
+                {sysLocales.map(locale => (
                   <option key={locale.name} value={locale.name}>
                     {locale.title}
                   </option>
@@ -283,7 +283,7 @@ const UpsertLocale = props => {
           }
         >
           <CircleSpinner show={spinner} size="small" />
-          <span>{updateMode ? "Update" : "Add"}</span>
+          {!spinner && <span>{updateMode ? "Update" : "Add"}</span>}
         </button>
       </ModalFooter>
     </Modal>

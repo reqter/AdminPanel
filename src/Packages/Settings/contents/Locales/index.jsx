@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useGlobalState } from "../../../../services";
-import { updateSpace } from "./../../../../Api/space-api";
+import { setLocales } from "./../../../../Api/space-api";
 const Locale = props => {
   const [{ sysLocales, spaceInfo }, dispatch] = useGlobalState();
 
@@ -13,17 +13,19 @@ const Locale = props => {
     const s_copy = { ...spaceInfo };
     const r = s_copy.locales.filter(l => l.locale !== locale.locale);
     s_copy["locales"] = r;
-    dispatch({
-      type: "SET_SPACEINFO",
-      value: s_copy,
-    });
-    updateSpace()
-      .onOk(result => {})
+
+    setLocales()
+      .onOk(result => {
+        dispatch({
+          type: "SET_SPACEINFO",
+          value: s_copy,
+        });
+      })
       .onServerError(result => {})
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(result => {})
-      .call();
+      .call(spaceInfo.id, r);
   }
   function editLocale(locale) {
     props.onEditLocale(locale);
@@ -38,7 +40,7 @@ const Locale = props => {
           </span>
         </div>
         <table className="table myTable">
-          <thead>
+          <thead className="myTable-header">
             <tr>
               <th>#</th>
               <th>Locale</th>

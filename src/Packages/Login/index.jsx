@@ -10,7 +10,6 @@ import { CircleSpinner } from "./../../components";
 import "./styles.scss";
 
 const Login = props => {
-
   const [{}, dispatch] = useGlobalState();
   const [spinner, toggleSpinner] = useState(false);
   const [userName, setUserName] = useState();
@@ -79,7 +78,9 @@ const Login = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: result.error ? result.error : languageManager.translate("LOGIN_NOT_FOUND"),
+              message: result.error
+                ? result.error
+                : languageManager.translate("LOGIN_NOT_FOUND"),
             },
           });
         })
@@ -106,7 +107,7 @@ const Login = props => {
           </span>
         </div>
         <div className="formBody">
-          <form onSubmit={loginUser}>
+          <form id="loginForm" onSubmit={loginUser}>
             <div className="form-group">
               <label>
                 {languageManager.translate("LOGIN_EMAIL_INPUT_TITLE")}
@@ -114,7 +115,6 @@ const Login = props => {
               <input
                 type="email"
                 className="form-control"
-                id="exampleInputEmail1"
                 aria-describedby="emailHelp"
                 placeholder={languageManager.translate(
                   "LOGIN_EMAIL_INPUT_PLACEHOLDER"
@@ -122,7 +122,7 @@ const Login = props => {
                 onChange={handleEmailChanged}
                 autoFocus
               />
-              <small id="emailHelp" className="form-text text-muted">
+              <small className="form-text text-muted">
                 {languageManager.translate("LOGIN_EMAIL_INPUT_DESCRIPTION")}
               </small>
             </div>
@@ -131,29 +131,30 @@ const Login = props => {
               <input
                 type="password"
                 className="form-control"
-                id="exampleInputPassword1"
                 placeholder={languageManager.translate(
                   "LOGIN_PASSWORD_INPUT_PLACEHOLDER"
                 )}
                 onChange={handlePasswordChanged}
               />
-              <small id="emailHelp" className="form-text text-muted">
+              <small className="form-text text-muted">
                 {languageManager.translate("LOGIN_PASSWORD_INPUT_DESCRIPTION")}
               </small>
             </div>
             <Link to="/forgotPassword">
               {languageManager.translate("LOGIN_FORGOT_PASS")}
             </Link>
-            {/* <button
-              type="button"
-              className="btn btn-link btn-sm"
-              onClick={navToForgotPass}
-            >
-              {languageManager.translate("LOGIN_FORGOT_PASS")}
-            </button> */}
             <button
               type="submit"
               className="btn btn-primary btn-block btn-submit"
+              form="loginForm"
+              disabled={
+                userName === undefined ||
+                password === undefined ||
+                userName.length === 0 ||
+                password.length === 0
+                  ? true
+                  : false
+              }
             >
               <CircleSpinner show={spinner} size="small" />
               {!spinner ? languageManager.translate("LOGIN_SUBMIT_BTN") : null}

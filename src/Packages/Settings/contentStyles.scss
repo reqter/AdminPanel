@@ -58,14 +58,16 @@
       }
     }
     thead {
-      // background: rgb(230, 230, 230);
       border: none;
-      height: 35px !important;
-      th {
-        font-weight: 500;
-        font-size: 14px;
-        border-width: 1.5px;
-        border-right: 0.5px solid lightgray;
+      tr {
+        th {
+          padding: 5px;
+          font-weight: 500;
+          height: 35px !important;
+          font-size: 14px;
+          height: 35px;
+          box-shadow: 0 3px 2px -2px lightgray;
+        }
       }
     }
     tbody {

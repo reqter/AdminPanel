@@ -48,7 +48,7 @@ export default {
   LOGIN_SUBMIT_BTN: 'Login',
   LOGIN_FORGET_PASS: 'Forgot Your Password ?',
   LOGIN_SIGNUP_LINK_TITLE: 'New to REQTER ?',
-  LOGIN_SIGNUP_LINK: 'Create an accout',
+  LOGIN_SIGNUP_LINK: 'Create an account',
   LOGIN_SOCIAL_BTN_GOOGLE: 'Google',
   LOGIN_SOCIAL_BTN_GITHUB: 'Github',
   LOGIN_ON_SERVER_ERROR: 'Internal server error',
