@@ -7,14 +7,14 @@ import "./styles.scss";
 
 const Signup = props => {
   const [{}, dispatch] = useGlobalState();
-  const [tab, changeTab] = useState(1);
+  const [tab, changeTab] = useState(2);
 
   const [spinner, toggleSpinner] = useState(false);
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
   const [repeatPass, setRepeatPassword] = useState();
   const [secTabContent, setSecTabContent] = useState({
-    type: "creatingSpace",
+    type: "success",
     title: languageManager.translate("SIGNUP_CREATING_TITLE"),
     message: languageManager.translate("SIGNUP_CREATING_MESSAGE"),
   });
@@ -193,8 +193,13 @@ const Signup = props => {
               {secTabContent.type === "success" && (
                 <>
                   <span className="welcomeMessage">
-                    {secTabContent.message}
+                    {/* {secTabContent.message} */}
                   </span>
+                  <div className="succssIcon">
+                    <i className="icon-empty-box-open " />
+                    Welcome to REQTER.Your account created successfully.back
+                    to login page and start editing your project
+                  </div>
                   <button
                     type="button"
                     className="btn btn-primary btn-block btn-submit"

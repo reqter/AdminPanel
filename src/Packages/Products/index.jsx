@@ -459,7 +459,13 @@ const Products = props => {
           },
         });
       })
-      .call(spaceInfo.id, text, contentTypeId, categoryId, status);
+      .call(
+        spaceInfo.id,
+        text,
+        contentTypeId ? [contentTypeId] : undefined,
+        categoryId ? [categoryId] : undefined,
+        status ? [status] : undefined
+      );
   }
   function handleDeleteRow(row) {
     setAlertData({

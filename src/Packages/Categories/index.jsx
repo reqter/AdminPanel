@@ -804,7 +804,7 @@ const Categories = props => {
         <AssetBrowser
           isOpen={assetBrowser}
           onCloseModal={handleChooseAsset}
-          mediaType={"image"}
+          mediaType={["image"]}
         />
       )}
       {alertData && <Alert data={alertData} />}

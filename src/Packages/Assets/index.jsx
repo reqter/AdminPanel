@@ -104,6 +104,7 @@ const Assets = props => {
     return languageManager.translate(key);
   }
   function doFilter(fileType, status) {
+    
     toggleSpinner(true);
     filterAssets()
       .onOk(result => {
@@ -146,7 +147,9 @@ const Assets = props => {
       .notFound(result => {
         toggleSpinner(false);
       })
-      .call(spaceInfo.id, fileType === "all" ? undefined : fileType, status);
+      .call(spaceInfo.id, fileType === "all" ? undefined : [fileType], [
+        status,
+      ]);
   }
   function handleFileTypeClick(selected) {
     setFileType(selected);
@@ -643,7 +646,7 @@ const Assets = props => {
                         ) : (
                           ""
                         )}
-                        
+
                         {file.status !== "published" &&
                           file.status !== "archived" && (
                             <button

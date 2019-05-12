@@ -547,7 +547,7 @@ const UpsertTemplate = props => {
         <AssetBrowser
           isOpen={assetBrowser}
           onCloseModal={handleChooseAsset}
-          mediaType={"image,video"}
+          mediaType={["image", "video"]}
         />
       )}
     </Modal>
