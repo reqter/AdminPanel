@@ -19,6 +19,7 @@ import {
   RichText,
   Reference,
   CircleSpinner,
+  JsonObject,
 } from "./../../components";
 
 const UpsertProduct = props => {
@@ -314,6 +315,16 @@ const UpsertProduct = props => {
       case "reference":
         return (
           <Reference
+            viewMode={viewMode}
+            field={field}
+            formData={formData}
+            init={setNameToFormValidation}
+            onChangeValue={handleOnChangeValue}
+          />
+        );
+      case "jsonobject":
+        return (
+          <JsonObject
             viewMode={viewMode}
             field={field}
             formData={formData}
