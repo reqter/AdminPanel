@@ -76,7 +76,7 @@ const fields = [
     name: "jsonObject",
     title: languageManager.translate("FIELD_TYPE_OBJECT"),
     description: languageManager.translate("FIELD_TYPE_OBJECT_INFO"),
-    icon: "icon-json-file"
+    icon: "icon-json-file",
   },
   {
     name: "reference",
@@ -161,8 +161,7 @@ const AddNewField = props => {
         toggleSpinner(true);
       }
       const obj = {
-        _id: Math.random().toString(),
-        name: name,
+        name: name.toLowerCase(),
         title: utility.applyeLangs(title),
         description: utility.applyeLangs(description),
         type: selectedField.name,

@@ -258,7 +258,6 @@ export function getByContentTypes () {
     }
   }
 }
-
 export function getContents () {
   let _onOkCallBack
   function _onOk (result) {

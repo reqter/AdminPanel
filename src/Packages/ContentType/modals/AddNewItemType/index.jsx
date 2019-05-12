@@ -156,7 +156,7 @@ const UpsertTemplate = props => {
         for (const key in selectedContentType) {
           obj[key] = selectedContentType[key];
         }
-        obj["name"] = name;
+        obj["name"] = name.toLowerCase();
         obj["title"] = utility.applyeLangs(title);
         obj["description"] = utility.applyeLangs(description);
         obj["media"] = media;
@@ -227,7 +227,7 @@ const UpsertTemplate = props => {
           .call(spaceInfo.id, obj);
       } else {
         let obj = {
-          name: name,
+          name: name.toLowerCase(),
           title: utility.applyeLangs(title),
           description: utility.applyeLangs(description),
           media: media,

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import AsyncCreatableSelect from "react-select/lib/AsyncCreatable";
 import "./styles.scss";
-import { languageManager } from "../../services";
+import { languageManager, useGlobalState } from "../../services";
 import { getByContentTypes } from "./../../Api/content-api";
 const currentLang = languageManager.getCurrentLanguage().name;
 
 const ReferenceInput = props => {
+  const [{ spaceInfo }, dispatch] = useGlobalState();
   const { field, formData } = props;
 
   const [options, setOptions] = useState();
@@ -39,7 +40,7 @@ const ReferenceInput = props => {
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(() => {})
-      .call(field.references);
+      .call(spaceInfo.id, field.references);
   }, [formData]);
   function initValue(allData) {
     if (field.isList) {
