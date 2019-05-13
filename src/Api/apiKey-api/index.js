@@ -1,4 +1,12 @@
+import { storageManager } from './../../services'
 const data = require('./../data.json')
+
+const config = process.env
+const baseUrl = config.REACT_APP_APPS_BASE_URL
+const getAllUrl = baseUrl + config.REACT_APP_APPS_GET_ALL
+const resgisterUrl = baseUrl + config.REACT_APP_APPS_REGISTER
+const updateUrl = baseUrl + config.REACT_APP_APPS_UPDATE
+const removeUrl = baseUrl + config.REACT_APP_APPS_REMOVE
 
 export function getApiKeys () {
   let _onOkCallBack
@@ -37,11 +45,21 @@ export function getApiKeys () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async () => {
+  const _call = async spaceId => {
     try {
-      const status = 200
-      const result = data.apiKeys ? data.apiKeys : []
+      debugger
+      const url = getAllUrl + '?id=' + spaceId
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        }
+      })
 
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
         case 200:
           _onOk(result)
@@ -61,9 +79,7 @@ export function getApiKeys () {
         default:
           break
       }
-    } catch (error) {
-      _onServerError()
-    }
+    } catch (error) {}
   }
 
   return {

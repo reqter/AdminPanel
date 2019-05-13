@@ -4,11 +4,12 @@ import { getApiKeys, deleteApiKey } from "../../../../Api/apiKey-api";
 
 const currentLang = languageManager.getCurrentLanguage().name;
 const ApiKeys = props => {
-  const [{ apiKeys }, dispatch] = useGlobalState();
+  const [{ apiKeys, spaceInfo }, dispatch] = useGlobalState();
 
   useEffect(() => {
     getApiKeys()
       .onOk(result => {
+        debugger
         if (result && result.length > 0)
           dispatch({
             type: "SET_API_KEYS",
@@ -19,7 +20,7 @@ const ApiKeys = props => {
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(result => {})
-      .call();
+      .call(spaceInfo.id);
   }, []);
   function remove(apiKey) {
     deleteApiKey()

@@ -17,7 +17,7 @@ const Locale = props => {
     setLocales()
       .onOk(result => {
         dispatch({
-          type: "SET_lOCALES",
+          type: "SET_LOCALES",
           value: s_copy["locales"],
         });
       })
