@@ -17,8 +17,8 @@ const Locale = props => {
     setLocales()
       .onOk(result => {
         dispatch({
-          type: "SET_SPACEINFO",
-          value: s_copy,
+          type: "SET_lOCALES",
+          value: s_copy["locales"],
         });
       })
       .onServerError(result => {})
@@ -59,7 +59,12 @@ const Locale = props => {
                   <td>
                     <div className="myTable-number">{index + 1}</div>
                   </td>
-                  <td>{getLocaleTitle(locale.locale, "name")}</td>
+                  <td>
+                    {getLocaleTitle(locale.locale, "name")}
+                    {locale.default === true && (
+                      <span className="defaultLang">Default</span>
+                    )}
+                  </td>
                   <td>{getLocaleTitle(locale.fallback, "fallback")}</td>
                   <td>{locale.inResponce === true ? "Enabled" : "Disabled"}</td>
                   <td>{locale.editable === true ? "Enabled" : "Disabled"}</td>
@@ -72,16 +77,19 @@ const Locale = props => {
                     <div className="myTable-actions">
                       <button
                         className="btn btn-light btn-sm"
-                        onClick={() => removeLocale(locale)}
-                      >
-                        <i className="icon-bin" />
-                      </button>
-                      <button
-                        className="btn btn-light btn-sm"
                         onClick={() => editLocale(locale)}
                       >
                         Edit
                       </button>
+                      {(locale.default === undefined ||
+                        locale.default === false) && (
+                        <button
+                          className="btn btn-light btn-sm"
+                          onClick={() => removeLocale(locale)}
+                        >
+                          <i className="icon-bin" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

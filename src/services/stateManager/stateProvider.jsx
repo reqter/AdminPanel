@@ -93,6 +93,14 @@ const Provider = props => {
           spaceInfo: action.value,
         };
         return s_info;
+      case "SET_lOCALES":
+        let s_l_info = { ...state.spaceInfo };
+        s_l_info["locales"] = action.value;
+        const s_locales = {
+          ...state,
+          spaceInfo: s_l_info,
+        };
+        return s_locales;
       case "SET_API_KEYS":
         const apiKeys = {
           ...state,

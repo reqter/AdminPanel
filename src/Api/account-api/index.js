@@ -16,7 +16,8 @@ const changeAvatarURL =
 const changePasswrodURL =
   config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_PASSWORD
 const changeNotificationURL =
-  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_CHANGE_NOTIFICATION
+  config.REACT_APP_ACCOUNT_BASE_URL +
+  config.REACT_APP_ACCOUNT_CHANGE_NOTIFICATION
 
 export function login () {
   let _onOkCallBack
@@ -817,7 +818,7 @@ export function changeNotification () {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          "notification" : notification
+          notification: notification
         })
       })
       const status = rawResponse.status
@@ -841,8 +842,7 @@ export function changeNotification () {
         default:
           break
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   return {

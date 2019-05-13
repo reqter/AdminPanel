@@ -28,26 +28,38 @@ const widthResolver = WrappedComponent => {
           toggleLoading(false);
         })
         .onServerError(result => {
+          console.log("server error");
           setError("Internal server error");
           toggleLoading(false);
         })
         .onBadRequest(result => {
+          console.log("bad request");
           setError("Bad request");
           toggleLoading(false);
         })
         .unAuthorized(result => {
+          console.log("un authorized");
+          setError(
+            "There is an error which has occured in the request.\ntry again "
+          );
           toggleLoading(false);
         })
         .notFound(result => {
+          console.log("not found");
+           setError(
+             "There is an error which has occured in the request.\ntry again "
+           );
           toggleLoading(false);
         })
         .onRequestError(result => {
+          console.log("request error");
           setError(
             "There is an error which has occured in the request.\ntry again "
           );
           toggleLoading(false);
         })
         .unKnownError(result => {
+          console.log("unknown error");
           setError(
             "There is an error which has occured in the request.\ntry again "
           );

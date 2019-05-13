@@ -9,7 +9,7 @@ const UpsertLocale = props => {
   const updateMode = props.selectedLocale !== undefined ? true : false;
 
   const selectedLocale =
-    props.selectedLocale != undefined ? props.selectedLocale : undefined;
+    props.selectedLocale !== undefined ? props.selectedLocale : undefined;
   const [locales, setUserLocales] = useState([]);
 
   const [localeName, setLocale] = useState();
@@ -24,6 +24,9 @@ const UpsertLocale = props => {
   );
   const [required, toggleRequired] = useState(
     selectedLocale ? selectedLocale.requiredFields : false
+  );
+  const [defaultLang, toggleDefaultLang] = useState(
+    selectedLocale ? selectedLocale.default : false
   );
 
   const [spinner, toggleSpinner] = useState(false);
@@ -64,6 +67,9 @@ const UpsertLocale = props => {
   function handleRequiredChanged(e) {
     toggleRequired(e.target.checked);
   }
+  function handleDefaultLang(e) {
+    toggleDefaultLang(e.target.checked);
+  }
 
   function showNotify(type, msg) {
     dispatch({
@@ -82,15 +88,25 @@ const UpsertLocale = props => {
     if (!spinner) {
       toggleSpinner(true);
 
-      const s = { ...spaceInfo };
+      const s = JSON.parse(JSON.stringify(spaceInfo));
+      let newLocales = s.locales;
+      if (defaultLang) {
+        newLocales = s.locales.map(l => {
+          l.default = false;
+          return l;
+        });
+      }
+      let current;
       if (updateMode) {
         for (let i = 0; i < s.locales.length; i++) {
           const locale = s.locales[i];
           if (locale.locale === selectedLocale.locale) {
+            current = locale;
             locale.fallback = fallback;
             locale.includeInResponce = includeReaponce;
             locale.editable = editable;
             locale.requiredFields = required;
+            locale.default = defaultLang;
             break;
           }
         }
@@ -98,26 +114,29 @@ const UpsertLocale = props => {
         if (s.locales === undefined) {
           s.locales = [];
         }
-        s.locales.push({
+        current = {
           locale: localeName,
           fallback: fallback,
           includeInResponce: includeReaponce,
           editable: editable,
           requiredFields: required,
-        });
+          default: defaultLang,
+        };
+        newLocales.push(current);
+        s.locales = newLocales;
       }
 
       setLocales()
         .onOk(result => {
-          closeModal();
+          dispatch({
+            type: "SET_LOCALES",
+            value: result["locales"],
+          });
           showNotify(
             "success",
-            languageManager.translate("SETTINGS_ADD_LOCALE_ON_OK")
+            languageManager.translate("Locales updated successfully")
           );
-          dispatch({
-            type: "SET_SPACEINFO",
-            value: result,
-          });
+          closeModal();
         })
         .onServerError(result => {
           toggleSpinner(false);
@@ -147,7 +166,7 @@ const UpsertLocale = props => {
             languageManager.translate("SETTINGS_ADD_LOCALE_NOT_FOUND")
           );
         })
-        .call(spaceInfo.id, s.locales);
+        .call(spaceInfo.id, newLocales);
     }
   }
   return (
@@ -265,6 +284,33 @@ const UpsertLocale = props => {
                 </label>
               </div>
             </div>
+            {(selectedLocale === undefined ||
+              selectedLocale.default === undefined ||
+              selectedLocale.default === false) && (
+              <div className="custom_checkbox">
+                <div className="left">
+                  <label className="checkBox">
+                    <input
+                      type="checkbox"
+                      id="default"
+                      checked={defaultLang}
+                      onChange={handleDefaultLang}
+                    />
+                    <span className="checkmark" />
+                  </label>
+                </div>
+                <div className="right">
+                  <label for="default">
+                    {languageManager.translate("Set as default")}
+                  </label>
+                  <label for="default">
+                    {languageManager.translate(
+                      "This language can not be deleted"
+                    )}
+                  </label>
+                </div>
+              </div>
+            )}
           </form>
         </div>
       </ModalBody>
