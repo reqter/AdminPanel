@@ -47,7 +47,6 @@ export function getApiKeys () {
   }
   const _call = async spaceId => {
     try {
-      debugger
       const url = getAllUrl + '?id=' + spaceId
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {
@@ -55,6 +54,7 @@ export function getApiKeys () {
         headers: {
           authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
+          spaceId: spaceId
         }
       })
 
@@ -147,18 +147,22 @@ export function addApiKey () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async apiKey => {
+  const _call = async (spaceId, client) => {
     try {
-      const status = 200
-      let a_list = data.apiKeys ? [...data.apiKeys] : []
-      const result = {
-        ...apiKey,
-        id: Math.random().toString(),
-        clientId: 'AIzaSyAvoANIcfDjP-AIzaSyAvoANIcfDjP',
-        clientSecret: 'AIzaSyAvoAN-IcfDjP-AIzaSyAvoANIcfDj'
-      }
-      a_list.push(result)
-      data.apiKeys = a_list
+      debugger
+      const url = resgisterUrl
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify(client)
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
         case 200:
           _onOk(result)
@@ -179,7 +183,7 @@ export function addApiKey () {
           break
       }
     } catch (error) {
-      _onServerError()
+      _onServerError(error)
     }
   }
 
@@ -248,14 +252,27 @@ export function deleteApiKey () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async id => {
+  const _call = async (spaceId, clientId) => {
     try {
-      const a_list = data.apiKeys.filter(item => item.id !== id)
-      data.apiKeys = a_list
-      const status = 200
+      const url = removeUrl
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify({
+          id: clientId
+        })
+      })
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
         case 200:
-          _onOk()
+          _onOk(result)
           break
         case 400:
           _onBadRequest()
@@ -272,9 +289,7 @@ export function deleteApiKey () {
         default:
           break
       }
-    } catch (error) {
-      _onServerError()
-    }
+    } catch (error) {}
   }
 
   return {
@@ -342,19 +357,25 @@ export function updateApiKey () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async apiKey => {
+  const _call = async (spaceId, apiKey) => {
     try {
-      const a_list = data.apiKeys.map(item => {
-        if (item.id === apiKey.id) {
-          item = apiKey
-        }
-        return item
+      const url = updateUrl
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          spaceId: spaceId
+        },
+        body: JSON.stringify(apiKey)
       })
-      data.apiKeys = a_list
-      const status = 200
+
+      const status = rawResponse.status
+      const result = await rawResponse.json()
       switch (status) {
         case 200:
-          _onOk()
+          _onOk(result)
           break
         case 400:
           _onBadRequest()
@@ -372,7 +393,7 @@ export function updateApiKey () {
           break
       }
     } catch (error) {
-      _onServerError()
+      _onServerError(error)
     }
   }
 

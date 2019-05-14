@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router";
+import useBrowserContextCommunication from "react-window-communication-hook";
 import "./styles.scss";
 import {
   Dropdown,
@@ -14,7 +15,10 @@ import {
 } from "../../../../../../services";
 const ProfileWidget = props => {
   const { match, location, history } = props;
-  const [{ userInfo }, dispatch] = useGlobalState();
+  const [{ userInfo, isAuthenticated }, dispatch] = useGlobalState();
+  const [communicationState, postMessage] = useBrowserContextCommunication(
+    "channel"
+  );
 
   const [dropDownVisibility, toggleVisibility] = useState(false);
   function toggle() {
@@ -26,6 +30,11 @@ const ProfileWidget = props => {
       type: "LOGOUT",
       value: false,
     });
+    history.replace("/login");
+    postMessage(false);
+  }
+  const shouldLogout = [communicationState.lastMessage, isAuthenticated];
+  if (!shouldLogout) {
     history.replace("/login");
   }
   function showProfile() {

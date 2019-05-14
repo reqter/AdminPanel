@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Select, { components } from "react-select";
 import { languageManager, useGlobalState } from "../../../../services";
 import { CircleSpinner, AssetBrowser } from "../../../../components";
 import { addApiKey, updateApiKey } from "./../../../../Api/apiKey-api";
+import { userInfo } from "os";
 
 const currentLang = languageManager.getCurrentLanguage().name;
 
@@ -23,10 +25,14 @@ const UpsertApiKey = props => {
   const [homePage, setHomePage] = useState(
     selectedApiKey ? selectedApiKey.homePage : ""
   );
-  const [category, setCategory] = useState(
-    selectedApiKey ? selectedApiKey.category : ""
-  );
-
+  const [type, setType] = useState(selectedApiKey ? selectedApiKey.type : "");
+  const options = [
+    { value: "password", label: "Password" },
+    { value: "authorization_code", label: "Authorization Code" },
+    { value: "clientCredentials", label: "Client Credentials" },
+    { value: "explicit", label: "Explicit" },
+  ];
+  const [grunts, setGrunts] = useState(getSelectedGrunts());
   const [image, setImage] = useState(
     selectedApiKey ? selectedApiKey.icon : undefined
   );
@@ -37,7 +43,21 @@ const UpsertApiKey = props => {
   useEffect(() => {
     nameRef.current.focus();
   }, []);
-
+  function getSelectedGrunts() {
+    if (!updateMode) return [];
+    let result = [];
+    for (let i = 0; i < selectedApiKey.grants.length; i++) {
+      const grunt = selectedApiKey.grants[i];
+      for (let j = 0; j < options.length; j++) {
+        const option = options[j];
+        if (option.value === grunt) {
+          result.push(option);
+          break;
+        }
+      }
+    }
+    return result;
+  }
   function removeImage() {
     setImage();
   }
@@ -46,9 +66,7 @@ const UpsertApiKey = props => {
   }
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
-    if (asset) {
-      setImage(asset.url);
-    }
+    if (asset) setImage(asset.url);
   }
   function showNotify(type, msg) {
     dispatch({
@@ -59,6 +77,9 @@ const UpsertApiKey = props => {
       },
     });
   }
+  function handleOnGruntsChange(items) {
+    setGrunts(items);
+  }
   function closeModal() {
     props.onClose();
   }
@@ -66,7 +87,22 @@ const UpsertApiKey = props => {
     e.preventDefault();
     if (!spinner) {
       toggleSpinner(true);
+      let grunt_values = [];
+      if (grunts && grunts.length > 0) {
+        grunts.forEach(g => grunt_values.push(g.value));
+      }
       if (!updateMode) {
+        const obj = {
+          icon: image ? image[currentLang] : undefined,
+          redirectUris: [],
+          type: type,
+          name: name,
+          description: description,
+          longDesc: null,
+          homepage: homePage,
+          category: "CMS",
+          grants: grunt_values,
+        };
         addApiKey()
           .onOk(result => {
             changeTab(2);
@@ -108,21 +144,19 @@ const UpsertApiKey = props => {
               languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
             );
           })
-          .call({
-            name: name,
-            description: description,
-            homePage: homePage,
-            category: category,
-            icon: image,
-          });
+          .call(spaceInfo.id, obj);
       } else {
         let apikey = {
-          ...props.selectedApiKey,
+          id: selectedApiKey._id,
+          icon: image ? image[currentLang] : undefined,
+          redirectUris: [],
+          type: type,
           name: name,
           description: description,
-          homePage: homePage,
-          category: category,
-          icon: image,
+          longDesc: null,
+          homepage: homePage,
+          category: "CMS",
+          grants: grunt_values,
         };
 
         updateApiKey()
@@ -165,7 +199,7 @@ const UpsertApiKey = props => {
               languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
             );
           })
-          .call(apikey);
+          .call(spaceInfo.id, apikey);
       }
     }
   }
@@ -179,70 +213,98 @@ const UpsertApiKey = props => {
           <div className="settings-modal-body">
             {tab === 1 && (
               <form id="form" onSubmit={onSubmit}>
-                <div className="form-group">
-                  <label>{languageManager.translate("Name")}</label>
-                  <input
-                    ref={nameRef}
-                    type="text"
-                    className="form-control"
-                    placeholder={languageManager.translate("enter a name ")}
-                    required
-                    value={name}
-                    onChange={e => {
-                      setName(e.target.value);
-                    }}
-                  />
-                  <small className="form-text text-muted">
-                    {languageManager.translate("name of api key  is require")}
-                  </small>
+                <div className="row">
+                  <div className="form-group col">
+                    <label>{languageManager.translate("Name")}</label>
+                    <input
+                      ref={nameRef}
+                      type="text"
+                      className="form-control"
+                      placeholder={languageManager.translate("enter a name ")}
+                      required
+                      value={name}
+                      onChange={e => {
+                        setName(e.target.value);
+                      }}
+                    />
+                    <small className="form-text text-muted">
+                      {languageManager.translate("name of api key  is require")}
+                    </small>
+                  </div>
+                  <div className="form-group col">
+                    <label>{languageManager.translate("Description")}</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder={languageManager.translate(
+                        "enter a short description"
+                      )}
+                      value={description}
+                      onChange={e => {
+                        setDescription(e.target.value);
+                      }}
+                    />
+                    <small className="form-text text-muted">
+                      {languageManager.translate(
+                        "short description of api key"
+                      )}
+                    </small>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="form-group col">
+                    <label>{languageManager.translate("Home Page")}</label>
+                    <input
+                      type="url"
+                      className="form-control"
+                      placeholder={languageManager.translate("enter a url")}
+                      value={homePage}
+                      onChange={e => {
+                        setHomePage(e.target.value);
+                      }}
+                    />
+                    <small className="form-text text-muted">
+                      {languageManager.translate("enter a url as home page")}
+                    </small>
+                  </div>
+                  <div className="form-group col">
+                    <label>{languageManager.translate("Type")}</label>
+                    <select
+                      className="form-control"
+                      value={type}
+                      onChange={e => {
+                        setType(e.target.value);
+                      }}
+                    >
+                      <option value="">Choose a type</option>
+                      <option value="web">Web App</option>
+                      <option value="native">
+                        Native app(mobile and desktop app)
+                      </option>
+                      <option value="service">
+                        Service(Machine to Machine call)
+                      </option>
+                    </select>
+                    <small className="form-text text-muted">
+                      {languageManager.translate("category is require")}
+                    </small>
+                  </div>
                 </div>
                 <div className="form-group">
-                  <label>{languageManager.translate("Description")}</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder={languageManager.translate(
-                      "enter a short description"
-                    )}
-                    value={description}
-                    onChange={e => {
-                      setDescription(e.target.value);
-                    }}
+                  <label>Grunts</label>
+                  <Select
+                    menuPlacement="bottom"
+                    closeMenuOnScroll={true}
+                    closeMenuOnSelect={false}
+                    //value={selectedOption}
+                    defaultValue={true && getSelectedGrunts()}
+                    onChange={handleOnGruntsChange}
+                    options={options}
+                    isMulti={true}
+                    isSearchable={true}
                   />
                   <small className="form-text text-muted">
-                    {languageManager.translate("short description of api key")}
-                  </small>
-                </div>
-
-                <div className="form-group">
-                  <label>{languageManager.translate("Home Page")}</label>
-                  <input
-                    type="url"
-                    className="form-control"
-                    placeholder={languageManager.translate("enter a url")}
-                    value={homePage}
-                    onChange={e => {
-                      setHomePage(e.target.value);
-                    }}
-                  />
-                  <small className="form-text text-muted">
-                    {languageManager.translate("enter a url as home page")}
-                  </small>
-                </div>
-                <div className="form-group">
-                  <label>{languageManager.translate("Category")}</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder={languageManager.translate("enter a category")}
-                    required
-                    value={category}
-                    onChange={e => {
-                      setCategory(e.target.value);
-                    }}
-                  />
-                  <small className="form-text text-muted">
-                    {languageManager.translate("category is require")}
+                    Grunts is required
                   </small>
                 </div>
                 <div className="up-uploader">
@@ -313,17 +375,21 @@ const UpsertApiKey = props => {
         </ModalBody>
         <ModalFooter>
           <button onClick={closeModal} className="btn btn-secondary">
-            {languageManager.translate("CANCEL")}
+            {tab === 1 ? languageManager.translate("CANCEL") : "Close"}
           </button>
           {tab === 1 && (
             <button
               type="submit"
               className="btn btn-primary ajax-button"
               form="form"
-              disabled={name.length > 0 && category.length > 0 ? false : true}
+              disabled={
+                name.length > 0 && type.length > 0 && grunts.length > 0
+                  ? false
+                  : true
+              }
             >
               <CircleSpinner show={spinner} size="small" />
-              <span> {updateMode ? "Update" : "Create"}</span>
+              {!spinner && <span> {updateMode ? "Update" : "Create"}</span>}
             </button>
           )}
         </ModalFooter>

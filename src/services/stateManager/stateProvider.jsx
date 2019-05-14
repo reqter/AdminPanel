@@ -94,7 +94,7 @@ const Provider = props => {
         };
         return s_info;
       case "SET_LOCALES":
-      debugger
+        debugger;
         let s_l_info = { ...state.spaceInfo };
         s_l_info["locales"] = action.value;
         const s_locales = {
@@ -117,7 +117,7 @@ const Provider = props => {
         };
       case "DELETE_API_KEY":
         const apiKeys_delete = state.apiKeys.filter(
-          item => item.id !== action.value.id
+          item => item._id !== action.value._id
         );
         return {
           ...state,
@@ -125,7 +125,7 @@ const Provider = props => {
         };
       case "UPDATE_API_KEY":
         const apiKeys_up = state.apiKeys.map(item => {
-          if (item.id === action.value.id) item = action.value;
+          if (item._id === action.value._id) item = action.value;
           return item;
         });
         return {

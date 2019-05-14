@@ -3,7 +3,7 @@ import Select, { components } from "react-select";
 import AsyncCreatableSelect from "react-select/lib/AsyncCreatable";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
-import { getByContentTypes } from "./../../Api/content-api";
+import { filterContents } from "./../../Api/content-api";
 const currentLang = languageManager.getCurrentLanguage().name;
 
 const ReferenceInput = props => {
@@ -21,7 +21,7 @@ const ReferenceInput = props => {
       if (field.isRequired === true) props.init(field.name, false);
     }
 
-    getByContentTypes()
+    filterContents()
       .onOk(result => {
         if (result) {
           const r = result.map(item => {
@@ -40,7 +40,7 @@ const ReferenceInput = props => {
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(() => {})
-      .call(spaceInfo.id, field.references);
+      .call(spaceInfo.id, undefined, [field.references]);
   }, [formData]);
   function initValue(allData) {
     if (field.isList) {
@@ -94,7 +94,7 @@ const ReferenceInput = props => {
   }
   function promiseOptions(inputValue) {
     return new Promise(resolve => {
-      getByContentTypes()
+      filterContents()
         .onOk(result => {
           if (result) resolve(initOptions(result));
         })
@@ -102,7 +102,7 @@ const ReferenceInput = props => {
         .onBadRequest(result => {})
         .unAuthorized(result => {})
         .notFound(() => {})
-        .call(field.references);
+        .call(spaceInfo.id, undefined, [field.references]);
     });
   }
   return (

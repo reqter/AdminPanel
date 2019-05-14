@@ -8,7 +8,6 @@ const KeyValueInput = props => {
   const { field, formData } = props;
 
   const [cmpKey, setKey] = useState();
-  const [selectedOptions, setSelectedOptions] = useState();
   const selectComponent = useRef(null);
 
   function getSelectedOption() {

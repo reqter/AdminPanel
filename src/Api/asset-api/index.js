@@ -573,10 +573,6 @@ export function deleteAsset () {
       }
     } catch (error) {}
   }
-  // const result = data.assets.filter(item => item.sys.id !== obj.sys.id)
-  // data.assets = result
-
-  // const status = 200
 
   return {
     call: _call,

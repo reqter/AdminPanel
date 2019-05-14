@@ -9,12 +9,10 @@ const ApiKeys = props => {
   useEffect(() => {
     getApiKeys()
       .onOk(result => {
-        debugger
-        if (result && result.length > 0)
-          dispatch({
-            type: "SET_API_KEYS",
-            value: result,
-          });
+        dispatch({
+          type: "SET_API_KEYS",
+          value: result,
+        });
       })
       .onServerError(result => {})
       .onBadRequest(result => {})
@@ -34,7 +32,7 @@ const ApiKeys = props => {
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .notFound(result => {})
-      .call(apiKey.id);
+      .call(spaceInfo.id, apiKey._id);
   }
 
   function edit(apiKey) {
@@ -71,7 +69,7 @@ const ApiKeys = props => {
                     </div>
                   </td>
                   <td>
-                    {apiKey.icon ? (
+                    {apiKey.icon && apiKey.icon.length > 0 ? (
                       <div className="myTable-image">
                         <img src={apiKey.icon[currentLang]} alt="" />
                       </div>
