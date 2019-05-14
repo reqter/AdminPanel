@@ -4,7 +4,6 @@ import Select, { components } from "react-select";
 import { languageManager, useGlobalState } from "../../../../services";
 import { CircleSpinner, AssetBrowser } from "../../../../components";
 import { addApiKey, updateApiKey } from "./../../../../Api/apiKey-api";
-import { userInfo } from "os";
 
 const currentLang = languageManager.getCurrentLanguage().name;
 
@@ -12,6 +11,8 @@ const UpsertApiKey = props => {
   const [{ spaceInfo }, dispatch] = useGlobalState();
 
   const nameRef = useRef(null);
+  const apiKeyRef = useRef(null);
+  const apiSecretRef = useRef(null);
 
   const updateMode = props.selectedApiKey === undefined ? undefined : true;
   const selectedApiKey =
@@ -25,14 +26,16 @@ const UpsertApiKey = props => {
   const [homePage, setHomePage] = useState(
     selectedApiKey ? selectedApiKey.homePage : ""
   );
-  const [type, setType] = useState(selectedApiKey ? selectedApiKey.type : "");
+  const [type, setType] = useState(
+    selectedApiKey ? selectedApiKey.type : "web"
+  );
   const options = [
     { value: "password", label: "Password" },
     { value: "authorization_code", label: "Authorization Code" },
     { value: "clientCredentials", label: "Client Credentials" },
-    { value: "explicit", label: "Explicit" },
+    { value: "implicit", label: "Implicit" },
   ];
-  const [grunts, setGrunts] = useState(getSelectedGrunts());
+  const [grants, setgrants] = useState(getSelectedgrants());
   const [image, setImage] = useState(
     selectedApiKey ? selectedApiKey.icon : undefined
   );
@@ -41,22 +44,38 @@ const UpsertApiKey = props => {
   const [result, setResult] = useState({});
 
   useEffect(() => {
-    nameRef.current.focus();
+     nameRef.current.focus();
   }, []);
-  function getSelectedGrunts() {
+  function getSelectedgrants() {
     if (!updateMode) return [];
     let result = [];
     for (let i = 0; i < selectedApiKey.grants.length; i++) {
-      const grunt = selectedApiKey.grants[i];
+      const grant = selectedApiKey.grants[i];
       for (let j = 0; j < options.length; j++) {
         const option = options[j];
-        if (option.value === grunt) {
+        if (option.value === grant) {
           result.push(option);
           break;
         }
       }
     }
     return result;
+  }
+  function copyApiKey() {
+    apiKeyRef.current.select();
+    document.execCommand("copy");
+    // This is just personal preference.
+    // I prefer to not show the the whole text area selected.
+    //e.target.focus();
+    showNotify("success", "Api key copied");
+  }
+  function copyApiSecret() {
+    apiSecretRef.current.select();
+    document.execCommand("copy");
+    // This is just personal preference.
+    // I prefer to not show the the whole text area selected.
+    //e.target.focus();
+    showNotify("success", "Api secret copied");
   }
   function removeImage() {
     setImage();
@@ -77,8 +96,8 @@ const UpsertApiKey = props => {
       },
     });
   }
-  function handleOnGruntsChange(items) {
-    setGrunts(items);
+  function handleOngrantsChange(items) {
+    setgrants(items);
   }
   function closeModal() {
     props.onClose();
@@ -87,9 +106,9 @@ const UpsertApiKey = props => {
     e.preventDefault();
     if (!spinner) {
       toggleSpinner(true);
-      let grunt_values = [];
-      if (grunts && grunts.length > 0) {
-        grunts.forEach(g => grunt_values.push(g.value));
+      let grant_values = [];
+      if (grants && grants.length > 0) {
+        grants.forEach(g => grant_values.push(g.value));
       }
       if (!updateMode) {
         const obj = {
@@ -101,7 +120,7 @@ const UpsertApiKey = props => {
           longDesc: null,
           homepage: homePage,
           category: "CMS",
-          grants: grunt_values,
+          grants: grant_values,
         };
         addApiKey()
           .onOk(result => {
@@ -156,7 +175,7 @@ const UpsertApiKey = props => {
           longDesc: null,
           homepage: homePage,
           category: "CMS",
-          grants: grunt_values,
+          grants: grant_values,
         };
 
         updateApiKey()
@@ -291,20 +310,20 @@ const UpsertApiKey = props => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Grunts</label>
+                  <label>grants</label>
                   <Select
                     menuPlacement="bottom"
                     closeMenuOnScroll={true}
                     closeMenuOnSelect={false}
                     //value={selectedOption}
-                    defaultValue={true && getSelectedGrunts()}
-                    onChange={handleOnGruntsChange}
+                    defaultValue={true && getSelectedgrants()}
+                    onChange={handleOngrantsChange}
                     options={options}
                     isMulti={true}
                     isSearchable={true}
                   />
                   <small className="form-text text-muted">
-                    Grunts is required
+                    grants is required
                   </small>
                 </div>
                 <div className="up-uploader">
@@ -335,7 +354,7 @@ const UpsertApiKey = props => {
               </form>
             )}
             {tab === 2 && (
-              <>
+              <div className="apiKeyResult">
                 <div className="alert alert-success" role="alert">
                   {/* <h4 className="alert-heading">Success!</h4>
                   <hr /> */}
@@ -347,11 +366,17 @@ const UpsertApiKey = props => {
                   <label>{languageManager.translate("Api Key")}</label>
                   <div className="input-group">
                     <input
+                      ref={apiKeyRef}
                       type="text"
                       className="form-control"
                       defaultValue={result.clientId}
+                      readOnly
                     />
-                    <div className="input-group-append">
+                    <div
+                      className="input-group-append"
+                      onClick={copyApiKey}
+                      style={{ cursor: "pointer" }}
+                    >
                       <span className="input-group-text">Copy</span>
                     </div>
                   </div>
@@ -360,16 +385,22 @@ const UpsertApiKey = props => {
                   <label>{languageManager.translate("Api Secret")}</label>
                   <div className="input-group">
                     <input
+                      ref={apiSecretRef}
                       type="text"
                       className="form-control"
                       defaultValue={result.clientSecret}
+                      readOnly
                     />
-                    <div className="input-group-append">
+                    <div
+                      className="input-group-append"
+                      onClick={copyApiSecret}
+                      style={{ cursor: "pointer" }}
+                    >
                       <span className="input-group-text">Copy</span>
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </ModalBody>
@@ -383,7 +414,7 @@ const UpsertApiKey = props => {
               className="btn btn-primary ajax-button"
               form="form"
               disabled={
-                name.length > 0 && type.length > 0 && grunts.length > 0
+                name.length > 0 && type.length > 0 && grants.length > 0
                   ? false
                   : true
               }

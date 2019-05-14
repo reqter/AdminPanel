@@ -370,7 +370,6 @@ export function updateApiKey () {
         },
         body: JSON.stringify(apiKey)
       })
-
       const status = rawResponse.status
       const result = await rawResponse.json()
       switch (status) {

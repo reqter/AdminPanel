@@ -1,25 +1,74 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal, ModalFooter } from "reactstrap";
 import { CircleSpinner } from "./../../../../components";
-import { languageManager } from "../../../../services";
+import { languageManager, useGlobalState } from "../../../../services";
 import "./styles.scss";
+import { addWebhook, updateWebhook } from "../../../../Api/webhook-api.";
+
+const currentLang = languageManager.getCurrentLanguage().name;
+const triggersEntity = [
+  {
+    name: "content",
+    title: {
+      en: "Content",
+    },
+  },
+  {
+    name: "asset",
+    title: {
+      en: "Asset",
+    },
+  },
+];
+const authTypes = [
+  {
+    name: "basic",
+    title: "Basic",
+  },
+  {
+    name: "bearer",
+    title: "Bearer Tokean",
+  },
+  {
+    name: "apiKey",
+    title: "Api Key",
+  },
+];
 
 const CustomWebHook = props => {
+  const [{ spaceInfo, webhooks }, dispatch] = useGlobalState();
   const nameRef = useRef(null);
 
   const updateMode = props.selctedWebhook ? true : false;
+  const selectedWebhook = props.selctedWebhook
+    ? props.selctedWebhook
+    : undefined;
 
   const [spinner, toggleSpinner] = useState(false);
   const [tab, changeTab] = useState(1);
 
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [url, setUrl] = useState();
   const [urlMethod, setUrlMethod] = useState("POST");
 
   const [triggerType, setTriggerType] = useState("all");
-  const [filters, setFilters] = useState([{}]);
+  const [customTriggers, setCustomTriggers] = useState({});
+
+  const [headerBox, toggleHeaderBox] = useState(1);
+  const [customHeaders, setCustomHeaders] = useState([{ key: "", value: "" }]);
+  const [secretHeaders, setSecretHeaders] = useState([{}]);
+  const [headerContentType, setHeaderContentType] = useState(
+    "application/json"
+  );
+  const [headerContentLength, toggleHeaderContentLength] = useState();
+
+  const [authType, setAuthType] = useState("basic");
+  const [authUserName, setAuthUserName] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
 
   const [payloadType, setPayLoadType] = useState("default");
+  const [customPayloadObj, setCustomPayloadObj] = useState("");
 
   useEffect(() => {
     nameRef.current.focus();
@@ -39,6 +88,161 @@ const CustomWebHook = props => {
   }
   function closeModal() {
     props.onClose();
+  }
+  function handleCustomTriggerChanged(item, key, value) {
+    const t = { ...customTriggers };
+    if (t[item] === undefined) t[item] = {};
+
+    t[item][key] = value;
+    setCustomTriggers(t);
+  }
+  function showNotify(type, msg) {
+    dispatch({
+      type: "ADD_NOTIFY",
+      value: {
+        type: type,
+        message: msg,
+      },
+    });
+  }
+  function handleRemoveCustomHeader(i) {
+    if (customHeaders.length > 1) {
+      const c_h = customHeaders.filter((item, index) => index !== i);
+      setCustomHeaders(c_h);
+    }
+  }
+  function addNewCustomHeader() {
+    const c_h = [...customHeaders];
+    const obj = { key: "", value: "" };
+    c_h.push(obj);
+    setCustomHeaders(c_h);
+  }
+  function handleCustomHeaderInputsChanged(index, key, value) {
+    let c_h = [...customHeaders];
+    c_h[index][key] = value;
+    setCustomHeaders(c_h);
+  }
+  function handleRemoveSecretHeader(i) {
+    if (secretHeaders.length > 1) {
+      const c_h = secretHeaders.filter((item, index) => index !== i);
+      setSecretHeaders(c_h);
+    }
+  }
+  function addNewSecretHeader() {
+    const c_h = [...secretHeaders];
+    const obj = { key: "", value: "" };
+    c_h.push(obj);
+    setSecretHeaders(c_h);
+  }
+  function handleSecretHeaderInputsChanged(index, key, value) {
+    let s_h = [...secretHeaders];
+    s_h[index][key] = value;
+    setSecretHeaders(s_h);
+  }
+  function submit(e) {
+    e.preventDefault();
+    if (!spinner) {
+      toggleSpinner(true);
+      let obj = {
+        name: name,
+        description: description,
+        url: url,
+        method: urlMethod,
+        type: "custom",
+      };
+      if (!updateMode) {
+        addWebhook()
+          .onOk(result => {
+            showNotify(
+              "success",
+              languageManager.translate("Custom webhook created successfully")
+            );
+            const w = [...webhooks];
+            w.push(result);
+            dispatch({
+              type: "SET_WEBHOOKS",
+              value: w,
+            });
+          })
+          .onServerError(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_ON_SERVER_ERROR")
+            );
+          })
+          .onBadRequest(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_ON_BAD_REQUEST")
+            );
+          })
+          .unAuthorized(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_UN_AUTHORIZED")
+            );
+          })
+          .notFound(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
+            );
+          })
+          .call(spaceInfo.id, obj);
+      } else {
+        obj["id"] = selectedWebhook._id;
+
+        updateWebhook()
+          .onOk(result => {
+            closeModal();
+            showNotify(
+              "success",
+              languageManager.translate("Webhook updated successfully.")
+            );
+            const w = webhooks.map(wh => {
+              if (wh._id === selectedWebhook._id) wh = result;
+              return wh;
+            });
+            dispatch({
+              type: "SET_WEBHOOKS",
+              value: w,
+            });
+          })
+          .onServerError(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_ON_SERVER_ERROR")
+            );
+          })
+          .onBadRequest(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_ON_BAD_REQUEST")
+            );
+          })
+          .unAuthorized(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_UN_AUTHORIZED")
+            );
+          })
+          .notFound(result => {
+            toggleSpinner(false);
+            showNotify(
+              "error",
+              languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
+            );
+          })
+          .call(spaceInfo.id, obj);
+      }
+    }
   }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal} size="lg">
@@ -71,6 +275,12 @@ const CustomWebHook = props => {
                 className={"webhookTabItem " + (tab === 4 ? "active" : "")}
                 onClick={() => handleChangeTab(4)}
               >
+                Authentication
+              </div>
+              <div
+                className={"webhookTabItem " + (tab === 5 ? "active" : "")}
+                onClick={() => handleChangeTab(5)}
+              >
                 PayLoad
               </div>
             </div>
@@ -86,7 +296,6 @@ const CustomWebHook = props => {
                   ref={nameRef}
                   className="form-control"
                   placeholder={languageManager.translate("Enter a name")}
-                  required
                   value={name}
                   onChange={e => {
                     setName(e.target.value);
@@ -96,6 +305,24 @@ const CustomWebHook = props => {
                   {languageManager.translate("Name is required ")}
                 </small>
               </div>
+              <div className="form-group">
+                <label>{languageManager.translate("Description")}</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder={languageManager.translate(
+                    "Enter a short description"
+                  )}
+                  value={description}
+                  onChange={e => {
+                    setDescription(e.target.value);
+                  }}
+                />
+                <small className="form-text text-muted">
+                  {languageManager.translate("Name is required ")}
+                </small>
+              </div>
+
               <div className="form-group">
                 <label>{languageManager.translate("URL")}</label>
                 <input
@@ -113,11 +340,11 @@ const CustomWebHook = props => {
                 </small>
               </div>
               <div className="urlMethods">
-                <label>{languageManager.translate("Metho Type")}</label>
+                <label>{languageManager.translate("Method Type")}</label>
                 <div className="urlMethods-btns">
                   <button
                     className={
-                      "btn " +
+                      "btn btn-sm " +
                       (urlMethod === "POST" ? "btn-primary" : "btn-light")
                     }
                     onClick={() => setUrlMethod("POST")}
@@ -187,8 +414,8 @@ const CustomWebHook = props => {
                   </label>
                 </div>
                 <div className="right">
-                  <label for="allEvent">Trigger for all events</label>
-                  <label for="allEvent">
+                  <label htmlFor="allEvent">Trigger for all events</label>
+                  <label htmlFor="allEvent">
                     Select this if there is only one thing to store For
                   </label>
                 </div>
@@ -208,10 +435,10 @@ const CustomWebHook = props => {
                   </label>
                 </div>
                 <div className="right">
-                  <label for="customEvents">
+                  <label htmlFor="customEvents">
                     Select specific triggering events
                   </label>
-                  <label for="customEvents">
+                  <label htmlFor="customEvents">
                     example, a single photo or one PDF file
                   </label>
                 </div>
@@ -220,284 +447,63 @@ const CustomWebHook = props => {
                 <div className="customTriggerEvents">
                   <table className="table">
                     <thead>
-                      <th />
-                      <th>Create</th>
-                      <th>Save</th>
-                      <th>Archive</th>
-                      <th>Unarchive</th>
-                      <th>Publish</th>
-                      <th>Unpublish</th>
-                      <th>Delete</th>
+                      <tr>
+                        <th />
+                        <th>Create</th>
+                        <th>Save</th>
+                        <th>Archive</th>
+                        <th>Unarchive</th>
+                        <th>Publish</th>
+                        <th>Unpublish</th>
+                        <th>Delete</th>
+                      </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>
-                          <div className="title">Content</div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
+                      {triggersEntity.map(item => (
+                        <tr key={item.name}>
+                          <td>
+                            <div className="title">
+                              {item.title[currentLang]}
                             </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
+                          </td>
+                          {[
+                            "create",
+                            "save",
+                            "archive",
+                            "unArchive",
+                            "publish",
+                            "unPublish",
+                            "delete",
+                          ].map(t => (
+                            <td key={t}>
+                              <div className="chk">
+                                <div className="custom_checkbox">
+                                  <div className="left">
+                                    <label className="checkBox">
+                                      <input
+                                        type="checkbox"
+                                        checked={
+                                          customTriggers[item.name]
+                                            ? customTriggers[item.name][t]
+                                            : false
+                                        }
+                                        onChange={e =>
+                                          handleCustomTriggerChanged(
+                                            item.name,
+                                            t,
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                      <span className="checkmark" />
+                                    </label>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="title">Asset</div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="title" />
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="chk">
-                            <div className="custom_checkbox">
-                              <div className="left">
-                                <label className="checkBox">
-                                  <input type="checkbox" />
-                                  <span className="checkmark" />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -507,132 +513,248 @@ const CustomWebHook = props => {
           {tab === 3 && (
             <>
               <div className="customWebhook-filters">
-                <div className="filters-title">Custom Header</div>
-                <div className="filters-message">
-                  This webhook will trigger only for entities matching the
+                <div
+                  className="customWebhook-filters-header"
+                  onClick={() => toggleHeaderBox(1)}
+                >
+                  <div className="filters-title">Custom Header</div>
+                  <div className="filters-message">
+                    This webhook will trigger only for entities matching the
+                  </div>
                 </div>
-                <div className="filter-content">
-                  {filters.map((item, index) => (
-                    <div className="options" key={index}>
-                      <div className="leftInput">
-                        <input type="text" className="form-control" />
-                      </div>
-                      <div className="centerInput">
-                        <input type="text" className="form-control" />
-                      </div>
+                {headerBox === 1 && (
+                  <div className="filter-content">
+                    {customHeaders.map((item, index) => (
+                      <div className="options" key={index}>
+                        <div className="leftInput">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="key"
+                            value={item["key"]}
+                            onChange={e =>
+                              handleCustomHeaderInputsChanged(
+                                index,
+                                "key",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="centerInput">
+                          <input
+                            type="text"
+                            placeholder="value"
+                            className="form-control"
+                            value={item["value"]}
+                            onChange={e =>
+                              handleCustomHeaderInputsChanged(
+                                index,
+                                "value",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
 
-                      <div className="rightInput">
-                        <button className="btn btn-light">
-                          <i className="icon-bin" />
-                        </button>
+                        <div className="rightInput">
+                          <button
+                            className="btn btn-light"
+                            onClick={() => handleRemoveCustomHeader(index)}
+                          >
+                            <i className="icon-bin" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                  <button className="btn btn-primary btn-plus btn-sm">
-                    <i className="icon-plus" />
-                  </button>
-                </div>
+                    ))}
+                    <button
+                      className="btn btn-primary btn-plus btn-sm"
+                      onClick={addNewCustomHeader}
+                    >
+                      <i className="icon-plus" />
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="customWebhook-filters">
-                <div className="filters-title">Secret Header</div>
-                <div className="filters-message">
-                  This webhook will trigger only for entities matching the
+                <div
+                  className="customWebhook-filters-header"
+                  onClick={() => toggleHeaderBox(2)}
+                >
+                  <div className="filters-title">Secret Header</div>
+                  <div className="filters-message">
+                    This webhook will trigger only for entities matching the
+                  </div>
                 </div>
-                <div className="filter-content">
-                  {filters.map((item, index) => (
-                    <div className="options" key={index}>
-                      <div className="leftInput">
-                        <input type="text" className="form-control" />
-                      </div>
-                      <div className="centerInput">
-                        <input type="text" className="form-control" />
-                      </div>
+                {headerBox === 2 && (
+                  <div className="filter-content">
+                    {secretHeaders.map((item, index) => (
+                      <div className="options" key={index}>
+                        <div className="leftInput">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="key"
+                            value={item["key"]}
+                            onChange={e =>
+                              handleSecretHeaderInputsChanged(
+                                index,
+                                "key",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="centerInput">
+                          <input
+                            type="text"
+                            placeholder="value"
+                            className="form-control"
+                            value={item["value"]}
+                            onChange={e =>
+                              handleSecretHeaderInputsChanged(
+                                index,
+                                "value",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
 
-                      <div className="rightInput">
-                        <button className="btn btn-light">
-                          <i className="icon-bin" />
-                        </button>
+                        <div className="rightInput">
+                          <button
+                            className="btn btn-light"
+                            onClick={() => handleRemoveSecretHeader(index)}
+                          >
+                            <i className="icon-bin" />
+                          </button>
+                        </div>
                       </div>
+                    ))}
+                    <button
+                      className="btn btn-primary btn-plus btn-sm"
+                      onClick={addNewSecretHeader}
+                    >
+                      <i className="icon-plus" />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="row">
+                <div className="headerContentType col">
+                  <div className="form-group">
+                    <label>{languageManager.translate("Content Type")}</label>
+                    <select
+                      className="form-control"
+                      value={headerContentType}
+                      onChange={e => setHeaderContentType(e.target.value)}
+                    >
+                      <option value="application/json">application/json</option>
+                      <option value="application/json;charset=utf-8">
+                        application/json; charset=utf-8
+                      </option>
+                      <option value="application/x-www-form-urlencoded">
+                        application/x-www-form-urlencoded
+                      </option>
+                      <option value="application/x-www-form-urlencoded;charset=utf-8">
+                        application/x-www-form-urlencoded; charset=utf-8
+                      </option>
+                    </select>
+                    <small className="form-text text-muted">
+                      {languageManager.translate(
+                        "Select one of allowed MIME types to be used as the value of the Content-Type header. Any custom Content-Type header will be ignored."
+                      )}
+                    </small>
+                  </div>
+                </div>
+                <div className="col" style={{ paddingTop: 40 }}>
+                  <div className="custom_checkbox">
+                    <div className="left">
+                      <label className="checkBox">
+                        <input
+                          type="checkbox"
+                          id="contentLength"
+                          checked={headerContentLength}
+                          onChange={e =>
+                            toggleHeaderContentLength(e.target.checked)
+                          }
+                        />
+                        <span className="checkmark" />
+                      </label>
                     </div>
-                  ))}
-                  <button className="btn btn-primary btn-plus btn-sm">
-                    <i className="icon-plus" />
-                  </button>
-                </div>
-              </div>
-              <div className="customWebhook-filters">
-                <div className="filters-title">HTTP Basic Auth Header</div>
-                <div className="filters-message">
-                  This webhook will trigger only for entities matching the
-                </div>
-                <div className="filter-content">
-                  {filters.map((item, index) => (
-                    <div className="options" key={index}>
-                      <div className="leftInput">
-                        <input type="text" className="form-control" />
-                      </div>
-                      <div className="centerInput">
-                        <input type="text" className="form-control" />
-                      </div>
-
-                      <div className="rightInput">
-                        <button className="btn btn-light">
-                          <i className="icon-bin" />
-                        </button>
-                      </div>
+                    <div className="right">
+                      <label htmlFor="contentLength">
+                        {languageManager.translate("Content Length")}
+                      </label>
+                      <label htmlFor="contentLength">
+                        {languageManager.translate(
+                          "If this option is selected, the byte size of the final request body will be computed and used as the value of the Content-Length header."
+                        )}
+                      </label>
                     </div>
-                  ))}
-                  <button className="btn btn-primary btn-plus btn-sm">
-                    <i className="icon-plus" />
-                  </button>
-                </div>
-              </div>
-              <div className="headerContentType">
-                <div className="form-group">
-                  <label>{languageManager.translate("Content Type")}</label>
-                  <select className="form-control">
-                    <option>
-                      application/vnd.contentful.management.v1+json
-                    </option>
-                    <option>
-                      application/vnd.contentful.management.v1+json;
-                      charset=utf-8
-                    </option>
-                    <option>application/json</option>
-                    <option>application/json; charset=utf-8</option>
-                    <option>application/x-www-form-urlencoded</option>
-                    <option>
-                      application/x-www-form-urlencoded; charset=utf-8
-                    </option>
-                  </select>
-                  <small className="form-text text-muted">
-                    {languageManager.translate(
-                      "Select one of allowed MIME types to be used as the value of the Content-Type header. Any custom Content-Type header will be ignored."
-                    )}
-                  </small>
-                </div>
-              </div>
-              <div className="custom_checkbox">
-                <div className="left">
-                  <label className="checkBox">
-                    <input type="checkbox" id="contentLength" />
-                    <span className="checkmark" />
-                  </label>
-                </div>
-                <div className="right">
-                  <label for="contentLength">
-                    {languageManager.translate("Content Length")}
-                  </label>
-                  <label for="contentLength">
-                    {languageManager.translate(
-                      "If this option is selected, the byte size of the final request body will be computed and used as the value of the Content-Length header."
-                    )}
-                  </label>
+                  </div>
                 </div>
               </div>
             </>
           )}
           {tab === 4 && (
+            <>
+              <div className="urlMethods">
+                <label>
+                  {languageManager.translate("Authentication type")}
+                </label>
+                <div className="urlMethods-btns">
+                  {authTypes.map(item => (
+                    <button
+                      key={item.name}
+                      className={
+                        "btn btn-sm " +
+                        (authType === item.name ? "btn-primary" : "btn-light")
+                      }
+                      onClick={() => setAuthType(item.name)}
+                    >
+                      {item.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <br />
+              <label> HTTP Basic Auth Header</label>
+              <div className="row">
+                <div className="form-group col">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder={languageManager.translate("Username")}
+                    required
+                    value={authUserName}
+                    onChange={e => {
+                      setAuthUserName(e.target.value);
+                    }}
+                  />
+                  <small className="form-text text-muted">
+                    {languageManager.translate("auth header username")}
+                  </small>
+                </div>
+                <div className="form-group col">
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder={languageManager.translate("Password")}
+                    required
+                    value={authPassword}
+                    onChange={e => {
+                      setAuthPassword(e.target.value);
+                    }}
+                  />
+                  <small className="form-text text-muted">
+                    {languageManager.translate("auth header passord")}
+                  </small>
+                </div>
+              </div>
+            </>
+          )}
+          {tab === 5 && (
             <>
               <div className="triggerType">
                 <div className="title">
@@ -655,8 +777,8 @@ const CustomWebHook = props => {
                   </label>
                 </div>
                 <div className="right">
-                  <label for="defaultPayLoadt">Use default payload</label>
-                  <label for="defaultPayLoad">
+                  <label htmlFor="defaultPayLoad">Use default payload</label>
+                  <label htmlFor="defaultPayLoad">
                     Select this if there is only one thing to store For
                   </label>
                 </div>
@@ -676,17 +798,21 @@ const CustomWebHook = props => {
                   </label>
                 </div>
                 <div className="right">
-                  <label for="customPayload">
+                  <label htmlFor="customPayload">
                     Customize the webhook payload
                   </label>
-                  <label for="customPayload">
+                  <label htmlFor="customPayload">
                     example, a single photo or one PDF file
                   </label>
                 </div>
               </div>
               {payloadType === "custom" && (
                 <div className="form-group" style={{ marginTop: 35 }}>
-                  <textarea className="form-control" />
+                  <textarea
+                    className="form-control"
+                    value={customPayloadObj}
+                    onChange={e => setCustomPayloadObj(e.target.value)}
+                  />
                   <small className="form-text text-muted">
                     {languageManager.translate(
                       `Custom payload can be any valid JSON value. To resolve a value from the original webhook payload use a JSON pointer wrapped with curly braces.
@@ -712,12 +838,13 @@ const CustomWebHook = props => {
           {languageManager.translate("CANCEL")}
         </button>
         <button
-          type="submit"
+          type="button"
           className="btn btn-primary ajax-button"
           disabled={name.length > 0 ? false : true}
+          onClick={submit}
         >
           <CircleSpinner show={spinner} size="small" />
-          <span>{updateMode ? "Update" : "Create"}</span>
+          {!spinner && <span>{updateMode ? "Update" : "Create"}</span>}
         </button>
       </ModalFooter>
     </Modal>

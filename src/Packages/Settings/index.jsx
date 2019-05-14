@@ -8,7 +8,7 @@ import {
 import "./styles.scss";
 import { languageManager, useGlobalState, utility } from "../../services";
 import { CircleSpinner } from "../../components";
-import { Locales, Roles, ApiKeys } from "./contents";
+import { Locales, Roles, ApiKeys, Webhooks } from "./contents";
 import "./contentStyles.scss";
 import UpsertLocale from "./modals/UpsertLocale";
 import UpsertRole from "./modals/UpsertRole";
@@ -75,6 +75,9 @@ const Settings = props => {
   }
   function toggleCustomWebhookModal() {
     setCustomWebHookModal(prevState => !prevState);
+  }
+  function handleEditWebhook(webhook) {
+    
   }
   return (
     <>
@@ -176,7 +179,9 @@ const Settings = props => {
           {tabContent === "apiKeys" && (
             <ApiKeys onEditApiKey={handleEditApiKey} />
           )}
-          {tabContent === "webHooks" && <div className="tabContent" />}
+          {tabContent === "webHooks" && (
+            <Webhooks onEditWebhook={handleEditWebhook} />
+          )}
         </div>
       </div>
       {upsertLocalModal && (

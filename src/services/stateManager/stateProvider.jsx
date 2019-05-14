@@ -57,6 +57,7 @@ const Provider = props => {
       },
     ],
     apiKeys: [],
+    webhooks: [],
   };
 
   const reducer = (state, action) => {
@@ -132,6 +133,12 @@ const Provider = props => {
           ...state,
           apiKeys: apiKeys_up,
         };
+      case "SET_WEBHOOKS":
+        const webhooks = {
+          ...state,
+          webhooks: action.value,
+        };
+        return webhooks;
       case "SET_CONTENT_TYPES":
         const s = {
           ...state,

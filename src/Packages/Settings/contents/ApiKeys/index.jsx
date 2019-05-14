@@ -93,7 +93,7 @@ const ApiKeys = props => {
                 <th>Icon</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Category</th>
+                <th>Type</th>
                 <th>Client ID</th>
                 <th />
               </tr>
@@ -110,7 +110,7 @@ const ApiKeys = props => {
                     <td>
                       {apiKey.icon && apiKey.icon.length > 0 ? (
                         <div className="myTable-image">
-                          <img src={apiKey.icon[currentLang]} alt="" />
+                          <img src={apiKey.icon} alt="" />
                         </div>
                       ) : (
                         <div className="myTable-image-empty">empty</div>
@@ -123,7 +123,7 @@ const ApiKeys = props => {
                       <div className="tdContent">{apiKey.description}</div>
                     </td>
                     <td>
-                      <div className="tdContent">{apiKey.category}</div>
+                      <div className="tdContent">{apiKey.type}</div>
                     </td>
                     <td>
                       <div className="tdContent">{apiKey.clientId}</div>

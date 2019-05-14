@@ -55,7 +55,7 @@ const Locale = props => {
             {spaceInfo &&
               spaceInfo.locales &&
               spaceInfo.locales.map((locale, index) => (
-                <tr key={locale.name}>
+                <tr key={locale.locale}>
                   <td>
                     <div className="myTable-number">{index + 1}</div>
                   </td>

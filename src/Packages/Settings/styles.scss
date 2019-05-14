@@ -83,5 +83,11 @@
   }
 }
 .settings-modal-body {
-  padding: 5px 10px
+  padding: 5px 10px;
+}
+
+.apiKeyResult {
+  input[readOnly] {
+    background: white;
+  }
 }
