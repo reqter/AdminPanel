@@ -13,7 +13,7 @@ import {
 } from "./../../Api/content-api";
 import "./styles.scss";
 
-import { Alert } from "./../../components";
+import { Alert, CircleSpinner } from "./../../components";
 import ContentTypes from "./FilterBox/contentTypes";
 import Tree from "./FilterBox/categories";
 import Status from "./FilterBox/status";
@@ -424,15 +424,19 @@ const Products = props => {
   }
 
   function filterData(text, contentTypeId, categoryId, status) {
+    toggleSpinner(true)
     filterContents()
       .onOk(result => {
+        toggleSpinner(false);
         dispatch({
           type: "SET_CONTENTS",
           value: result,
         });
         if (dataStatus) toggleDataStatus(false);
+        
       })
       .onServerError(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -442,6 +446,7 @@ const Products = props => {
         });
       })
       .onBadRequest(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -451,6 +456,7 @@ const Products = props => {
         });
       })
       .unAuthorized(result => {
+        toggleSpinner(false);
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -879,7 +885,10 @@ const Products = props => {
           )}
           <div className="p-content-right" ref={tableBox}>
             <div className="p-content-right-header">
-              <div className="p-content-header-title">All Data</div>
+              <div className="p-content-header-title">
+                All Data &nbsp;
+                <CircleSpinner show={spinner} size="small" />
+              </div>
             </div>
             <div className="p-content-right-body">
               <ReactTable
