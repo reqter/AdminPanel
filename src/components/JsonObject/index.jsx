@@ -57,7 +57,7 @@ const JsonInput = props => {
       <label>{field.title && field.title[currentLang]}</label>
       <textarea
         className="form-control"
-        placeholder={field.title && field.title[currentLang]}
+        placeholder="example : { 'propName' : 'propValue' }"
         value={input}
         onChange={handleOnChange}
         readOnly={props.viewMode}
