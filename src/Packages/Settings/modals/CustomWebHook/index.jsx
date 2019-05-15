@@ -3,7 +3,7 @@ import { Modal, ModalFooter } from "reactstrap";
 import { CircleSpinner } from "./../../../../components";
 import { languageManager, useGlobalState } from "../../../../services";
 import "./styles.scss";
-import { addWebhook, updateWebhook } from "../../../../Api/webhook-api.";
+import { addWebhook, updateWebhook } from "../../../../Api/webhook-api";
 
 const currentLang = languageManager.getCurrentLanguage().name;
 const triggersEntity = [
