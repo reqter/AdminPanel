@@ -25,7 +25,7 @@ const ReferenceInput = props => {
       .onOk(result => {
         if (result) {
           const r = result.map(item => {
-            item.value = item.sys.id;
+            item.value = item._id;
             return item;
           });
           setOptions(r);
