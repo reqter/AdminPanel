@@ -25,7 +25,6 @@ const ProfileWidget = props => {
     toggleVisibility(prevState => !prevState);
   }
   function logout() {
-    storageManager.removeItem("token");
     dispatch({
       type: "LOGOUT",
       value: false,

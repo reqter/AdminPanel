@@ -63,11 +63,20 @@ const Provider = props => {
   const reducer = (state, action) => {
     switch (action.type) {
       case "LOGOUT":
+        storageManager.removeItem("token");
         const logout = {
           ...state,
           isAuthenticated: false,
           spaceInfo: undefined,
           userInfo: undefined,
+          contentTypes: [],
+          fields: [],
+          categories: [],
+          contents: [],
+          users: [],
+          assets: [],
+          apiKeys: [],
+          webhooks: [],
         };
         return logout;
       case "SET_AUTHENTICATED":

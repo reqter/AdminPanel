@@ -68,7 +68,7 @@ const Tree = props => {
   }
   function mapper(nodes, parentId, lvl) {
     return nodes.map((node, index) => {
-      if (node.type !== "contentType") {
+      if (node.sys.type !== "contentType") {
         const id = `${node._id}-${parentId ? parentId : "top"}`.replace(
           /[^a-zA-Z0-9-_]/g,
           ""
@@ -82,7 +82,7 @@ const Tree = props => {
               color: selected._id === node._id ? "rgb(56,132,255)" : "gray",
             }}
           >
-            {node.items ? (
+            {node.items && node.items.length > 0 ? (
               <>
                 <div>
                   {idState[id] ? (
@@ -120,7 +120,7 @@ const Tree = props => {
                 </ul>
               </>
             ) : (
-              <div>
+              <div style={{ cursor: "pointer" }}>
                 <i className="icon-circle-o circleIcon" />
                 {node.image !== undefined ? (
                   <div className="treeItem-img">

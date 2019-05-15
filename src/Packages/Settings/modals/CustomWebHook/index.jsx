@@ -3,7 +3,7 @@ import { Modal, ModalFooter } from "reactstrap";
 import { CircleSpinner } from "./../../../../components";
 import { languageManager, useGlobalState } from "../../../../services";
 import "./styles.scss";
-import { addWebhook, updateWebhook } from "./../../../../Api/webhook-api";
+import { setWebhooks } from "./../../../../Api/webhook-api";
 const util = require("util");
 const currentLang = languageManager.getCurrentLanguage().name;
 const triggersEntity = [
@@ -36,11 +36,11 @@ const authTypes = [
 ];
 
 const CustomWebHook = props => {
-  const [{ spaceInfo, webhooks }, dispatch] = useGlobalState();
+  const [{ spaceInfo, userInfo, webhooks }, dispatch] = useGlobalState();
   const nameRef = useRef(null);
 
-  const updateMode = props.selctedWebhook ? true : false;
-  const selectedWebhook = props.selctedWebhook
+  const updateMode = props.selectedWebhook ? true : false;
+  const selectedWebhook = props.selectedWebhook
     ? props.selctedWebhook
     : undefined;
 
@@ -49,7 +49,7 @@ const CustomWebHook = props => {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState("");
   const [urlMethod, setUrlMethod] = useState("POST");
 
   const [triggerType, setTriggerType] = useState("all");
@@ -145,7 +145,6 @@ const CustomWebHook = props => {
   }
   function handlePayloadJson(e) {
     let p;
-
     setCustomPayloadObj(e.target.value);
     try {
       p = JSON.parse(e.target.value);
@@ -154,19 +153,100 @@ const CustomWebHook = props => {
       setJsonError(util.inspect(error));
     }
   }
+  function checkValidations() {
+    if (authType === "basic") {
+      if (basicUserName.length === 0 || basicPassword.length === 0) {
+        showNotify(
+          "error",
+          " Basic authentication needs valid username and password"
+        );
+        changeTab(4);
+        return false;
+      }
+    }
+    if (authType === "bearer") {
+      if (bearerToken.length === 0) {
+        changeTab(4);
+        showNotify("error", "Bearer token can not be empty.");
+      }
+      return false;
+    }
+    if (authType === "apiKey") {
+      if (apiKey.length === 0 || apiSecret.length === 0) {
+        changeTab(4);
+        showNotify("error", "Api key and api secret can not be empty");
+      }
+      return false;
+    }
+    if (payloadType === "custom" && customPayloadObj.length === 0) {
+      changeTab(5);
+      showNotify("error", "Please enter a valid payload object");
+      return false;
+    }
+    return true;
+  }
   function submit(e) {
     e.preventDefault();
     if (!spinner) {
-      toggleSpinner(true);
-      let obj = {
-        name: name,
-        description: description,
-        url: url,
-        method: urlMethod,
-        type: "custom",
-      };
-      if (!updateMode) {
-        addWebhook()
+      const isValid = checkValidations();
+      if (isValid) {
+        toggleSpinner(true);
+        let w = [...webhooks];
+        let obj = {
+          name: name,
+          description: description,
+          type: "custom",
+          sys: {
+            issuer: userInfo.id,
+            issueData: new Date(),
+            //lastUpdater: userInfo,
+          },
+          config: {
+            method: urlMethod,
+            url: url,
+            trigger: triggerType === "all" ? null : customTriggers,
+            customHeaders: customHeaders.reduce((acc, obj, i) => {
+              acc[obj["key"]] = obj["value"];
+              return acc;
+            }, {}),
+            secretHeaders: secretHeaders.reduce((acc, obj, i) => {
+              acc[obj["key"]] = obj["value"];
+              return acc;
+            }, {}),
+            contentType: headerContentType,
+            contentLength: headerContentLength,
+            authentication: {
+              type: authType,
+              basicAuth:
+                authType === "basic"
+                  ? {
+                      username: basicUserName,
+                      password: basicPassword,
+                    }
+                  : null,
+              bearerToken: authType === "bearer" ? bearerToken : null,
+              apiKey:
+                authType === "apiKey"
+                  ? {
+                      apiKey: apiKey,
+                      apiSecret: apiSecret,
+                    }
+                  : null,
+            },
+            payload:
+              payloadType === "default" ? null : JSON.parse(customPayloadObj),
+          },
+        };
+        if (updateMode) {
+          obj["sys"]["lastUpdateTime"] = new Date();
+          for (let i = 0; i < w.length; i++) {
+            let w_h = w[i];
+            if (w_h.name === name) {
+              w_h = obj;
+            }
+          }
+        } else w.push(obj);
+        setWebhooks()
           .onOk(result => {
             showNotify(
               "success",
@@ -207,55 +287,7 @@ const CustomWebHook = props => {
               languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
             );
           })
-          .call(spaceInfo.id, obj);
-      } else {
-        obj["id"] = selectedWebhook._id;
-
-        updateWebhook()
-          .onOk(result => {
-            closeModal();
-            showNotify(
-              "success",
-              languageManager.translate("Webhook updated successfully.")
-            );
-            const w = webhooks.map(wh => {
-              if (wh._id === selectedWebhook._id) wh = result;
-              return wh;
-            });
-            dispatch({
-              type: "SET_WEBHOOKS",
-              value: w,
-            });
-          })
-          .onServerError(result => {
-            toggleSpinner(false);
-            showNotify(
-              "error",
-              languageManager.translate("PROFILE_CHANGE_PASS_ON_SERVER_ERROR")
-            );
-          })
-          .onBadRequest(result => {
-            toggleSpinner(false);
-            showNotify(
-              "error",
-              languageManager.translate("PROFILE_CHANGE_PASS_ON_BAD_REQUEST")
-            );
-          })
-          .unAuthorized(result => {
-            toggleSpinner(false);
-            showNotify(
-              "error",
-              languageManager.translate("PROFILE_CHANGE_PASS_UN_AUTHORIZED")
-            );
-          })
-          .notFound(result => {
-            toggleSpinner(false);
-            showNotify(
-              "error",
-              languageManager.translate("PROFILE_CHANGE_PASS_NOT_FOUND")
-            );
-          })
-          .call(spaceInfo.id, obj);
+          .call(spaceInfo.id, w);
       }
     }
   }
@@ -347,7 +379,6 @@ const CustomWebHook = props => {
                   placeholder={languageManager.translate(
                     "Enter a webservice url"
                   )}
-                  required
                   value={url}
                   onChange={e => {
                     setUrl(e.target.value);
@@ -509,7 +540,7 @@ const CustomWebHook = props => {
                                           handleCustomTriggerChanged(
                                             item.name,
                                             t,
-                                            e.target.value
+                                            e.target.checked
                                           )
                                         }
                                       />
@@ -940,7 +971,7 @@ const CustomWebHook = props => {
         <button
           type="button"
           className="btn btn-primary ajax-button"
-          disabled={name.length > 0 ? false : true}
+          disabled={name.length > 0 && url.length > 0 ? false : true}
           onClick={submit}
         >
           <CircleSpinner show={spinner} size="small" />

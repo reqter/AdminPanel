@@ -29,6 +29,8 @@ const Settings = props => {
   const [webHookModal, setWebHookModal] = useState(false);
   const [customWebhookModal, setCustomWebHookModal] = useState(false);
   const [selectedApiKey, setSelectedApiKey] = useState();
+  const [selectedWebhook, setSelectedWebhook] = useState();
+
   const [upsertApiKeyModal, toggleApiKeyModal] = useState(false);
   const [newWebHookDropDown, toggleWebHookDropDown] = useState(false);
 
@@ -77,7 +79,10 @@ const Settings = props => {
     setCustomWebHookModal(prevState => !prevState);
   }
   function handleEditWebhook(webhook) {
-    
+    if (webhook.type === "custom") {
+      toggleCustomWebhookModal();
+    } else toggleWebHookModal();
+    setSelectedWebhook(webhook);
   }
   return (
     <>
@@ -122,11 +127,11 @@ const Settings = props => {
                   caret
                   color="primary"
                 >
-                  New WebHook
+                  New Webhook
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem onClick={toggleCustomWebhookModal}>
-                    {languageManager.translate("Custom WebHook")}
+                    {languageManager.translate("Custom Webhook")}
                   </DropdownItem>
                   <DropdownItem onClick={toggleWebHookModal}>
                     {languageManager.translate("From Templates")}
@@ -206,12 +211,17 @@ const Settings = props => {
         />
       )}
       {webHookModal && (
-        <WebHookCreation isOpen={webHookModal} onClose={toggleWebHookModal} />
+        <WebHookCreation
+          isOpen={webHookModal}
+          onClose={toggleWebHookModal}
+          selectedWebhook={selectedWebhook}
+        />
       )}
       {customWebhookModal && (
         <CustomWebhook
           isOpen={customWebhookModal}
           onClose={toggleCustomWebhookModal}
+          selectedWebhook={selectedWebhook}
         />
       )}
     </>

@@ -291,11 +291,20 @@ const Profile = props => {
       })
       .call(e.target.checked);
   }
+  function showNotify(type, msg) {
+    dispatch({
+      type: "ADD_NOTIFY",
+      value: {
+        type: type,
+        message: msg,
+      },
+    });
+  }
   function handleDeleteAccount() {
     setAlertData({
       type: "error",
       title: "Delete Account",
-      message: "Are you sure to remove ?",
+      message: "Are you sure to remove?",
       isAjaxCall: true,
       okTitle: "Remove",
       cancelTitle: "Don't remove",
@@ -303,8 +312,15 @@ const Profile = props => {
         deleteAccount()
           .onOk(result => {
             setAlertData();
+            showNotify("success", "Your account deleted successfully");
+            dispatch({
+              type: "LOGOUT",
+              value: false,
+            });
+            props.history.replace("login");
           })
           .onServerError(result => {
+            showNotify("success", "Internal server error");
             setAlertData();
           })
           .onBadRequest(result => {

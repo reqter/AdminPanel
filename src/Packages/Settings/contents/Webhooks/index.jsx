@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useGlobalState, languageManager } from "../../../../services";
-import { getWebhooks, deleteWebhook } from "../../../../Api/webhook-api";
+import { getWebhooks, setWebhooks } from "../../../../Api/webhook-api";
 import { CircleSpinner, Alert } from "../../../../components";
 
-const currentLang = languageManager.getCurrentLanguage().name;
 const Webhooks = props => {
   const [{ webhooks, spaceInfo }, dispatch] = useGlobalState();
   const [spinner, toggleSpinner] = useState(true);
@@ -14,7 +13,7 @@ const Webhooks = props => {
         toggleSpinner(false);
         dispatch({
           type: "SET_WEBHOOKS",
-          value: result,
+          value: result ? result : [],
         });
       })
       .onServerError(result => {
@@ -29,9 +28,16 @@ const Webhooks = props => {
       .notFound(result => {
         toggleSpinner(false);
       })
+      .requestError(result => {
+        toggleSpinner(false);
+      })
+      .unKnownError(result => {
+        toggleSpinner(false);
+      })
       .call(spaceInfo.id);
   }, []);
   function remove(webhook) {
+    const w = webhooks.filter(wh => wh.name !== webhook.name);
     setAlertData({
       type: "error",
       title: "Remove Webhook",
@@ -40,10 +46,9 @@ const Webhooks = props => {
       okTitle: "Remove",
       cancelTitle: "Don't remove",
       onOk: () =>
-        deleteWebhook()
+        setWebhooks()
           .onOk(result => {
             setAlertData();
-            const w = webhooks.filter(wh => wh._id !== webhook._id);
             dispatch({
               type: "SET_WEBHOOKS",
               value: w,
@@ -61,7 +66,7 @@ const Webhooks = props => {
           .notFound(result => {
             setAlertData();
           })
-          .call(spaceInfo.id, webhook._id),
+          .call(spaceInfo.id, w),
       onCancel: () => {
         setAlertData();
       },

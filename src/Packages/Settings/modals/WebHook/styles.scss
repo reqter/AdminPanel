@@ -4,9 +4,9 @@
     display: flex;
     flex-wrap: wrap;
     .webhookItem {
-      width: 140px;
-      margin-right: 10px;
-      cursor: pointer;
+      width: calc(20% - 10px);
+      margin: 0 10px 15px 0;
+      cursor: pointer !important;
       .w-top {
         height: 100px;
         background: whitesmoke;
@@ -29,6 +29,33 @@
           font-weight: 500;
         }
       }
+    }
+  }
+}
+.templatesHeader {
+  img {
+    width: 40px;
+    height: 40px;
+  }
+  span {
+    margin-left: 10px;
+  }
+}
+.webhookTemplates {
+  .webhookTemplates-body {
+    padding: 0 10px;
+    ul {
+      padding-left: 15px;
+    }
+  }
+  .webhookTemplates-footer {
+    display: flex;
+    flex-direction: row-reverse;
+    border-top: 0.5px solid lightgray;
+    align-items: center;
+    padding-top: 20px;
+    button {
+      margin-left: 5px;
     }
   }
 }

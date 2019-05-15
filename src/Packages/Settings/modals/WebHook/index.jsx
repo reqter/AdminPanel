@@ -1,64 +1,195 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { languageManager, useGlobalState } from "../../../../services";
-import { updateSpace } from "./../../../../Api/space-api";
-import { CircleSpinner } from "../../../../components";
 import "./styles.scss";
+import { Gitlab } from "./templates";
+
 const currentLang = languageManager.getCurrentLanguage().name;
 const list = [
+  {
+    name: "gitlab",
+    title: {
+      en: "Gitlab",
+    },
+    description: "Trigger a pipeline",
+    icon: require("./../../../../assets/webhooksIcons/gitlab.png"),
+    hasContent: true,
+  },
+  {
+    name: "netlify",
+    title: {
+      en: "Netlify",
+    },
+    description: "Deploy a site",
+    icon: require("./../../../../assets/webhooksIcons/netlify.png"),
+  },
   {
     name: "heroku",
     title: {
       en: "Heroku",
     },
-    description: "lorem ipsum bundle manager to get a better localization",
-    icon: "https://img.icons8.com/color/260/heroku.png",
+    description: "Trigger a build",
+    icon: require("./../../../../assets/webhooksIcons/heroku.png"),
   },
+  {
+    name: "travisCI",
+    title: {
+      en: "Travis CI",
+    },
+    description: "Trigger a build",
+    icon: require("./../../../../assets/webhooksIcons/travis.png"),
+  },
+  {
+    name: "circleCI",
+    title: {
+      en: "CircleCI",
+    },
+    description: "Trigger a build",
+    icon: require("./../../../../assets/webhooksIcons/circleCI.png"),
+  },
+  {
+    name: "bitbucket",
+    title: {
+      en: "Bitbucket",
+    },
+    description: "Trigger a pipeline",
+    icon: require("./../../../../assets/webhooksIcons/bitbucket.png"),
+  },
+  {
+    name: "awsLambda",
+    title: {
+      en: "AWS Lambda",
+    },
+    description: "Invoke a fucntion",
+    icon: require("./../../../../assets/webhooksIcons/AWS.jpg"),
+  },
+  {
+    name: "googleCloud",
+    title: {
+      en: "Google Cloud",
+    },
+    description: "Run a function",
+    icon: require("./../../../../assets/webhooksIcons/googleCloud.png"),
+  },
+  {
+    name: "webtask",
+    title: {
+      en: "Webtask",
+    },
+    description: "Run a function",
+    icon: require("./../../../../assets/webhooksIcons/webtask.png"),
+  },
+  {
+    name: "slack",
+    title: {
+      en: "Slack",
+    },
+    description: "Notify a channel",
+    icon: require("./../../../../assets/webhooksIcons/slack.png"),
+  },
+  {
+    name: "twilio",
+    title: {
+      en: "Twilio",
+    },
+    description: "Send a SMS",
+    icon: require("./../../../../assets/webhooksIcons/twilio.png"),
+  },
+  {
+    name: "mailgun",
+    title: {
+      en: "Mailgun",
+    },
+    description: "Send an email",
+    icon: require("./../../../../assets/webhooksIcons/mailgun.png"),
+  },
+  {
+    name: "awsSos",
+    title: {
+      en: "AWS SQS",
+    },
+    description: "Send a message",
+    icon: require("./../../../../assets/webhooksIcons/AWS-sos.jpg"),
+  },
+  {
+    name: "pubnub",
+    title: {
+      en: "Pubnub",
+    },
+    description: "Publish a message",
+    icon: require("./../../../../assets/webhooksIcons/pubnub.png"),
+  },
+  {
+    name: "awsS3",
+    title: {
+      en: "AWS S3",
+    },
+    description: "Store entries",
+    icon: require("./../../../../assets/webhooksIcons/AWS-s3.jpg"),
+  },
+  {
+    name: "algolia",
+    title: {
+      en: "Algolia",
+    },
+    description: "Index entries",
+    icon: require("./../../../../assets/webhooksIcons/algolia.png"),
+  },
+
   {
     name: "edlasticsearch",
     title: {
       en: "Elasticsearch",
     },
-    description: "lorem ipsum bundle manager to",
-    icon: "https://cdn.worldvectorlogo.com/logos/elastic-elasticsearch.svg",
+    description: "Index entries",
+    icon: require("./../../../../assets/webhooksIcons/elastic-elasticsearch.svg"),
+  },
+  {
+    name: "jira",
+    title: {
+      en: "Jira",
+    },
+    description: "Create a task",
+    icon: require("./../../../../assets/webhooksIcons/jira.png"),
   },
 ];
 
 const WebHookCreating = props => {
   const [{ spaceInfo }, dispatch] = useGlobalState();
-
-  const [spinner, toggleSpinner] = useState(false);
-  const [tab, changeTab] = useState(1);
-  const [selectedTemplate, setSelectedTemplate] = useState();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const selectedWebhook = props.selectedWebhook
+    ? props.selectedWebhook
+    : undefined;
+  const [selectedTemplate, setSelectedTemplate] = useState(
+    selectedWebhook ? getTemplates() : undefined
+  );
+  const [tab, changeTab] = useState(selectedWebhook ? 2 : 1);
 
   useEffect(() => {}, []);
-
-  function showNotify(type, msg) {
-    dispatch({
-      type: "ADD_NOTIFY",
-      value: {
-        type: type,
-        message: msg,
-      },
-    });
+  function getTemplates() {
+    return list.find(t => t.name === selectedWebhook.type);
   }
   function closeModal() {
     props.onClose();
   }
   function handleSelectTemplate(item) {
-    setSelectedTemplate(item);
-    changeTab(2);
+    if (item.hasContent) {
+      setSelectedTemplate(item);
+      changeTab(2);
+    }
   }
-  function onSubmit(e) {
-    e.preventDefault();
+  function backToTemplates() {
+    changeTab(1);
   }
   return (
     <Modal isOpen={props.isOpen} toggle={closeModal} size="lg">
       <ModalHeader toggle={closeModal}>
-        {tab === 1 && "WebHook Templates"}
-        {tab === 2 && "Complete Info"}
+        {tab === 1 && "Webhook Templates"}
+        {tab === 2 && (
+          <div className="templatesHeader">
+            <img src={selectedTemplate.icon} alt="" />
+            <span>{selectedTemplate.title[currentLang]}</span>
+          </div>
+        )}
       </ModalHeader>
       <ModalBody>
         <div className="webhooksBody">
@@ -80,52 +211,17 @@ const WebHookCreating = props => {
               ))}
             </div>
           )}
-          {tab === 2 && (
-            <>
-              <div className="form-group">
-                <label>{languageManager.translate("Name")}</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={languageManager.translate(
-                    "enter a name for your webhook"
-                  )}
-                  value={name}
-                  onChange={e => {
-                    setName(e.target.value);
-                  }}
-                />
-                <small className="form-text text-muted">
-                  {languageManager.translate("name is required")}
-                </small>
-              </div>
-              <div className="form-group">
-                <label>{languageManager.translate("Description")}</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={languageManager.translate(
-                    "enter a short description"
-                  )}
-                  value={description}
-                  onChange={e => {
-                    setDescription(e.target.value);
-                  }}
-                />
-                <small className="form-text text-muted">
-                  {languageManager.translate("name is required")}
-                </small>
-              </div>
-            </>
-          )}
+          {tab === 2 ? (
+            selectedTemplate.name === "gitlab" ? (
+              <Gitlab
+                onShowTemplates={backToTemplates}
+                selectedTemplate={selectedTemplate}
+                selectedWebHook={selectedWebhook}
+              />
+            ) : null
+          ) : null}
         </div>
       </ModalBody>
-      {tab === 2 && (
-        <ModalFooter>
-          <button className="btn btn-secondary">Cancel</button>
-          <button className="btn btn-primary">Create</button>
-        </ModalFooter>
-      )}
     </Modal>
   );
 };
