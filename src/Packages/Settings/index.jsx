@@ -169,7 +169,7 @@ const Settings = props => {
               }
               onClick={() => toggleTab("webHooks")}
             >
-              Web Hooks
+              Webhooks
             </div>
           </div>
           {tabContent === "locales" && (

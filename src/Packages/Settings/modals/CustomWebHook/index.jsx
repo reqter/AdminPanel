@@ -4,7 +4,7 @@ import { CircleSpinner } from "./../../../../components";
 import { languageManager, useGlobalState } from "../../../../services";
 import "./styles.scss";
 import { addWebhook, updateWebhook } from "./../../../../Api/webhook-api";
-
+const util = require("util");
 const currentLang = languageManager.getCurrentLanguage().name;
 const triggersEntity = [
   {
@@ -64,11 +64,15 @@ const CustomWebHook = props => {
   const [headerContentLength, toggleHeaderContentLength] = useState();
 
   const [authType, setAuthType] = useState("basic");
-  const [authUserName, setAuthUserName] = useState("");
-  const [authPassword, setAuthPassword] = useState("");
+  const [basicUserName, setBasicUserName] = useState("");
+  const [basicPassword, setBasicPassword] = useState("");
+  const [bearerToken, setBearerToken] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [apiSecret, setApiSecret] = useState("");
 
   const [payloadType, setPayLoadType] = useState("default");
   const [customPayloadObj, setCustomPayloadObj] = useState("");
+  const [jsonError, setJsonError] = useState();
 
   useEffect(() => {
     nameRef.current.focus();
@@ -138,6 +142,17 @@ const CustomWebHook = props => {
     let s_h = [...secretHeaders];
     s_h[index][key] = value;
     setSecretHeaders(s_h);
+  }
+  function handlePayloadJson(e) {
+    let p;
+
+    setCustomPayloadObj(e.target.value);
+    try {
+      p = JSON.parse(e.target.value);
+      if (jsonError) setJsonError();
+    } catch (error) {
+      setJsonError(util.inspect(error));
+    }
   }
   function submit(e) {
     e.preventDefault();
@@ -289,46 +304,49 @@ const CustomWebHook = props => {
         <div className="customWebhook-body">
           {tab === 1 && (
             <>
-              <div className="form-group">
-                <label>{languageManager.translate("Name")}</label>
-                <input
-                  type="text"
-                  ref={nameRef}
-                  className="form-control"
-                  placeholder={languageManager.translate("Enter a name")}
-                  value={name}
-                  onChange={e => {
-                    setName(e.target.value);
-                  }}
-                />
-                <small className="form-text text-muted">
-                  {languageManager.translate("Name is required ")}
-                </small>
+              <div className="row">
+                <div className="form-group col">
+                  <label>{languageManager.translate("Name")}</label>
+                  <input
+                    type="text"
+                    ref={nameRef}
+                    className="form-control"
+                    placeholder={languageManager.translate("Enter a name")}
+                    value={name}
+                    onChange={e => {
+                      setName(e.target.value);
+                    }}
+                  />
+                  <small className="form-text text-muted">
+                    {languageManager.translate("Name is required ")}
+                  </small>
+                </div>
+                <div className="form-group col">
+                  <label>{languageManager.translate("Description")}</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder={languageManager.translate(
+                      "Enter a short description"
+                    )}
+                    value={description}
+                    onChange={e => {
+                      setDescription(e.target.value);
+                    }}
+                  />
+                  <small className="form-text text-muted">
+                    {languageManager.translate("Name is required ")}
+                  </small>
+                </div>
               </div>
               <div className="form-group">
-                <label>{languageManager.translate("Description")}</label>
+                <label>{languageManager.translate("Webservice URL")}</label>
                 <input
                   type="text"
                   className="form-control"
                   placeholder={languageManager.translate(
-                    "Enter a short description"
+                    "Enter a webservice url"
                   )}
-                  value={description}
-                  onChange={e => {
-                    setDescription(e.target.value);
-                  }}
-                />
-                <small className="form-text text-muted">
-                  {languageManager.translate("Name is required ")}
-                </small>
-              </div>
-
-              <div className="form-group">
-                <label>{languageManager.translate("URL")}</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={languageManager.translate("Enter a url")}
                   required
                   value={url}
                   onChange={e => {
@@ -515,12 +533,20 @@ const CustomWebHook = props => {
               <div className="customWebhook-filters">
                 <div
                   className="customWebhook-filters-header"
-                  onClick={() => toggleHeaderBox(1)}
+                  onClick={() => {
+                    if (headerBox !== 1) toggleHeaderBox(1);
+                    else toggleHeaderBox();
+                  }}
                 >
                   <div className="filters-title">Custom Header</div>
                   <div className="filters-message">
                     This webhook will trigger only for entities matching the
                   </div>
+                  <span
+                    className={
+                      "icon icon-caret-" + (headerBox === 1 ? "up" : "down")
+                    }
+                  />
                 </div>
                 {headerBox === 1 && (
                   <div className="filter-content">
@@ -579,12 +605,20 @@ const CustomWebHook = props => {
               <div className="customWebhook-filters">
                 <div
                   className="customWebhook-filters-header"
-                  onClick={() => toggleHeaderBox(2)}
+                  onClick={() => {
+                    if (headerBox !== 2) toggleHeaderBox(2);
+                    else toggleHeaderBox();
+                  }}
                 >
                   <div className="filters-title">Secret Header</div>
                   <div className="filters-message">
                     This webhook will trigger only for entities matching the
                   </div>
+                  <span
+                    className={
+                      "icon icon-caret-" + (headerBox === 2 ? "up" : "down")
+                    }
+                  />
                 </div>
                 {headerBox === 2 && (
                   <div className="filter-content">
@@ -719,39 +753,102 @@ const CustomWebHook = props => {
                 </div>
               </div>
               <br />
-              <label> HTTP Basic Auth Header</label>
-              <div className="row">
-                <div className="form-group col">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder={languageManager.translate("Username")}
-                    required
-                    value={authUserName}
-                    onChange={e => {
-                      setAuthUserName(e.target.value);
-                    }}
-                  />
-                  <small className="form-text text-muted">
-                    {languageManager.translate("auth header username")}
-                  </small>
-                </div>
-                <div className="form-group col">
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder={languageManager.translate("Password")}
-                    required
-                    value={authPassword}
-                    onChange={e => {
-                      setAuthPassword(e.target.value);
-                    }}
-                  />
-                  <small className="form-text text-muted">
-                    {languageManager.translate("auth header passord")}
-                  </small>
-                </div>
-              </div>
+              {authType === "apiKey" && (
+                <>
+                  <label> Api Key</label>
+                  <div className="row">
+                    <div className="form-group col">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder={languageManager.translate(
+                          "enter your api key"
+                        )}
+                        value={apiKey}
+                        onChange={e => {
+                          setApiKey(e.target.value);
+                        }}
+                      />
+                      <small className="form-text text-muted">
+                        {languageManager.translate("Api key is required")}
+                      </small>
+                    </div>
+                    <div className="form-group col">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder={languageManager.translate(
+                          "enter your api secret"
+                        )}
+                        value={apiSecret}
+                        onChange={e => {
+                          setApiSecret(e.target.value);
+                        }}
+                      />
+                      <small className="form-text text-muted">
+                        {languageManager.translate("Api secret is required")}
+                      </small>
+                    </div>
+                  </div>
+                </>
+              )}
+              {authType === "bearer" && (
+                <>
+                  <label> Bearer Token</label>
+                  <div className="form-group">
+                    <textarea
+                      className="form-control"
+                      placeholder={languageManager.translate(
+                        "enter your token"
+                      )}
+                      value={bearerToken}
+                      onChange={e => {
+                        setBearerToken(e.target.value);
+                      }}
+                    />
+                    <small className="form-text text-muted">
+                      {languageManager.translate("Token is required")}
+                    </small>
+                  </div>
+                </>
+              )}
+              {authType === "basic" && (
+                <>
+                  <label> HTTP Basic Auth Header</label>
+                  <div className="row">
+                    <div className="form-group col">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder={languageManager.translate("Username")}
+                        required
+                        value={basicUserName}
+                        onChange={e => {
+                          setBasicUserName(e.target.value);
+                        }}
+                      />
+                      <small className="form-text text-muted">
+                        {languageManager.translate("auth header username")}
+                      </small>
+                    </div>
+                    <div className="form-group col">
+                      <input
+                        type="password"
+                        className="form-control"
+                        placeholder={languageManager.translate("Password")}
+                        required
+                        value={basicPassword}
+                        onChange={e => {
+                          setBasicPassword(e.target.value);
+                        }}
+                      />
+                      <small className="form-text text-muted">
+                        {languageManager.translate("auth header password")}
+                      </small>
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           )}
           {tab === 5 && (
@@ -811,8 +908,11 @@ const CustomWebHook = props => {
                   <textarea
                     className="form-control"
                     value={customPayloadObj}
-                    onChange={e => setCustomPayloadObj(e.target.value)}
+                    onChange={handlePayloadJson}
                   />
+                  {jsonError && (
+                    <span style={{ color: "red" }}>{jsonError}</span>
+                  )}
                   <small className="form-text text-muted">
                     {languageManager.translate(
                       `Custom payload can be any valid JSON value. To resolve a value from the original webhook payload use a JSON pointer wrapped with curly braces.

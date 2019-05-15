@@ -340,8 +340,8 @@
             "fa": "Name"
           },
           "description": {
-            "fa": "name of each product",
-            "en": "name of each product"
+            "fa": "توضیحات برای قایل صوتی",
+            "en": "short description for audio file"
           },
           "type": "string",
           "isBase": true,
