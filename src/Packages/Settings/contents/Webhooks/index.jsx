@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useGlobalState, languageManager } from "../../../../services";
-import { getWebhooks, deleteWebhook } from "../../../../Api/webhook-api.";
+import { getWebhooks, deleteWebhook } from "../../../../Api/webhook-api";
 import { CircleSpinner, Alert } from "../../../../components";
 
 const currentLang = languageManager.getCurrentLanguage().name;
