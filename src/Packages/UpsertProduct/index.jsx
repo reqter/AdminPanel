@@ -130,7 +130,7 @@ const UpsertProduct = props => {
     getContentById()
       .onOk(result => {
         if (result) {
-          if (result.contentType === undefined) {
+          if (!result.contentType) {
             const obj = {
               type: "CONTEN_TYPE_UNDEFINED",
               sender: "getItemById",

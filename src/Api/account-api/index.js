@@ -18,6 +18,10 @@ const changePasswrodURL =
 const changeNotificationURL =
   config.REACT_APP_ACCOUNT_BASE_URL +
   config.REACT_APP_ACCOUNT_CHANGE_NOTIFICATION
+  const deleteAccountURL =
+  config.REACT_APP_ACCOUNT_BASE_URL +
+  config.REACT_APP_ACCOUNT_DELETE_ACCOUNT
+
 
 export function login () {
   let _onOkCallBack
@@ -1081,3 +1085,129 @@ export function sendEmailConfirmation () {
     }
   }
 }
+
+export function deleteAccount () {
+  let _onOkCallBack
+  function _onOk (result) {
+    if (_onOkCallBack) {
+      _onOkCallBack(result)
+    }
+  }
+  let _onServerErrorCallBack
+  function _onServerError (result) {
+    if (_onServerErrorCallBack) {
+      _onServerErrorCallBack(result)
+    }
+  }
+  let _onBadRequestCallBack
+  function _onBadRequest (result) {
+    if (_onBadRequestCallBack) {
+      _onBadRequestCallBack(result)
+    }
+  }
+  let _unAuthorizedCallBack
+  function _unAuthorized (result) {
+    if (_unAuthorizedCallBack) {
+      _unAuthorizedCallBack(result)
+    }
+  }
+  let _notFoundCallBack
+  function _notFound (result) {
+    if (_notFoundCallBack) {
+      _notFoundCallBack(result)
+    }
+  }
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
+    }
+  }
+  let _onConnectionErrorCallBack
+  function _onConnectionError (result) {
+    if (_onConnectionErrorCallBack) {
+      _onConnectionErrorCallBack(result)
+    }
+  }
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
+
+  const _call = async () => {
+    try {
+      const url = deleteAccountURL
+      const token = storageManager.getItem('token')
+      var rawResponse = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      })
+      const status = rawResponse.status
+      const result = await rawResponse.json()
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          _unKnownError(result)
+          break
+      }
+    } catch (error) {
+      _onRequestError(error)
+    }
+  }
+
+  return {
+    call: _call,
+    onOk: function (callback) {
+      _onOkCallBack = callback
+      return this
+    },
+    onServerError: function (callback) {
+      _onServerErrorCallBack = callback
+      return this
+    },
+    onBadRequest: function (callback) {
+      _onBadRequestCallBack = callback
+      return this
+    },
+    notFound: function (callback) {
+      _notFoundCallBack = callback
+      return this
+    },
+    unAuthorized: function (callback) {
+      _unAuthorizedCallBack = callback
+      return this
+    },
+    onConnectionError: function (callback) {
+      _onConnectionErrorCallBack = callback
+      return this
+    },
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
+      return this
+    }
+  }
+}
+

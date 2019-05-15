@@ -477,13 +477,16 @@ const ItemTypes = props => {
                         </div>
 
                         <div className="fieldItem-actions">
-                          <button
-                            className="btn btn-link"
-                            size="xs"
-                            onClick={() => showAdvanceConfig(field)}
-                          >
-                            Settings
-                          </button>
+                          {field.allowEdit === undefined ||
+                            (field.allowEdit && (
+                              <button
+                                className="btn btn-link"
+                                size="xs"
+                                onClick={() => showAdvanceConfig(field)}
+                              >
+                                Settings
+                              </button>
+                            ))}
                           {field.isBase === undefined || !field.isBase ? (
                             <>
                               <button

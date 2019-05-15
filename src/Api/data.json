@@ -3,7 +3,10 @@
     {
       "id": "1",
       "name": "dataCollection",
-      "title": { "en": "Data Collection", "fa": "مجموعه داده ای" },
+      "title": {
+        "en": "Data Collection",
+        "fa": "مجموعه داده ای"
+      },
       "description": {
         "en": "Create a content type with custom fields",
         "fa": "ایجاد محتوا با فیلد های سفارشی"
@@ -44,11 +47,11 @@
     },
     {
       "id": "2",
-      "name": "content",
-      "title": { "en": "Content", "fa": "محتوا" },
+      "name": "newsblog",
+      "title": { "en": "News Blog", "fa": "بلاگ" },
       "description": {
-        "en": "It contains a body field",
-        "fa": "این شامل فیلدی برای تولید محتوای سفارشی می باشد"
+        "en": "News blog content",
+        "fa": "محتوای بلاگ خبری"
       },
       "icon": "icon-drawer2",
       "allowCustomFields": true,
@@ -66,7 +69,8 @@
           "type": "string",
           "isBase": true,
           "isTranslate": true,
-          "isRequired": true
+          "isRequired": true,
+          "allowEdit": false
         },
         {
           "name": "shortDesc",
@@ -80,7 +84,8 @@
           },
           "type": "string",
           "isBase": true,
-          "isTranslate": true
+          "isTranslate": true,
+          "allowEdit": false
         },
         {
           "name": "media",
@@ -95,7 +100,8 @@
           "type": "media",
           "isBase": true,
           "mediaType": "all",
-          "isTranslate": true
+          "isTranslate": true,
+          "allowEdit": false
         },
         {
           "name": "body",
@@ -185,11 +191,263 @@
         }
       ],
       "allowCustomFields": true
+    },
+    {
+      "id": "4",
+      "name": "socialmediacontent",
+      "title": {
+        "en": "Social Media Content",
+        "fa": "محتوای شبکه اجتماعی"
+      },
+      "description": {
+        "en": "Social media content(image, video , ...)",
+        "fa": " محتوای شبکه اجتماعی عکس ویدیو"
+      },
+      "icon": "icon-request",
+      "allowCustomFields": true,
+      "fields": [
+        {
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true,
+          "allowEdit": false
+        },
+        {
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
+          "name": "media",
+          "title": {
+            "fa": "رسانه",
+            "en": "Media"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": "all",
+          "isTranslate": true,
+          "isMulti": true,
+          "allowEdit": false
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "videocontent",
+      "title": {
+        "en": "Video Content",
+        "fa": "محتوای ویدیویی"
+      },
+      "description": {
+        "en": "ُStoring video contents",
+        "fa": "محتوای ویدیویی "
+      },
+      "icon": "icon-video",
+      "allowCustomFields": true,
+      "fields": [
+        {
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true,
+          "allowEdit": false
+        },
+        {
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
+          "name": "video",
+          "title": {
+            "fa": "ویدیو",
+            "en": "Video"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": "video",
+          "isTranslate": true,
+          "allowEdit": false
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "audiocontent",
+      "title": {
+        "en": "Audio Content",
+        "fa": "محتوای  صوتی"
+      },
+      "description": {
+        "en": "Audio types contents",
+        "fa": "محتوای صوتی  "
+      },
+      "icon": "icon-audio",
+      "allowCustomFields": true,
+      "fields": [
+        {
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true,
+          "allowEdit": false
+        },
+        {
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
+          "name": "audio",
+          "title": {
+            "fa": "صدا",
+            "en": "Audio"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": "audio",
+          "isTranslate": true,
+          "allowEdit": false
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "name": "filecontent",
+      "title": {
+        "en": "File Content",
+        "fa": "محتوای  فایلی"
+      },
+      "description": {
+        "en": "Storing file as a content",
+        "fa": "محتوا به صورت فایل"
+      },
+      "icon": "icon-file-text",
+      "allowCustomFields": true,
+      "fields": [
+        {
+          "name": "name",
+          "title": {
+            "en": "Name",
+            "fa": "Name"
+          },
+          "description": {
+            "fa": "name of each product",
+            "en": "name of each product"
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "isRequired": true,
+          "allowEdit": false
+        },
+        {
+          "name": "shortDesc",
+          "title": {
+            "fa": "Short Description",
+            "en": "Short Description"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
+          "name": "file",
+          "title": {
+            "fa": "فایل",
+            "en": "File"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": "all",
+          "isTranslate": true,
+          "allowEdit": false
+        }
+      ]
     }
   ],
-  "contentTypes": [
-  ],
-  "contents":[],
+  "contentTypes": [],
+  "contents": [],
   "users": [],
   "assets": []
 }

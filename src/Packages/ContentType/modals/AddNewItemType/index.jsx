@@ -433,7 +433,7 @@ const UpsertTemplate = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label for="version">
+                    <label htmlFor="version">
                       Enable versioning of this content type
                     </label>
                     <label>
@@ -454,10 +454,10 @@ const UpsertTemplate = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label for="categorize">
+                    <label htmlFor="categorize">
                       Enable categorization of this content type
                     </label>
-                    <label for="categorize">
+                    <label htmlFor="categorize">
                       This content type can categorize entering data
                     </label>
                   </div>
@@ -477,10 +477,10 @@ const UpsertTemplate = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label for="accessRight">
+                    <label htmlFor="accessRight">
                       Enable access right of this content type
                     </label>
-                    <label for="accessRight">
+                    <label htmlFor="accessRight">
                       You can set acceess rights on this contebt type
                     </label>
                   </div>

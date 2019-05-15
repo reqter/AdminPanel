@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 
 import "./styles.scss";
 import { languageManager, useGlobalState, utility } from "../../services";
-import { CircleSpinner } from "../../components";
+import { CircleSpinner, Alert } from "../../components";
 import { uploadAssetFile } from "./../../Api/asset-api";
 import {
   updateProfile,
   changeAvatar,
   changeNotification,
   sendEmailConfirmation,
+  deleteAccount,
 } from "./../../Api/account-api";
 
 import UpdatePassword from "./modals/updatePassword";
@@ -20,11 +21,12 @@ const Profile = props => {
 
   const dropRef = useRef(null);
   const [dragging, setDragging] = useState(false);
-  const [eventsAdded, setEvents] = useState(false);
+  const [alertData, setAlertData] = useState();
 
   const [updatePasswordModal, toggleUpdatePassModal] = useState(false);
   const [updateSpinner, toggleUpdateSpinner] = useState(false);
   const [confirmEmailSpinner, toggleConfirmEmailSpinner] = useState(false);
+  const [deleteAccountSpinner, toggleDeleteAccountSpinner] = useState(false);
 
   const [currentBox, setCurrentBox] = useState(1);
   const [isUploading, toggleIsUploading] = useState(false);
@@ -289,6 +291,37 @@ const Profile = props => {
       })
       .call(e.target.checked);
   }
+  function handleDeleteAccount() {
+    setAlertData({
+      type: "error",
+      title: "Delete Account",
+      message: "Are you sure to remove ?",
+      isAjaxCall: true,
+      okTitle: "Remove",
+      cancelTitle: "Don't remove",
+      onOk: () =>
+        deleteAccount()
+          .onOk(result => {
+            setAlertData();
+          })
+          .onServerError(result => {
+            setAlertData();
+          })
+          .onBadRequest(result => {
+            setAlertData();
+          })
+          .unAuthorized(result => {
+            setAlertData();
+          })
+          .notFound(result => {
+            setAlertData();
+          })
+          .call(),
+      onCancel: () => {
+        setAlertData();
+      },
+    });
+  }
   return (
     <>
       <div className="pro-wrapper">
@@ -489,6 +522,39 @@ const Profile = props => {
               </div>
             )}
           </div>
+          <div className="pro-box">
+            <div
+              className={
+                "pro-box-header " + (currentBox !== 4 ? "hoverBox" : "")
+              }
+              onClick={() => showBoxContent(4)}
+            >
+              Danger Zone
+            </div>
+            {currentBox === 4 && (
+              <div className="pro-box-content">
+                <div className="text-switch">
+                  <div className="left-text">
+                    <span className="left-text-title">Delete Account</span>
+                    <span className="left-text-description">
+                      Permanently delete your account.You will no longer have
+                      access to your account.
+                    </span>
+                  </div>
+                  <div className="right-switch">
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={handleDeleteAccount}
+                    >
+                      <CircleSpinner show={deleteAccountSpinner} />
+                      {!deleteAccountSpinner && "Delete Account"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       {updatePasswordModal && (
@@ -497,6 +563,7 @@ const Profile = props => {
           onClose={handleCloseUpdatePass}
         />
       )}
+      {alertData && <Alert data={alertData} />}
     </>
   );
 };
