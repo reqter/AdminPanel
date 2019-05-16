@@ -47,11 +47,11 @@
     },
     {
       "id": "2",
-      "name": "newsblog",
-      "title": { "en": "News Blog", "fa": "بلاگ" },
+      "name": "blog",
+      "title": { "en": "Blog", "fa": "بلاگ" },
       "description": {
-        "en": "News blog content",
-        "fa": "محتوای بلاگ خبری"
+        "en": "blog content",
+        "fa": "محتوای بلاگ "
       },
       "icon": "icon-drawer2",
       "allowCustomFields": true,
@@ -249,7 +249,7 @@
           },
           "type": "media",
           "isBase": true,
-          "mediaType": "all",
+          "mediaType": ["video", "audio", "image"],
           "isTranslate": true,
           "isMulti": true,
           "allowEdit": false
@@ -302,6 +302,22 @@
           "allowEdit": false
         },
         {
+          "name": "cover",
+          "title": {
+            "fa": "عکس نمایشی",
+            "en": "Cover Image"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": "image",
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
           "name": "video",
           "title": {
             "fa": "ویدیو",
@@ -328,7 +344,7 @@
       },
       "description": {
         "en": "Audio types contents",
-        "fa": "محتوای صوتی  "
+        "fa": "محتوای صوتی "
       },
       "icon": "icon-audio",
       "allowCustomFields": true,

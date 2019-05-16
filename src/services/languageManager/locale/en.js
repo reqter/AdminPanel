@@ -329,7 +329,7 @@ export default {
   UPSERT_ITEM_ADD_UN_AUTHORIZED: 'Un Authorized',
   UPSERT_ITEM_ADD_NOT_FOUND: 'Not found',
   UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED:
-    'Content type is removed from content. ',
+    'Content type is removed from content.To continue editing you have to choose a new content type ',
   UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR: 'Internal server error.',
   UPSERT_ITEM_GET_BY_ID_BAD_REQUEST: 'Bad request',
   UPSERT_ITEM_GET_BY_ID_NOT_FOUND: 'Content did not found',

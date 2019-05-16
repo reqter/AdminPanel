@@ -394,8 +394,8 @@ const FieldConfig = props => {
         obj["mediaType"] = mediaTypeVisibility
           ? mediaType !== undefined
             ? mediaType.name
-            : "file"
-          : "file";
+            : "all"
+          : "all";
       } else if (selectedField.type === "reference") {
         obj["isList"] = referenceChooseType === "single" ? false : true;
         let arr = [];

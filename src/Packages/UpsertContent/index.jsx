@@ -8,6 +8,7 @@ import {
   getContentTypes,
 } from "./../../Api/content-api";
 import CategoriesModal from "./Categories";
+import ContentTypesList from "./ContentTypes";
 import {
   String,
   Number,
@@ -44,11 +45,16 @@ const UpsertProduct = props => {
   const [contentType, setContentType] = useState();
   const [fields, setFields] = useState();
 
+  // it will get value editing time
+  const [selectedContent, setSelectedContent] = useState();
+
   const [formData, setFormData] = useState({});
   const [form, setForm] = useState({});
   const [formValidation, setFormValidation] = useState();
   const [error, setError] = useState({});
   const [isValidForm, toggleIsValidForm] = useState(false);
+
+  const [newContentTypeBox, toggleNewContentTypeBox] = useState(false);
   const [spinner, toggleSpinner] = useState(false);
   const [closeSpinner, toggleCloseSpinner] = useState(false);
 
@@ -62,10 +68,12 @@ const UpsertProduct = props => {
           toggleTab(3);
         }
       } else {
-        getContentTypesList();
+        toggleTab(1);
+        //getContentTypesList();
       }
     } else {
-      getContentTypesList();
+      toggleTab(1);
+      //getContentTypesList();
     }
   }, [props.match.params.id]);
 
@@ -88,52 +96,16 @@ const UpsertProduct = props => {
     }
     return true;
   }
-  function getContentTypesList() {
-    getContentTypes()
-      .onOk(result => {
-        dispatch({
-          type: "SET_CONTENT_TYPES",
-          value: result,
-        });
-        toggleTab(1);
-      })
-      .onServerError(result => {
-        const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "contentType",
-          message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR"),
-        };
-        setError(obj);
-        toggleTab(3);
-      })
-      .onBadRequest(result => {
-        const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "contentType",
-          message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
-        };
-        setError(obj);
-        toggleTab(3);
-      })
-      .unAuthorized(result => {
-        const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "contentType",
-          message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
-        };
-        setError(obj);
-        toggleTab(3);
-      })
-      .call(spaceInfo.id);
-  }
   function getItemById(id) {
     getContentById()
       .onOk(result => {
         if (result) {
+          setSelectedContent(result);
           if (!result.contentType) {
             const obj = {
               type: "CONTEN_TYPE_UNDEFINED",
               sender: "getItemById",
+              errorType: "contentType",
               message: languageManager.translate(
                 "UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"
               ),
@@ -141,15 +113,7 @@ const UpsertProduct = props => {
             setError(obj);
             toggleTab(3);
           } else {
-            setFormData(result.fields);
-            setForm(result.fields);
-            setContentType(result.contentType);
-            const c_fields = result.contentType.fields;
-            setFields(c_fields.sort((a, b) => a.index - b.index));
-            if (result.contentType.categorization === true)
-              setCategory(result.category);
-
-            if (tab !== 2) toggleTab(2);
+            initEditMode(result);
           }
         } else {
           toggleTab(3);
@@ -200,6 +164,17 @@ const UpsertProduct = props => {
       .call(spaceInfo.id, id);
   }
 
+  function initEditMode(result) {
+    setFormData(result.fields);
+    setForm(result.fields);
+    setContentType(result.contentType);
+    const c_fields = result.contentType.fields;
+    setFields(c_fields.sort((a, b) => a.index - b.index));
+    if (result.contentType.categorization === true)
+      setCategory(result.category);
+
+    if (tab !== 2) toggleTab(2);
+  }
   function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
       setFormValidation(prevFormValidation => ({
@@ -351,11 +326,30 @@ const UpsertProduct = props => {
       toggleTab(1);
     }
   }
+  function handleLoadedContentTypes(success, error, sender) {
+    if (sender === "choosingNewContentType") {
+      if (error) {
+        setError(error);
+      }
+    } else {
+      if (success) toggleTab(1);
+      else {
+        setError(error);
+        toggleTab(3);
+      }
+    }
+  }
+
   function handleSelectContentType(contentType) {
     setContentType(contentType);
   }
-  function navigateToContentTypes() {
-    props.history.push("/panel/contentType");
+  function handleSelectNewContentType(contentType) {
+    selectedContent.contentType = contentType;
+    initEditMode(selectedContent);
+    setContentType(contentType)
+  }
+  function chooseNewContentType() {
+    toggleNewContentTypeBox(true);
   }
   function upsertItem(closePage) {
     if (!spinner && !closeSpinner) {
@@ -562,58 +556,11 @@ const UpsertProduct = props => {
           {tab === 1 && (
             <>
               <div className="up-content-title">Choose a content type</div>
-              <div className="up-content-itemTypes animated fadeIn ">
-                {!contentTypes || contentTypes.length === 0 ? (
-                  <div className="emptyContenType">
-                    <i className="icon-empty-box-open icon" />
-                    <span className="title">Empty List!</span>
-                    <span className="info">
-                      You have not created any content types yet.
-                    </span>
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={navigateToContentTypes}
-                    >
-                      New Content Type
-                    </button>
-                  </div>
-                ) : (
-                  contentTypes.map(c => (
-                    <div key={c.id} className="listGroupItem">
-                      <div className="treeItem">
-                        {c.media === undefined || c.media.length === 0 ? (
-                          <div className="treeItem-icon">
-                            <div className="contentIcon">
-                              <i className="icon-item-type" />
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="treeItem-img">
-                            <img src={c.media[0][currentLang]} alt="" />
-                          </div>
-                        )}
-                        <div className="treeItem-text">
-                          <span className="treeItem-name">
-                            {c.title[currentLang]}
-                          </span>
-                          <span className="treeItem-desc">
-                            {c.description[currentLang] ||
-                              "Lorem ipsum dolor sit amet, consectetur"}
-                          </span>
-                        </div>
-                        <button
-                          className="btn btn-light treeItem-action"
-                          size="xs"
-                          onClick={() => handleSelectContentType(c)}
-                        >
-                          <span style={{ fontSize: 12 }}>
-                            {languageManager.translate("Choose")}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                )}
+              <div className="up-content-itemTypes animated fadeIn">
+                <ContentTypesList
+                  onSelectContentType={handleSelectContentType}
+                  onEndLoading={handleLoadedContentTypes}
+                />
               </div>
             </>
           )}
@@ -667,7 +614,7 @@ const UpsertProduct = props => {
                     </div>
                   ))}
                 {!viewMode && (
-                  <div className="actions">
+                  <div className="actions btns" style={{display: 'flex',flexDirection: 'row-reverse',}}>
                     {!updateMode && (
                       <button
                         className="btn btn-primary"
@@ -697,14 +644,42 @@ const UpsertProduct = props => {
               <div className="alert alert-danger">{error && error.message}</div>
               <div className="actions">
                 {error.sender === "contentType" && (
-                  <button className="btn btn-light">
-                    {languageManager.translate("Reload Item Types")}
-                  </button>
+                  <div className="btns">
+                    <button className="btn btn-light">
+                      {languageManager.translate("Reload Item Types")}
+                    </button>
+                  </div>
                 )}
                 {error.sender === "getItemById" && (
-                  <button className="btn btn-light">
-                    {languageManager.translate("Reload")}
-                  </button>
+                  <>
+                    <div className="btns">
+                      <button className="btn btn-light">
+                        {languageManager.translate("Reload")}
+                      </button>
+                      {error.errorType === "contentType" && (
+                        <button
+                          className="btn btn-light"
+                          onClick={chooseNewContentType}
+                        >
+                          {languageManager.translate("Choose Content Type")}
+                        </button>
+                      )}
+                    </div>
+                    {newContentTypeBox && (
+                      <div className="getItem-content-itemTypes animated fadeIn">
+                        <ContentTypesList
+                          onSelectContentType={handleSelectNewContentType}
+                          onEndLoading={(success, error) =>
+                            handleLoadedContentTypes(
+                              success,
+                              error,
+                              "choosingNewContentType"
+                            )
+                          }
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

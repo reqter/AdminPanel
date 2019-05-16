@@ -54,7 +54,13 @@ body {
           border-bottom: 1px solid whitesmoke;
           padding: 10px 0;
         }
-       
+      }
+      .getItem-content-itemTypes {
+        margin-top: 10px;
+        .listGroupItem {
+          border-bottom: 1px solid whitesmoke;
+          padding: 10px 0;
+        }
       }
       .up-content-title {
         font-size: 25px;
@@ -124,10 +130,12 @@ body {
         }
 
         .actions {
-          display: flex;
-          flex-direction: row-reverse;
-          .btn {
-            margin-left: 10px;
+          .btns {
+            display: flex;
+            flex-direction: row-reverse;
+            .btn {
+              margin-left: 10px;
+            }
           }
         }
         .shortDesc textarea {
@@ -151,4 +159,14 @@ body {
   padding: 0 10px;
   color: gray;
   cursor: pointer;
+}
+.contentTypesSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 200px;
+  span {
+    margin-top: 10px;
+  }
 }

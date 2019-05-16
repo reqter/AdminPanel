@@ -115,7 +115,7 @@ const GitLabUpsert = props => {
           <ul>
             <li>Triggers a Gitlab pipeline</li>
             <li>
-              Triggered when an entry or asset is published or unpublished
+              Triggered when a content or asset is published or unpublished
             </li>
           </ul>
           <div className="row">

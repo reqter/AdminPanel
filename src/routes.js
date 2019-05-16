@@ -9,8 +9,8 @@ import HomeComponent from './Packages/Home'
 import Categories from './Packages/Categories'
 import ContentType from './Packages/ContentType'
 import Users from './Packages/Users'
-import Products from './Packages/Products'
-import UpsertContent from './Packages/UpsertProduct'
+import Contents from './Packages/Contents'
+import UpsertContent from './Packages/UpsertContent'
 import Assets from './Packages/Assets'
 import UpdateFile from './Packages/upsertFile'
 import Profile from './Packages/Profile'
@@ -44,7 +44,11 @@ const routes = [
     component: ForgotPassword,
     isPublic: true
   },
-
+  {
+    path: '/requestContent/iiid',
+    component: ForgotPassword,
+    isPublic: true
+  },
   {
     path: '/panel',
     component: Home,
@@ -71,7 +75,7 @@ const routes = [
         icon: 'product',
         path: '/panel/contents',
         desc: translate('HOME_SIDE_NAV_PRODUCTS_DESC'),
-        component: Products,
+        component: Contents,
         isPublic: false
       },
       {
