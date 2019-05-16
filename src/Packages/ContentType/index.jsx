@@ -472,10 +472,10 @@ const ItemTypes = props => {
                             }
                           />
                         </div>
-                        <div className="fieldItem-name">{field.name}</div>
-                        <div className="fieldItem-title">
+                        <div className="fieldItem-name">
                           {field.title[currentLang]}
                         </div>
+                        <div className="fieldItem-title">{field.name}</div>
 
                         <div className="fieldItem-actions">
                           {(field.allowEdit === undefined ||

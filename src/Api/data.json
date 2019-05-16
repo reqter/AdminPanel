@@ -88,6 +88,22 @@
           "allowEdit": false
         },
         {
+          "name": "thumbnail",
+          "title": {
+            "fa": "تصویر نمایشی",
+            "en": "Cover Image"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "mediaType": ["image"],
+          "isBase": true,
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
           "name": "media",
           "title": {
             "fa": "رسانه",
@@ -99,7 +115,6 @@
           },
           "type": "media",
           "isBase": true,
-          "mediaType": "all",
           "isTranslate": true,
           "allowEdit": false
         },
@@ -158,7 +173,7 @@
           "isTranslate": true
         },
         {
-          "name": "cover",
+          "name": "thumbnail",
           "title": {
             "fa": "تصویر گالری",
             "en": "Cover Image"
@@ -168,11 +183,12 @@
             "en": ""
           },
           "type": "media",
-          "mediaType": "image",
+          "mediaType": ["image"],
           "isTranslate": true,
           "isRequired": true,
           "isList": false,
-          "isBase": true
+          "isBase": true,
+          "allowEdit": false
         },
         {
           "name": "gallery",
@@ -185,7 +201,6 @@
             "fa": ""
           },
           "type": "media",
-          "mediaType": "all",
           "isList": true,
           "isBase": true
         }
@@ -233,6 +248,22 @@
             "en": ""
           },
           "type": "string",
+          "isBase": true,
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
+          "name": "thumbnail",
+          "title": {
+            "fa": "تصویر نمایشی",
+            "en": "Cover Image"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "mediaType": ["image"],
           "isBase": true,
           "isTranslate": true,
           "allowEdit": false
@@ -302,7 +333,7 @@
           "allowEdit": false
         },
         {
-          "name": "cover",
+          "name": "thumbnail",
           "title": {
             "fa": "عکس نمایشی",
             "en": "Cover Image"
@@ -313,7 +344,7 @@
           },
           "type": "media",
           "isBase": true,
-          "mediaType": "image",
+          "mediaType": ["image"],
           "isTranslate": true,
           "allowEdit": false
         },
@@ -329,7 +360,7 @@
           },
           "type": "media",
           "isBase": true,
-          "mediaType": "video",
+          "mediaType": ["video"],
           "isTranslate": true,
           "allowEdit": false
         }
@@ -356,7 +387,7 @@
             "fa": "Name"
           },
           "description": {
-            "fa": "توضیحات برای قایل صوتی",
+            "fa": "توضیحات برای فایل صوتی",
             "en": "short description for audio file"
           },
           "type": "string",
@@ -381,6 +412,22 @@
           "allowEdit": false
         },
         {
+          "name": "thumbnail",
+          "title": {
+            "fa": "تصویر نمایشی",
+            "en": "Cover Image"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": ["image"],
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
           "name": "audio",
           "title": {
             "fa": "صدا",
@@ -392,7 +439,7 @@
           },
           "type": "media",
           "isBase": true,
-          "mediaType": "audio",
+          "mediaType": ["audio"],
           "isTranslate": true,
           "allowEdit": false
         }
@@ -444,6 +491,22 @@
           "allowEdit": false
         },
         {
+          "name": "thumbnail",
+          "title": {
+            "fa": "تصویر نمایشی",
+            "en": "Cover Image"
+          },
+          "description": {
+            "fa": "",
+            "en": ""
+          },
+          "type": "media",
+          "isBase": true,
+          "mediaType": ["image"],
+          "isTranslate": true,
+          "allowEdit": false
+        },
+        {
           "name": "file",
           "title": {
             "fa": "فایل",
@@ -455,7 +518,6 @@
           },
           "type": "media",
           "isBase": true,
-          "mediaType": "all",
           "isTranslate": true,
           "allowEdit": false
         }
