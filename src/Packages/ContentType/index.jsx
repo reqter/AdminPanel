@@ -177,6 +177,7 @@ const ItemTypes = props => {
     if (!rightContent) toggleRightContent(true);
     setItemType(item);
     if (item.fields && item.fields.length > 0) setFields([...item.fields]);
+    else setFields([]);
     //dispatch({ type: "SET_FIELDS", value: [...item.fields] });
   }
   function closeAddFieldModal(result) {
@@ -477,16 +478,16 @@ const ItemTypes = props => {
                         </div>
 
                         <div className="fieldItem-actions">
-                          {field.allowEdit === undefined ||
-                            (field.allowEdit && (
-                              <button
-                                className="btn btn-link"
-                                size="xs"
-                                onClick={() => showAdvanceConfig(field)}
-                              >
-                                Settings
-                              </button>
-                            ))}
+                          {(field.allowEdit === undefined ||
+                            field.allowEdit) && (
+                            <button
+                              className="btn btn-link"
+                              size="xs"
+                              onClick={() => showAdvanceConfig(field)}
+                            >
+                              Settings
+                            </button>
+                          )}
                           {field.isBase === undefined || !field.isBase ? (
                             <>
                               <button

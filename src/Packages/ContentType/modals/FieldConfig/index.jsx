@@ -71,7 +71,7 @@ const FieldConfig = props => {
   });
   const [isOpen, toggleModal] = useState(true);
   const [tab, changeTab] = useState(1);
-  const [name, setName] = useState(selectedField.name);
+  const [name] = useState(selectedField.name);
   const [title, setTitle] = useState(selectedField.title[currentLang]);
   const [translation, toggleTranslation] = useState(selectedField.isTranslate);
   const [isRequired, toggleRequired] = useState(
@@ -92,20 +92,47 @@ const FieldConfig = props => {
   const [mediaTypeVisibility, toggleMediaType] = useState(
     selectedField.type === "media" ? true : false
   );
-  const [mediaType, setMediaType] = useState(() => {
-    if (
-      selectedField.mediaType === undefined ||
-      selectedField.mediaType === "all"
-    ) {
-      return acceptedMediaTypes[0];
-    } else {
-      for (let i = 0; i < acceptedMediaTypes.length; i++) {
-        if (acceptedMediaTypes[i].name === selectedField.mediaType) {
-          return acceptedMediaTypes[i];
+  const [mediaType, setMediaType] = useState(
+    selectedField.type === "media"
+      ? () => {
+          if (
+            selectedField.mediaType === undefined ||
+            selectedField.mediaType.length === 0
+          ) {
+            let m = JSON.parse(JSON.stringify(acceptedMediaTypes));
+            m[0].selected = true;
+            return m;
+          } else {
+            let m = JSON.parse(JSON.stringify(acceptedMediaTypes));
+            for (let j = 0; j < m.length; j++) {
+              for (let i = 0; i < selectedField.mediaType.length; i++) {
+                const type = selectedField.mediaType[i];
+                if (m[j].name === type) {
+                  m[j].selected = true;
+                }
+              }
+            }
+            return m;
+          }
         }
-      }
-    }
-  });
+      : []
+    //   () => {
+    //   if (
+    //     selectedField.mediaType === undefined ||
+    //     selectedField.mediaType === "all"
+    //   ) {
+    //     return acceptedMediaTypes[0];
+    //   } else {
+    //     return [];
+    //     for (let i = 0; i < acceptedMediaTypes.length; i++) {
+    //       if (acceptedMediaTypes[i].name === selectedField.mediaType) {
+    //         return acceptedMediaTypes[i];
+    //       }
+    //     }
+    //   }
+
+    // }
+  );
 
   const [referenceContentTypeChk, toggleReferenceContentType] = useState(
     selectedField.type === "reference"
@@ -306,7 +333,27 @@ const FieldConfig = props => {
     });
     setFieldsUI(f_uis);
   }
-
+  function handleSelectMediaType(type) {
+    let m;
+    if (type.name === "all") {
+      m = mediaType.map(c => {
+        c.selected = false;
+        if (type.name === c.name) {
+          c.selected = !c.selected;
+        }
+        return c;
+      });
+    } else {
+      m = mediaType.map(c => {
+        if (type.name === c.name) {
+          c.selected = !c.selected;
+        }
+        return c;
+      });
+      if (m[0].selected === true) m[0].selected = false;
+    }
+    setMediaType(m);
+  }
   function addNewOption() {
     let opts = [...options];
     opts.push({
@@ -391,11 +438,16 @@ const FieldConfig = props => {
       }
       if (selectedField.type === "media") {
         obj["isList"] = imageUploadMethod === "oneFile" ? false : true;
-        obj["mediaType"] = mediaTypeVisibility
-          ? mediaType !== undefined
-            ? mediaType.name
-            : "all"
-          : "all";
+        if (mediaTypeVisibility) {
+          let r = [];
+          for (let i = 0; i < mediaType.length; i++) {
+            const type = mediaType[i];
+            if (type.name !== "all" && type.selected === true) {
+              r.push(type.name);
+            }
+          }
+          obj["mediaType"] = r.length > 0 ? r : undefined;
+        }
       } else if (selectedField.type === "reference") {
         obj["isList"] = referenceChooseType === "single" ? false : true;
         let arr = [];
@@ -692,10 +744,10 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="invisible">
+                      <label htmlFor="invisible">
                         {languageManager.translate("FIELD_INVISIBLE")}
                       </label>
-                      <label for="invisible">
+                      <label htmlFor="invisible">
                         {languageManager.translate("FIELD_INVISIBLE_INFO")}
                       </label>
                     </div>
@@ -715,7 +767,7 @@ const FieldConfig = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label for="localization">
+                    <label htmlFor="localization">
                       {languageManager.translate("TRANSLATION")}
                     </label>
                     <label>
@@ -739,7 +791,7 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="dateShowCurrent">
+                      <label htmlFor="dateShowCurrent">
                         {languageManager.translate("FIELD_DATE_SHOW_CURRENT")}
                       </label>
                       <label>
@@ -762,10 +814,10 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="dateDisablePast">
+                      <label htmlFor="dateDisablePast">
                         {languageManager.translate("FIELD_DATE_DISABLE_PAST")}
                       </label>
-                      <label for="dateDisablePast">
+                      <label htmlFor="dateDisablePast">
                         {languageManager.translate(
                           "FIELD_DATE_DISABLE_PAST_INFO"
                         )}
@@ -788,10 +840,10 @@ const FieldConfig = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label for="multiLine">
+                    <label htmlFor="multiLine">
                       {languageManager.translate("FIELD_STRING_MULTILINE")}
                     </label>
-                    <label for="multiLine">
+                    <label htmlFor="multiLine">
                       {languageManager.translate("FIELD_STRING_MULTILINE_INFO")}
                     </label>
                   </div>
@@ -814,7 +866,7 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="oneFileRadio">One File</label>
+                      <label htmlFor="oneFileRadio">One File</label>
                       <label>
                         Select this if there is only one thing to store For
                         example, a single photo or one PDF file
@@ -836,7 +888,7 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="manyFileRadio">Many Files</label>
+                      <label htmlFor="manyFileRadio">Many Files</label>
                       <label>
                         Select this if there are several things to be stored For
                         example, several photos or PDF files
@@ -862,8 +914,8 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="singleRadio">Single Select</label>
-                      <label for="singleRadio">
+                      <label htmlFor="singleRadio">Single Select</label>
+                      <label htmlFor="singleRadio">
                         Select this if there is only one thing to store For
                       </label>
                     </div>
@@ -883,8 +935,8 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="multiSelectRadio">Multi Select</label>
-                      <label for="multiSelectRadio">
+                      <label htmlFor="multiSelectRadio">Multi Select</label>
+                      <label htmlFor="multiSelectRadio">
                         Select this if there are several things to be stored
                       </label>
                     </div>
@@ -908,8 +960,8 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="singlePickerRadio">Single Select</label>
-                      <label for="singlePickerRadio">
+                      <label htmlFor="singlePickerRadio">Single Select</label>
+                      <label htmlFor="singlePickerRadio">
                         Select this if there is only one thing to store For
                       </label>
                     </div>
@@ -929,8 +981,10 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label for="multiSelectPickerRadio">Multi Select</label>
-                      <label for="multiSelectPickerRadio">
+                      <label htmlFor="multiSelectPickerRadio">
+                        Multi Select
+                      </label>
+                      <label htmlFor="multiSelectPickerRadio">
                         Select this if there are several things to be stored
                       </label>
                     </div>
@@ -954,7 +1008,7 @@ const FieldConfig = props => {
                   </label>
                 </div>
                 <div className="right">
-                  <label for="isRequired">Required</label>
+                  <label htmlFor="isRequired">Required</label>
                   <label>
                     You won't be able to publish an entry if this field is empty
                   </label>
@@ -976,7 +1030,7 @@ const FieldConfig = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label for="mediaType">
+                    <label htmlFor="mediaType">
                       Accept only specified file types
                     </label>
                     <label>
@@ -984,16 +1038,16 @@ const FieldConfig = props => {
                     </label>
                     {mediaTypeVisibility && (
                       <div className="validation-configs">
-                        {acceptedMediaTypes.map((type, index) => (
+                        {mediaType.map((type, index) => (
                           <button
                             key={"btnType" + index}
                             className={
                               "btn btn-sm " +
-                              (mediaType.name === type.name
+                              (type.selected === true
                                 ? "btn-primary"
                                 : "btn-light")
                             }
-                            onClick={() => setMediaType(type)}
+                            onClick={() => handleSelectMediaType(type)}
                           >
                             {type.title}
                           </button>
@@ -1017,10 +1071,10 @@ const FieldConfig = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label for="referenceChk">
+                    <label htmlFor="referenceChk">
                       Accept only specified entry type
                     </label>
-                    <label for="referenceChk">
+                    <label htmlFor="referenceChk">
                       Make this field only accept entries from specified content
                       type(s)
                     </label>
@@ -1169,9 +1223,7 @@ const FieldConfig = props => {
                             <i
                               className="icon-checkmark"
                               style={{
-                                opacity: item.selected
-                                  ? "1"
-                                  : ".2",
+                                opacity: item.selected ? "1" : ".2",
                               }}
                             />
                           </button>
