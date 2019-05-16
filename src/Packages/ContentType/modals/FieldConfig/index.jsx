@@ -447,6 +447,8 @@ const FieldConfig = props => {
             }
           }
           obj["mediaType"] = r.length > 0 ? r : undefined;
+        } else {
+          obj["mediaType"] = undefined;
         }
       } else if (selectedField.type === "reference") {
         obj["isList"] = referenceChooseType === "single" ? false : true;

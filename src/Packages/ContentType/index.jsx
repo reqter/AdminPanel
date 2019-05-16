@@ -204,7 +204,7 @@ const ItemTypes = props => {
       isAjaxCall: true,
       onOk: () => {
         const newContentType = { ...selectedContentType };
-        const f = [...fields].filter(item => item._id !== field._id);
+        const f = fields.filter(item => item.name !== field.name);
         newContentType.fields = f;
         updateContentType()
           .onOk(result => {

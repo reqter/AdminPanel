@@ -121,11 +121,7 @@ const MediaInput = props => {
         <AssetBrowser
           isOpen={assetBrowser}
           onCloseModal={handleChooseAsset}
-          mediaType={
-            field.mediaType && field.mediaType !== "all"
-              ? [field.mediaType]
-              : undefined
-          }
+          mediaType={field.mediaType ? [field.mediaType] : undefined}
         />
       )}
     </>
