@@ -165,6 +165,7 @@ const WebHookCreating = props => {
   const [tab, changeTab] = useState(selectedWebhook ? 2 : 1);
 
   useEffect(() => {}, []);
+  
   function getTemplates() {
     return list.find(t => t.name === selectedWebhook.type);
   }

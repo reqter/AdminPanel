@@ -37,7 +37,7 @@
       background: white;
       box-shadow: 0 0 2px lightgray;
       .tabItem {
-        width: 120px;
+        min-width: 120px;
         padding: 20px 15px;
         display: flex;
         justify-content: center;

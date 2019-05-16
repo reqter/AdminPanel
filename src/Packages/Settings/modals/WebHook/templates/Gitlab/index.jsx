@@ -117,11 +117,6 @@ const GitLabUpsert = props => {
             <li>
               Triggered when an entry or asset is published or unpublished
             </li>
-            <li>Scoped to events in the master environment</li>
-            <li>
-              Passes entity ID, entity type, space ID and environment ID as
-              build-time environment variables
-            </li>
           </ul>
           <div className="row">
             <div className="form-group col">

@@ -114,7 +114,7 @@ const Settings = props => {
                 className="btn btn-primary"
                 onClick={toggleUpsertApiKeyModal}
               >
-                New Api Key
+                Connect New App
               </button>
             )}
             {tabContent === "webHooks" && (
@@ -166,7 +166,7 @@ const Settings = props => {
               }
               onClick={() => toggleTab("apiKeys")}
             >
-              Keys
+              Connected Apps
             </div>
             <div
               className={

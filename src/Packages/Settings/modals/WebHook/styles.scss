@@ -6,7 +6,20 @@
     .webhookItem {
       width: calc(20% - 10px);
       margin: 0 10px 15px 0;
-      cursor: pointer !important;
+      -webkit-filter: grayscale(100%);
+      -moz-filter: grayscale(100%);
+      -ms-filter: grayscale(100%);
+      -o-filter: grayscale(100%);
+      filter: gray; /* IE 6-9 */
+      &:first-child {
+        cursor: pointer;
+        opacity: 1;
+        -webkit-filter: grayscale(0);
+        -moz-filter: grayscale(0);
+        -ms-filter: grayscale(0);
+        -o-filter: grayscale(0);
+        filter: none; /* IE 6-9 */
+      }
       .w-top {
         height: 100px;
         background: whitesmoke;

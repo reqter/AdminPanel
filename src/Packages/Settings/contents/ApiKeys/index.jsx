@@ -79,7 +79,7 @@ const ApiKeys = props => {
               className="tabContent-header-title"
               style={{ display: "flex", alignItems: "center" }}
             >
-              Keys&nbsp;&nbsp;
+              Connected Apps&nbsp;&nbsp;
               <CircleSpinner show={spinner} size="small" />
             </span>
             <span className="tabContent-header-desc">
