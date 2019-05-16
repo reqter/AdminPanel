@@ -138,6 +138,14 @@ body {
             }
           }
         }
+        .form-submit-btns {
+          display: flex;
+          flex-direction: row-reverse;
+          button {
+            margin-left: 10px;
+            margin-top: 10px;
+          }
+        }
         .shortDesc textarea {
           min-height: 100px;
         }

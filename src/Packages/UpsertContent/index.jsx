@@ -346,7 +346,7 @@ const UpsertProduct = props => {
   function handleSelectNewContentType(contentType) {
     selectedContent.contentType = contentType;
     initEditMode(selectedContent);
-    setContentType(contentType)
+    setContentType(contentType);
   }
   function chooseNewContentType() {
     toggleNewContentTypeBox(true);
@@ -614,7 +614,7 @@ const UpsertProduct = props => {
                     </div>
                   ))}
                 {!viewMode && (
-                  <div className="actions btns" style={{display: 'flex',flexDirection: 'row-reverse',}}>
+                  <div className="form-submit-btns">
                     {!updateMode && (
                       <button
                         className="btn btn-primary"

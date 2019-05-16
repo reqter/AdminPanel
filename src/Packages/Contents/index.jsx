@@ -36,29 +36,29 @@ const Products = props => {
         );
       },
     },
-    // {
-    //   width: 100,
-    //   Header: () => <div className="p-header-td">Media</div>,
-    //   //show: false,
-    //   headerStyle: {
-    //     display: "block",
-    //   },
-    //   accessor: "fields.thumbnail",
-    //   Cell: props => {
-    //     return (
-    //       <div className="p-image">
-    //         {props.value && props.value.length > 0 ? (
-    //           getAssetUi(props.value[0][currentLang])
-    //         ) : (
-    //           <div className="p-thumbnail-file empty">
-    //             {/* <i className="file-text" /> */}
-    //             empty
-    //           </div>
-    //         )}
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      width: 100,
+      Header: () => <div className="p-header-td">Thumbnail</div>,
+      //show: false,
+      headerStyle: {
+        display: "block",
+      },
+      accessor: "fields.thumbnail",
+      Cell: props => {
+        return (
+          <div className="p-image">
+            {props.value && props.value.length > 0 ? (
+              getAssetUi(props.value[0][currentLang])
+            ) : (
+              <div className="p-thumbnail-file empty">
+                {/* <i className="file-text" /> */}
+                empty
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
     {
       Header: () => <div className="p-header-td">Name</div>,
       //show: false,
@@ -68,15 +68,19 @@ const Products = props => {
       accessor: "fields",
       Cell: props => (
         <div className="p-name">
-          <span>{props.value["name"] && props.value["name"][currentLang]}</span>
           <span>
-            {props.value["shortDesc"] && props.value["shortDesc"][currentLang]}
+            {props.value["name"] && props.value["name"][currentLang]}
+          </span>
+          <span>
+            {props.value["shortDesc"] &&
+              props.value["shortDesc"][currentLang]}
           </span>
         </div>
       ),
     },
     {
       Header: () => <div className="p-header-td">Issuer</div>,
+      width: 130,
       //show: false,
       headerStyle: {
         display: "block",
@@ -91,6 +95,7 @@ const Products = props => {
     },
     {
       Header: () => <div className="p-header-td">Content Type</div>,
+      width: 110,
       //show: false,
       headerStyle: {
         display: "block",
@@ -123,6 +128,7 @@ const Products = props => {
     // },
     {
       Header: () => <div className="p-header-td">Status</div>,
+      width: 110,
       //show: false,
       headerStyle: {
         display: "block",
