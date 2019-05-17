@@ -22,6 +22,10 @@ const triggersEntity = [
 ];
 const authTypes = [
   {
+    name: "none",
+    title: "None",
+  },
+  {
     name: "basic",
     title: "Basic",
   },
@@ -63,7 +67,7 @@ const CustomWebHook = props => {
   );
   const [headerContentLength, toggleHeaderContentLength] = useState();
 
-  const [authType, setAuthType] = useState("basic");
+  const [authType, setAuthType] = useState("none");
   const [basicUserName, setBasicUserName] = useState("");
   const [basicPassword, setBasicPassword] = useState("");
   const [bearerToken, setBearerToken] = useState("");

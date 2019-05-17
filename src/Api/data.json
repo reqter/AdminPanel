@@ -101,22 +101,8 @@
           "mediaType": ["image"],
           "isBase": true,
           "isTranslate": true,
-          "allowEdit": false
-        },
-        {
-          "name": "media",
-          "title": {
-            "fa": "رسانه",
-            "en": "Media"
-          },
-          "description": {
-            "fa": "",
-            "en": ""
-          },
-          "type": "media",
-          "isBase": true,
-          "isTranslate": true,
-          "allowEdit": false
+          "allowEdit": false,
+          "isRequired": true
         },
         {
           "name": "body",
@@ -129,14 +115,15 @@
             "fa": ""
           },
           "type": "richText",
-          "isBase": true
+          "isBase": true,
+          "isRequired": true
         }
       ]
     },
     {
       "id": "3",
       "name": "gallery",
-      "title": { "en": "Gallery", "fa": "گالری" },
+      "title": { "en": "Image Gallery", "fa": "گالری عکس" },
       "description": {
         "en": "Making custom gallery collection",
         "fa": "گالری سفارشی خود را بسازید"
@@ -201,8 +188,10 @@
             "fa": ""
           },
           "type": "media",
+          "mediaType": ["image"],
           "isList": true,
-          "isBase": true
+          "isBase": true,
+          "allowEdit": false
         }
       ],
       "allowCustomFields": true
@@ -228,8 +217,8 @@
             "fa": "Name"
           },
           "description": {
-            "fa": "name of each product",
-            "en": "name of each product"
+            "fa": "",
+            "en": ""
           },
           "type": "string",
           "isBase": true,
@@ -362,7 +351,8 @@
           "isBase": true,
           "mediaType": ["video"],
           "isTranslate": true,
-          "allowEdit": false
+          "allowEdit": false,
+          "isRequired": true
         }
       ]
     },
@@ -441,7 +431,8 @@
           "isBase": true,
           "mediaType": ["audio"],
           "isTranslate": true,
-          "allowEdit": false
+          "allowEdit": false,
+          "isRequired": true
         }
       ]
     },
@@ -519,7 +510,8 @@
           "type": "media",
           "isBase": true,
           "isTranslate": true,
-          "allowEdit": false
+          "allowEdit": false,
+          "isRequired": true
         }
       ]
     }

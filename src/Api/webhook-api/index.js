@@ -51,14 +51,13 @@ export function getWebhooks () {
 
   const _call = async spaceId => {
     try {
-      const url = getWebhooksUrl
+      const url = getWebhooksUrl + '?id=' + spaceId
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
           authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json',
-          spaceId: spaceId
+          'Content-Type': 'application/json'
         }
       })
 
@@ -163,13 +162,15 @@ export function setWebhooks () {
       const url = setWebhooksUrl
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json',
-          spaceId: spaceId
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(webhooks)
+        body: JSON.stringify({
+          id: spaceId,
+          webhooks: webhooks
+        })
       })
       const status = rawResponse.status
       const result = await rawResponse.json()

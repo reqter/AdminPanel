@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
+import {
+  NotificationBar,
+  setNotif,
+  useNotification,
+} from "./../../components/Commons/NotficationBar";
 import { StateProvider } from "./index";
 import storageManager from "./../storageManager";
 const Provider = props => {
+  // const [notifiIfo] = useNotification();
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setNotif("test message");
+  //   }, 2000);
+  // }, false);
+
   const token = storageManager.getItem("token");
   const initialState = {
     isAuthenticated:
@@ -315,6 +327,7 @@ const Provider = props => {
   return (
     <StateProvider initialState={initialState} reducer={reducer}>
       {props.children}
+      {/* <NotificationBar {...notifiIfo} /> */}
     </StateProvider>
   );
 };
