@@ -10,7 +10,7 @@ import {
   unPublish,
   archive,
   unArchive,
-} from "../../Api/request-api.";
+} from "../../Api/request-api";
 import "./styles.scss";
 
 import { Alert, CircleSpinner } from "../../components";

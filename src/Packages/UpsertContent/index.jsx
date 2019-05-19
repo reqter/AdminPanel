@@ -10,7 +10,7 @@ import {
   addRequest,
   updateRequest,
   getRequestById,
-} from "./../../Api/request-api.";
+} from "../../Api/request-api";
 import CategoriesModal from "./Categories";
 import ContentTypesList from "./ContentTypes";
 import {
