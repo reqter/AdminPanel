@@ -570,19 +570,15 @@ const Requests = props => {
       },
     });
   }
-  function handleViewRow(row) {
-    props.history.push({
-      pathname: `/view/${spaceInfo.id}/${row.original._id}`,
-    });
-  }
+  
   function handleEditRow(row) {
     props.history.push({
-      pathname: `/contents/edit/${row.original._id}`,
+      pathname: `/requests/edit/${row.original._id}`,
     });
   }
   function viewContent(row) {
     props.history.push({
-      pathname: `/contents/view/${row._id}`,
+      pathname: `/requests/view/${row._id}`,
       viewMode: true,
     });
   }

@@ -15,9 +15,10 @@ const MediaInput = props => {
       if (field.isRequired === true) props.init(field.name, true);
 
       const d = formData[field.name].map(item => {
-        item.id = Math.random();
-        item.url = item;
-        return item;
+        return {
+          id: Math.random(),
+          url: item,
+        };
       });
       setFiles(d);
     } else {
@@ -72,7 +73,7 @@ const MediaInput = props => {
     <>
       <div className="up-uploader">
         <span className="title">{field.title[currentLang]}</span>
-        {field.description  && (
+        {field.description && (
           <span className="description">{field.description[currentLang]}</span>
         )}
         <div className="files">

@@ -70,7 +70,6 @@ const requestFields = [
     },
     type: "string",
     appearance: "email",
-    isRequired: true,
   },
   {
     id: "4",
@@ -144,7 +143,8 @@ const UpsertProduct = props => {
       if (props.match.params.id !== undefined) {
         if (props.match.params.id.length > 0) {
           //toggleUpdateMode(true);
-          getItemById(props.match.params.id);
+          if (isRequest) getRequestContentById(props.match.params.id);
+          else getItemById(props.match.params.id);
         } else {
           toggleTab(3);
         }
@@ -239,14 +239,82 @@ const UpsertProduct = props => {
       })
       .call(spaceInfo.id, id);
   }
-
+  function getRequestContentById(id) {
+    getRequestById()
+      .onOk(result => {
+        if (result) {
+          setSelectedContent(result);
+          if (!result.contentType) {
+            const obj = {
+              type: "CONTEN_TYPE_UNDEFINED",
+              sender: "getItemById",
+              errorType: "contentType",
+              message: languageManager.translate(
+                "UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"
+              ),
+            };
+            setError(obj);
+            toggleTab(3);
+          } else {
+            initEditMode(result);
+          }
+        } else {
+          toggleTab(3);
+        }
+      })
+      .onServerError(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate(
+            "UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"
+          ),
+        };
+        setError(obj);
+      })
+      .onBadRequest(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate(
+            "UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"
+          ),
+        };
+        setError(obj);
+      })
+      .unAuthorized(result => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate(
+            "UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"
+          ),
+        };
+        setError(obj);
+      })
+      .notFound(() => {
+        toggleTab(3);
+        const obj = {
+          type: "ON_SERVER_ERROR",
+          sender: "getItemById",
+          message: languageManager.translate("UPSERT_ITEM_GET_BY_ID_NOT_FOUND"),
+        };
+        setError(obj);
+      })
+      .call(spaceInfo.id, id);
+  }
   function initEditMode(result) {
-    setFormData(result.fields);
-    setForm(result.fields);
     setContentType(result.contentType);
     if (isRequest) {
+      setFormData(result);
+      setForm(result);
       setFields(requestFields);
     } else {
+      setFormData(result.fields);
+      setForm(result.fields);
       const c_fields = result.contentType.fields;
       setFields(c_fields.sort((a, b) => a.index - b.index));
     }
@@ -450,15 +518,19 @@ const UpsertProduct = props => {
   function upsertRequestItem(closePage) {
     if (updateMode) {
       const obj = {
-        _id: props.match.params.id,
+        id: props.match.params.id,
         contentType: contentType._id,
         category:
           contentType.categorization === true
             ? category
               ? category._id
-              : null
-            : null,
-        fields: form,
+              : ""
+            : "",
+        title: form["title"],
+        description: form["description"]  ? form["description"] : "",
+        receiver: form["receiver"] ? form["receiver"] : "",
+        thumbnail: form["thumbnail"],
+        attachments: form["attachments"],
       };
       updateRequest()
         .onOk(result => {
@@ -520,6 +592,28 @@ const UpsertProduct = props => {
               message: languageManager.translate(
                 "UPSERT_ITEM_UPDATE_NOT_FOUND"
               ),
+            },
+          });
+        })
+        .unKnownError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("error occured."),
+            },
+          });
+        })
+        .onRequestError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("request error"),
             },
           });
         })
@@ -853,10 +947,7 @@ const UpsertProduct = props => {
                 </span>
                 {!viewMode ? (
                   contentType.categorization === true ? (
-                    <button
-                      className="btn btn-link"
-                      onClick={showCatgoryModal}
-                    >
+                    <button className="btn btn-link" onClick={showCatgoryModal}>
                       {category ? "Change Category" : "Choose a category"}
                     </button>
                   ) : (
@@ -904,9 +995,7 @@ const UpsertProduct = props => {
           )}
           {tab === 3 && (
             <div className="up-formInputs animated fadeIn errorsBox">
-              <div className="alert alert-danger">
-                {error && error.message}
-              </div>
+              <div className="alert alert-danger">{error && error.message}</div>
               <div className="actions">
                 {error.sender === "contentType" && (
                   <div className="btns">
@@ -1004,10 +1093,7 @@ const UpsertProduct = props => {
         </main>
       </div>
       {categoryModal && (
-        <CategoriesModal
-          categories={categories}
-          onCloseModal={onCloseModel}
-        />
+        <CategoriesModal categories={categories} onCloseModal={onCloseModel} />
       )}
     </div>
   );

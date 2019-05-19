@@ -105,7 +105,7 @@ export default {
   HOME_SIDE_NAV_CONTENT_TYPE_DEC: 'Manage your content types',
   HOME_SIDE_NAV_PRODUCTS: 'Contents',
   HOME_SIDE_NAV_PRODUCTS_DESC: 'Define and manage your content',
-  HOME_SIDE_NAV_REQUESTS: 'Requests',
+  HOME_SIDE_NAV_REQUESTS: 'Content Request',
   HOME_SIDE_NAV_REQUESTS_DESC: 'Manage your reqeusted contents',
   HOME_SIDE_NAV_QUOTES: 'Quotes',
   HOME_SIDE_NAV_QUOTES_DESC: 'View and approve offers from vendors',

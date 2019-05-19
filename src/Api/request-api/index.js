@@ -710,13 +710,20 @@ export function updateRequest () {
       _notFoundCallBack(result)
     }
   }
-  let _onConnectionErrorCallBack
-  function _onConnectionError (result) {
-    if (_onConnectionErrorCallBack) {
-      _onConnectionErrorCallBack(result)
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
     }
   }
-  const _call = async (spaceId, content) => {
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
+
+  const _call = async (spaceId, request) => {
     try {
       const url = updateURL
       const token = storageManager.getItem('token')
@@ -728,13 +735,16 @@ export function updateRequest () {
           spaceId: spaceId
         },
         body: JSON.stringify({
-          id: content._id,
-          contentType: content.contentType,
-          category: content.category,
-          fields: content.fields
+          id: request.id,
+          contentType: request.contentType,
+          category: request.category,
+          title: request.title,
+          description: request.description,
+          receiver: request.receiver,
+          thumbnail: request.thumbnail,
+          attachments: request.attachments
         })
       })
-
       const status = rawResponse.status
       const result = await rawResponse.json()
       switch (status) {
@@ -754,9 +764,12 @@ export function updateRequest () {
           _onServerError()
           break
         default:
+          _unKnownError()
           break
       }
-    } catch (error) {}
+    } catch (error) {
+      _onRequestError()
+    }
   }
 
   return {
@@ -781,8 +794,12 @@ export function updateRequest () {
       _unAuthorizedCallBack = callback
       return this
     },
-    onConnectionError: function (callback) {
-      _onConnectionErrorCallBack = callback
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
       return this
     }
   }
