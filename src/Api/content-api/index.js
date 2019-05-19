@@ -912,12 +912,19 @@ export function getContentById () {
       _notFoundCallBack(result)
     }
   }
-  let _onConnectionErrorCallBack
-  function _onConnectionError (result) {
-    if (_onConnectionErrorCallBack) {
-      _onConnectionErrorCallBack(result)
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
     }
   }
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
+
   const _call = async (spaceId, contentId) => {
     try {
       const url = getByIdURL + '?id=' + contentId
@@ -977,8 +984,12 @@ export function getContentById () {
       _unAuthorizedCallBack = callback
       return this
     },
-    onConnectionError: function (callback) {
-      _onConnectionErrorCallBack = callback
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
       return this
     }
   }

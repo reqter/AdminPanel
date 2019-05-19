@@ -25,6 +25,7 @@ const Provider = props => {
     fields: [],
     categories: [],
     contents: [],
+    requests: [],
     users: [],
     assets: [],
     status: [
@@ -154,6 +155,12 @@ const Provider = props => {
           ...state,
           apiKeys: apiKeys_up,
         };
+      case "SET_REQUESTS":
+        const requests = {
+          ...state,
+          requests: action.value,
+        };
+        return requests;
       case "SET_WEBHOOKS":
         const webhooks = {
           ...state,

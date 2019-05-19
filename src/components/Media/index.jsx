@@ -72,7 +72,7 @@ const MediaInput = props => {
     <>
       <div className="up-uploader">
         <span className="title">{field.title[currentLang]}</span>
-        {field.description && field.description.length > 0 && (
+        {field.description  && (
           <span className="description">{field.description[currentLang]}</span>
         )}
         <div className="files">

@@ -18,10 +18,8 @@ const changePasswrodURL =
 const changeNotificationURL =
   config.REACT_APP_ACCOUNT_BASE_URL +
   config.REACT_APP_ACCOUNT_CHANGE_NOTIFICATION
-  const deleteAccountURL =
-  config.REACT_APP_ACCOUNT_BASE_URL +
-  config.REACT_APP_ACCOUNT_DELETE_ACCOUNT
-
+const deleteAccountURL =
+  config.REACT_APP_ACCOUNT_BASE_URL + config.REACT_APP_ACCOUNT_DELETE_ACCOUNT
 
 export function login () {
   let _onOkCallBack
@@ -1210,4 +1208,3 @@ export function deleteAccount () {
     }
   }
 }
-

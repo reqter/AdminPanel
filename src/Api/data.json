@@ -189,7 +189,7 @@
           },
           "type": "media",
           "mediaType": ["image"],
-          "isList": true,
+          "isList": false,
           "isBase": true,
           "allowEdit": false
         }

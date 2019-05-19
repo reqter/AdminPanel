@@ -1,26 +1,26 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { useGlobalState, languageManager } from "./../../services";
+import { useGlobalState, languageManager } from "../../services";
 import {
-  getContents,
-  filterContents,
-  deleteContent,
+  getRequests,
+  filterRequests,
+  deleteRequest,
   publish,
   unPublish,
   archive,
   unArchive,
-} from "./../../Api/content-api";
+} from "../../Api/request-api.";
 import "./styles.scss";
 
-import { Alert, CircleSpinner } from "./../../components";
+import { Alert, CircleSpinner } from "../../components";
 import {
   CategoriesFilter,
   ContentTypesFilter,
   StatusFilter,
-} from "./../../components/Commons/ContentFilters";
+} from "../../components/Commons/ContentFilters";
 
-const Products = props => {
+const Requests = props => {
   //#region controller
   const currentLang = languageManager.getCurrentLanguage().name;
   let baseFieldColumnsConfig = [
@@ -46,7 +46,7 @@ const Products = props => {
       headerStyle: {
         display: "block",
       },
-      accessor: "fields.thumbnail",
+      accessor: "thumbnail",
       Cell: props => {
         return (
           <div className="p-image">
@@ -63,27 +63,21 @@ const Products = props => {
       },
     },
     {
-      Header: () => <div className="p-header-td">Name</div>,
+      Header: () => <div className="p-header-td">Title</div>,
       //show: false,
       headerStyle: {
         display: "block",
       },
-      accessor: "fields",
+      //accessor: "title",
       Cell: props => {
-       return (
-         <div className="p-name">
-           <span>
-             {props.value &&
-               props.value["name"] &&
-               props.value["name"][currentLang]}
-           </span>
-           <span>
-             {props.value && props.value["shortDesc"] &&
-               props.value["shortDesc"][currentLang]}
-           </span>
-         </div>
-       );
-    },
+        const { title, description } = props.row._original;
+        return (
+          <div className="p-name">
+            <span>{title && title[currentLang]}</span>
+            <span>{description && description[currentLang]}</span>
+          </div>
+        );
+      },
     },
     {
       Header: () => <div className="p-header-td">Issuer</div>,
@@ -162,12 +156,6 @@ const Products = props => {
           <div className="p-actions">
             <button
               className="btn btn-light btn-sm"
-              onClick={() => handleViewRow(props)}
-            >
-              View
-            </button>
-            <button
-              className="btn btn-light btn-sm"
               onClick={() => handleEditRow(props)}
             >
               Edit
@@ -236,7 +224,7 @@ const Products = props => {
 
   // variables
   const [
-    { contents, categories, contentTypes, spaceInfo },
+    { requests, categories, contentTypes, spaceInfo },
     dispatch,
   ] = useGlobalState();
 
@@ -257,17 +245,17 @@ const Products = props => {
   const [dataStatus, toggleDataStatus] = useState(false);
 
   useEffect(() => {
-    loadContents();
+    loadRequests();
   }, []);
 
-  function loadContents() {
-    getContents()
+  function loadRequests() {
+    getRequests()
       .onOk(result => {
+        toggleSpinner(false);
         dispatch({
-          type: "SET_CONTENTS",
+          type: "SET_REQUESTS",
           value: result,
         });
-        toggleSpinner(false);
       })
       .onServerError(result => {
         toggleSpinner(false);
@@ -299,6 +287,12 @@ const Products = props => {
           },
         });
       })
+      .unKnownError(result => {
+        toggleSpinner(false);
+      })
+      .onRequestError(result => {
+        toggleSpinner(false);
+      })
       .call(spaceInfo.id);
   }
   // methods
@@ -306,11 +300,14 @@ const Products = props => {
   const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
   const audios = ["wav", "mp3", "ogg"];
   function getAssetUi(url) {
-    const ext = url
-      .split("/")
-      .pop()
-      .split(".")
-      .pop();
+    const ext =
+      url && url.length > 0
+        ? url
+            .split("/")
+            .pop()
+            .split(".")
+            .pop()
+        : "";
     if (imgs.indexOf(ext.toLowerCase()) !== -1)
       return <img className="p-image-value" src={url} alt="" />;
     else if (videos.indexOf(ext.toLowerCase()) !== -1)
@@ -350,10 +347,10 @@ const Products = props => {
   }
   function openNewItemBox(contentType) {
     props.history.push({
-      pathname: "/contents/new",
+      pathname: "/requests/new",
       // search: "?sort=name",
       //hash: "#the-hash",
-      //params: { contentType, hasContentType }
+      //params: { isRequest: true },
     });
   }
   function makeTableFieldView(type, props) {
@@ -451,11 +448,11 @@ const Products = props => {
 
   function filterData(text, contentTypeId, categoryId, status) {
     toggleSpinner(true);
-    filterContents()
+    filterRequests()
       .onOk(result => {
         toggleSpinner(false);
         dispatch({
-          type: "SET_CONTENTS",
+          type: "SET_REQUESTS",
           value: result,
         });
         if (dataStatus) toggleDataStatus(false);
@@ -501,20 +498,17 @@ const Products = props => {
   function handleDeleteRow(row) {
     setAlertData({
       type: "error",
-      title: "Remove Content",
-      message: "Are you sure to remove ?",
+      title: "Remove request",
+      message: "Are you sure to remove?",
       isAjaxCall: true,
       okTitle: "Remove",
       cancelTitle: "Don't remove",
       onOk: () => {
         const deleted = row.original;
-        deleteContent()
+        deleteRequest()
           .onOk(result => {
+            loadRequests();
             setAlertData();
-            dispatch({
-              type: "DELETE_CONTENT",
-              value: deleted,
-            });
             dispatch({
               type: "ADD_NOTIFY",
               value: {
@@ -614,10 +608,6 @@ const Products = props => {
           },
         });
         toggleDataStatus(true);
-        // dispatch({
-        //   type: "CHANGE_CONTENT_STATUS",
-        //   value: result,
-        // });
       })
       .onServerError(result => {
         dispatch({
@@ -714,6 +704,7 @@ const Products = props => {
   function publishContent(row) {
     publish()
       .onOk(result => {
+        
         dispatch({
           type: "ADD_NOTIFY",
           value: {
@@ -722,11 +713,6 @@ const Products = props => {
           },
         });
         toggleDataStatus(true);
-
-        // dispatch({
-        //   type: "CHANGE_CONTENT_STATUS",
-        //   value: result,
-        // });
       })
       .onServerError(result => {
         dispatch({
@@ -841,7 +827,7 @@ const Products = props => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search name of content"
+                placeholder="Search requests by title"
                 value={searchText}
                 onChange={e => setSearchText(e.target.value)}
               />
@@ -856,7 +842,7 @@ const Products = props => {
               <i className="icon-filter" />
             </button>
             <button className="btn btn-primary" onClick={openNewItemBox}>
-              New Content
+              New Request
             </button>
           </div>
         </div>
@@ -923,7 +909,7 @@ const Products = props => {
             </div>
             <div className="p-content-right-body">
               <ReactTable
-                data={contents}
+                data={requests}
                 defaultPageSize={10}
                 minRows={2}
                 columns={columns}
@@ -954,4 +940,4 @@ const Products = props => {
   );
 };
 
-export default Products;
+export default Requests;

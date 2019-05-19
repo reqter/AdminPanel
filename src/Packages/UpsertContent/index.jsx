@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import { useGlobalState, languageManager } from "./../../services";
 import {
   addContent,
   updateContent,
   getContentById,
-  getContentTypes,
 } from "./../../Api/content-api";
+import {
+  addRequest,
+  updateRequest,
+  getRequestById,
+} from "./../../Api/request-api.";
 import CategoriesModal from "./Categories";
 import ContentTypesList from "./ContentTypes";
 import {
@@ -23,14 +27,89 @@ import {
   JsonObject,
 } from "./../../components";
 
+const requestFields = [
+  {
+    id: "1",
+    name: "title",
+    title: {
+      en: "Title",
+      fa: "عنوان",
+    },
+    description: {
+      en: "title is required",
+    },
+    type: "string",
+    isBase: true,
+    isTranslate: true,
+    isRequired: true,
+  },
+  {
+    id: "2",
+    name: "description",
+    title: {
+      en: "Description",
+      fa: "توضیحات",
+    },
+    description: {
+      en: "Short description of your request",
+      fa: "توضیح کوتاه برای فایل",
+    },
+    type: "string",
+    isBase: true,
+    isTranslate: true,
+  },
+  {
+    id: "3",
+    name: "receiver",
+    title: {
+      en: "Receiver",
+      fa: "عنوان",
+    },
+    description: {
+      en: "Receiver is required",
+    },
+    type: "string",
+    appearance: "email",
+    isRequired: true,
+  },
+  {
+    id: "4",
+    name: "thumbnail",
+    title: {
+      en: "Thumbnail",
+    },
+    description: {
+      fa: "",
+      en: "Click on file selector to choose your file",
+    },
+    type: "media",
+    mediaType: ["image"],
+    isTranslate: true,
+  },
+  {
+    id: "5",
+    name: "attachments",
+    title: {
+      en: "Attachments",
+    },
+    description: {
+      fa: "",
+      en: "Click on file selector to choose your file",
+    },
+    type: "media",
+    isTranslate: true,
+  },
+];
+
 const UpsertProduct = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
-  const [
-    { categories, contentTypes, contents, spaceInfo },
-    dispatch,
-  ] = useGlobalState();
+  const requestBaseLink = process.env.REACT_APP_REQUESTS_DELIVERY_URL;
+  const [{ categories, spaceInfo }, dispatch] = useGlobalState();
 
   // variables
+  const requestLinkInput = useRef(null);
+  const isRequest = props.match.url.includes("requests") ? true : false;
+
   const [updateMode, toggleUpdateMode] = useState(
     props.match.params.id
       ? props.match.url.includes("view")
@@ -38,6 +117,7 @@ const UpsertProduct = props => {
         : true
       : false
   );
+
   const [viewMode] = useState(props.match.url.includes("view") ? true : false);
   const [tab, toggleTab] = useState();
   const [categoryModal, toggleCategoryModal] = useState(false);
@@ -57,6 +137,7 @@ const UpsertProduct = props => {
   const [newContentTypeBox, toggleNewContentTypeBox] = useState(false);
   const [spinner, toggleSpinner] = useState(false);
   const [closeSpinner, toggleCloseSpinner] = useState(false);
+  const [requestResult, setRequestResult] = useState();
 
   useEffect(() => {
     if (updateMode || viewMode) {
@@ -69,11 +150,9 @@ const UpsertProduct = props => {
         }
       } else {
         toggleTab(1);
-        //getContentTypesList();
       }
     } else {
       toggleTab(1);
-      //getContentTypesList();
     }
   }, [props.match.params.id]);
 
@@ -82,10 +161,7 @@ const UpsertProduct = props => {
   }, [contentType]);
   useEffect(() => {
     if (Object.keys(form).length > 0 && checkFormValidation()) {
-      if (contentType.categorization === true) {
-        if (category !== undefined && category !== null)
-          toggleIsValidForm(true);
-      } else toggleIsValidForm(true);
+      toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [formValidation, category]);
 
@@ -168,8 +244,12 @@ const UpsertProduct = props => {
     setFormData(result.fields);
     setForm(result.fields);
     setContentType(result.contentType);
-    const c_fields = result.contentType.fields;
-    setFields(c_fields.sort((a, b) => a.index - b.index));
+    if (isRequest) {
+      setFields(requestFields);
+    } else {
+      const c_fields = result.contentType.fields;
+      setFields(c_fields.sort((a, b) => a.index - b.index));
+    }
     if (result.contentType.categorization === true)
       setCategory(result.category);
 
@@ -312,14 +392,19 @@ const UpsertProduct = props => {
     }
   }
   function backToProducts() {
-    props.history.push("/panel/contents");
+    if (isRequest) props.history.push("/panel/requests");
+    else props.history.push("/panel/contents");
   }
   function changeTab(tab) {
     if (tab === 2) {
       if (contentType !== undefined) {
         toggleTab(2);
-        const f = contentType.fields;
-        setFields(f.sort((a, b) => a.index - b.index));
+        if (isRequest) {
+          setFields(requestFields);
+        } else {
+          const f = contentType.fields;
+          setFields(f.sort((a, b) => a.index - b.index));
+        }
       }
     } else {
       setContentType(undefined);
@@ -355,169 +440,344 @@ const UpsertProduct = props => {
     if (!spinner && !closeSpinner) {
       if (closePage) toggleCloseSpinner(true);
       else toggleSpinner(true);
-      if (updateMode) {
-        const obj = {
-          _id: props.match.params.id,
-          contentType: contentType._id,
-          category:
-            contentType.categorization === true
-              ? category
-                ? category._id
-                : null
-              : null,
-          fields: form,
-        };
-        updateContent()
-          .onOk(result => {
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "success",
-                message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
-              },
-            });
-            backToProducts();
-          })
-          .onServerError(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "error",
-                message: languageManager.translate(
-                  "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
-                ),
-              },
-            });
-          })
-          .onBadRequest(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "error",
-                message: languageManager.translate(
-                  "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
-                ),
-              },
-            });
-          })
-          .unAuthorized(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "warning",
-                message: languageManager.translate(
-                  "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
-                ),
-              },
-            });
-          })
-          .notFound(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "warning",
-                message: languageManager.translate(
-                  "UPSERT_ITEM_UPDATE_NOT_FOUND"
-                ),
-              },
-            });
-          })
-          .call(spaceInfo.id, obj);
+      if (isRequest) {
+        upsertRequestItem(true);
       } else {
-        const obj = {
-          contentType: contentType._id,
-          category:
-            contentType.categorization === true
-              ? category
-                ? category._id
-                : null
-              : null,
-          fields: form,
-        };
-        addContent()
-          .onOk(result => {
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "success",
-                message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
-              },
-            });
-            if (closePage) {
-              backToProducts();
-            } else {
-              if (closePage) toggleCloseSpinner(false);
-              else toggleSpinner(false);
-              setFormData({});
-              setForm({});
-              // let n_obj = {};
-              // for (const key in formValidation) {
-              //   n_obj[key] = false;
-              // }
-              setFormValidation({});
-            }
-          })
-          .onServerError(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "error",
-                message: languageManager.translate(
-                  "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
-                ),
-              },
-            });
-          })
-          .onBadRequest(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "error",
-                message: languageManager.translate(
-                  "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
-                ),
-              },
-            });
-          })
-          .unAuthorized(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "warning",
-                message: languageManager.translate(
-                  "UPSERT_ITEM_ADD_UN_AUTHORIZED"
-                ),
-              },
-            });
-          })
-          .notFound(result => {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "warning",
-                message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
-              },
-            });
-          })
-          .call(spaceInfo.id, obj);
+        upsertContent(closePage);
       }
     }
+  }
+  function upsertRequestItem(closePage) {
+    if (updateMode) {
+      const obj = {
+        _id: props.match.params.id,
+        contentType: contentType._id,
+        category:
+          contentType.categorization === true
+            ? category
+              ? category._id
+              : null
+            : null,
+        fields: form,
+      };
+      updateRequest()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
+            },
+          });
+          backToProducts();
+        })
+        .onServerError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .notFound(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_NOT_FOUND"
+              ),
+            },
+          });
+        })
+        .call(spaceInfo.id, obj);
+    } else {
+      const obj = {
+        contentType: contentType._id,
+        category:
+          contentType.categorization === true
+            ? category
+              ? category._id
+              : null
+            : null,
+        ...form,
+      };
+      addRequest()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
+            },
+          });
+          setRequestResult(result);
+          toggleTab(4);
+          toggleSpinner(false);
+          setFormData({});
+          setForm({});
+          setFormValidation({});
+        })
+        .onServerError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .notFound(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
+            },
+          });
+        })
+        .call(spaceInfo.id, obj);
+    }
+  }
+  function upsertContent(closePage) {
+    if (updateMode) {
+      const obj = {
+        _id: props.match.params.id,
+        contentType: contentType._id,
+        category:
+          contentType.categorization === true
+            ? category
+              ? category._id
+              : null
+            : null,
+        fields: form,
+      };
+      updateContent()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
+            },
+          });
+          backToProducts();
+        })
+        .onServerError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .notFound(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_UPDATE_NOT_FOUND"
+              ),
+            },
+          });
+        })
+        .call(spaceInfo.id, obj);
+    } else {
+      const obj = {
+        contentType: contentType._id,
+        category:
+          contentType.categorization === true
+            ? category
+              ? category._id
+              : null
+            : null,
+        fields: form,
+      };
+      addContent()
+        .onOk(result => {
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
+            },
+          });
+          if (closePage) {
+            backToProducts();
+          } else {
+            if (closePage) toggleCloseSpinner(false);
+            else toggleSpinner(false);
+            setFormData({});
+            setForm({});
+            // let n_obj = {};
+            // for (const key in formValidation) {
+            //   n_obj[key] = false;
+            // }
+            setFormValidation({});
+          }
+        })
+        .onServerError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .notFound(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
+            },
+          });
+        })
+        .call(spaceInfo.id, obj);
+    }
+  }
+  function copyRequestLink() {
+    requestLinkInput.current.select();
+    document.execCommand("copy");
+    dispatch({
+      type: "ADD_NOTIFY",
+      value: {
+        type: "success",
+        message: languageManager.translate("Request link copied"),
+      },
+    });
   }
   return (
     <div className="up-wrapper">
@@ -593,7 +853,10 @@ const UpsertProduct = props => {
                 </span>
                 {!viewMode ? (
                   contentType.categorization === true ? (
-                    <button className="btn btn-link" onClick={showCatgoryModal}>
+                    <button
+                      className="btn btn-link"
+                      onClick={showCatgoryModal}
+                    >
                       {category ? "Change Category" : "Choose a category"}
                     </button>
                   ) : (
@@ -615,7 +878,7 @@ const UpsertProduct = props => {
                   ))}
                 {!viewMode && (
                   <div className="form-submit-btns">
-                    {!updateMode && (
+                    {!updateMode && !isRequest && (
                       <button
                         className="btn btn-primary"
                         onClick={() => upsertItem(false)}
@@ -641,7 +904,9 @@ const UpsertProduct = props => {
           )}
           {tab === 3 && (
             <div className="up-formInputs animated fadeIn errorsBox">
-              <div className="alert alert-danger">{error && error.message}</div>
+              <div className="alert alert-danger">
+                {error && error.message}
+              </div>
               <div className="actions">
                 {error.sender === "contentType" && (
                   <div className="btns">
@@ -684,10 +949,65 @@ const UpsertProduct = props => {
               </div>
             </div>
           )}
+          {tab === 4 && (
+            <div className="up-formInputs animated fadeIn errorsBox requestAlert">
+              <div className="requestAlert-top">
+                <div className="requestSuccessIcon">
+                  <i className="icon-checkmark" />
+                </div>
+                <h4 className="alert-heading">Submitted!</h4>
+              </div>
+              <p>
+                Your request is created successfully.Use this link to send to
+                your audience.
+              </p>
+              <hr />
+              <p className="mb-0">
+                This link will be activated when you publish the request.
+                <br />
+                Request link :
+                <a
+                  href={requestBaseLink + "/" + requestResult.sys.link}
+                  class="alert-link"
+                >
+                  {requestBaseLink + "/" + requestResult.sys.link}
+                </a>
+              </p>
+
+              <div className="form-group">
+                <div className="input-group">
+                  <input
+                    ref={requestLinkInput}
+                    type="text"
+                    className="form-control"
+                    defaultValue={
+                      requestBaseLink + "/" + requestResult.sys.link
+                    }
+                    readOnly
+                  />
+                  <div
+                    className="input-group-append"
+                    onClick={copyRequestLink}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="input-group-text">Copy</span>
+                  </div>
+                </div>
+              </div>
+              <div className="requestLink-actions">
+                <button className="btn btn-light" onClick={backToProducts}>
+                  {languageManager.translate("Close")}
+                </button>
+              </div>
+            </div>
+          )}
         </main>
       </div>
       {categoryModal && (
-        <CategoriesModal categories={categories} onCloseModal={onCloseModel} />
+        <CategoriesModal
+          categories={categories}
+          onCloseModal={onCloseModel}
+        />
       )}
     </div>
   );

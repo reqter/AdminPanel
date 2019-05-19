@@ -106,7 +106,7 @@ export default {
   HOME_SIDE_NAV_PRODUCTS: 'Contents',
   HOME_SIDE_NAV_PRODUCTS_DESC: 'Define and manage your content',
   HOME_SIDE_NAV_REQUESTS: 'Requests',
-  HOME_SIDE_NAV_REQUESTS_DESC: 'View and approve incoming requests',
+  HOME_SIDE_NAV_REQUESTS_DESC: 'Manage your reqeusted contents',
   HOME_SIDE_NAV_QUOTES: 'Quotes',
   HOME_SIDE_NAV_QUOTES_DESC: 'View and approve offers from vendors',
   HOME_SIDE_NAV_ASSETS_MANAGER: 'Media',
@@ -329,7 +329,7 @@ export default {
   UPSERT_ITEM_ADD_UN_AUTHORIZED: 'Un Authorized',
   UPSERT_ITEM_ADD_NOT_FOUND: 'Not found',
   UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED:
-    'Content type is removed from content.To continue editing you have to choose a new content type ',
+    'Content type is removed from this content.To continue editing you have to choose a new content type',
   UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR: 'Internal server error.',
   UPSERT_ITEM_GET_BY_ID_BAD_REQUEST: 'Bad request',
   UPSERT_ITEM_GET_BY_ID_NOT_FOUND: 'Content did not found',

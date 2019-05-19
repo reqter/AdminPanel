@@ -1,0 +1,67 @@
+.viewContent {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .viewContent--header {
+    position: fixed;
+    height: 60px;
+    background: white;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0px 0px 3px 2px lightgray;
+    display: flex;
+    padding: 0 3%;
+    align-items: center;
+    z-index: 100;
+    .header--left {
+      display: flex;
+      align-items: center;
+      img {
+        margin-right: 15px;
+        width: 40px;
+        height: 40px;
+      }
+      .header--content-name {
+        font-weight: 500;
+        font-size: 18px;
+      }
+    }
+    .header--center {
+      flex: 1;
+    }
+    .header--right {
+    }
+  }
+  .viewContent--body {
+    padding-top: 60px;
+    flex: 1;
+    height: 100%;
+    .viewContent--error {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 300px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      div {
+      }
+      .viewContent--error-title {
+        font-weight: 500;
+        font-size: 25px;
+      }
+      .viewContent--error-msg {
+      }
+    }
+    .viewContent--template {
+      height: 100%;
+      overflow: auto;
+    }
+  }
+}

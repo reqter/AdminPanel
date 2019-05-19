@@ -8,7 +8,8 @@ import ForgotPassword from './Packages/ForgotPassword'
 import HomeComponent from './Packages/Home'
 import Categories from './Packages/Categories'
 import ContentType from './Packages/ContentType'
-import Users from './Packages/Users'
+//import Users from './Packages/Users'
+import Requests from './Packages/Requests'
 import Contents from './Packages/Contents'
 import UpsertContent from './Packages/UpsertContent'
 import Assets from './Packages/Assets'
@@ -16,6 +17,7 @@ import UpdateFile from './Packages/upsertFile'
 import Profile from './Packages/Profile'
 import Settings from './Packages/Settings'
 import UpsertUser from './Packages/upsertUser'
+import ContentView from './Packages/ViewContent'
 
 const Home = withResolver(HomeComponent)
 const AddAsset = withResolver(UpdateFile)
@@ -41,11 +43,6 @@ const routes = [
   },
   {
     path: '/forgotPassword',
-    component: ForgotPassword,
-    isPublic: true
-  },
-  {
-    path: '/requestContent/iiid',
     component: ForgotPassword,
     isPublic: true
   },
@@ -79,11 +76,11 @@ const routes = [
         isPublic: false
       },
       {
-        name: translate('HOME_SIDE_NAV_MANAGET_USERS'),
+        name: translate('HOME_SIDE_NAV_REQUESTS'),
         icon: 'users',
-        path: '/panel/users',
-        desc: translate('HOME_SIDE_NAV_MANAGE_USERS_DESC'),
-        component: Users,
+        path: '/panel/requests',
+        desc: translate('HOME_SIDE_NAV_REQUESTS_DESC'),
+        component: Requests,
         isPublic: false
       },
       {
@@ -110,6 +107,14 @@ const routes = [
         component: Settings,
         isPublic: false
       }
+      // {
+      //   name: translate('HOME_SIDE_NAV_MANAGET_USERS'),
+      //   icon: 'users',
+      //   path: '/panel/users',
+      //   desc: translate('HOME_SIDE_NAV_MANAGE_USERS_DESC'),
+      //   component: Users,
+      //   isPublic: false
+      // }
     ]
   },
   {
@@ -124,6 +129,21 @@ const routes = [
   },
   {
     path: '/contents/view/:id',
+    component: ViewContent,
+    isPublic: false
+  },
+    {
+    path: '/requests/new',
+    component: AddContent,
+    isPublic: false
+  },
+  {
+    path: '/requests/edit/:id',
+    component: EditContent,
+    isPublic: false
+  },
+  {
+    path: '/requests/view/:id',
     component: ViewContent,
     isPublic: false
   },
@@ -145,6 +165,16 @@ const routes = [
   {
     path: '/editAsset/:id',
     component: EditAsset,
+    isPublic: true
+  },
+  {
+    path: '/requestContent',
+    component: ForgotPassword,
+    isPublic: true
+  },
+  {
+    path: '/view/:spaceId/:id',
+    component: ContentView,
     isPublic: true
   }
 ]

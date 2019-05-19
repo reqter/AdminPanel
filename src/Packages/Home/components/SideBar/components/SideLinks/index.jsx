@@ -25,13 +25,12 @@ const NavLinks = props => {
       path: "/panel/contents",
       desc: translate("HOME_SIDE_NAV_PRODUCTS_DESC")
     },
-
-    // {
-    //   name: translate("HOME_SIDE_NAV_REQUESTS"),
-    //   icon: "request",
-    //   path: "/home/requests",
-    //   desc: translate("HOME_SIDE_NAV_REQUESTS_DESC")
-    // },
+    {
+      name: translate("HOME_SIDE_NAV_REQUESTS"),
+      icon: "request",
+      path: "/panel/requests",
+      desc: translate("HOME_SIDE_NAV_REQUESTS_DESC")
+    },
     // {
     //   name: translate("HOME_SIDE_NAV_QUOTES"),
     //   icon: "quote",
