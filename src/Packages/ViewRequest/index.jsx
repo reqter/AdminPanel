@@ -183,6 +183,10 @@ const ViewRequest = props => {
             };
             setError(obj);
           } else {
+            dispatch({
+              type: "SET_SPACEINFO",
+              value: { id: result.sys.spaceId },
+            });
             setItem(result);
             //setContentType(result.contentType);
             const c_fields = result.contentType.fields;
@@ -197,10 +201,8 @@ const ViewRequest = props => {
       .onServerError(result => {
         const obj = {
           type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: languageManager.translate(
-            "UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"
-          ),
+          title: "Server Error!",
+          message: "Internal server error.",
         };
         setError(obj);
         toggleSpinner(false);
@@ -208,10 +210,8 @@ const ViewRequest = props => {
       .onBadRequest(result => {
         const obj = {
           type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: languageManager.translate(
-            "UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"
-          ),
+          title: "Bad Request",
+          message: languageManager.translate("Bad Request"),
         };
         setError(obj);
         toggleSpinner(false);
@@ -220,18 +220,16 @@ const ViewRequest = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: languageManager.translate(
-            "UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"
-          ),
+          message: languageManager.translate(""),
         };
         setError(obj);
         toggleSpinner(false);
       })
       .notFound(() => {
         const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: languageManager.translate("UPSERT_ITEM_GET_BY_ID_NOT_FOUND"),
+          type: "NOT_FOUND",
+          title: "Not Found!",
+          message: languageManager.translate("Request not found."),
         };
         setError(obj);
         toggleSpinner(false);
@@ -239,8 +237,10 @@ const ViewRequest = props => {
       .onRequestError(() => {
         const obj = {
           type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: languageManager.translate("UPSERT_ITEM_GET_BY_ID_NOT_FOUND"),
+          title: "Request error",
+          message: languageManager.translate(
+            "There is an error like connection error."
+          ),
         };
         setError(obj);
         toggleSpinner(false);
@@ -248,8 +248,10 @@ const ViewRequest = props => {
       .unKnownError(() => {
         const obj = {
           type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: languageManager.translate("UPSERT_ITEM_GET_BY_ID_NOT_FOUND"),
+          title: "Error has occured",
+          message: languageManager.translate(
+            "There is an error in your request"
+          ),
         };
         setError(obj);
         toggleSpinner(false);
@@ -484,7 +486,7 @@ const ViewRequest = props => {
               )} */}
             </div>
             <div className="header--content-name">
-                <span>REQTER</span>
+              <span>REQTER</span>
               {/* <span>{item.title && item.title[currentLang]}</span>
               <span>
                 {item.description
@@ -531,14 +533,18 @@ const ViewRequest = props => {
         className="viewRequest--body"
         style={{
           paddingTop:
-            item && item.settings && item.settings.showHeader === true
-              ? 60
-              : 0,
+            item && item.settings && item.settings.showHeader === true ? 60 : 0,
         }}
       >
         {error ? (
           <div className="viewRequest--error">
-            <div>{error.type === "CONTENT_TYPE" && <NotFound />}</div>
+            <div>
+              {error.type === "CONTENT_TYPE" || error.type === "NOT_FOUND" ? (
+                <NotFound />
+              ) : (
+                <Wrong />
+              )}
+            </div>
             <div>{error.type === "WRONG_URL" && <Wrong />}</div>
             <span className="viewRequest--error-title">{error.title}</span>
             <span className="viewRequest--error-msg">{error.message}</span>
@@ -546,27 +552,25 @@ const ViewRequest = props => {
         ) : (
           <div className="viewRequest-form">
             <div className="formContent">
-              {item &&
-                item.settings &&
-                item.settings.showRequestInfo === true && (
-                  <div className="content-userInfo">
-                    <div className="userImage">
-                      <img
-                        src="https://sitejerk.com/images/profile-image-png-17.png"
-                        alt=""
-                      />
-                    </div>
-                    <div className="info">
-                      <span>
-                        <strong>Saeed padyab</strong> is requesting
-                      </span>
-                      <span>{item.title && item.title[currentLang]}</span>
-                    </div>
-                    <div className="requestDate">
-                      {moment(item.sys.issueDate).fromNow()}
-                    </div>
+              {item && item.settings && item.settings.showRequestInfo === true && (
+                <div className="content-userInfo">
+                  <div className="userImage">
+                    <img
+                      src="https://sitejerk.com/images/profile-image-png-17.png"
+                      alt=""
+                    />
                   </div>
-                )}
+                  <div className="info">
+                    <span>
+                      <strong>Saeed padyab</strong> is requesting
+                    </span>
+                    <span>{item.title && item.title[currentLang]}</span>
+                  </div>
+                  <div className="requestDate">
+                    {moment(item.sys.issueDate).fromNow()}
+                  </div>
+                </div>
+              )}
               <div className="content-inputs">
                 {fields &&
                   fields.map(field => (
@@ -575,7 +579,11 @@ const ViewRequest = props => {
                     </div>
                   ))}
                 <div className="actions">
-                  <button className="btn btn-primary" onClick={upsertContent}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={upsertContent}
+                    disabled={!isValidForm}
+                  >
                     <CircleSpinner show={submitSpinner} size="small" />
                     {!submitSpinner && "Submit"}
                   </button>

@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
 import { languageManager, useGlobalState, utility } from "../../services";
-import AssetFile from "./../AssetFile";
 import ImageEditorModal from "./ImageEditorModal";
 import { uploadAssetFile } from "./../../Api/asset-api";
 import SVGIcon from "./svg";
+import CircleSpinner from "./../CircleSpinner";
+import AssetFile from "./../AssetFile";
 
 const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -19,38 +20,22 @@ const FileUploaderInput = props => {
   const [progressPercentage, setPercentage] = useState("0");
   const [selectedFile, setSelectedFile] = useState();
 
-  const [files, setFiles] = useState(() => {
-    if (formData[field.name]) {
-      let fs = [];
-      fs.push({
-        id: Math.random(),
-        url: formData[field.name][currentLang],
-        fileType: formData["fileType"],
-        name: formData["name"],
-      });
-      return fs;
-    }
-    return [];
-  });
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    if (formData[field.name]) {
+    if (formData[field.name] && formData[field.name].length > 0) {
       if (field.isRequired === true) props.init(field.name, true);
 
-      let fs = [];
-      fs.push({
-        id: Math.random(),
-        url: formData[field.name][currentLang],
-        fileType: formData["fileType"],
-        name: formData["name"],
+      const d = formData[field.name].map(item => {
+        return {
+          id: Math.random(),
+          url: item,
+        };
       });
-      setFiles(fs);
+      setFiles(d);
     } else {
       if (field.isRequired === true) props.init(field.name, false);
-
-      if (files.length > 0) {
-        setFiles([]);
-      }
+      if (files.length > 0) setFiles([]);
     }
   }, [formData]);
   useEffect(() => {
@@ -88,10 +73,19 @@ const FileUploaderInput = props => {
     // setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
-      console.log(file)
-      if (file.type.includes("image")) {
-        //uploadAvatar(file);
-      }
+      setSelectedFile(file);
+      toggleIsUploading(true);
+      uploadFile(file);
+      // if (field.mediaType===undefined || field.mediaType.length===0 || field.mediaType[0]==="all") {
+      //   setSelectedFile(file);
+      //   toggleIsUploading(true);
+      //   uploadFile(file);
+      // }else {
+
+      // }
+      // if (file.type.includes("image")) {
+      //  // uploadAvatar(file);
+      // }
       e.dataTransfer.clearData();
     }
   }
@@ -101,12 +95,14 @@ const FileUploaderInput = props => {
       if (event.target.files.length > 0) {
         const file = event.target.files[0];
         setSelectedFile(file);
-        if (file.type.includes("image")) {
-          toggleEditorModal(true);
-        } else {
-          toggleIsUploading(true);
-          uploadFile(file);
-        }
+        toggleIsUploading(true);
+        uploadFile(file);
+        // if (file.type.includes("image")) {
+        //   toggleEditorModal(true);
+        // } else {
+        //   toggleIsUploading(true);
+        //   uploadFile(file);
+        // }
       }
     }
   }
@@ -115,60 +111,92 @@ const FileUploaderInput = props => {
       .onOk(result => {
         const { file } = result;
         addToList(file);
-        setTimeout(() => {
-          toggleIsUploading(false);
-        }, 200);
+        toggleIsUploading(false);
       })
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
+      .onServerError(result => {
+        toggleIsUploading(false);
+      })
+      .onBadRequest(result => {
+        toggleIsUploading(false);
+      })
+      .unAuthorized(result => {
+        toggleIsUploading(false);
+      })
       .onProgress(result => {
         setPercentage(result);
       })
       .call(file);
   }
   function removeFile(f) {
-    const fs = files.filter(file => file.id !== f.id);
-    setFiles(fs);
+    setFiles([]);
+    // const fs = files.filter(file => file.id !== f.id);
+    // setFiles(fs);
 
-    if (field.isRequired) {
-      if (field.isList !== undefined && field.isList) {
-        if (fs.length === 0) props.onChangeValue(field.name, fs, false);
-        else props.onChangeValue(field, fs, true);
-      } else {
-        if (fs.length === 0) {
-          if (field.isTranslate) {
-            props.onChangeValue(field, undefined, false);
-          } else props.onChangeValue(field, undefined, false);
-        }
-      }
-    } else {
-      props.onChangeValue(field.name, fs, true);
-    }
+    // if (field.isRequired) {
+    //   if (field.isList !== undefined && field.isList) {
+    //     if (fs.length === 0) props.onChangeValue(field.name, fs, false);
+    //     else props.onChangeValue(field, fs, true);
+    //   } else {
+    //     if (fs.length === 0) {
+    //       if (field.isTranslate) {
+    //         props.onChangeValue(field, undefined, false);
+    //       } else props.onChangeValue(field, undefined, false);
+    //     }
+    //   }
+    // } else {
+    //   props.onChangeValue(field.name, fs, true);
+    // }
   }
+  useEffect(() => {
+    // send value to form after updateing
+    let result = files.map(item => item.url);
+    if (result.length === 0) result = [];
+    if (field.isRequired === true) {
+      if (result === undefined || result.length === 0)
+        props.onChangeValue(field, result, false);
+      else props.onChangeValue(field, result, true);
+    } else {
+      props.onChangeValue(field, result, true);
+    }
+  }, [files]);
+
   function addToList(file) {
-    let obj = {
-      id: Math.random().toString(),
-      url: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
-      name: file.originalname,
-      fileType: file.mimetype,
+    const obj = {
+      id: Math.random(),
+      url: {
+        [currentLang]: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+      },
     };
     if (field.isList !== undefined && field.isList) {
-      let fs = [...files];
-      fs.push(obj);
-      setFiles(fs);
-      props.onChangeValue(field, fs, true);
+      const newFiles = [...files, obj];
+      setFiles(newFiles);
     } else {
       let fs = [];
-      fs.push(obj);
+      fs[0] = obj;
       setFiles(fs);
-      let f, l;
-      if (field.isTranslate) {
-        l = utility.applyeLangs(fs[0].url);
-        f = { ...fs[0], ...l };
-      }
-      props.onChangeValue(field, f, true);
     }
+    // let obj = {
+    //   id: Math.random().toString(),
+    //   url: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+    //   name: file.originalname,
+    //   fileType: file.mimetype,
+    // };
+    // if (field.isList !== undefined && field.isList) {
+    //   let fs = [...files];
+    //   fs.push(obj);
+    //   setFiles(fs);
+    //   props.onChangeValue(field, fs, true);
+    // } else {
+    //   let fs = [];
+    //   fs.push(obj);
+    //   setFiles(fs);
+    //   let f, l;
+    //   if (field.isTranslate) {
+    //     l = utility.applyeLangs(fs[0].url);
+    //     f = { ...fs[0], ...l };
+    //   }
+    //   props.onChangeValue(field, f, true);
+    // }
   }
   function onCloseEditor(result) {
     toggleEditorModal(false);
@@ -182,12 +210,43 @@ const FileUploaderInput = props => {
         <span className="title">{field.title[currentLang]}</span>
         <span className="description">{field.description[currentLang]}</span>
         <div className="dropBox" ref={dropRef}>
-          <div className="dropbox-content">
-            <SVGIcon />
-            <span>
-              Drag and drop a file hear or <a href="">open browser...</a>
-            </span>
-          </div>
+          {files && files.length > 0 && (
+            <div className="dropbox-uploadedFile">
+              {utility.getAssetIconByURL(
+                files[0]["url"][currentLang],
+                "unknowIcon"
+              )}
+            </div>
+          )}
+
+          {!files ||
+            (files.length === 0 && (
+              <div className="dropbox-content">
+                <SVGIcon />
+                <span>
+                  Drag and drop a file hear or{" "}
+                  <div className="dropbox-browser">
+                    <a href="">open browser...</a>
+                    <input type="file" onChange={handleChange} />
+                  </div>
+                </span>
+              </div>
+            ))}
+          {isUploading && (
+            <div className="dropbox-spinner">
+              <CircleSpinner show={isUploading} size="large" />
+              Uploading {progressPercentage + "%"}
+            </div>
+          )}
+          {files && files.length > 0 && (
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary btn-remove"
+              onClick={removeFile}
+            >
+              <i className="icon-bin" />
+            </button>
+          )}
           {/* {files.map(file => (
             <div key={file.id} className="files-uploaded">
               <div
@@ -248,23 +307,6 @@ const FileUploaderInput = props => {
           </div>
        */}
         </div>
-        {isUploading && (
-          <>
-            <span style={{ marginBottom: 10 }}>{selectedFile.name}</span>
-            <div className="progress">
-              <div
-                className="progress-bar"
-                role="progressbar"
-                style={{ width: progressPercentage + "%" }}
-                aria-valuenow="25"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                {progressPercentage + "%"}
-              </div>
-            </div>
-          </>
-        )}
       </div>
       {editorModal && (
         <ImageEditorModal
