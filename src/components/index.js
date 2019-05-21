@@ -16,8 +16,10 @@ import CircleSpinner from './CircleSpinner'
 import Alert from './PopupAlert'
 import RowSkeleton from './RowSkeleton'
 import JsonObject from './JsonObject'
+import AdvanceUploader from './AdvanceUploader'
 
 export {
+  AdvanceUploader,
   Alert,
   AssignRole,
   Reference,

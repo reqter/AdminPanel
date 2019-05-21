@@ -74,36 +74,47 @@ const MediaInput = props => {
       <div className="up-uploader">
         <span className="title">{field.title[currentLang]}</span>
         {field.description && (
-          <span className="description">{field.description[currentLang]}</span>
+          <span className="description">
+            {field.description && field.description[currentLang]}
+          </span>
         )}
         <div className="files">
-          {files.map(file => (
-            <div key={file.id} className="files-uploaded">
-              {!props.viewMode && (
-                <div
-                  className="files-uploaded-icon"
-                  onClick={() => removeFile(file)}
-                >
-                  <i className="icon-bin" />
-                </div>
-              )}
-              <div className="updatedFileType">
-                {field.mediaType === "image" ? (
-                  <img src={file.url[currentLang]} alt="" />
-                ) : field.mediaType === "video" ? (
-                  <i className="icon-video" />
-                ) : field.mediaType === "audio" ? (
-                  <i className="icon-audio" />
-                ) : field.mediaType === "pdf" ? (
-                  <i className="icon-pdf" />
-                ) : field.mediaType === "spreadsheet" ? (
-                  <i className="icon-spreadsheet" />
-                ) : (
-                  utility.getAssetIconByURL(file.url[currentLang])
-                )}
+          {props.viewMode && (!files || files.length === 0) ? (
+            <div className="files-uploaded">
+              <div className="updatedFileType" style={{ fontSize: 17 }}>
+                empty
               </div>
             </div>
-          ))}
+          ) : (
+            files.map(file => (
+              <div key={file.id} className="files-uploaded">
+                {!props.viewMode && (
+                  <div
+                    className="files-uploaded-icon"
+                    onClick={() => removeFile(file)}
+                  >
+                    <i className="icon-bin" />
+                  </div>
+                )}
+                <div className="updatedFileType">
+                  {field.mediaType === "image" ? (
+                    <img src={file.url[currentLang]} alt="" />
+                  ) : field.mediaType === "video" ? (
+                    <i className="icon-video" />
+                  ) : field.mediaType === "audio" ? (
+                    <i className="icon-audio" />
+                  ) : field.mediaType === "pdf" ? (
+                    <i className="icon-pdf" />
+                  ) : field.mediaType === "spreadsheet" ? (
+                    <i className="icon-spreadsheet" />
+                  ) : (
+                    utility.getAssetIconByURL(file.url[currentLang])
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+          {}
           {!props.viewMode && (
             <div className="files-input" onClick={openAssetBrowser}>
               {field.mediaType === "file" ? (

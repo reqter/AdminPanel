@@ -242,6 +242,7 @@ const UpsertProduct = props => {
   function getRequestContentById(id) {
     getRequestById()
       .onOk(result => {
+        debugger
         if (result) {
           setSelectedContent(result);
           if (!result.contentType) {

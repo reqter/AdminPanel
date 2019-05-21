@@ -29,10 +29,10 @@
           "isRequired": true
         },
         {
-          "name": "shortDesc",
+          "name": "description",
           "title": {
-            "fa": "Short Description",
-            "en": "Short Description"
+            "fa": "توضیحات",
+            "en": "Description"
           },
           "description": {
             "fa": "",
@@ -73,10 +73,9 @@
           "allowEdit": false
         },
         {
-          "name": "shortDesc",
+          "name": "description",
           "title": {
-            "fa": "Short Description",
-            "en": "Short Description"
+            "en": "Description"
           },
           "description": {
             "fa": "",
@@ -146,10 +145,9 @@
           "isRequired": true
         },
         {
-          "name": "shortDesc",
+          "name": "description",
           "title": {
-            "fa": "Short Description",
-            "en": "Short Description"
+            "en": "Description"
           },
           "description": {
             "fa": "",
@@ -227,9 +225,8 @@
           "allowEdit": false
         },
         {
-          "name": "shortDesc",
+          "name": "description",
           "title": {
-            "fa": "Short Description",
             "en": "Short Description"
           },
           "description": {
@@ -307,9 +304,8 @@
           "allowEdit": false
         },
         {
-          "name": "shortDesc",
+          "name": "description",
           "title": {
-            "fa": "Short Description",
             "en": "Short Description"
           },
           "description": {
@@ -387,9 +383,8 @@
           "allowEdit": false
         },
         {
-          "name": "shortDesc",
+          "name": "description",
           "title": {
-            "fa": "Short Description",
             "en": "Short Description"
           },
           "description": {
@@ -467,9 +462,8 @@
           "allowEdit": false
         },
         {
-          "name": "shortDesc",
+          "name": "description",
           "title": {
-            "fa": "Short Description",
             "en": "Short Description"
           },
           "description": {

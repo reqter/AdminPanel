@@ -8,7 +8,7 @@ import ForgotPassword from './Packages/ForgotPassword'
 import HomeComponent from './Packages/Home'
 import Categories from './Packages/Categories'
 import ContentType from './Packages/ContentType'
-//import Users from './Packages/Users'
+// import Users from './Packages/Users'
 import Requests from './Packages/Requests'
 import Contents from './Packages/Contents'
 import UpsertContent from './Packages/UpsertContent'
@@ -18,6 +18,7 @@ import Profile from './Packages/Profile'
 import Settings from './Packages/Settings'
 import UpsertUser from './Packages/upsertUser'
 import ContentView from './Packages/ViewContent'
+import ViewRequest from './Packages/ViewRequest'
 
 const Home = withResolver(HomeComponent)
 const AddAsset = withResolver(UpdateFile)
@@ -132,7 +133,7 @@ const routes = [
     component: ViewContent,
     isPublic: false
   },
-    {
+  {
     path: '/requests/new',
     component: AddContent,
     isPublic: false
@@ -146,6 +147,11 @@ const routes = [
     path: '/requests/view/:id',
     component: ViewContent,
     isPublic: false
+  },
+  {
+    path: '/requestContent/:id',
+    component: ViewRequest,
+    isPublic: true
   },
   {
     path: '/users/new',
@@ -165,11 +171,6 @@ const routes = [
   {
     path: '/editAsset/:id',
     component: EditAsset,
-    isPublic: true
-  },
-  {
-    path: '/requestContent',
-    component: ForgotPassword,
     isPublic: true
   },
   {

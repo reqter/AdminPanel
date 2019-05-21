@@ -3,7 +3,7 @@ import { Video, Gallery } from "./Templates";
 import "./styles.scss";
 import { languageManager, useGlobalState } from "../../services";
 import { getContentById } from "./../../Api/content-api";
-import { NotFound } from "./ErrorsComponent";
+import { NotFound } from "../../components/Commons/ErrorsComponent";
 
 const currentLang = languageManager.getCurrentLanguage().name;
 
