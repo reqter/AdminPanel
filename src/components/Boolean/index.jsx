@@ -59,7 +59,7 @@ const BooleanComponent = props => {
           <label className="checkBox">
             <input
               type="checkbox"
-              id={"chk" + field.sys.id}
+              id={"chk" + field.name}
               checked={value}
               onChange={handleCheckboxValue}
               disabled={props.viewMode}
@@ -68,7 +68,7 @@ const BooleanComponent = props => {
           </label>
         </div>
         <div className="right">
-          <label for={"chk" + field.sys.id}>{field.title[currentLang]}</label>
+          <label for={"chk" + field.name}>{field.title[currentLang]}</label>
           {field.description && field.description.length && (
             <label>{field.description[currentLang]}</label>
           )}
@@ -87,7 +87,7 @@ const BooleanComponent = props => {
           <label className="checkBox">
             <input
               type="checkbox"
-              id={"chk" + field.sys.id}
+              id={"chk" + field.name}
               checked={value}
               onChange={handleCheckboxValue}
             />
@@ -95,7 +95,7 @@ const BooleanComponent = props => {
           </label>
         </div>
         <div className="right">
-          <label for={"chk" + field.sys.id}>{field.title[currentLang]}</label>
+          <label for={"chk" + field.name}>{field.title[currentLang]}</label>
           <label>{field.description[currentLang]}</label>
         </div>
       </div>

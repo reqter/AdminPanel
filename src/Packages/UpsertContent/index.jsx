@@ -73,6 +73,30 @@ const requestFields = [
   },
   {
     id: "4",
+    name: "requesterInfo",
+    title: {
+      en: "Show Requester Info",
+      fa: "عنوان",
+    },
+    description: {
+      en: "If checked, request page will show your info",
+    },
+    type: "boolean",
+  },
+  {
+    id: "5",
+    name: "showHeader",
+    title: {
+      en: "Show Header Info",
+      fa: "عنوان",
+    },
+    description: {
+      en: "If checked, request page will have a header at top of the page",
+    },
+    type: "boolean",
+  },
+  {
+    id: "6",
     name: "thumbnail",
     title: {
       en: "Thumbnail",
@@ -86,7 +110,7 @@ const requestFields = [
     isTranslate: true,
   },
   {
-    id: "5",
+    id: "7",
     name: "attachments",
     title: {
       en: "Attachments",
@@ -242,7 +266,6 @@ const UpsertProduct = props => {
   function getRequestContentById(id) {
     getRequestById()
       .onOk(result => {
-        debugger
         if (result) {
           setSelectedContent(result);
           if (!result.contentType) {
@@ -528,7 +551,7 @@ const UpsertProduct = props => {
               : ""
             : "",
         title: form["title"],
-        description: form["description"]  ? form["description"] : "",
+        description: form["description"] ? form["description"] : "",
         receiver: form["receiver"] ? form["receiver"] : "",
         thumbnail: form["thumbnail"],
         attachments: form["attachments"],
@@ -1057,10 +1080,10 @@ const UpsertProduct = props => {
                 <br />
                 Request link :
                 <a
-                  href={requestBaseLink + "/" + requestResult.sys.link}
+                  href={requestBaseLink + "/" + requestResult._id}
                   class="alert-link"
                 >
-                  {requestBaseLink + "/" + requestResult.sys.link}
+                  {requestBaseLink + "/" + requestResult._id}
                 </a>
               </p>
 
@@ -1070,9 +1093,7 @@ const UpsertProduct = props => {
                     ref={requestLinkInput}
                     type="text"
                     className="form-control"
-                    defaultValue={
-                      requestBaseLink + "/" + requestResult.sys.link
-                    }
+                    defaultValue={requestBaseLink + "/" + requestResult._id}
                     readOnly
                   />
                   <div

@@ -145,11 +145,11 @@
             font-size: 12px;
             & span:first-child {
               font-size: 16px;
-              font-weight: 500;
               margin-bottom: 5px;
             }
           }
           .requestDate {
+            font-size: 15px;
           }
         }
         .content-inputs {
@@ -160,6 +160,13 @@
           box-shadow: 0 0 0px lightgray;
           padding: 4%;
           margin-bottom: 20px;
+          .actions {
+            display: flex;
+            flex-direction: row-reverse;
+            button {
+              margin-top: 10px;
+            }
+          }
         }
         .form-attachments {
           min-height: 100px;

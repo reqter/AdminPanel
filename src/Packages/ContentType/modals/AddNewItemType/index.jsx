@@ -125,8 +125,10 @@ const UpsertTemplate = props => {
     setTemplate(tmp);
   }
   function backToTemplates() {
-    changeTab(1);
-    setTemplate({});
+    if (!spinner) {
+      changeTab(1);
+      setTemplate({});
+    }
   }
   function handleNameChanged(e) {
     setName(e.target.value);

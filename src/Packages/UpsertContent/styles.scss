@@ -179,6 +179,10 @@ body {
   }
 }
 .requestAlert {
+  a {
+    font-size: 14px;
+    padding-left: 5px;
+  }
   .requestAlert-top {
     display: flex;
     align-items: center;

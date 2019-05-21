@@ -5,7 +5,8 @@ import {
   useGlobalState,
   storageManager,
 } from "../../services";
-import { getContentById } from "./../../Api/content-api";
+import { addContent } from "./../../Api/content-api";
+import { getRequestById } from "./../../Api/request-api";
 import { getUserInfo } from "./../../Api/account-api";
 import { NotFound, Wrong } from "../../components/Commons/ErrorsComponent";
 import {
@@ -97,7 +98,7 @@ const requestFields = [
 ];
 
 const currentLang = languageManager.getCurrentLanguage().name;
- 
+
 const ViewRequest = props => {
   const viewMode = false;
   const updateMode = false;
@@ -105,7 +106,7 @@ const ViewRequest = props => {
   const [{ spaceInfo }, dispatch] = useGlobalState();
   const [item, setItem] = useState();
   const [userInfo, setUserInfo] = useState();
-  const [spinner, toggleSpinner] = useState(false);
+  const [spinner, toggleSpinner] = useState(true);
 
   const [categoryModal, toggleCategoryModal] = useState(false);
   const [category, setCategory] = useState();
@@ -136,11 +137,8 @@ const ViewRequest = props => {
       toggleSpinner(false);
     } else {
       const token = storageManager.getItem("token");
-      if (token) {
-        fetchUserInfo();
-      } else {
-        // getItemById(params.spaceId, params.id);
-      }
+      if (token) fetchUserInfo();
+      getItemById("5ccfd1297890980017b2c899", params.id);
     }
   }, [props.match.params.id]);
 
@@ -172,10 +170,9 @@ const ViewRequest = props => {
       .call();
   }
   function getItemById(spaceId, id) {
-    getContentById()
+    getRequestById()
       .onOk(result => {
         if (result) {
-          setItem(result);
           if (!result.contentType) {
             const obj = {
               type: "CONTENT_TYPE",
@@ -184,15 +181,13 @@ const ViewRequest = props => {
             };
             setError(obj);
           } else {
-            setError();
-            setContentType(result.contentType);
-
-            setFormData(result.fields);
-            setForm(result.fields);
+            setItem(result);
+            //setContentType(result.contentType);
             const c_fields = result.contentType.fields;
             setFields(c_fields.sort((a, b) => a.index - b.index));
-            if (result.contentType.categorization === true)
-              setCategory(result.category);
+            // if (result.contentType.categorization === true)
+            //   setCategory(result.category);
+            setError();
           }
         }
         toggleSpinner(false);
@@ -386,6 +381,84 @@ const ViewRequest = props => {
       [key]: isValid,
     }));
   }
+
+  function upsertContent(closePage) {
+    if (!submitSpinner) {
+      toggleSubmitSpinner(true)
+      const obj = {
+        contentType: item.contentType._id,
+        // category:
+        //   item.contentType.categorization === true
+        //     ? item.category
+        //       ? item.category._id
+        //       : null
+        //     : null,
+        fields: form,
+      };
+      addContent()
+        .onOk(result => {
+            toggleSubmitSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
+            },
+          });
+
+          setFormData({});
+          setForm({});
+          setFormValidation({});
+        })
+        .onServerError(result => {
+          toggleSubmitSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        })
+        .onBadRequest(result => {
+          toggleSubmitSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
+              ),
+            },
+          });
+        })
+        .unAuthorized(result => {
+          toggleSubmitSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate(
+                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
+              ),
+            },
+          });
+        })
+        .notFound(result => {
+          toggleSubmitSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
+            },
+          });
+        })
+        .call(item.sys.spaceId, obj);
+    }
+  }
   return spinner ? (
     <div className="loaderBox">
       <div className="loader" />
@@ -403,11 +476,11 @@ const ViewRequest = props => {
             />
           </div>
           <div className="header--content-name">
-            <span>{"Please send your IDcard"}</span>
+            <span>{item.title && item.title[currentLang]}</span>
             <span>
-              {
-                "please dont use low quality images, each itam has got two references"
-              }
+              {item.description
+                ? item.description[currentLang]
+                : "Lorem ipsum description"}
             </span>
           </div>
         </div>
@@ -432,7 +505,8 @@ const ViewRequest = props => {
                     " " +
                     userInfo.profile.last_name}
               </span>
-              {userInfo.profile.avatar && userInfo.profile.avatar.length > 0 ? (
+              {userInfo.profile.avatar &&
+              userInfo.profile.avatar.length > 0 ? (
                 <div>
                   <img src="https://i.redd.it/6onq25y0sh311.jpg" alt="" />
                 </div>
@@ -463,27 +537,35 @@ const ViewRequest = props => {
                 </div>
                 <div className="info">
                   <span>
-                    <string>Saeed padyab</string> is requesting
+                    <strong>Saeed padyab</strong> is requesting
                   </span>
-                  <span>Please send your id card</span>
+                  <span>{item.title && item.title[currentLang]}</span>
                 </div>
-                <div className="requestDate">Yesterday</div>
+                <div className="requestDate">{item.sys.issueDate}</div>
               </div>
               <div className="content-inputs">
-                {requestFields &&
-                  requestFields.map(field => (
+                {fields &&
+                  fields.map(field => (
                     <div key={field.id} className="rowItem">
                       {getFieldItem(field)}
                     </div>
                   ))}
-              </div>
-              <div className="form-attachments">
-                <h5>Attachments</h5>
-                <div className="attachments-files">
-                  <div className="attachmentItem" />
-                  <div className="attachmentItem" />
+                <div className="actions">
+                  <button className="btn btn-primary" onClick={upsertContent}>
+                    <CircleSpinner show={submitSpinner} size="small" />
+                    {!submitSpinner && "Submit"}
+                  </button>
                 </div>
               </div>
+              {item.attachments && item.attachments.length > 0 && (
+                <div className="form-attachments">
+                  <h5>Attachments</h5>
+                  <div className="attachments-files">
+                    <div className="attachmentItem" />
+                    <div className="attachmentItem" />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
