@@ -21,26 +21,28 @@ const ReferenceInput = props => {
       if (field.isRequired === true) props.init(field.name, false);
     }
 
-    filterContents()
-      .onOk(result => {
-        if (result) {
-          const r = result.map(item => {
-            item.value = item._id;
-            return item;
-          });
-          setOptions(r);
-          if (formData[field.name] === undefined) {
-            setValues(null);
-          } else {
-            initValue(r);
+    if (spaceInfo) {
+      filterContents()
+        .onOk(result => {
+          if (result) {
+            const r = result.map(item => {
+              item.value = item._id;
+              return item;
+            });
+            setOptions(r);
+            if (formData[field.name] === undefined) {
+              setValues(null);
+            } else {
+              initValue(r);
+            }
           }
-        }
-      })
-      .onServerError(result => {})
-      .onBadRequest(result => {})
-      .unAuthorized(result => {})
-      .notFound(() => {})
-      .call(spaceInfo.id, undefined, [field.references]);
+        })
+        .onServerError(result => {})
+        .onBadRequest(result => {})
+        .unAuthorized(result => {})
+        .notFound(() => {})
+        .call(spaceInfo.id, undefined, [field.references]);
+    }
   }, [formData]);
   function initValue(allData) {
     if (field.isList) {

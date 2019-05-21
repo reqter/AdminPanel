@@ -6,7 +6,7 @@ import {
   storageManager,
 } from "../../services";
 import { addContent } from "./../../Api/content-api";
-import { getRequestById } from "./../../Api/request-api";
+import { getRequestByLink } from "./../../Api/request-api";
 import { getUserInfo } from "./../../Api/account-api";
 import { NotFound, Wrong } from "../../components/Commons/ErrorsComponent";
 import {
@@ -24,6 +24,8 @@ import {
   FileUploader,
   AdvanceUploader,
 } from "./../../components";
+var moment = require("moment");
+
 const requestFields = [
   {
     id: "1",
@@ -104,7 +106,7 @@ const ViewRequest = props => {
   const updateMode = false;
 
   const [{ spaceInfo }, dispatch] = useGlobalState();
-  const [item, setItem] = useState();
+  const [item, setItem] = useState({});
   const [userInfo, setUserInfo] = useState();
   const [spinner, toggleSpinner] = useState(true);
 
@@ -138,7 +140,7 @@ const ViewRequest = props => {
     } else {
       const token = storageManager.getItem("token");
       if (token) fetchUserInfo();
-      getItemById("5ccfd1297890980017b2c899", params.id);
+      getItemById(params.id);
     }
   }, [props.match.params.id]);
 
@@ -169,8 +171,8 @@ const ViewRequest = props => {
       .unKnownError(result => {})
       .call();
   }
-  function getItemById(spaceId, id) {
-    getRequestById()
+  function getItemById(link) {
+    getRequestByLink()
       .onOk(result => {
         if (result) {
           if (!result.contentType) {
@@ -189,7 +191,7 @@ const ViewRequest = props => {
             //   setCategory(result.category);
             setError();
           }
-        }
+        } else setItem({});
         toggleSpinner(false);
       })
       .onServerError(result => {
@@ -252,7 +254,7 @@ const ViewRequest = props => {
         setError(obj);
         toggleSpinner(false);
       })
-      .call(spaceId, id);
+      .call(link);
   }
   function getFieldItem(field) {
     switch (field.type.toLowerCase()) {
@@ -384,7 +386,7 @@ const ViewRequest = props => {
 
   function upsertContent(closePage) {
     if (!submitSpinner) {
-      toggleSubmitSpinner(true)
+      toggleSubmitSpinner(true);
       const obj = {
         contentType: item.contentType._id,
         // category:
@@ -397,7 +399,7 @@ const ViewRequest = props => {
       };
       addContent()
         .onOk(result => {
-            toggleSubmitSpinner(false);
+          toggleSubmitSpinner(false);
           dispatch({
             type: "ADD_NOTIFY",
             value: {
@@ -466,58 +468,74 @@ const ViewRequest = props => {
     </div>
   ) : (
     <div className="viewRequest">
-      <div className="viewRequest--header">
-        <div className="header--left">
-          <div className="header--content-icon">
-            {/* <div className="empty-icon">?</div> */}
-            <img
-              src="https://www.insertcart.com/wp-content/uploads/2018/05/thumbnail.jpg"
-              alt=""
-            />
-          </div>
-          <div className="header--content-name">
-            <span>{item.title && item.title[currentLang]}</span>
-            <span>
-              {item.description
-                ? item.description[currentLang]
-                : "Lorem ipsum description"}
-            </span>
-          </div>
-        </div>
-        <div className="header--center" />
-        <div className="header--right">
-          {!userInfo && (
-            <img
-              src={require("./../../assets/logo.png")}
-              alt=""
-              className="logo"
-            />
-          )}
-          {userInfo && (
-            <div className="userinfo">
-              <span>
-                {(userInfo.profile.first_name === undefined ||
-                  userInfo.profile.first_name.length === 0) &&
-                (userInfo.profile.last_name === undefined ||
-                  userInfo.profile.last_name.length === 0)
-                  ? "Your name"
-                  : userInfo.profile.first_name +
-                    " " +
-                    userInfo.profile.last_name}
-              </span>
-              {userInfo.profile.avatar &&
-              userInfo.profile.avatar.length > 0 ? (
-                <div>
-                  <img src="https://i.redd.it/6onq25y0sh311.jpg" alt="" />
-                </div>
+      {item && item.settings && item.settings.showHeader === true && (
+        <div className="viewRequest--header">
+          <div className="header--left">
+            <div className="header--content-icon">
+              <img
+                src={require("./../../assets/logo.png")}
+                alt=""
+                className="logo"
+              />
+              {/* {item.thumbnail && item.thumbnail.length > 0 ? (
+                <img src={item.thumbnail[0][currentLang]} alt="" />
               ) : (
-                <div className="empty-avatar">?</div>
-              )}
+                <div className="empty-icon">?</div>
+              )} */}
             </div>
-          )}
+            <div className="header--content-name">
+                <span>REQTER</span>
+              {/* <span>{item.title && item.title[currentLang]}</span>
+              <span>
+                {item.description
+                  ? item.description[currentLang]
+                  : "Lorem ipsum description"}
+              </span> */}
+            </div>
+          </div>
+          <div className="header--center" />
+          <div className="header--right">
+            {!userInfo && (
+              <img
+                src={require("./../../assets/logo.png")}
+                alt=""
+                className="logo"
+              />
+            )}
+            {userInfo && (
+              <div className="userinfo">
+                <span>
+                  {(userInfo.profile.first_name === undefined ||
+                    userInfo.profile.first_name.length === 0) &&
+                  (userInfo.profile.last_name === undefined ||
+                    userInfo.profile.last_name.length === 0)
+                    ? "Your name"
+                    : userInfo.profile.first_name +
+                      " " +
+                      userInfo.profile.last_name}
+                </span>
+                {userInfo.profile.avatar &&
+                userInfo.profile.avatar.length > 0 ? (
+                  <div>
+                    <img src="https://i.redd.it/6onq25y0sh311.jpg" alt="" />
+                  </div>
+                ) : (
+                  <div className="empty-avatar">?</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="viewRequest--body">
+      )}
+      <div
+        className="viewRequest--body"
+        style={{
+          paddingTop:
+            item && item.settings && item.settings.showHeader === true
+              ? 60
+              : 0,
+        }}
+      >
         {error ? (
           <div className="viewRequest--error">
             <div>{error.type === "CONTENT_TYPE" && <NotFound />}</div>
@@ -528,21 +546,27 @@ const ViewRequest = props => {
         ) : (
           <div className="viewRequest-form">
             <div className="formContent">
-              <div className="content-userInfo">
-                <div className="userImage">
-                  <img
-                    src="https://sitejerk.com/images/profile-image-png-17.png"
-                    alt=""
-                  />
-                </div>
-                <div className="info">
-                  <span>
-                    <strong>Saeed padyab</strong> is requesting
-                  </span>
-                  <span>{item.title && item.title[currentLang]}</span>
-                </div>
-                <div className="requestDate">{item.sys.issueDate}</div>
-              </div>
+              {item &&
+                item.settings &&
+                item.settings.showRequestInfo === true && (
+                  <div className="content-userInfo">
+                    <div className="userImage">
+                      <img
+                        src="https://sitejerk.com/images/profile-image-png-17.png"
+                        alt=""
+                      />
+                    </div>
+                    <div className="info">
+                      <span>
+                        <strong>Saeed padyab</strong> is requesting
+                      </span>
+                      <span>{item.title && item.title[currentLang]}</span>
+                    </div>
+                    <div className="requestDate">
+                      {moment(item.sys.issueDate).fromNow()}
+                    </div>
+                  </div>
+                )}
               <div className="content-inputs">
                 {fields &&
                   fields.map(field => (

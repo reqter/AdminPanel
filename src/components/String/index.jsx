@@ -15,10 +15,11 @@ const StringInput = props => {
 
   // set value to input
   useEffect(() => {
-    if (formData[field.name]) {
+    if (formData && formData[field.name]) {
       if (field.isRequired === true) props.init(field.name, true);
 
-      if (field.isTranslate) setInput(props.formData[field.name][currentLang]);
+      if (field.isTranslate)
+        setInput(props.formData[field.name][currentLang]);
       else setInput(props.formData[field.name]);
     } else {
       if (field.isRequired === true) props.init(field.name, false);

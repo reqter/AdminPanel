@@ -906,7 +906,7 @@ const Requests = props => {
             <div className="p-content-right-body">
               <ReactTable
                 data={requests}
-                defaultPageSize={10}
+                defaultPageSize={1000000}
                 minRows={2}
                 columns={columns}
                 showPaginationTop={false}

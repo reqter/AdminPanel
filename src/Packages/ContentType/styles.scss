@@ -41,8 +41,9 @@
     }
   }
   .ct-content {
+    flex: 1;
     display: flex;
-    overflow: auto;
+    overflow-y: auto;
     .ct-content-left {
       overflow: auto;
       flex: 1;

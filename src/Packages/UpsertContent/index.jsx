@@ -73,7 +73,7 @@ const requestFields = [
   },
   {
     id: "4",
-    name: "requesterInfo",
+    name: "showRequestInfo",
     title: {
       en: "Show Requester Info",
       fa: "عنوان",
@@ -333,8 +333,17 @@ const UpsertProduct = props => {
   function initEditMode(result) {
     setContentType(result.contentType);
     if (isRequest) {
-      setFormData(result);
-      setForm(result);
+      debugger;
+      let obj = {};
+      for (const key in result) {
+        if (key === "settings") {
+          obj = { ...obj, ...result[key] };
+        } else {
+          obj[key] = result[key];
+        }
+      }
+      setFormData(obj);
+      setForm(obj);
       setFields(requestFields);
     } else {
       setFormData(result.fields);
@@ -555,6 +564,10 @@ const UpsertProduct = props => {
         receiver: form["receiver"] ? form["receiver"] : "",
         thumbnail: form["thumbnail"],
         attachments: form["attachments"],
+        settings: {
+          showHeader: form["showHeader"],
+          showRequestInfo: form["showRequestInfo"],
+        },
       };
       updateRequest()
         .onOk(result => {
@@ -651,7 +664,15 @@ const UpsertProduct = props => {
               ? category._id
               : null
             : null,
-        ...form,
+        title: form["title"],
+        description: form["description"] ? form["description"] : "",
+        receiver: form["receiver"] ? form["receiver"] : "",
+        thumbnail: form["thumbnail"],
+        attachments: form["attachments"],
+        settings: {
+          showHeader: form["showHeader"],
+          showRequestInfo: form["showRequestInfo"],
+        },
       };
       addRequest()
         .onOk(result => {
@@ -1080,10 +1101,12 @@ const UpsertProduct = props => {
                 <br />
                 Request link :
                 <a
-                  href={requestBaseLink + "/" + requestResult._id}
+                  href={requestBaseLink + "/" + requestResult.sys.link}
                   class="alert-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {requestBaseLink + "/" + requestResult._id}
+                  {requestBaseLink + "/" + requestResult.sys.link}
                 </a>
               </p>
 
@@ -1093,7 +1116,9 @@ const UpsertProduct = props => {
                     ref={requestLinkInput}
                     type="text"
                     className="form-control"
-                    defaultValue={requestBaseLink + "/" + requestResult._id}
+                    defaultValue={
+                      requestBaseLink + "/" + requestResult.sys.link
+                    }
                     readOnly
                   />
                   <div
