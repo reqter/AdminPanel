@@ -31,7 +31,13 @@ export default {
           </div>
         )
       } else {
-        if (imgs.indexOf(ext.toLowerCase()) !== -1) { return <img src={url} alt='' /> } else if (videos.indexOf(ext.toLowerCase()) !== -1) { return <i className='icon-video' /> } else if (audios.indexOf(ext.toLowerCase()) !== -1) { return <i className='icon-audio' /> } else {
+        if (imgs.indexOf(ext.toLowerCase()) !== -1) {
+          return <img src={url} alt='' />
+        } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
+          return <i className='icon-video' />
+        } else if (audios.indexOf(ext.toLowerCase()) !== -1) {
+          return <i className='icon-audio' />
+        } else {
           return (
             <div className={cls}>
               <i className='icon-file-text un-icon' />

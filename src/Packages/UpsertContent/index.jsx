@@ -135,6 +135,7 @@ const requestFields = [
     },
     type: "media",
     isTranslate: true,
+    isList:true
   },
 ];
 
@@ -1131,7 +1132,7 @@ const UpsertProduct = props => {
                 <div className="requestSuccessIcon">
                   <i className="icon-checkmark" />
                 </div>
-                <h4 className="alert-heading">Submitted!</h4>
+                <h4 className="alert-heading">{updateMode ? "Updated!" :"Submitted!"}</h4>
               </div>
               <p>
                 Your request is created successfully.Use this link to send to

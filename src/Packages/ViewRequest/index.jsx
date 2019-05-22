@@ -4,6 +4,7 @@ import {
   languageManager,
   useGlobalState,
   storageManager,
+  utility,
 } from "../../services";
 import { addContent } from "./../../Api/content-api";
 import { getRequestByLink } from "./../../Api/request-api";
@@ -371,7 +372,9 @@ const ViewRequest = props => {
   function showProfile() {
     props.history.push("/panel/profile");
   }
-
+  function backToContent() {
+    setCurrentBox("form");
+  }
   function upsertContent(closePage) {
     if (!submitSpinner) {
       if (tab === 1 && item.settings && item.settings.userDetail === true) {
@@ -601,21 +604,30 @@ const ViewRequest = props => {
                             ? "Next"
                             : "Submit")}
                       </button>
-
-                      <button
-                        className="btn btn-secondary"
-                        //onClick={backToContent}
-                      >
-                        Content
-                      </button>
+                      {currentBox === "successBox" && (
+                        <button
+                          className="btn btn-secondary"
+                          onClick={backToContent}
+                        >
+                          Content
+                        </button>
+                      )}
                     </div>
                   </div>
                   {item.attachments && item.attachments.length > 0 && (
                     <div className="form-attachments">
                       <h5>Attachments</h5>
                       <div className="attachments-files">
-                        <div className="attachmentItem" />
-                        <div className="attachmentItem" />
+                        {item.attachments.map(att => (
+                          <a
+                            href={att[currentLang]}
+                            className="attachmentItem"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {utility.getAssetIconByURL(att[currentLang])}
+                          </a>
+                        ))}
                       </div>
                     </div>
                   )}
