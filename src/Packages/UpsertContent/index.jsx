@@ -969,8 +969,8 @@ const UpsertProduct = props => {
                 {updateMode ? "Edit " : viewMode ? "View" : "Add New "}
               </div>
               <div className="up-categoryBox animated fadeIn">
-                {category &&
-                  (category.image !== undefined ? (
+                {category ? (
+                  category.image !== undefined ? (
                     <div className="selectedCategory-img">
                       <img src={category.image[currentLang]} alt="" />
                     </div>
@@ -980,7 +980,14 @@ const UpsertProduct = props => {
                         <i className="icon-item-type" />
                       </div>
                     </div>
-                  ))}
+                  )
+                ) : (
+                  <div className="selectedCategory-icon">
+                    <div className="contentIcon">
+                      <i className="icon-item-type" />
+                    </div>
+                  </div>
+                )}
                 <span>
                   {contentType.categorization === true
                     ? category
