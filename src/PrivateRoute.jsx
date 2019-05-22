@@ -27,6 +27,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       .notFound(result => {})
       .call();
   }
+  debugger
   return isAuthenticated ? (
     <Route
       {...rest}

@@ -617,7 +617,6 @@ export function addRequest () {
   }
   const _call = async (spaceId, content) => {
     try {
-      debugger
       const url = addURL
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {
@@ -744,7 +743,8 @@ export function updateRequest () {
           description: request.description,
           receiver: request.receiver,
           thumbnail: request.thumbnail,
-          attachments: request.attachments
+          attachments: request.attachments,
+          settings: request.settings
         })
       })
       const status = rawResponse.status
@@ -1074,13 +1074,13 @@ export function getRequestByLink () {
     }
   }
 
-  const _call = async (link) => {
+  const _call = async link => {
     try {
       const url = getBylinkURL + '?link=' + link
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         }
       })
 

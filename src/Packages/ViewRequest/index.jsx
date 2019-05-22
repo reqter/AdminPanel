@@ -161,6 +161,11 @@ const ViewRequest = props => {
   function fetchUserInfo() {
     getUserInfo()
       .onOk(result => {
+        if (result.profile && result.profile.avatar) {
+          result.profile.avatar =
+            process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL +
+            result.profile.avatar;
+        }
         setUserInfo(result);
       })
       .onServerError(result => {})
@@ -386,6 +391,10 @@ const ViewRequest = props => {
     }));
   }
 
+  function showProfile() {
+    props.history.push("/panel/profile");
+  }
+
   function upsertContent(closePage) {
     if (!submitSpinner) {
       toggleSubmitSpinner(true);
@@ -479,31 +488,13 @@ const ViewRequest = props => {
                 alt=""
                 className="logo"
               />
-              {/* {item.thumbnail && item.thumbnail.length > 0 ? (
-                <img src={item.thumbnail[0][currentLang]} alt="" />
-              ) : (
-                <div className="empty-icon">?</div>
-              )} */}
             </div>
             <div className="header--content-name">
               <span>REQTER</span>
-              {/* <span>{item.title && item.title[currentLang]}</span>
-              <span>
-                {item.description
-                  ? item.description[currentLang]
-                  : "Lorem ipsum description"}
-              </span> */}
             </div>
           </div>
           <div className="header--center" />
           <div className="header--right">
-            {!userInfo && (
-              <img
-                src={require("./../../assets/logo.png")}
-                alt=""
-                className="logo"
-              />
-            )}
             {userInfo && (
               <div className="userinfo">
                 <span>
@@ -518,8 +509,8 @@ const ViewRequest = props => {
                 </span>
                 {userInfo.profile.avatar &&
                 userInfo.profile.avatar.length > 0 ? (
-                  <div>
-                    <img src="https://i.redd.it/6onq25y0sh311.jpg" alt="" />
+                  <div onClick={showProfile}>
+                    <img src={userInfo.profile.avatar} alt="" />
                   </div>
                 ) : (
                   <div className="empty-avatar">?</div>

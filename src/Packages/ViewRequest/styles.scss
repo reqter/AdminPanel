@@ -141,10 +141,13 @@
             flex-direction: column;
             flex: 1;
             padding-left: 20px;
-            font-size: 12px;
+            font-size: 16px;
             & span:first-child {
               font-size: 16px;
               margin-bottom: 5px;
+            }
+            & span:last-child {
+            font-weight: 500
             }
           }
           .requestDate {

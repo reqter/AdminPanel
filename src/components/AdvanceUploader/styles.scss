@@ -60,6 +60,8 @@
     .dropbox-uploadedFile {
       width: 300px;
       margin: auto;
+      height: 100%;
+      padding: 5px;
       .unknowIcon {
         .un-icon {
           margin-bottom: 10px;
@@ -69,7 +71,7 @@
       img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: contain
       }
     }
     .files-uploaded {
