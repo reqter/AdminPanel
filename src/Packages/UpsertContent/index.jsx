@@ -563,6 +563,7 @@ const UpsertProduct = props => {
   }
   function upsertRequestItem(closePage) {
     if (updateMode) {
+      debugger
       const obj = {
         id: props.match.params.id,
         contentType: contentType._id,
@@ -592,7 +593,8 @@ const UpsertProduct = props => {
               message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
             },
           });
-          backToProducts();
+           setRequestResult(result);
+           toggleTab(4);
         })
         .onServerError(result => {
           if (closePage) toggleCloseSpinner(false);

@@ -10,17 +10,14 @@ const BooleanComponent = props => {
     field.defaultValue ? field.defaultValue : false
   );
 
-  // set default value to form data in parent
-  useEffect(() => {}, []);
-
   // set value to input
   useEffect(() => {
-    if (formData[field.name]) {
+    if (formData[field.name] !== undefined && formData[field.name] !== null) {
       if (field.isRequired === true) props.init(field.name, true);
       setValue(props.formData[field.name]);
     } else {
       if (field.isRequired === true) props.init(field.name, false);
-      if (field.defaultValue) {
+      if (field.defaultValue !== undefined && field.defaultValue !== null) {
         setValue(field.defaultValue);
         setValueToParentForm(field.defaultValue);
       } else setValue(false);
@@ -47,60 +44,31 @@ const BooleanComponent = props => {
     }
   }
 
-  if (field.appearance === "default") {
-    return (
-      <div
-        className="custom_checkbox"
-        style={{
-          marginTop: 10,
-        }}
-      >
-        <div className="left">
-          <label className="checkBox">
-            <input
-              type="checkbox"
-              id={"chk" + field.name}
-              checked={value}
-              onChange={handleCheckboxValue}
-              disabled={props.viewMode}
-            />
-            <span className="checkmark" />
-          </label>
-        </div>
-        <div className="right">
-          <label for={"chk" + field.name}>{field.title[currentLang]}</label>
-          {field.description && field.description.length && (
-            <label>{field.description[currentLang]}</label>
-          )}
-        </div>
+  return (
+    <div
+      className="custom_checkbox"
+      style={{
+        marginTop: 10,
+      }}
+    >
+      <div className="left">
+        <label className="checkBox">
+          <input
+            type="checkbox"
+            id={"chk" + field.name}
+            checked={value}
+            onChange={handleCheckboxValue}
+            disabled={props.viewMode}
+          />
+          <span className="checkmark" />
+        </label>
       </div>
-    );
-  } else {
-    return (
-      <div
-        className="custom_checkbox"
-        style={{
-          marginTop: 10,
-        }}
-      >
-        <div className="left">
-          <label className="checkBox">
-            <input
-              type="checkbox"
-              id={"chk" + field.name}
-              checked={value}
-              onChange={handleCheckboxValue}
-            />
-            <span className="checkmark" />
-          </label>
-        </div>
-        <div className="right">
-          <label for={"chk" + field.name}>{field.title[currentLang]}</label>
-          <label>{field.description[currentLang]}</label>
-        </div>
+      <div className="right">
+        <label for={"chk" + field.name}>{field.title[currentLang]}</label>
+        {field.description && <label>{field.description[currentLang]}</label>}
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default BooleanComponent;
