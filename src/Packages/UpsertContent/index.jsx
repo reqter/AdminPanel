@@ -73,18 +73,6 @@ const requestFields = [
   },
   {
     id: "4",
-    name: "showRequestInfo",
-    title: {
-      en: "Show Requester Info",
-      fa: "عنوان",
-    },
-    description: {
-      en: "If checked, request page will show your info",
-    },
-    type: "boolean",
-  },
-  {
-    id: "5",
     name: "showHeader",
     title: {
       en: "Show Header Info",
@@ -94,9 +82,35 @@ const requestFields = [
       en: "If checked, request page will have a header at top of the page",
     },
     type: "boolean",
+    defaultValue: true,
+  },
+  {
+    id: "5",
+    name: "showRequestInfo",
+    title: {
+      en: "Show Requester Info",
+      fa: "عنوان",
+    },
+    description: {
+      en: "If checked, request page will show your info",
+    },
+    type: "boolean",
+    defaultValue: true,
   },
   {
     id: "6",
+    name: "userDetail",
+    title: {
+      en: "Ask User Detial",
+    },
+    description: {
+      en: "If checked, request page will ask user detail",
+    },
+    type: "boolean",
+    defaultValue: true,
+  },
+  {
+    id: "7",
     name: "thumbnail",
     title: {
       en: "Thumbnail",
@@ -110,7 +124,7 @@ const requestFields = [
     isTranslate: true,
   },
   {
-    id: "7",
+    id: "8",
     name: "attachments",
     title: {
       en: "Attachments",
@@ -333,7 +347,6 @@ const UpsertProduct = props => {
   function initEditMode(result) {
     setContentType(result.contentType);
     if (isRequest) {
-      debugger;
       let obj = {};
       for (const key in result) {
         if (key === "settings") {
@@ -567,6 +580,7 @@ const UpsertProduct = props => {
         settings: {
           showHeader: form["showHeader"],
           showRequestInfo: form["showRequestInfo"],
+          userDetail: form["userDetail"],
         },
       };
       updateRequest()
@@ -672,6 +686,7 @@ const UpsertProduct = props => {
         settings: {
           showHeader: form["showHeader"],
           showRequestInfo: form["showRequestInfo"],
+          userDetail: form["userDetail"],
         },
       };
       addRequest()
@@ -1012,6 +1027,25 @@ const UpsertProduct = props => {
                   )
                 ) : null}
               </div>
+              {(updateMode || viewMode) && isRequest && (
+                <div className="linkBox animated fadeIn">
+                  <p className="mb-0">
+                    <span>
+                      This link will be activated when you publish the request.
+                    </span>
+                    <br />
+                    Request link :
+                    <a
+                      href={requestBaseLink + "/" + selectedContent.sys.link}
+                      class="alert-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {requestBaseLink + "/" + selectedContent.sys.link}
+                    </a>
+                  </p>
+                </div>
+              )}
               <div className="up-formInputs animated fadeIn">
                 {fields &&
                   fields.map(field => (

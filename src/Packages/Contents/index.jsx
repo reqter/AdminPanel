@@ -1,4 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+} from "reactstrap";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { useGlobalState, languageManager } from "./../../services";
@@ -13,7 +19,7 @@ import {
 } from "./../../Api/content-api";
 import "./styles.scss";
 
-import { Alert, CircleSpinner } from "./../../components";
+import { Alert, CircleSpinner, DateFormater } from "./../../components";
 import {
   CategoriesFilter,
   ContentTypesFilter,
@@ -70,20 +76,21 @@ const Products = props => {
       },
       accessor: "fields",
       Cell: props => {
-       return (
-         <div className="p-name">
-           <span>
-             {props.value &&
-               props.value["name"] &&
-               props.value["name"][currentLang]}
-           </span>
-           <span>
-             {props.value && props.value["shortDesc"] &&
-               props.value["shortDesc"][currentLang]}
-           </span>
-         </div>
-       );
-    },
+        return (
+          <div className="p-name">
+            <span>
+              {props.value &&
+                props.value["name"] &&
+                props.value["name"][currentLang]}
+            </span>
+            <span>
+              {props.value &&
+                props.value["shortDesc"] &&
+                props.value["shortDesc"][currentLang]}
+            </span>
+          </div>
+        );
+      },
     },
     {
       Header: () => <div className="p-header-td">Issuer</div>,
@@ -96,7 +103,9 @@ const Products = props => {
       Cell: props => (
         <div className="p-issuer">
           <span>{props.value.issuer.fullName}</span>
-          <span>{props.value.issueDate}</span>
+          <span>
+            <DateFormater date={props.value.issueDate} />
+          </span>
         </div>
       ),
     },
@@ -242,6 +251,7 @@ const Products = props => {
 
   const tableBox = useRef(null);
 
+  const [headerActions, toggleHeaderActions] = useState(false);
   const [spinner, toggleSpinner] = useState(true);
   const [leftContent, toggleLeftContent] = useState(false);
   const [alertData, setAlertData] = useState();
@@ -354,6 +364,11 @@ const Products = props => {
       // search: "?sort=name",
       //hash: "#the-hash",
       //params: { contentType, hasContentType }
+    });
+  }
+  function newRequest() {
+    props.history.push({
+      pathname: "/requests/new",
     });
   }
   function makeTableFieldView(type, props) {
@@ -846,18 +861,25 @@ const Products = props => {
                 onChange={e => setSearchText(e.target.value)}
               />
             </div>
-            {/* <button className="btn btn-primary">
-              <i className="icon-folder" />
-            </button>
-            <button className="btn btn-primary">
-              <i className="icon-list" />
-            </button> */}
             <button className="btn btn-primary" onClick={toggleFilterBox}>
               <i className="icon-filter" />
             </button>
-            <button className="btn btn-primary" onClick={openNewItemBox}>
-              New Content
-            </button>
+            <Dropdown
+              isOpen={headerActions}
+              toggle={() => toggleHeaderActions(prevState => !prevState)}
+            >
+              <DropdownToggle className="btn btn-primary" caret color="primary">
+                Create
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={openNewItemBox}>
+                  {languageManager.translate("New Content")}
+                </DropdownItem>
+                <DropdownItem onClick={newRequest}>
+                  {languageManager.translate("New Request")}
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         </div>
         <div className="p-content">

@@ -13,7 +13,7 @@ import {
 } from "../../Api/request-api";
 import "./styles.scss";
 
-import { Alert, CircleSpinner } from "../../components";
+import { Alert, CircleSpinner, DateFormater } from "../../components";
 import {
   CategoriesFilter,
   ContentTypesFilter,
@@ -90,7 +90,9 @@ const Requests = props => {
       Cell: props => (
         <div className="p-issuer">
           <span>{props.value.issuer.fullName}</span>
-          <span>{props.value.issueDate}</span>
+          <span>
+            <DateFormater date={props.value.issueDate} />
+          </span>
         </div>
       ),
     },
@@ -570,7 +572,7 @@ const Requests = props => {
       },
     });
   }
-  
+
   function handleEditRow(row) {
     props.history.push({
       pathname: `/requests/edit/${row.original._id}`,
@@ -700,7 +702,6 @@ const Requests = props => {
   function publishContent(row) {
     publish()
       .onOk(result => {
-        
         dispatch({
           type: "ADD_NOTIFY",
           value: {

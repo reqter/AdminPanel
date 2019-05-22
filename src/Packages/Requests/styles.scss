@@ -269,6 +269,7 @@
         font-weight: 500;
       }
       .p-content-right-header {
+        flex-shrink: 0 !important;
         height: 50px;
         display: flex;
         align-items: center;
@@ -310,7 +311,6 @@
       }
       .p-content-right-body {
         min-height: 50px;
-        overflow: auto !important;
         .ReactTable .rt-thead.-header {
           box-shadow: 0 0 4px lightgray;
         }

@@ -71,7 +71,7 @@ body {
       .up-categoryBox {
         height: 100px;
         box-shadow: 0 0 3px lightgray;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         background: white;
         border-radius: 3px;
         display: flex;
@@ -115,11 +115,26 @@ body {
           }
         }
       }
+      .linkBox {
+        height: 60px;
+        box-shadow: 0 0 3px lightgray;
+        margin-bottom: 10px;
+        background: white;
+        border-radius: 3px;
+        padding: 0 5%;
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        a{
+          margin-left: 5px;
+        }
+      }
       .up-formInputs {
         border-radius: 3px;
         background: white;
         box-shadow: 0 0 3px lightgray;
-        padding: 4%;
+        padding:2% 4%;
         input[readonly],
         textarea[readonly],
         select[disabled] {

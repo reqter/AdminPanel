@@ -17,8 +17,10 @@ import Alert from './PopupAlert'
 import RowSkeleton from './RowSkeleton'
 import JsonObject from './JsonObject'
 import AdvanceUploader from './AdvanceUploader'
+import DateFormater from "./DateFormater";
 
 export {
+  DateFormater,
   AdvanceUploader,
   Alert,
   AssignRole,
