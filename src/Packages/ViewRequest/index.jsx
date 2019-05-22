@@ -538,7 +538,7 @@ const ViewRequest = props => {
           <div className="viewRequest-form">
             <div className="formContent">
               {currentBox === "successBox" && (
-                <div className="successRequest">
+                <div className="successRequest animated fadeIn">
                   <Success />
                   <span className="title">Submitted!</span>
                   <span className="successMsg">
@@ -582,7 +582,7 @@ const ViewRequest = props => {
                     {tab === 2 &&
                       userDetailFields &&
                       userDetailFields.map(field => (
-                        <div key={field.id} className="rowItem">
+                        <div key={field.id} className="rowItem animated fadeIn">
                           {getFieldItem(field)}
                         </div>
                       ))}

@@ -116,7 +116,7 @@ body {
         }
       }
       .linkBox {
-        height: 60px;
+        height: 80px;
         box-shadow: 0 0 3px lightgray;
         margin-bottom: 10px;
         background: white;
@@ -126,7 +126,10 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        a{
+        .linkmsg {
+          padding-bottom: 10px !important;
+        }
+        a {
           margin-left: 5px;
         }
       }
@@ -134,7 +137,7 @@ body {
         border-radius: 3px;
         background: white;
         box-shadow: 0 0 3px lightgray;
-        padding:2% 4%;
+        padding: 2% 4%;
         input[readonly],
         textarea[readonly],
         select[disabled] {

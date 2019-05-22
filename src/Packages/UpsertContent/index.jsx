@@ -563,7 +563,7 @@ const UpsertProduct = props => {
   }
   function upsertRequestItem(closePage) {
     if (updateMode) {
-      debugger
+      debugger;
       const obj = {
         id: props.match.params.id,
         contentType: contentType._id,
@@ -593,8 +593,8 @@ const UpsertProduct = props => {
               message: languageManager.translate("UPSERT_ITEM_UPDATE_ON_OK"),
             },
           });
-           setRequestResult(result);
-           toggleTab(4);
+          setRequestResult(result);
+          toggleTab(4);
         })
         .onServerError(result => {
           if (closePage) toggleCloseSpinner(false);
@@ -1031,11 +1031,10 @@ const UpsertProduct = props => {
               </div>
               {(updateMode || viewMode) && isRequest && (
                 <div className="linkBox animated fadeIn">
-                  <p className="mb-0">
-                    <span>
-                      This link will be activated when you publish the request.
-                    </span>
-                    <br />
+                  <span className="linkmsg">
+                    This link will be activated when you publish the request.
+                  </span>
+                  <div>
                     Request link :
                     <a
                       href={requestBaseLink + "/" + selectedContent.sys.link}
@@ -1045,7 +1044,7 @@ const UpsertProduct = props => {
                     >
                       {requestBaseLink + "/" + selectedContent.sys.link}
                     </a>
-                  </p>
+                  </div>
                 </div>
               )}
               <div className="up-formInputs animated fadeIn">
