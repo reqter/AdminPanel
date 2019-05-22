@@ -8,7 +8,11 @@ import {
 import { addContent } from "./../../Api/content-api";
 import { getRequestByLink } from "./../../Api/request-api";
 import { getUserInfo } from "./../../Api/account-api";
-import { NotFound, Wrong } from "../../components/Commons/ErrorsComponent";
+import {
+  NotFound,
+  Wrong,
+  Success,
+} from "../../components/Commons/ErrorsComponent";
 import {
   String,
   Number,
@@ -23,79 +27,48 @@ import {
   JsonObject,
   FileUploader,
   AdvanceUploader,
+  DateFormater,
 } from "./../../components";
-var moment = require("moment");
 
-const requestFields = [
+const userDetailFields = [
   {
     id: "1",
-    name: "title",
+    name: "email",
     title: {
-      en: "Title",
-      fa: "عنوان",
+      en: "Email",
+      fa: "ایمیل",
     },
     description: {
-      en: "title is required",
+      en: "Email is required",
     },
     type: "string",
-    isBase: true,
-    isTranslate: true,
+    appearance: "email",
     isRequired: true,
   },
   {
     id: "2",
-    name: "description",
+    name: "fullName",
     title: {
-      en: "Description",
-      fa: "توضیحات",
+      en: "Full Name",
+      fa: "نام و نام خانوادگی",
     },
     description: {
-      en: "Short description of your request",
-      fa: "توضیح کوتاه برای فایل",
+      en: "Full name is optional",
     },
     type: "string",
-    isBase: true,
-    isTranslate: true,
+    isRequired: true,
   },
   {
     id: "3",
-    name: "receiver",
+    name: "phoneNumber",
     title: {
-      en: "Receiver",
-      fa: "عنوان",
+      en: "Phone Number",
     },
     description: {
-      en: "Receiver is required",
+      en: "Phone Number is required",
     },
-    type: "string",
-    appearance: "email",
-  },
-  {
-    id: "4",
-    name: "thumbnail",
-    title: {
-      en: "Thumbnail",
-    },
-    description: {
-      fa: "",
-      en: "Click on file selector to choose your file",
-    },
-    type: "media",
-    mediaType: ["image"],
-    isTranslate: true,
-  },
-  {
-    id: "5",
-    name: "attachments",
-    title: {
-      en: "Attachments",
-    },
-    description: {
-      fa: "",
-      en: "Click on file selector to choose your file",
-    },
-    type: "media",
-    isTranslate: true,
+    type: "number",
+    isRequired: true,
   },
 ];
 
@@ -106,6 +79,10 @@ const ViewRequest = props => {
   const updateMode = false;
 
   const [{ spaceInfo }, dispatch] = useGlobalState();
+
+  const [tab, changeTab] = useState(1);
+  const [currentBox, setCurrentBox] = useState("form");
+
   const [item, setItem] = useState({});
   const [userInfo, setUserInfo] = useState();
   const [spinner, toggleSpinner] = useState(true);
@@ -397,80 +374,96 @@ const ViewRequest = props => {
 
   function upsertContent(closePage) {
     if (!submitSpinner) {
-      toggleSubmitSpinner(true);
-      const obj = {
-        contentType: item.contentType._id,
-        // category:
-        //   item.contentType.categorization === true
-        //     ? item.category
-        //       ? item.category._id
-        //       : null
-        //     : null,
-        fields: form,
-      };
-      addContent()
-        .onOk(result => {
-          toggleSubmitSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
-            },
-          });
-
-          setFormData({});
-          setForm({});
-          setFormValidation({});
-        })
-        .onServerError(result => {
-          toggleSubmitSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
-              ),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          toggleSubmitSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: languageManager.translate(
-                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
-              ),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          toggleSubmitSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate(
-                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
-              ),
-            },
-          });
-        })
-        .notFound(result => {
-          toggleSubmitSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
-            },
-          });
-        })
-        .call(item.sys.spaceId, obj);
+      if (tab === 1 && item.settings && item.settings.userDetail === true) {
+        changeTab(2);
+      } else {
+        submit(closePage);
+      }
     }
+  }
+  function submit(closePage) {
+    toggleSubmitSpinner(true);
+    let obj = {
+      contentType: item.contentType._id,
+      // category:
+      //   item.contentType.categorization === true
+      //     ? item.category
+      //       ? item.category._id
+      //       : null
+      //     : null,
+      fields: form,
+    };
+    if (item.settings && item.settings.userDetail === true) {
+      delete obj["fields"]["email"];
+      delete obj["fields"]["fullName"];
+      delete obj["fields"]["phoneNumber"];
+      obj["request"] = {
+        email: form["email"],
+        fullName: form["fullName"],
+        phoneNumber: form["phoneNumber"],
+      };
+    }
+    addContent()
+      .onOk(result => {
+        setCurrentBox("successBox");
+        // toggleSubmitSpinner(false);
+        // dispatch({
+        //   type: "ADD_NOTIFY",
+        //   value: {
+        //     type: "success",
+        //     message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
+        //   },
+        // });
+
+        // setFormData({});
+        // setForm({});
+        // setFormValidation({});
+      })
+      .onServerError(result => {
+        toggleSubmitSpinner(false);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
+            ),
+          },
+        });
+      })
+      .onBadRequest(result => {
+        toggleSubmitSpinner(false);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
+            ),
+          },
+        });
+      })
+      .unAuthorized(result => {
+        toggleSubmitSpinner(false);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("UPSERT_ITEM_ADD_UN_AUTHORIZED"),
+          },
+        });
+      })
+      .notFound(result => {
+        toggleSubmitSpinner(false);
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "warning",
+            message: languageManager.translate("UPSERT_ITEM_ADD_NOT_FOUND"),
+          },
+        });
+      })
+      .call(item.sys.spaceId, obj);
   }
   return spinner ? (
     <div className="loaderBox">
@@ -520,6 +513,7 @@ const ViewRequest = props => {
           </div>
         </div>
       )}
+
       <div
         className="viewRequest--body"
         style={{
@@ -543,51 +537,89 @@ const ViewRequest = props => {
         ) : (
           <div className="viewRequest-form">
             <div className="formContent">
-              {item && item.settings && item.settings.showRequestInfo === true && (
-                <div className="content-userInfo">
-                  <div className="userImage">
-                    <img
-                      src="https://sitejerk.com/images/profile-image-png-17.png"
-                      alt=""
-                    />
-                  </div>
-                  <div className="info">
-                    <span>
-                      <strong>Saeed padyab</strong> is requesting
-                    </span>
-                    <span>{item.title && item.title[currentLang]}</span>
-                  </div>
-                  <div className="requestDate">
-                    {moment(item.sys.issueDate).fromNow()}
-                  </div>
+              {currentBox === "successBox" && (
+                <div className="successRequest">
+                  <Success />
+                  <span className="title">Submitted!</span>
+                  <span className="successMsg">
+                    Request Successfully submitted.only requester will know the
+                    content
+                  </span>
+                  <div className="successBox-actions" />
                 </div>
               )}
-              <div className="content-inputs">
-                {fields &&
-                  fields.map(field => (
-                    <div key={field.id} className="rowItem">
-                      {getFieldItem(field)}
+              {currentBox === "form" && (
+                <>
+                  {item &&
+                    item.settings &&
+                    item.settings.showRequestInfo === true && (
+                      <div className="content-userInfo">
+                        <div className="userImage">
+                          <img
+                            src="https://sitejerk.com/images/profile-image-png-17.png"
+                            alt=""
+                          />
+                        </div>
+                        <div className="info">
+                          <span>
+                            <strong>Saeed padyab</strong> is requesting
+                          </span>
+                          <span>{item.title && item.title[currentLang]}</span>
+                        </div>
+                        <div className="requestDate">
+                          <DateFormater date={item.sys.issueDate} />
+                        </div>
+                      </div>
+                    )}
+                  <div className="content-inputs">
+                    {tab === 1 &&
+                      fields &&
+                      fields.map(field => (
+                        <div key={field.id} className="rowItem">
+                          {getFieldItem(field)}
+                        </div>
+                      ))}
+                    {tab === 2 &&
+                      userDetailFields &&
+                      userDetailFields.map(field => (
+                        <div key={field.id} className="rowItem">
+                          {getFieldItem(field)}
+                        </div>
+                      ))}
+                    <div className="actions">
+                      <button
+                        className="btn btn-primary"
+                        onClick={upsertContent}
+                        disabled={!isValidForm}
+                      >
+                        <CircleSpinner show={submitSpinner} size="small" />
+                        {!submitSpinner &&
+                          (item &&
+                          item.settings &&
+                          item.settings.userDetail === true &&
+                          tab === 1
+                            ? "Next"
+                            : "Submit")}
+                      </button>
+
+                      <button
+                        className="btn btn-secondary"
+                        //onClick={backToContent}
+                      >
+                        Content
+                      </button>
                     </div>
-                  ))}
-                <div className="actions">
-                  <button
-                    className="btn btn-primary"
-                    onClick={upsertContent}
-                    disabled={!isValidForm}
-                  >
-                    <CircleSpinner show={submitSpinner} size="small" />
-                    {!submitSpinner && "Submit"}
-                  </button>
-                </div>
-              </div>
-              {item.attachments && item.attachments.length > 0 && (
-                <div className="form-attachments">
-                  <h5>Attachments</h5>
-                  <div className="attachments-files">
-                    <div className="attachmentItem" />
-                    <div className="attachmentItem" />
                   </div>
-                </div>
+                  {item.attachments && item.attachments.length > 0 && (
+                    <div className="form-attachments">
+                      <h5>Attachments</h5>
+                      <div className="attachments-files">
+                        <div className="attachmentItem" />
+                        <div className="attachmentItem" />
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
