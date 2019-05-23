@@ -3,16 +3,15 @@ import "cropperjs/dist/cropper.css";
 import "./styles.scss";
 import { languageManager, useGlobalState, utility } from "../../services";
 import ImageEditorModal from "./ImageEditorModal";
-import { uploadAssetFile } from "./../../Api/asset-api";
+import { uploadAssetFile, addAsset } from "./../../Api/asset-api";
 import SVGIcon from "./svg";
 import CircleSpinner from "./../CircleSpinner";
-import AssetFile from "./../AssetFile";
 
 const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const dropRef = useRef(null);
 
-  const [{}, dispatch] = useGlobalState();
+  const [{ spaceInfo }, dispatch] = useGlobalState();
   const [editorModal, toggleEditorModal] = useState(false);
   const { field, formData } = props;
   const [droppableBox, toggleDroppableBox] = useState(true);
@@ -76,19 +75,7 @@ const FileUploaderInput = props => {
     // setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
-      setSelectedFile(file);
-      toggleIsUploading(true);
-      uploadFile(file);
-      // if (field.mediaType===undefined || field.mediaType.length===0 || field.mediaType[0]==="all") {
-      //   setSelectedFile(file);
-      //   toggleIsUploading(true);
-      //   uploadFile(file);
-      // }else {
-
-      // }
-      // if (file.type.includes("image")) {
-      //  // uploadAvatar(file);
-      // }
+      checkFileByType(file);
       e.dataTransfer.clearData();
     }
   }
@@ -97,15 +84,36 @@ const FileUploaderInput = props => {
     if (!isUploading) {
       if (event.target.files.length > 0) {
         const file = event.target.files[0];
+        checkFileByType(file);
+      }
+    }
+  }
+
+  function checkFileByType(file) {
+    if (
+      !field.mediaType ||
+       field.mediaType.length === 0 ||
+      (field.mediaType.length === 1 && field.mediaType[0] === "all")
+    ) {
+      setSelectedFile(file);
+      toggleIsUploading(true);
+      uploadFile(file);
+    } else {
+      const type = file.type.split("/");
+      if (field.mediaType.indexOf(type) !== -1) {
         setSelectedFile(file);
         toggleIsUploading(true);
         uploadFile(file);
-        // if (file.type.includes("image")) {
-        //   toggleEditorModal(true);
-        // } else {
-        //   toggleIsUploading(true);
-        //   uploadFile(file);
-        // }
+      } else {
+        dispatch({
+          type: "ADD_NOTIFY",
+          value: {
+            type: "error",
+            message: languageManager.translate(
+              `You just choose ${field.mediaType.join(" ")}`
+            ),
+          },
+        });
       }
     }
   }
@@ -113,8 +121,67 @@ const FileUploaderInput = props => {
     uploadAssetFile()
       .onOk(result => {
         const { file } = result;
-        addToList(file);
-        toggleIsUploading(false);
+        const obj = {
+          name: file.originalname,
+          title: file.originalname,
+          description: "",
+          url: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+          fileType: file.mimetype,
+        };
+        addAsset()
+          .onOk(result => {
+            addToList(file);
+            toggleIsUploading(false);
+          })
+          .onServerError(result => {
+            toggleIsUploading(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+                ),
+              },
+            });
+          })
+          .onBadRequest(result => {
+            toggleIsUploading(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+                ),
+              },
+            });
+          })
+          .unAuthorized(result => {
+            toggleIsUploading(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "warning",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+                ),
+              },
+            });
+          })
+          .notFound(result => {
+            toggleIsUploading(false);
+            dispatch({
+              type: "ADD_NOTIFY",
+              value: {
+                type: "error",
+                message: languageManager.translate(
+                  "UPSERT_ASSET_ADD_NOT_FOUND"
+                ),
+              },
+            });
+          })
+          .call(spaceInfo.id, obj);
       })
       .onServerError(result => {
         toggleIsUploading(false);
@@ -123,6 +190,12 @@ const FileUploaderInput = props => {
         toggleIsUploading(false);
       })
       .unAuthorized(result => {
+        toggleIsUploading(false);
+      })
+      .onRequestError(result => {
+        toggleIsUploading(false);
+      })
+      .unKnownError(result => {
         toggleIsUploading(false);
       })
       .onProgress(result => {

@@ -68,8 +68,7 @@ const userDetailFields = [
     description: {
       en: "Phone Number is required",
     },
-    type: "number",
-    isRequired: true,
+    type: "number"
   },
 ];
 
@@ -375,6 +374,9 @@ const ViewRequest = props => {
   function backToContent() {
     setCurrentBox("form");
   }
+  function handleSubmitMore(){
+     setCurrentBox("form");
+  }
   function upsertContent(closePage) {
     if (!submitSpinner) {
       if (tab === 1 && item.settings && item.settings.userDetail === true) {
@@ -418,9 +420,9 @@ const ViewRequest = props => {
         //   },
         // });
 
-        // setFormData({});
-        // setForm({});
-        // setFormValidation({});
+        setFormData({});
+        setForm({});
+        setFormValidation({}); 
       })
       .onServerError(result => {
         toggleSubmitSpinner(false);
@@ -548,7 +550,9 @@ const ViewRequest = props => {
                     Request Successfully submitted.only requester will know the
                     content
                   </span>
-                  <div className="successBox-actions" />
+                  <div className="successBox-actions">
+                    <button className="btn btn-primary" onClick={handleSubmitMore}>Submit More</button>
+                  </div>
                 </div>
               )}
               {currentBox === "form" && (

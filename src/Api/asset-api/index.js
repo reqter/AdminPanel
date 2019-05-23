@@ -1176,6 +1176,18 @@ export function uploadAssetFile () {
       _onProgressCallBack(result)
     }
   }
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
+    }
+  }
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
 
   const _call = async (file, spaceId) => {
     try {
@@ -1204,6 +1216,7 @@ export function uploadAssetFile () {
             _onServerError(result)
             break
           default:
+          _unKnownError()
             break
         }
       }
@@ -1225,7 +1238,9 @@ export function uploadAssetFile () {
       xhr.setRequestHeader('spaceId', spaceId)
       // xhr.setRequestHeader('content-type', 'multipart/form-data')
       await xhr.send(formdata)
-    } catch (error) {}
+    } catch (error) {
+      _onRequestError()
+    }
   }
 
   return {
@@ -1256,6 +1271,14 @@ export function uploadAssetFile () {
     },
     onProgress: function (callback) {
       _onProgressCallBack = callback
+      return this
+    },
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
       return this
     }
   }
