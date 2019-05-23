@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import "./styles.scss";
-import { languageManager, useGlobalState, utility } from "../../services";
-import { CircleSpinner, Alert } from "../../components";
-import { uploadAssetFile } from "./../../Api/asset-api";
+import { languageManager, useGlobalState } from "../../services";
+import { AssetBrowser, CircleSpinner, Alert } from "../../components";
+import { uploadAssetFile, addAsset } from "./../../Api/asset-api";
 import {
   updateProfile,
   changeAvatar,
@@ -13,15 +13,17 @@ import {
 } from "./../../Api/account-api";
 
 import UpdatePassword from "./modals/updatePassword";
+const currentLang = languageManager.getCurrentLanguage().name;
 
 const Profile = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
 
-  const [{ userInfo }, dispatch] = useGlobalState();
+  const [{ userInfo, spaceInfo }, dispatch] = useGlobalState();
 
   const dropRef = useRef(null);
   const [dragging, setDragging] = useState(false);
   const [alertData, setAlertData] = useState();
+  const [assetBrowser, toggleAssetBrowser] = useState(false);
 
   const [updatePasswordModal, toggleUpdatePassModal] = useState(false);
   const [updateSpinner, toggleUpdateSpinner] = useState(false);
@@ -127,12 +129,20 @@ const Profile = props => {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       if (file.type.includes("image")) {
-        uploadAvatar(file);
+        handleDroppedImage(file);
       }
       e.dataTransfer.clearData();
     }
   }
-
+  function showAssetBrowser() {
+    toggleAssetBrowser(true);
+  }
+  function handleChooseAsset(asset) {
+    toggleAssetBrowser(false);
+    if (asset) {
+      uploadAvatar(asset["url"][currentLang]);
+    }
+  }
   function updateProfileInfo() {
     if (!updateSpinner) {
       toggleUpdateSpinner(true);
@@ -162,35 +172,107 @@ const Profile = props => {
         .call(firstName, lastName);
     }
   }
-  function uploadAvatar(file) {
+  function handleDroppedImage(file) {
     if (!isUploading) {
       toggleIsUploading(true);
+
       uploadAssetFile()
         .onOk(result => {
+           dispatch({
+             type: "ADD_NOTIFY",
+             value: {
+               type: "success",
+               message: languageManager.translate(
+                 "Image uploaded successfully.now it is changing avatar"
+               ),
+             },
+           });
           const { file } = result;
-          changeAvatar()
+          const obj = {
+            name: file.originalname,
+            title: file.originalname,
+            description: "",
+            url: {
+              [currentLang]:
+                process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+            },
+            fileType: file.mimetype,
+          };
+          addAsset()
             .onOk(result => {
-              toggleIsUploading(false);
-              let u = { ...userInfo };
-              u.profile["avatar"] = file.url;
-              dispatch({
-                type: "SET_USERINFO",
-                value: u,
-              });
+              changeAvatar()
+                .onOk(result => {
+                  toggleIsUploading(false);
+                  let u = { ...userInfo };
+                  u.profile["avatar"] = result.profile.avatar;
+                  dispatch({
+                    type: "SET_USERINFO",
+                    value: u,
+                  });
+                })
+                .onServerError(result => {
+                  toggleIsUploading(false);
+                })
+                .onBadRequest(result => {
+                  toggleIsUploading(false);
+                })
+                .unAuthorized(result => {
+                  toggleIsUploading(false);
+                })
+                .notFound(result => {
+                  toggleIsUploading(false);
+                })
+                .call(result.url[currentLang]);
             })
             .onServerError(result => {
               toggleIsUploading(false);
+              dispatch({
+                type: "ADD_NOTIFY",
+                value: {
+                  type: "error",
+                  message: languageManager.translate(
+                    "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+                  ),
+                },
+              });
             })
             .onBadRequest(result => {
               toggleIsUploading(false);
+              dispatch({
+                type: "ADD_NOTIFY",
+                value: {
+                  type: "error",
+                  message: languageManager.translate(
+                    "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+                  ),
+                },
+              });
             })
             .unAuthorized(result => {
               toggleIsUploading(false);
+              dispatch({
+                type: "ADD_NOTIFY",
+                value: {
+                  type: "warning",
+                  message: languageManager.translate(
+                    "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+                  ),
+                },
+              });
             })
             .notFound(result => {
               toggleIsUploading(false);
+              dispatch({
+                type: "ADD_NOTIFY",
+                value: {
+                  type: "error",
+                  message: languageManager.translate(
+                    "UPSERT_ASSET_ADD_NOT_FOUND"
+                  ),
+                },
+              });
             })
-            .call(file.url);
+            .call(spaceInfo.id, obj);
         })
         .onServerError(result => {
           toggleIsUploading(false);
@@ -205,6 +287,34 @@ const Profile = props => {
           //setPercentage(result);
         })
         .call(file);
+    }
+  }
+  function uploadAvatar(url) {
+    if (!isUploading) {
+      toggleIsUploading(true);
+      changeAvatar()
+        .onOk(result => {
+          toggleIsUploading(false);
+          let u = { ...userInfo };
+          u.profile["avatar"] = url;
+          dispatch({
+            type: "SET_USERINFO",
+            value: u,
+          });
+        })
+        .onServerError(result => {
+          toggleIsUploading(false);
+        })
+        .onBadRequest(result => {
+          toggleIsUploading(false);
+        })
+        .unAuthorized(result => {
+          toggleIsUploading(false);
+        })
+        .notFound(result => {
+          toggleIsUploading(false);
+        })
+        .call(url);
     }
   }
   function confirmEmail() {
@@ -383,9 +493,9 @@ const Profile = props => {
                   >
                     <div className="dropText">
                       Drop your file here
-                      <span>
+                      <span onClick={showAssetBrowser}>
                         <a>or Browse</a>
-                        <input type="file" onChange={handleImageBrowsed} />
+                        {/* <input type="file" onChange={handleImageBrowsed} /> */}
                       </span>
                     </div>
                   </div>
@@ -580,6 +690,13 @@ const Profile = props => {
         />
       )}
       {alertData && <Alert data={alertData} />}
+      {assetBrowser && (
+        <AssetBrowser
+          isOpen={assetBrowser}
+          onCloseModal={handleChooseAsset}
+          mediaType={["image"]}
+        />
+      )}
     </>
   );
 };

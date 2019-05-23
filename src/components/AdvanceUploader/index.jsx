@@ -92,14 +92,15 @@ const FileUploaderInput = props => {
   function checkFileByType(file) {
     if (
       !field.mediaType ||
-       field.mediaType.length === 0 ||
+      field.mediaType.length === 0 ||
       (field.mediaType.length === 1 && field.mediaType[0] === "all")
     ) {
       setSelectedFile(file);
       toggleIsUploading(true);
       uploadFile(file);
     } else {
-      const type = file.type.split("/");
+      
+      const type = file.type.split("/")[0];
       if (field.mediaType.indexOf(type) !== -1) {
         setSelectedFile(file);
         toggleIsUploading(true);
@@ -125,7 +126,10 @@ const FileUploaderInput = props => {
           name: file.originalname,
           title: file.originalname,
           description: "",
-          url: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+          url: {
+            [currentLang]:
+              process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+          },
           fileType: file.mimetype,
         };
         addAsset()
