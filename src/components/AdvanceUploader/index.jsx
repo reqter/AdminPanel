@@ -15,7 +15,10 @@ const FileUploaderInput = props => {
   const [{}, dispatch] = useGlobalState();
   const [editorModal, toggleEditorModal] = useState(false);
   const { field, formData } = props;
-  const [image, setEditImage] = useState();
+  const [droppableBox, toggleDroppableBox] = useState(true);
+  const [dropZoneViewBox, toggleDropZoneViewBox] = useState(false);
+  const [dropZoneFile, setDropZoneFile] = useState({});
+
   const [isUploading, toggleIsUploading] = useState(false);
   const [progressPercentage, setPercentage] = useState("0");
   const [selectedFile, setSelectedFile] = useState();
@@ -128,24 +131,15 @@ const FileUploaderInput = props => {
       .call(file);
   }
   function removeFile(f) {
-    setFiles([]);
-    // const fs = files.filter(file => file.id !== f.id);
-    // setFiles(fs);
-
-    // if (field.isRequired) {
-    //   if (field.isList !== undefined && field.isList) {
-    //     if (fs.length === 0) props.onChangeValue(field.name, fs, false);
-    //     else props.onChangeValue(field, fs, true);
-    //   } else {
-    //     if (fs.length === 0) {
-    //       if (field.isTranslate) {
-    //         props.onChangeValue(field, undefined, false);
-    //       } else props.onChangeValue(field, undefined, false);
-    //     }
-    //   }
-    // } else {
-    //   props.onChangeValue(field.name, fs, true);
-    // }
+    if (field.isList === true) {
+      const fs = files.filter(file => file.id !== f.id);
+      setFiles(fs);
+    } else {
+      setFiles([]);
+      setDropZoneFile();
+      toggleDroppableBox(true);
+      toggleDropZoneViewBox(false);
+    }
   }
   useEffect(() => {
     // send value to form after updateing
@@ -167,6 +161,9 @@ const FileUploaderInput = props => {
         [currentLang]: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
       },
     };
+    const newFiles = [...files, obj];
+    setFiles(newFiles);
+
     if (field.isList !== undefined && field.isList) {
       const newFiles = [...files, obj];
       setFiles(newFiles);
@@ -174,29 +171,11 @@ const FileUploaderInput = props => {
       let fs = [];
       fs[0] = obj;
       setFiles(fs);
+
+      setDropZoneFile(obj);
+      toggleDroppableBox(false);
+      toggleDropZoneViewBox(true);
     }
-    // let obj = {
-    //   id: Math.random().toString(),
-    //   url: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
-    //   name: file.originalname,
-    //   fileType: file.mimetype,
-    // };
-    // if (field.isList !== undefined && field.isList) {
-    //   let fs = [...files];
-    //   fs.push(obj);
-    //   setFiles(fs);
-    //   props.onChangeValue(field, fs, true);
-    // } else {
-    //   let fs = [];
-    //   fs.push(obj);
-    //   setFiles(fs);
-    //   let f, l;
-    //   if (field.isTranslate) {
-    //     l = utility.applyeLangs(fs[0].url);
-    //     f = { ...fs[0], ...l };
-    //   }
-    //   props.onChangeValue(field, f, true);
-    // }
   }
   function onCloseEditor(result) {
     toggleEditorModal(false);
@@ -210,104 +189,60 @@ const FileUploaderInput = props => {
         <span className="title">{field.title[currentLang]}</span>
         <span className="description">{field.description[currentLang]}</span>
         <div className="dropBox" ref={dropRef}>
-          {files && files.length > 0 && (
+          {dropZoneViewBox && (
             <div className="dropbox-uploadedFile">
               {utility.getAssetIconByURL(
-                files[0]["url"][currentLang],
+                dropZoneFile["url"][currentLang],
                 "unknowIcon"
               )}
             </div>
           )}
 
-          {!files ||
-            (files.length === 0 && (
-              <div className="dropbox-content">
-                <SVGIcon />
-                <span>
-                  Drag and drop a file hear or{" "}
-                  <div className="dropbox-browser">
-                    <a href="">open browser...</a>
-                    <input type="file" onChange={handleChange} />
-                  </div>
-                </span>
-              </div>
-            ))}
+          {droppableBox && (
+            <div className="dropbox-content">
+              <SVGIcon />
+              <span>
+                Drag and drop a file hear or{" "}
+                <div className="dropbox-browser">
+                  <a href="">open browser...</a>
+                  <input type="file" onChange={handleChange} />
+                </div>
+              </span>
+            </div>
+          )}
           {isUploading && (
             <div className="dropbox-spinner">
               <CircleSpinner show={isUploading} size="large" />
               Uploading {progressPercentage + "%"}
             </div>
           )}
-          {files && files.length > 0 && (
-            <button
-              type="button"
-              className="btn btn-sm btn-secondary btn-remove"
-              onClick={removeFile}
-            >
-              <i className="icon-bin" />
-            </button>
-          )}
-          {/* {files.map(file => (
-            <div key={file.id} className="files-uploaded">
+          {dropZoneViewBox &&
+            (field.isList === undefined || field.isList === false) && (
+              <button
+                type="button"
+                className="btn btn-sm btn-secondary btn-remove"
+                onClick={removeFile}
+              >
+                <i className="icon-bin" />
+              </button>
+            )}
+        </div>
+      </div>
+      {field.isList === true && (
+        <div className="isList-files">
+          {files.map(file => (
+            <div className="isListItem">
+              {utility.getAssetIconByURL(file["url"][currentLang])}
               <div
-                className="files-uploaded-icon"
+                className="isListItem-remove"
                 onClick={() => removeFile(file)}
               >
                 <i className="icon-bin" />
               </div>
-              <div className="updatedFileType">
-                {file.fileType ? (
-                  file.fileType.toLowerCase().includes("image") ? (
-                    <img src={file.url} alt="" />
-                  ) : file.fileType.toLowerCase().includes("video") ? (
-                    <i className="icon-video" />
-                  ) : file.fileType.toLowerCase().includes("audio") ? (
-                    <i className="icon-audio" />
-                  ) : file.fileType.toLowerCase().includes("pdf") ? (
-                    <i className="icon-pdf" />
-                  ) : file.fileType.toLowerCase().includes("spreadsheet") ? (
-                    <i className="icon-spreadsheet" />
-                  ) : (
-                    <AssetFile file={file} class="fileUploader" />
-                  )
-                ) : (
-                  <AssetFile file={file} class="fileUploader" />
-                )}
-              </div>
             </div>
           ))}
-          <div className="files-input">
-            <input
-              type="file"
-              className="btn"
-              onChange={handleChange}
-              accept={
-                field.fileType
-                  ? field.fileType === "image"
-                    ? "image/*"
-                    : field.fileType === "video"
-                    ? "video/*"
-                    : field.fileType === "audio"
-                    ? "audio/*"
-                    : field.fileType === "pdf"
-                    ? ".pdf"
-                    : field.fileType === "spreadsheet"
-                    ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    : "/*"
-                  : "/*"
-              }
-            />
-            {field.mediaType === "all" ? (
-              <i className="icon-file-plus-o" />
-            ) : field.mediaType === "image" ? (
-              <i className="icon-camera" />
-            ) : (
-              <i className="icon-file-plus-o" />
-            )}
-          </div>
-       */}
         </div>
-      </div>
+      )}
       {editorModal && (
         <ImageEditorModal
           image={selectedFile}

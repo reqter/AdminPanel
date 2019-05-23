@@ -1,3 +1,45 @@
+.isList-files {
+  display: flex;
+  margin-bottom: 20px;
+  .isListItem {
+    width: 70px;
+    height: 60px;
+    border: 0.5px solid lightgray;
+    margin-right: 10px;
+    position: relative;
+    background: whitesmoke;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    cursor: pointer;
+    &:hover .isListItem-remove {
+      opacity: 1;
+      transition-duration: 0.2s;
+    }
+    .isListItem-remove {
+      opacity: 0;
+      transition-duration: 0.2s;
+      position: absolute;
+      right: 0;
+      top: -10px;
+      border: 0.5px solid gray;
+      background: lightgray;
+      font-size: 13px;
+      border-radius: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 25px;
+      height: 25px;
+    }
+  }
+}
 .ad-uploader {
   margin: 13px 0;
   display: flex;
@@ -16,10 +58,10 @@
     border: 5px dashed rgb(230, 230, 230);
     background: whitesmoke;
     position: relative;
-    .btn-remove{
+    .btn-remove {
       position: absolute;
       bottom: 10px;
-      right: 10px
+      right: 10px;
     }
     .dropbox-content {
       width: 100%;
@@ -71,7 +113,7 @@
       img {
         width: 100%;
         height: 100%;
-        object-fit: contain
+        object-fit: contain;
       }
     }
     .files-uploaded {
