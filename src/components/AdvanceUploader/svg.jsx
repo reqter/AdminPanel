@@ -5,8 +5,8 @@ const SVGUpload = props => {
       id="a706cf1c-1654-439b-8fcf-310eb7aa0e00"
       data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
-      width="150"
-      height="150"
+      width="250"
+      height="250"
       viewBox="0 0 1003.96 687.01"
     >
       <defs>

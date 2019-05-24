@@ -497,9 +497,9 @@ const ViewRequest = props => {
             {userInfo && (
               <div className="userinfo">
                 <span>
-                  {(userInfo.profile.first_name === undefined ||
+                  {(!userInfo.profile.first_name ||
                     userInfo.profile.first_name.length === 0) &&
-                  (userInfo.profile.last_name === undefined ||
+                  (!userInfo.profile.last_name ||
                     userInfo.profile.last_name.length === 0)
                     ? "Your name"
                     : userInfo.profile.first_name +

@@ -40,6 +40,7 @@ const FileUploaderInput = props => {
       if (files.length > 0) setFiles([]);
     }
   }, [formData]);
+
   useEffect(() => {
     if (dropRef.current) {
       let div = dropRef.current;
@@ -99,7 +100,6 @@ const FileUploaderInput = props => {
       toggleIsUploading(true);
       uploadFile(file);
     } else {
-      
       const type = file.type.split("/")[0];
       if (field.mediaType.indexOf(type) !== -1) {
         setSelectedFile(file);
@@ -231,28 +231,30 @@ const FileUploaderInput = props => {
     }
   }, [files]);
 
+  function showPreview(file) {
+    setDropZoneFile(file);
+    toggleDroppableBox(false);
+    toggleDropZoneViewBox(true);
+  }
+
   function addToList(file) {
     const obj = {
       id: Math.random(),
       url: {
         [currentLang]: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
       },
+      name: file.originalname,
     };
-    const newFiles = [...files, obj];
-    setFiles(newFiles);
-
     if (field.isList !== undefined && field.isList) {
-      const newFiles = [...files, obj];
-      setFiles(newFiles);
+      setFiles(prevState => [...prevState, obj]);
     } else {
       let fs = [];
       fs[0] = obj;
       setFiles(fs);
-
-      setDropZoneFile(obj);
-      toggleDroppableBox(false);
-      toggleDropZoneViewBox(true);
     }
+    setDropZoneFile(obj);
+    toggleDroppableBox(false);
+    toggleDropZoneViewBox(true);
   }
   function onCloseEditor(result) {
     toggleEditorModal(false);
@@ -268,10 +270,7 @@ const FileUploaderInput = props => {
         <div className="dropBox" ref={dropRef}>
           {dropZoneViewBox && (
             <div className="dropbox-uploadedFile">
-              {utility.getAssetIconByURL(
-                dropZoneFile["url"][currentLang],
-                "unknowIcon"
-              )}
+              {utility.getMediaComponentByUrl(dropZoneFile, "unknowIcon")}
             </div>
           )}
 
@@ -308,16 +307,28 @@ const FileUploaderInput = props => {
       {field.isList === true && (
         <div className="isList-files">
           {files.map(file => (
-            <div className="isListItem">
-              {utility.getAssetIconByURL(file["url"][currentLang])}
-              <div
-                className="isListItem-remove"
-                onClick={() => removeFile(file)}
-              >
-                <i className="icon-bin" />
+            <div
+              className={
+                "isListContainer " + (dropZoneFile.id === file.id && "active")
+              }
+              key={file.id}
+            >
+              <div className="isListItem" onClick={() => showPreview(file)}>
+                {utility.getMediaThumbnailByUrl(file["url"][currentLang])}
+                <div
+                  className="isListItem-remove"
+                  onClick={() => removeFile(file)}
+                >
+                  <i className="icon-bin" />
+                </div>
               </div>
+              <div>{file.name}</div>
             </div>
           ))}
+          <div className="isListItem-new">
+            <i className="icon-plus" />
+            <input type="file" onChange={handleChange} />
+          </div>
         </div>
       )}
       {editorModal && (

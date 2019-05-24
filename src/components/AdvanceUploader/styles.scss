@@ -1,42 +1,97 @@
 .isList-files {
   display: flex;
   margin-bottom: 20px;
-  .isListItem {
-    width: 70px;
-    height: 60px;
-    border: 0.5px solid lightgray;
+  flex-wrap: wrap;
+  .isListContainer {
+    width: calc(16.6% - 10px);
+    height: 110px;
     margin-right: 10px;
-    position: relative;
-    background: whitesmoke;
-    padding: 3px;
+    margin-bottom: 25px;
+    &.active {
+      & div:last-child {
+        transition-duration: 0.2s;
+        color: rgb(56, 132, 255);
+      }
+      .isListItem {
+        border: 2px solid rgb(56, 132, 255) !important;
+        transition-duration: 0.2s;
+      }
+    }
+    & div:last-child {
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 11px;
+    }
+    .isListItem {
+      height: 110px;
+      flex-shrink: 0;
+      border: 2px solid lightgray;
+      position: relative;
+      background: whitesmoke;
+      padding: 3px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      audio {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      cursor: pointer;
+      &:hover .isListItem-remove {
+        opacity: 1;
+        transition-duration: 0.2s;
+      }
+      .isListItem-remove {
+        opacity: 0;
+        transition-duration: 0.2s;
+        position: absolute;
+        right: 0;
+        top: -10px;
+        border: 0.5px solid gray;
+        background: lightgray;
+        font-size: 13px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 25px;
+        height: 25px;
+        color: black !important;
+      }
+    }
+  }
+  .isListItem-new {
+    width: 110px;
+    height: 110px;
+    border: 2px dashed lightgray;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 30px;
-    img {
-      width: 100%;
-      height: 100%;
-    }
+    color: gray;
     cursor: pointer;
-    &:hover .isListItem-remove {
-      opacity: 1;
-      transition-duration: 0.2s;
-    }
-    .isListItem-remove {
-      opacity: 0;
-      transition-duration: 0.2s;
+    position: relative;
+    input {
       position: absolute;
-      right: 0;
-      top: -10px;
-      border: 0.5px solid gray;
-      background: lightgray;
-      font-size: 13px;
-      border-radius: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 25px;
-      height: 25px;
+      z-index: 10;
+      width: 80px;
+      height: 80px;
+      opacity: 0;
+      cursor: pointer;
     }
   }
 }
@@ -53,7 +108,7 @@
     padding: 5px 0;
   }
   .dropBox {
-    height: 220px;
+    height: 400px;
     display: flex;
     border: 5px dashed rgb(230, 230, 230);
     background: whitesmoke;
@@ -100,10 +155,14 @@
       font-size: 20px;
     }
     .dropbox-uploadedFile {
-      width: 300px;
+      width: 100%;
       margin: auto;
       height: 100%;
       padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
       .unknowIcon {
         .un-icon {
           margin-bottom: 10px;
@@ -111,6 +170,16 @@
         }
       }
       img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      audio {
         width: 100%;
         height: 100%;
         object-fit: contain;
