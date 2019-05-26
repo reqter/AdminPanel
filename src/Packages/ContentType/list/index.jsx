@@ -64,7 +64,7 @@ const List = props => {
               >
                 <i className="icon-pencil" />
               </button>
-              {listItem.enableAccessRight && (
+              {listItem.accessRight && (
                 <button
                   className="btn btn-light treeItem-action"
                   size="xs"

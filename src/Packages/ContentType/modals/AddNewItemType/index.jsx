@@ -465,30 +465,29 @@ const UpsertTemplate = props => {
                   </div>
                 </div>
               </div>
-              {/*
-                          <div className="custom_checkbox col">
-                  <div className="left">
-                    <label className="checkBox">
-                      <input
-                        type="checkbox"
-                        id="accessRight"
-                        checked={accessRight}
-                        onChange={handleAccessRightChanged}
-                      />
-                      <span className="checkmark" />
-                    </label>
-                  </div>
-                  <div className="right">
-                    <label htmlFor="accessRight">
-                      Enable access right of this content type
-                    </label>
-                    <label htmlFor="accessRight">
-                      You can set acceess rights on this contebt type
-                    </label>
-                  </div>
+
+              <div className="custom_checkbox ">
+                <div className="left">
+                  <label className="checkBox">
+                    <input
+                      type="checkbox"
+                      id="accessRight"
+                      checked={accessRight}
+                      onChange={handleAccessRightChanged}
+                    />
+                    <span className="checkmark" />
+                  </label>
                 </div>
-    
-               */}
+                <div className="right">
+                  <label htmlFor="accessRight">
+                    Enable access right of this content type
+                  </label>
+                  <label htmlFor="accessRight">
+                    You can set acceess rights on this contebt type
+                  </label>
+                </div>
+              </div>
+
               <div className="up-uploader">
                 <span className="title">
                   {languageManager.translate("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
