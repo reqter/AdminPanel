@@ -138,11 +138,11 @@ const ViewRequest = props => {
   function fetchUserInfo() {
     getUserInfo()
       .onOk(result => {
-        if (result.profile && result.profile.avatar) {
-          result.profile.avatar =
-            process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL +
-            result.profile.avatar;
-        }
+        // if (result.profile && result.profile.avatar) {
+        //   result.profile.avatar =
+        //     process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL +
+        //     result.profile.avatar;
+        // }
         setUserInfo(result);
       })
       .onServerError(result => {})
@@ -381,10 +381,8 @@ const ViewRequest = props => {
   function handleOnChangeValue(field, value, isValid) {
     const { name: key } = field;
     // add value to form
-    setForm(prevState => ({
-      ...prevState,
-      [field.name]: value,
-    }));
+    const f = { ...form, [key]: value };
+    setForm(f);
     setFormValidation(prevFormValidation => ({
       ...prevFormValidation,
       [key]: isValid,
@@ -399,11 +397,8 @@ const ViewRequest = props => {
   }
   function handleSubmitMore() {
     changeTab(1);
+    toggleSubmitSpinner(false);
     setCurrentBox("form");
-  }
-  function checkFieldVisibility(field) {
-    if (!item.settings || item.settings.userFields) {
-    }
   }
   function upsertContent(closePage) {
     if (!submitSpinner) {

@@ -208,15 +208,15 @@ const FileUploaderInput = props => {
       .call(file);
   }
   function removeFile(f) {
-    if (field.isList === true) {
-      const fs = files.filter(file => file.id !== f.id);
-      setFiles(fs);
-    } else {
-      setFiles([]);
-      setDropZoneFile();
-      toggleDroppableBox(true);
-      toggleDropZoneViewBox(false);
+    const fs = files.filter(file => file.id !== f.id);
+    setFiles(fs);
+    if (fs.length === 0) {
     }
+    if (!field.isList) {
+      toggleDropZoneViewBox(false);
+      toggleDroppableBox(true);
+    }
+    if (f.id === dropZoneFile.id) setDropZoneFile();
   }
   useEffect(() => {
     // send value to form after updateing
@@ -228,6 +228,10 @@ const FileUploaderInput = props => {
       else props.onChangeValue(field, result, true);
     } else {
       props.onChangeValue(field, result, true);
+    }
+    if (result.length === 0) {
+      toggleDropZoneViewBox(false);
+      toggleDroppableBox(true);
     }
   }, [files]);
 
@@ -297,7 +301,7 @@ const FileUploaderInput = props => {
               <button
                 type="button"
                 className="btn btn-sm btn-secondary btn-remove"
-                onClick={removeFile}
+                onClick={() => removeFile(dropZoneFile)}
               >
                 <i className="icon-bin" />
               </button>
@@ -312,6 +316,7 @@ const FileUploaderInput = props => {
                 "isListContainer " + (dropZoneFile.id === file.id && "active")
               }
               key={file.id}
+              title={file.name}
             >
               <div className="isListItem" onClick={() => showPreview(file)}>
                 {utility.getMediaThumbnailByUrl(file["url"][currentLang])}
