@@ -101,14 +101,14 @@ const Settings = props => {
                 New Locale
               </button>
             )}
-            {/* {tabContent === "roles" && (
+            {tabContent === "roles" && (
               <button
                 className="btn btn-primary"
                 onClick={toggleUpsertRoleModal}
               >
                 New Role
               </button>
-            )} */}
+            )}
             {tabContent === "apiKeys" && (
               <button
                 className="btn btn-primary"
@@ -154,12 +154,12 @@ const Settings = props => {
             >
               Locales
             </div>
-            {/* <div
+            <div
               className={"tabItem " + (tabContent === "roles" ? "active" : "")}
               onClick={() => toggleTab("roles")}
             >
               Roles
-            </div> */}
+            </div>
             <div
               className={
                 "tabItem " + (tabContent === "apiKeys" ? "active" : "")
@@ -180,7 +180,9 @@ const Settings = props => {
           {tabContent === "locales" && (
             <Locales onEditLocale={handleEditLocale} />
           )}
+          
           {tabContent === "roles" && <Roles onEditRole={handleEditRole} />}
+
           {tabContent === "apiKeys" && (
             <ApiKeys onEditApiKey={handleEditApiKey} />
           )}

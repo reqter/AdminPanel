@@ -8,7 +8,7 @@ import ForgotPassword from './Packages/ForgotPassword'
 import HomeComponent from './Packages/Home'
 import Categories from './Packages/Categories'
 import ContentType from './Packages/ContentType'
-// import Users from './Packages/Users'
+import Users from './Packages/Users'
 import Requests from './Packages/Requests'
 import Contents from './Packages/Contents'
 import UpsertContent from './Packages/UpsertContent'
@@ -107,15 +107,15 @@ const routes = [
         path: '/panel/settings',
         component: Settings,
         isPublic: false
+      },
+      {
+        name: translate('HOME_SIDE_NAV_MANAGET_USERS'),
+        icon: 'users',
+        path: '/panel/users',
+        desc: translate('HOME_SIDE_NAV_MANAGE_USERS_DESC'),
+        component: Users,
+        isPublic: false
       }
-      // {
-      //   name: translate('HOME_SIDE_NAV_MANAGET_USERS'),
-      //   icon: 'users',
-      //   path: '/panel/users',
-      //   desc: translate('HOME_SIDE_NAV_MANAGE_USERS_DESC'),
-      //   component: Users,
-      //   isPublic: false
-      // }
     ]
   },
   {

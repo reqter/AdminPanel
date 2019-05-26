@@ -58,7 +58,6 @@ const requestFields = [
     type: "string",
     isBase: true,
     isTranslate: true,
-    // defaultValue: "saeed",
   },
   {
     id: "3",
@@ -219,6 +218,7 @@ const UpsertProduct = props => {
     changeTab(2);
   }, [contentType]);
   useEffect(() => {
+    debugger
     if (Object.keys(form).length > 0 && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
@@ -366,8 +366,23 @@ const UpsertProduct = props => {
       })
       .call(spaceInfo.id, id);
   }
+  // useState(() => {
+  //   if (contentType) {
+  //     console.log("0");
+  //     const f = contentType.fields.reduce((preValue, currentValue) => {
+  //       preValue.push({ value: currentValue.name });
+  //       return preValue;
+  //     }, []);
+  //     const r_f = requestFields.map(rF => {
+  //       if (rF.name === "userFields") {
+  //         rF.options = f;
+  //       }
+  //       return rF;
+  //     });
+  //     setFields(r_f);
+  //   }
+  // }, [form]);
   function initEditMode(result) {
-    setContentType(result.contentType);
     if (isRequest) {
       let obj = {};
       for (const key in result) {
@@ -379,22 +394,12 @@ const UpsertProduct = props => {
       }
       setFormData(obj);
       setForm(obj);
-      const f = contentType.fields.reduce((preValue, currentValue) => {
-        preValue.push({ value: currentValue.name });
-        return preValue;
-      }, []);
-      const r_f = requestFields.map(rF => {
-        if (rF.name === "userFields") {
-          rF.options = f;
-        }
-        return rF;
-      });
-      setFields(r_f);
+      setContentType(result.contentType);
     } else {
       setFormData(result.fields);
       setForm(result.fields);
-      const c_fields = result.contentType.fields;
-      setFields(c_fields.sort((a, b) => a.index - b.index));
+      // const c_fields = result.contentType.fields;
+      // setFields(c_fields.sort((a, b) => a.index - b.index));
     }
     if (result.contentType.categorization === true)
       setCategory(result.category);
@@ -412,10 +417,10 @@ const UpsertProduct = props => {
   function handleOnChangeValue(field, value, isValid) {
     const { name: key } = field;
     // add value to form
-    setForm(prevState => ({
-      ...prevState,
-      [field.name]: value,
-    }));
+    const f = { ...form, [key]: value };
+    //form[key] = value;
+    setForm(f);
+
     setFormValidation(prevFormValidation => ({
       ...prevFormValidation,
       [key]: isValid,

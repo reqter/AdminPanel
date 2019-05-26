@@ -32,6 +32,7 @@ const fields = [
     },
     type: "string",
     appearance: "password",
+    isRequired: true,
   },
 ];
 
