@@ -5,6 +5,7 @@ import {
   addContent,
   updateContent,
   getContentById,
+  getContentTypes,
 } from "./../../Api/content-api";
 import {
   addRequest,
@@ -57,6 +58,7 @@ const requestFields = [
     type: "string",
     isBase: true,
     isTranslate: true,
+    // defaultValue: "saeed",
   },
   {
     id: "3",
@@ -135,7 +137,20 @@ const requestFields = [
     },
     type: "media",
     isTranslate: true,
-    isList:true
+    isList: true,
+  },
+  {
+    id: "9",
+    name: "userFields",
+    title: {
+      en: "User Fields",
+    },
+    description: {
+      fa: "",
+      en: "User can only the fields which you you select",
+    },
+    type: "keyValue",
+    isList: true,
   },
 ];
 
@@ -191,7 +206,12 @@ const UpsertProduct = props => {
         toggleTab(1);
       }
     } else {
-      toggleTab(1);
+      if (props.location.params && props.location.params.content) {
+        getItemById(props.location.params.content._id);
+        //_getContentTypeById(props.location.params.content._id);
+      } else {
+        toggleTab(1);
+      }
     }
   }, [props.match.params.id]);
 
@@ -211,6 +231,7 @@ const UpsertProduct = props => {
     }
     return true;
   }
+
   function getItemById(id) {
     getContentById()
       .onOk(result => {
@@ -358,7 +379,17 @@ const UpsertProduct = props => {
       }
       setFormData(obj);
       setForm(obj);
-      setFields(requestFields);
+      const f = contentType.fields.reduce((preValue, currentValue) => {
+        preValue.push({ value: currentValue.name });
+        return preValue;
+      }, []);
+      const r_f = requestFields.map(rF => {
+        if (rF.name === "userFields") {
+          rF.options = f;
+        }
+        return rF;
+      });
+      setFields(r_f);
     } else {
       setFormData(result.fields);
       setForm(result.fields);
@@ -507,15 +538,35 @@ const UpsertProduct = props => {
     }
   }
   function backToProducts() {
-    if (isRequest) props.history.push("/panel/requests");
-    else props.history.push("/panel/contents");
+    if (isRequest) {
+      if (
+        props.location.params &&
+        props.location.params.requestFromContents === true
+      )
+        props.history.push("/panel/contents");
+      else props.history.push("/panel/requests");
+    } else {
+      props.history.push("/panel/contents");
+    }
+
+    //else
   }
   function changeTab(tab) {
     if (tab === 2) {
       if (contentType !== undefined) {
         toggleTab(2);
         if (isRequest) {
-          setFields(requestFields);
+          const f = contentType.fields.reduce((preValue, currentValue) => {
+            preValue.push({ value: currentValue.name });
+            return preValue;
+          }, []);
+          const r_f = requestFields.map(rF => {
+            if (rF.name === "userFields") {
+              rF.options = f;
+            }
+            return rF;
+          });
+          setFields(r_f);
         } else {
           const f = contentType.fields;
           setFields(f.sort((a, b) => a.index - b.index));
@@ -564,8 +615,7 @@ const UpsertProduct = props => {
   }
   function upsertRequestItem(closePage) {
     if (updateMode) {
-      debugger;
-      const obj = {
+      let obj = {
         id: props.match.params.id,
         contentType: contentType._id,
         category:
@@ -583,8 +633,12 @@ const UpsertProduct = props => {
           showHeader: form["showHeader"],
           showRequestInfo: form["showRequestInfo"],
           userDetail: form["userDetail"],
+          userFields: form["userFields"],
         },
       };
+      if (selectedContent.settings && selectedContent.settings.contentId) {
+        obj["settings"]["contentId"] = selectedContent.settings.contentId;
+      }
       updateRequest()
         .onOk(result => {
           dispatch({
@@ -673,7 +727,7 @@ const UpsertProduct = props => {
         })
         .call(spaceInfo.id, obj);
     } else {
-      const obj = {
+      let obj = {
         contentType: contentType._id,
         category:
           contentType.categorization === true
@@ -690,8 +744,12 @@ const UpsertProduct = props => {
           showHeader: form["showHeader"],
           showRequestInfo: form["showRequestInfo"],
           userDetail: form["userDetail"],
+          userFields: form["userFields"],
         },
       };
+      if (props.location.params && props.location.params.content) {
+        obj["settings"]["contentId"] = props.location.params.content._id;
+      }
       addRequest()
         .onOk(result => {
           dispatch({
@@ -1132,7 +1190,9 @@ const UpsertProduct = props => {
                 <div className="requestSuccessIcon">
                   <i className="icon-checkmark" />
                 </div>
-                <h4 className="alert-heading">{updateMode ? "Updated!" :"Submitted!"}</h4>
+                <h4 className="alert-heading">
+                  {updateMode ? "Updated!" : "Submitted!"}
+                </h4>
               </div>
               <p>
                 Your request is created successfully.Use this link to send to

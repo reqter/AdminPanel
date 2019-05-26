@@ -20,45 +20,59 @@ const ItemTypes = props => {
   const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
   const [spinner, setSpinner] = useState(true);
   useEffect(() => {
+    let didCancel = false;
     getContentTypes()
       .onOk(result => {
-        setSpinner(false);
-        dispatch({
-          type: "SET_CONTENT_TYPES",
-          value: result,
-        });
+        if (!didCancel) {
+          setSpinner(false);
+          dispatch({
+            type: "SET_CONTENT_TYPES",
+            value: result,
+          });
+        }
       })
       .onServerError(result => {
-        setSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CONTENT_TYPE_ON_SERVER_ERROR"),
-          },
-        });
+        if (!didCancel) {
+          setSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate(
+                "CONTENT_TYPE_ON_SERVER_ERROR"
+              ),
+            },
+          });
+        }
       })
       .onBadRequest(result => {
-        setSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
-          },
-        });
+        if (!didCancel) {
+          setSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
+            },
+          });
+        }
       })
       .unAuthorized(result => {
-        setSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
-          },
-        });
+        if (!didCancel) {
+          setSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
+            },
+          });
+        }
       })
       .call(spaceInfo.id);
+    return () => {
+      didCancel = true;
+    };
   }, []);
 
   const { name: pageTitle, desc: pageDescription } = props.component;

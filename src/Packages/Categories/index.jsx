@@ -37,6 +37,7 @@ function useInput(defaultValue = "") {
 }
 
 const Categories = props => {
+  let didCancel = false;
   const { name: pageTitle, desc: pageDescription } = props.component;
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ categories, spaceInfo }, dispatch] = useGlobalState();
@@ -64,6 +65,9 @@ const Categories = props => {
 
   useEffect(() => {
     loadCategories();
+    return () => {
+      didCancel = true;
+    };
   }, []);
   useEffect(() => {
     if (upsertCategoryModal) {
@@ -74,41 +78,49 @@ const Categories = props => {
   function loadCategories() {
     getCategories()
       .onOk(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "SET_CATEGORIES",
-          value: result,
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "SET_CATEGORIES",
+            value: result,
+          });
+        }
       })
       .onServerError(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CATEGORY_ON_SERVER_ERROR"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CATEGORY_ON_SERVER_ERROR"),
+            },
+          });
+        }
       })
       .onBadRequest(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CATEGORY_ON_BAD_REQUEST"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CATEGORY_ON_BAD_REQUEST"),
+            },
+          });
+        }
       })
       .unAuthorized(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("CATEGORY_UN_AUTHORIZED"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("CATEGORY_UN_AUTHORIZED"),
+            },
+          });
+        }
       })
       .call(spaceInfo.id);
   }
@@ -134,7 +146,7 @@ const Categories = props => {
     toggleModal();
     setManageCategory(false);
     setImage();
-    loadCategories()
+    loadCategories();
   }
   function closeRightContent() {
     toggleRightContent(false);

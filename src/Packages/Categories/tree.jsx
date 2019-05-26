@@ -114,6 +114,8 @@ class Tree extends Component {
                       : "Lorem ipsum dolor sit amet, consectetur"}
                   </span>
                 </div>
+
+                
                 {/* hoverAction */}
                 {(node.items === undefined ||
                   node.items.length === 0) && (

@@ -27,6 +27,7 @@ import {
 } from "./../../components/Commons/ContentFilters";
 
 const Products = props => {
+  let didCancel = false;
   //#region controller
   const currentLang = languageManager.getCurrentLanguage().name;
   let baseFieldColumnsConfig = [
@@ -169,11 +170,37 @@ const Products = props => {
         const { status } = props.original;
         return (
           <div className="p-actions">
+            {/* <Dropdown
+              isOpen={contentActions[props.original._id]}
+              toggle={() => handleContentActions(props.original._id)}
+            >
+              <DropdownToggle
+                className="btn btn-primary btn-sm"
+                color="primary"
+              >
+                <i className="icon-more-h" />
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={openNewItemBox}>
+                  {languageManager.translate("New Content")}
+                </DropdownItem>
+                <DropdownItem onClick={newRequest}>
+                  {languageManager.translate("New Request")}
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown> */}
+
             <button
               className="btn btn-light btn-sm"
               onClick={() => handleViewRow(props)}
             >
               View
+            </button>
+            <button
+              className="btn btn-light btn-sm"
+              onClick={() => handleRequestRow(props)}
+            >
+              Requst
             </button>
             <button
               className="btn btn-light btn-sm"
@@ -250,7 +277,7 @@ const Products = props => {
   ] = useGlobalState();
 
   const tableBox = useRef(null);
-
+  const [contentActions, toggleContentActions] = useState({});
   const [headerActions, toggleHeaderActions] = useState(false);
   const [spinner, toggleSpinner] = useState(true);
   const [leftContent, toggleLeftContent] = useState(false);
@@ -268,50 +295,66 @@ const Products = props => {
 
   useEffect(() => {
     loadContents();
+    return () => {
+      didCancel = true;
+    };
   }, []);
 
   function loadContents() {
     getContents()
       .onOk(result => {
-        dispatch({
-          type: "SET_CONTENTS",
-          value: result,
-        });
-        toggleSpinner(false);
+        if (!didCancel) {
+          dispatch({
+            type: "SET_CONTENTS",
+            value: result,
+          });
+          toggleSpinner(false);
+        }
       })
       .onServerError(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CONTENTS_ON_SERVER_ERROR"),
+            },
+          });
+        }
       })
       .onBadRequest(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CONTENTS_ON_BAD_REQUEST"),
+            },
+          });
+        }
       })
       .unAuthorized(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("CONTENTS_UN_AUTHORIZED"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("CONTENTS_UN_AUTHORIZED"),
+            },
+          });
+        }
       })
       .call(spaceInfo.id);
   }
   // methods
+  function handleContentActions(id) {
+    let newObj = { ...contentActions };
+    newObj[id] = !newObj[id];
+    toggleContentActions(newObj);
+  }
   const imgs = ["jpg", "jpeg", "gif", "bmp", "png"];
   const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
   const audios = ["wav", "mp3", "ogg"];
@@ -369,6 +412,9 @@ const Products = props => {
   function newRequest() {
     props.history.push({
       pathname: "/requests/new",
+      params: {
+        requestFromContents: true,
+      },
     });
   }
   function makeTableFieldView(type, props) {
@@ -599,6 +645,15 @@ const Products = props => {
   function handleEditRow(row) {
     props.history.push({
       pathname: `/contents/edit/${row.original._id}`,
+    });
+  }
+  function handleRequestRow(row) {
+    props.history.push({
+      pathname: "/requests/new",
+      params: {
+        requestFromContents: true,
+        content: row.original,
+      },
     });
   }
   function viewContent(row) {

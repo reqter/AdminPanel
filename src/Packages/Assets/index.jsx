@@ -46,6 +46,7 @@ const filters = [
 ];
 
 const Assets = props => {
+  let didCancel = false;
   const currentLang = languageManager.getCurrentLanguage().name;
   const [{ assets, status, spaceInfo }, dispatch] = useGlobalState();
   const [spinner, toggleSpinner] = useState(true);
@@ -53,46 +54,60 @@ const Assets = props => {
   useEffect(() => {
     getAssets()
       .onOk(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "SET_ASSETS",
-          value: result,
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "SET_ASSETS",
+            value: result,
+          });
+        }
       })
       .onServerError(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
+            },
+          });
+        }
       })
       .onBadRequest(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
+            },
+          });
+        }
       })
       .unAuthorized(result => {
-        props.history.replace("/login");
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
-          },
-        });
+        if (!didCancel) {
+          props.history.replace("/login");
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
+            },
+          });
+        }
       })
       .notFound(result => {
-        toggleSpinner(false);
+        if (!didCancel) {
+          toggleSpinner(false);
+        }
       })
       .call(spaceInfo.id);
+
+    return () => {
+      didCancel = true;
+    };
   }, []);
 
   const { name: pageTitle, desc: pageDescription } = props.component;
@@ -104,7 +119,6 @@ const Assets = props => {
     return languageManager.translate(key);
   }
   function doFilter(fileType, status) {
-    
     toggleSpinner(true);
     filterAssets()
       .onOk(result => {

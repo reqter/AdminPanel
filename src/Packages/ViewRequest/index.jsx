@@ -83,7 +83,7 @@ const ViewRequest = props => {
   const [tab, changeTab] = useState(1);
   const [currentBox, setCurrentBox] = useState("form");
 
-  const [item, setItem] = useState({});
+  const [item, setItem] = useState();
   const [userInfo, setUserInfo] = useState();
   const [spinner, toggleSpinner] = useState(true);
 
@@ -153,6 +153,30 @@ const ViewRequest = props => {
       .unKnownError(result => {})
       .call();
   }
+  useEffect(() => {
+    if (item) {
+      let f = [];
+      if (
+        !item.settings ||
+        !item.settings.userFields ||
+        item.settings.userFields.length === 0
+      ) {
+        f = item.contentType.fields;
+      } else {
+        for (let i = 0; i < item.contentType.fields.length; i++) {
+          const field = item.contentType.fields[i];
+          for (let j = 0; j < item.settings.userFields.length; j++) {
+            const userField = item.settings.userFields[j];
+            if (field.name === userField) {
+              f.push(field);
+              break;
+            }
+          }
+        }
+      }
+      setFields(f.sort((a, b) => a.index - b.index));
+    }
+  }, [item]);
   function getItemById(link) {
     getRequestByLink()
       .onOk(result => {
@@ -171,8 +195,7 @@ const ViewRequest = props => {
             });
             setItem(result);
             //setContentType(result.contentType);
-            const c_fields = result.contentType.fields;
-            setFields(c_fields.sort((a, b) => a.index - b.index));
+
             // if (result.contentType.categorization === true)
             //   setCategory(result.category);
             setError();
@@ -377,6 +400,10 @@ const ViewRequest = props => {
   function handleSubmitMore() {
     changeTab(1);
     setCurrentBox("form");
+  }
+  function checkFieldVisibility(field) {
+    if (!item.settings || item.settings.userFields) {
+    }
   }
   function upsertContent(closePage) {
     if (!submitSpinner) {

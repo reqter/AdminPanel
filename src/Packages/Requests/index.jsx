@@ -21,6 +21,7 @@ import {
 } from "../../components/Commons/ContentFilters";
 
 const Requests = props => {
+  let didCancel = false;
   //#region controller
   const currentLang = languageManager.getCurrentLanguage().name;
   let baseFieldColumnsConfig = [
@@ -248,52 +249,67 @@ const Requests = props => {
 
   useEffect(() => {
     loadRequests();
+    return () => {
+      didCancel = true;
+    };
   }, []);
 
   function loadRequests() {
     getRequests()
       .onOk(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "SET_REQUESTS",
-          value: result,
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "SET_REQUESTS",
+            value: result,
+          });
+        }
       })
       .onServerError(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CONTENTS_ON_SERVER_ERROR"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CONTENTS_ON_SERVER_ERROR"),
+            },
+          });
+        }
       })
       .onBadRequest(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: languageManager.translate("CONTENTS_ON_BAD_REQUEST"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: languageManager.translate("CONTENTS_ON_BAD_REQUEST"),
+            },
+          });
+        }
       })
       .unAuthorized(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: languageManager.translate("CONTENTS_UN_AUTHORIZED"),
-          },
-        });
+        if (!didCancel) {
+          toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: languageManager.translate("CONTENTS_UN_AUTHORIZED"),
+            },
+          });
+        }
       })
       .unKnownError(result => {
-        toggleSpinner(false);
+        if (!didCancel) {
+          toggleSpinner(false);
+        }
       })
       .onRequestError(result => {
-        toggleSpinner(false);
+        if (!didCancel) {
+          toggleSpinner(false);
+        }
       })
       .call(spaceInfo.id);
   }

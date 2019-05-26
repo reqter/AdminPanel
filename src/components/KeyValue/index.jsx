@@ -75,57 +75,54 @@ const KeyValueInput = props => {
     // setSelectedOption(selected);
     setValueToParentForm(selected);
   }
-  if (field.appearance === "default") {
-    return (
-      <div className="form-group">
-        <label>{field.title[currentLang]}</label>
-        <Select
-          key={cmpKey}
-          ref={selectComponent}
-          menuPlacement="top"
-          closeMenuOnScroll={true}
-          closeMenuOnSelect={!field.isList}
-          //value={selectedOption}
-          defaultValue={true && getSelectedOption()}
-          onChange={handleOnChange}
-          options={field.options}
-          isMulti={field.isList}
-          isSearchable={true}
-          isDisabled={props.viewMode}
-          components={{
-            Option: CustomOption,
-            MultiValueLabel,
-            SingleValue,
-          }}
-        />
-        <small className="form-text text-muted">
-          {field.description[currentLang]}
-        </small>
+
+  return !field.appearance || field.appearance === "default" ? (
+    <div className="form-group">
+      <label>{field.title[currentLang]}</label>
+      <Select
+        key={cmpKey}
+        ref={selectComponent}
+        menuPlacement="top"
+        closeMenuOnScroll={true}
+        closeMenuOnSelect={!field.isList}
+        //value={selectedOption}
+        defaultValue={true && getSelectedOption()}
+        onChange={handleOnChange}
+        options={field.options ? field.options : []}
+        isMulti={field.isList}
+        isSearchable={true}
+        isDisabled={props.viewMode}
+        components={{
+          Option: CustomOption,
+          MultiValueLabel,
+          SingleValue,
+        }}
+      />
+      <small className="form-text text-muted">
+        {field.description[currentLang]}
+      </small>
+    </div>
+  ) : field.appearance === "radioGroup" ? (
+    <>
+      <label>{field.title[currentLang]}</label>
+      <div className="up-form-keyvalue-radio">
+        {field.options.map(option => (
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="exampleRadios"
+              id={"radio" + option.key}
+              value={option.key}
+            />
+            <label class="form-check-label" htmlFor={"radio" + option.key}>
+              {option.value}
+            </label>
+          </div>
+        ))}
       </div>
-    );
-  } else if (field.appearance === "radioGroup") {
-    return (
-      <>
-        <label>{field.title[currentLang]}</label>
-        <div className="up-form-keyvalue-radio">
-          {field.options.map(option => (
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="exampleRadios"
-                id={"radio" + option.key}
-                value={option.key}
-              />
-              <label class="form-check-label" for={"radio" + option.key}>
-                {option.value}
-              </label>
-            </div>
-          ))}
-        </div>
-      </>
-    );
-  }
+    </>
+  ) : null;
 };
 
 export default KeyValueInput;
