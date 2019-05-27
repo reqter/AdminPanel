@@ -588,7 +588,14 @@ const ViewRequest = props => {
                   {item &&
                     item.settings &&
                     item.settings.showRequestInfo === true && (
-                      <div className="content-userInfo">
+                      <div
+                        className={
+                          "content-userInfo " +
+                          (item.settings && item.settings.showHeader === true
+                            ? "userInfo_withHeader"
+                            : "userInfo_noHeader")
+                        }
+                      >
                         <div className="userImage">
                           <img
                             src="https://sitejerk.com/images/profile-image-png-17.png"

@@ -64,8 +64,12 @@ const BooleanComponent = props => {
         </label>
       </div>
       <div className="right">
-        <label for={"chk" + field.name}>{field.title[currentLang]}</label>
-        {field.description && <label>{field.description[currentLang]}</label>}
+        <label htmlFor={"chk" + field.name}>{field.title[currentLang]}</label>
+        {field.description && (
+          <label htmlFor={"chk" + field.name}>
+            {field.description[currentLang]}
+          </label>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+
   .viewRequest--header {
     position: fixed;
     height: 60px;
@@ -113,11 +114,10 @@
     .viewRequest-form {
       flex: 1;
       overflow: auto;
-      padding-top: 50px;
       .formContent {
         margin: auto;
+        overflow: hidden;
         .successRequest {
-          // background: white;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -224,9 +224,26 @@
 }
 
 // Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {
+  .formContent {
+    width: 100%;
+  }
+  .userInfo_withHeader {
+    margin-top: 20px;
+  }
+  .userInfo_noHeader {
+    margin-top: 0px;
+  }
+}
 @media (min-width: 576px) {
   .formContent {
     width: 100%;
+  }
+  .userInfo_withHeader {
+    margin-top: 20px;
+  }
+  .userInfo_noHeader {
+    margin-top: 0px;
   }
 }
 
@@ -235,6 +252,12 @@
   .formContent {
     width: 768px;
   }
+  .userInfo_withHeader {
+    margin-top: 50px;
+  }
+  .userInfo_noHeader {
+    margin-top: 50px;
+  }
 }
 
 // Large devices (desktops, 992px and up)
@@ -242,11 +265,23 @@
   .formContent {
     width: 768px;
   }
+  .userInfo_withHeader {
+    margin-top: 50px;
+  }
+  .userInfo_noHeader {
+    margin-top: 50px;
+  }
 }
 
 // Extra large devices (large desktops, 1200px and up)
 @media (min-width: 1200px) {
   .formContent {
     width: 768px;
+  }
+  .userInfo_withHeader {
+    margin-top: 50px;
+  }
+  .userInfo_noHeader {
+    margin-top: 50px;
   }
 }
