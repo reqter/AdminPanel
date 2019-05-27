@@ -339,6 +339,9 @@ const FileUploaderInput = props => {
     toggleDroppableBox(false);
     toggleDropZoneViewBox(true);
   }
+  function cancelUpload(id) {
+    
+  }
   function onCloseEditor(result) {
     toggleEditorModal(false);
     if (result) {
@@ -399,7 +402,7 @@ const FileUploaderInput = props => {
               <div className="isListItem" onClick={() => showPreview(file)}>
                 {isListSpinner[file.id] && (
                   <div className="isListUploadSpinner">
-                    <CircleSpinner show={true} size="medium" />
+                    <CircleSpinner show={true} size="medium" onClick={cancelUpload}/>
                     <span>
                       {progressPercentage[file.id] &&
                         progressPercentage[file.id] + "%"}

@@ -17,9 +17,11 @@ import Alert from './PopupAlert'
 import RowSkeleton from './RowSkeleton'
 import JsonObject from './JsonObject'
 import AdvanceUploader from './AdvanceUploader'
-import DateFormater from "./DateFormater";
+import DateFormater from './DateFormater'
+import ProgressiveSpinner from './ProgressiveSpinner'
 
 export {
+  ProgressiveSpinner,
   DateFormater,
   AdvanceUploader,
   Alert,
