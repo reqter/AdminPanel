@@ -218,7 +218,7 @@ const UpsertProduct = props => {
     changeTab(2);
   }, [contentType]);
   useEffect(() => {
-    debugger
+    debugger;
     if (Object.keys(form).length > 0 && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
@@ -398,6 +398,7 @@ const UpsertProduct = props => {
     } else {
       setFormData(result.fields);
       setForm(result.fields);
+      setContentType(result.contentType);
       // const c_fields = result.contentType.fields;
       // setFields(c_fields.sort((a, b) => a.index - b.index));
     }

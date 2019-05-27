@@ -3,7 +3,6 @@
   margin-bottom: 20px;
   flex-wrap: wrap;
   .isListContainer {
-    width: calc(16.6% - 10px);
     height: 110px;
     margin-right: 10px;
     margin-bottom: 25px;
@@ -71,6 +70,18 @@
         width: 25px;
         height: 25px;
         color: black !important;
+      }
+      .isListUploadSpinner {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.5);
+        width: 100%;
+        font-size: 13px;
+        color: white;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
       }
     }
   }
@@ -366,5 +377,38 @@
     button {
       margin-left: 5px;
     }
+  }
+}
+
+@media (max-width: 576px) {
+  .isListContainer {
+    width: calc(25% - 10px);
+  }
+}
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+  .isListContainer {
+    width: calc(16.6% - 10px);
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .isListContainer {
+    width: calc(16.6% - 10px);
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .isListContainer {
+    width: calc(16.6% - 10px);
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  .isListContainer {
+    width: calc(16.6% - 10px);
   }
 }

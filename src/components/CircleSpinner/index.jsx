@@ -13,7 +13,7 @@ const CircleSpinner = props => {
     <div
       style={{
         borderColor: props.bgColor || "#f3f3f3",
-        borderTopColor: props.color || "#3498db",
+        borderTopColor: props.color || "rgb(56,132,255)",
       }}
       className={classNames}
     />

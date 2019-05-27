@@ -115,7 +115,6 @@
       overflow: auto;
       padding-top: 50px;
       .formContent {
-        width: 768px;
         margin: auto;
         .successRequest {
           // background: white;
@@ -132,7 +131,7 @@
           .successMsg {
             font-size: 14px;
           }
-          .successBox-actions{
+          .successBox-actions {
             padding-top: 10px;
           }
         }
@@ -221,5 +220,33 @@
         }
       }
     }
+  }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+  .formContent {
+    width: 100%;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .formContent {
+    width: 768px;
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .formContent {
+    width: 768px;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  .formContent {
+    width: 768px;
   }
 }
