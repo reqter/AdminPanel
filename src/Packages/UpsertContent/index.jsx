@@ -218,7 +218,6 @@ const UpsertProduct = props => {
     changeTab(2);
   }, [contentType]);
   useEffect(() => {
-    debugger;
     if (Object.keys(form).length > 0 && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
@@ -418,9 +417,12 @@ const UpsertProduct = props => {
   function handleOnChangeValue(field, value, isValid) {
     const { name: key } = field;
     // add value to form
-    const f = { ...form, [key]: value };
+    //const f = { ...form, [key]: value };
     //form[key] = value;
-    setForm(f);
+    setForm(prevForm => {
+      const obj = { ...prevForm, [key]: value };
+      return obj;
+    });
 
     setFormValidation(prevFormValidation => ({
       ...prevFormValidation,
@@ -620,6 +622,7 @@ const UpsertProduct = props => {
     }
   }
   function upsertRequestItem(closePage) {
+    debugger;
     if (updateMode) {
       let obj = {
         id: props.match.params.id,
