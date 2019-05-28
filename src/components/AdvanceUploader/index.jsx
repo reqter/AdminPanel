@@ -25,8 +25,8 @@ const FileUploaderInput = props => {
   const [dropZoneViewBox, toggleDropZoneViewBox] = useState(false);
   const [dropZoneFile, setDropZoneFile] = useState({});
 
-  const [isUploading, toggleIsUploading] = useState(true);
-  const [singleFilePercentage, setSinglePercentage] = useState(33);
+  const [isUploading, toggleIsUploading] = useState(false);
+  const [singleFilePercentage, setSinglePercentage] = useState(0);
   const [selectedFile, setSelectedFile] = useState();
 
   const [files, setFiles] = useState([{}]);
