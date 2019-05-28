@@ -4,6 +4,11 @@
 body {
   overflow-x: hidden;
 }
+*,
+html,
+body {
+  scroll-behavior: smooth;
+}
 *::-webkit-scrollbar,
 div::-webkit-scrollbar,
 html::-webkit-scrollbar {
@@ -316,7 +321,7 @@ div::-moz-scrollbar-thumb:hover {
   .icon-video {
     font-size: 40px;
     cursor: pointer;
-    color: white
+    color: white;
   }
   video {
     height: 100%;

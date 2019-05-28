@@ -135,5 +135,59 @@ export default {
         }
       }
     }
+  },
+  getMediaLocalFile (file, customClass) {
+    if (file) {
+      const result = window.URL.createObjectURL(file)
+      const type = file.type
+      const cls = 'unkownFileType ' + customClass
+
+      if (type.includes('image')) return <img src={result} alt='' />
+      if (type.includes('video')) {
+        return (
+          <video>
+            <source src={result} />
+          </video>
+        )
+      }
+      if (type.includes('audio')) return <i className='icon-audio' />
+
+      return (
+        <div className={cls}>
+          <i className='icon-file-text un-icon' />
+          <span className='un-text'>{file.name}</span>
+        </div>
+      )
+    }
+  },
+  getMediaLocalFilePreview (file, customClass) {
+    if (file) {
+      const result = window.URL.createObjectURL(file)
+      const type = file.type
+      const cls = 'unkownFileType ' + customClass
+
+      if (type.includes('image')) return <img src={result} alt='' />
+      if (type.includes('video')) {
+        return (
+          <video controls>
+            <source src={result} />
+          </video>
+        )
+      }
+      if (type.includes('audio')) {
+        return (
+          <audio controls>
+            <source src={result} />
+          </audio>
+        )
+      }
+
+      return (
+        <div className={cls}>
+          <i className='icon-file-text un-icon' />
+          <span className='un-text'>{file.name}</span>
+        </div>
+      )
+    }
   }
 }

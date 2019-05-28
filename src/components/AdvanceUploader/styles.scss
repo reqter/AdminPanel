@@ -2,88 +2,7 @@
   display: flex;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  .isListContainer {
-    height: 110px;
-    margin-right: 10px;
-    margin-bottom: 25px;
-    &.active {
-      & div:last-child {
-        transition-duration: 0.2s;
-        color: rgb(56, 132, 255);
-      }
-      .isListItem {
-        border: 2px solid rgb(56, 132, 255) !important;
-        transition-duration: 0.2s;
-      }
-    }
-    & div:last-child {
-      width: 100%;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      font-size: 11px;
-    }
-    .isListItem {
-      height: 110px;
-      flex-shrink: 0;
-      border: 2px solid lightgray;
-      position: relative;
-      background: whitesmoke;
-      padding: 3px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 30px;
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-      video {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-      audio {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-      cursor: pointer;
-      &:hover .isListItem-remove {
-        opacity: 1;
-        transition-duration: 0.2s;
-      }
-      .isListItem-remove {
-        opacity: 0;
-        transition-duration: 0.2s;
-        position: absolute;
-        right: 0;
-        top: -10px;
-        border: 0.5px solid gray;
-        background: lightgray;
-        font-size: 13px;
-        border-radius: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 25px;
-        height: 25px;
-        color: black !important;
-      }
-      .isListUploadSpinner {
-        background: rgba(0, 0, 0, 0.5);
-        width: 100%;
-        font-size: 13px;
-        color: white;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-    }
-  }
+
   .isListItem-new {
     width: 110px;
     height: 110px;
@@ -379,28 +298,132 @@
   }
 }
 
+.listItem {
+  height: 110px;
+  margin-right: 10px;
+  margin-bottom: 25px;
+  position: relative;
+  .listItem-spinner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: whitesmoke;
+  }
+  .listItem-preview {
+    cursor: pointer;
+    height: 110px;
+    flex-shrink: 0;
+    border: 2px solid lightgray;
+    position: relative;
+    background: whitesmoke;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    &.active {
+      // & div:last-child {
+      //   transition-duration: 0.2s;
+      //   color: rgb(56, 132, 255);
+      // }
+      border: 2px solid rgb(56, 132, 255) !important;
+      transition-duration: 0.2s;
+    }
+    .unkownFile {
+      .un-icon {
+      }
+      .un-text {
+        margin-top: 5px;
+        font-size: 12px;
+      }
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    audio {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  .listItem-selected {
+    transition-duration: 0.2s;
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    background: rgb(56,132,255);
+    font-size: 13px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    color: white !important;
+    cursor: pointer;
+  }
+  .listItem-remove {
+    opacity: 0;
+    transition-duration: 0.2s;
+    position: absolute;
+    right: 0;
+    top: -10px;
+    border: 0.5px solid gray;
+    background: lightgray;
+    font-size: 13px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    color: black !important;
+    cursor: pointer;
+  }
+  &:hover .listItem-remove {
+    opacity: 1;
+  }
+  .listItem-name {
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 11px;
+  }
+}
+
 @media (max-width: 576px) {
-  .isListContainer {
+  .listItem {
     width: calc(25% - 10px);
   }
 }
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) {
-  .isListContainer {
+  .listItem {
     width: calc(16.6% - 10px);
   }
 }
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) {
-  .isListContainer {
+  .listItem {
     width: calc(16.6% - 10px);
   }
 }
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
-  .isListContainer {
+  .listItem {
     width: calc(16.6% - 10px);
   }
 }

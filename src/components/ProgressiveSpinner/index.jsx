@@ -2,18 +2,19 @@ import React from "react";
 import "./styles.scss";
 const ProgressiveSpinner = props => {
   function handleClick() {
-    if (props.onClick) {
-      props.onClick();
+    if (props.onCancel) {
+      props.onCancel();
     }
   }
   return (
-    <div class="arc-container">
-      <div class="arc-overlay" />
-      <div class="arc-hider" />
-      <div class="arc-wrapper">
-        <div class="arc1" />
-        <div class="arc2" />
-      </div>
+    <div class={"item progress-" + props.value}>
+      <div class="radial-inner-bg" />
+      <span className="percent">{props.value ? props.value : "0"}%</span>
+      <span
+        className="cancel icon-cross"
+        title="Cancel uploading"
+        onClick={handleClick}
+      />
     </div>
   );
 };

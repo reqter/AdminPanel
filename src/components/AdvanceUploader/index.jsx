@@ -6,6 +6,7 @@ import ImageEditorModal from "./ImageEditorModal";
 import { uploadAssetFile, addAsset } from "./../../Api/asset-api";
 import SVGIcon from "./svg";
 import CircleSpinner from "./../CircleSpinner";
+import ListItem from "./ListItem";
 
 const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
@@ -24,8 +25,8 @@ const FileUploaderInput = props => {
   const [progressPercentage, setPercentage] = useState({});
   const [selectedFile, setSelectedFile] = useState();
 
-  const [files, setFiles] = useState([]);
-  const [fakeFiles, setFakeFiles] = useState([]);
+  const [files, setFiles] = useState([{}]);
+  const [uploadedList, setUploadedList] = useState([]);
 
   useEffect(() => {
     if (formData[field.name] && formData[field.name].length > 0) {
@@ -119,7 +120,7 @@ const FileUploaderInput = props => {
       }
     }
   }
-  function uploadFile(file, id) {
+  function uploadFile(localFile) {
     uploadAssetFile()
       .onOk(result => {
         const { file } = result;
@@ -135,8 +136,7 @@ const FileUploaderInput = props => {
         };
         addAsset()
           .onOk(result => {
-            if (field.isList === true) completeIsListUploading(file);
-            else completeSingleUploading(file);
+            completeSingleUploading(localFile, file);
           })
           .onServerError(result => {
             toggleIsUploading(false);
@@ -204,25 +204,15 @@ const FileUploaderInput = props => {
         toggleIsUploading(false);
       })
       .onProgress(result => {
-        if (id)
-          setPercentage(p => ({
-            ...p,
-            [id]: result,
-          }));
-        else setSinglePercentage(result);
+        setSinglePercentage(result);
       })
-      .call(file);
+      .call(localFile);
   }
   function removeFile(f) {
-    const fs = files.filter(file => file.id !== f.id);
-    setFiles(fs);
-    if (fs.length === 0) {
-    }
-    if (!field.isList) {
-      toggleDropZoneViewBox(false);
-      toggleDroppableBox(true);
-    }
-    if (f.id === dropZoneFile.id) setDropZoneFile();
+    setUploadedList([]);
+    toggleDropZoneViewBox(false);
+    toggleDroppableBox(true);
+    setDropZoneFile();
   }
   useEffect(() => {
     // send value to form after updateing
@@ -239,70 +229,18 @@ const FileUploaderInput = props => {
       toggleDropZoneViewBox(false);
       toggleDroppableBox(true);
     }
-  }, [files]);
+  }, [uploadedList]);
 
-  function showPreview(file) {
-    if (file.url) {
-      setDropZoneFile(file);
-      toggleDroppableBox(false);
-      toggleDropZoneViewBox(true);
-    }
-  }
-
-  useEffect(() => {
-    if (fakeFiles && fakeFiles.length > 0) {
-      uploadFile(
-        fakeFiles[fakeFiles.length - 1],
-        fakeFiles[fakeFiles.length - 1].name.replace(/\s/g, "")
-      );
-    }
-  }, [fakeFiles]);
   function preUploadIsListFile(file) {
-    const id = file.name.replace(/\s/g, "");
-    const obj = { id: id };
-    let fs = [...files, obj];
-    setFiles(fs);
-    setFakeFiles(prevState => [...prevState, file]);
-
-    let sp = { ...isListSpinner };
-    sp[id] = !sp[id];
-    toggleIsListSpinner(sp);
+    const obj = { id: Math.random(), data: file };
+    setFiles(files => [...files, obj]);
   }
-  function completeIsListUploading(uploadedFile) {
-    const obj = {
-      id: uploadedFile.originalname.replace(/\s/g, ""),
-      url: {
-        [currentLang]:
-          process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + uploadedFile.url,
-      },
-      name: uploadedFile.originalname,
-    };
-    let f = files.find(
-      file => file.id === uploadedFile.originalname.replace(/\s/g, "")
-    );
 
-    f = { ...f, ...obj };
-
-    setFiles(files => {
-      let fs_filter = files.filter(item => item.id !== obj.id);
-      return [...fs_filter, f];
-    });
-
-    let sp = { ...isListSpinner };
-    sp[uploadedFile.originalname.replace(/\s/g, "")] = !sp[
-      uploadedFile.originalname.replace(/\s/g, "")
-    ];
-    toggleIsListSpinner(sp);
-
-    setDropZoneFile(obj);
-    toggleDroppableBox(false);
-    toggleDropZoneViewBox(true);
-  }
   function preUploadSingleFile(file) {
     toggleIsUploading(true);
     uploadFile(file);
   }
-  function completeSingleUploading(uploadedFile) {
+  function completeSingleUploading(localFile, uploadedFile) {
     toggleIsUploading(false);
     const obj = {
       id: Math.random(),
@@ -310,38 +248,37 @@ const FileUploaderInput = props => {
         [currentLang]:
           process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + uploadedFile.url,
       },
-      name: uploadedFile.originalname,
     };
     let fs = [];
     fs[0] = obj;
-    setFiles(fs);
+    setUploadedList(fs);
 
-    setDropZoneFile(obj);
+    setDropZoneFile({ data: localFile });
     toggleDroppableBox(false);
     toggleDropZoneViewBox(true);
   }
-  function addToList(file) {
-    const obj = {
-      id: Math.random(),
-      url: {
-        [currentLang]: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
-      },
-      name: file.originalname,
+
+  // is list functions
+  function handleUploadEnd(file) {
+    file.url = {
+      [currentLang]: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
     };
-    if (field.isList !== undefined && field.isList) {
-      setFiles(prevState => [...prevState, obj]);
-    } else {
-      let fs = [];
-      fs[0] = obj;
-      setFiles(fs);
-    }
-    setDropZoneFile(obj);
+    setUploadedList(list => [...list, file]);
+  }
+
+  function handlePreview(file) {
+    setDropZoneFile(file);
     toggleDroppableBox(false);
     toggleDropZoneViewBox(true);
   }
-  function cancelUpload(id) {
-    
+  function handleRemove(file) {
+    const f = uploadedList.filter(item => item.id !== file.id);
+    setUploadedList(f);
+    const ff = files.filter(item => item.id !== file.id);
+    setFiles(ff);
   }
+  function handleCancelUploading(file) {}
+
   function onCloseEditor(result) {
     toggleEditorModal(false);
     if (result) {
@@ -356,7 +293,10 @@ const FileUploaderInput = props => {
         <div className="dropBox" ref={dropRef}>
           {dropZoneViewBox && (
             <div className="dropbox-uploadedFile">
-              {utility.getMediaComponentByUrl(dropZoneFile, "unknowIcon")}
+              {utility.getMediaLocalFilePreview(
+                dropZoneFile.data,
+                "unknowIcon"
+              )}
             </div>
           )}
 
@@ -392,37 +332,15 @@ const FileUploaderInput = props => {
       {field.isList === true && (
         <div className="isList-files">
           {files.map(file => (
-            <div
-              className={
-                "isListContainer " + (dropZoneFile.id === file.id && "active")
-              }
+            <ListItem
               key={file.id}
-              title={file.name}
-            >
-              <div className="isListItem" onClick={() => showPreview(file)}>
-                {isListSpinner[file.id] && (
-                  <div className="isListUploadSpinner">
-                    <CircleSpinner show={true} size="medium" onClick={cancelUpload}/>
-                    <span>
-                      {progressPercentage[file.id] &&
-                        progressPercentage[file.id] + "%"}
-                    </span>
-                  </div>
-                )}
-                {!isListSpinner[file.id] &&
-                  (file["url"] &&
-                    utility.getMediaThumbnailByUrl(file["url"][currentLang]))}
-                {!isListSpinner[file.id] && (
-                  <div
-                    className="isListItem-remove"
-                    onClick={() => removeFile(file)}
-                  >
-                    <i className="icon-bin" />
-                  </div>
-                )}
-              </div>
-              {!isListSpinner[file.id] && <div>{file.name}</div>}
-            </div>
+              file={file}
+              selectedFile={dropZoneFile}
+              onUploadEnded={handleUploadEnd}
+              onPreview={handlePreview}
+              onRemove={handleRemove}
+              onCancelUploading={handleCancelUploading}
+            />
           ))}
           <div className="isListItem-new">
             <i className="icon-plus" />

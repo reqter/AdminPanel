@@ -113,7 +113,6 @@
     }
     .viewRequest-form {
       flex: 1;
-      overflow: auto;
       .formContent {
         margin: auto;
         overflow: hidden;
@@ -225,6 +224,9 @@
 
 // Small devices (landscape phones, 576px and up)
 @media (max-width: 576px) {
+  .viewRequest-form {
+    overflow: unset;
+  }
   .formContent {
     width: 100%;
   }
@@ -236,6 +238,9 @@
   }
 }
 @media (min-width: 576px) {
+  .viewRequest-form {
+    overflow: unset;
+  }
   .formContent {
     width: 100%;
   }
@@ -249,6 +254,9 @@
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) {
+  .viewRequest-form {
+    overflow: auto;
+  }
   .formContent {
     width: 768px;
   }
@@ -262,6 +270,9 @@
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) {
+  .viewRequest-form {
+    overflow: auto;
+  }
   .formContent {
     width: 768px;
   }
@@ -275,6 +286,9 @@
 
 // Extra large devices (large desktops, 1200px and up)
 @media (min-width: 1200px) {
+  .viewRequest-form {
+    overflow: auto;
+  }
   .formContent {
     width: 768px;
   }

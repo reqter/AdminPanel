@@ -23,7 +23,8 @@ const CircleSpinner = props => {
       }}
       className={classNames}
       onClick={handleClick}
-    />
+    >
+    </div>
   ) : null;
 };
 export default CircleSpinner;

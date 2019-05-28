@@ -3,6 +3,7 @@ import "./styles.scss";
 import { languageManager, utility } from "../../services";
 import AssetBrowser from "./../AssetBrowser";
 
+
 const MediaInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;

@@ -1,78 +1,68 @@
-.arc1,
-.arc2 {
-  background-color: #6c69c5;
-  border-top-left-radius: 100%;
-  width: 75px;
-  height: 75px;
-  -moz-transform-origin: right bottom;
-  -webkit-transform-origin: right bottom;
-  transform-origin: right bottom;
-  position: absolute;
-  -moz-transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-}
-.arc1 {
-  animation: arc1 1s infinite linear;
-  -moz-animation: arc1 1s infinite linear;
-  -webkit-animation: arc1 1s infinite linear;
-}
-.arc2 {
-  animation: arc1 5s infinite linear;
-  -moz-animation: arc1 5s infinite linear;
-  -webkit-animation: arc1 5s infinite linear;
-}
-@-moz-keyframes arc1
-/* Firefox */ {
-  100% {
-    -moz-transform: rotate(315deg);
-  }
-}
-@-webkit-keyframes arc1
-/* Safari and Chrome */ {
-  100% {
-    -webkit-transform: rotate(315deg);
-    transform: rotate(315deg);
-  }
-}
-.arc-overlay {
-  width: 120px;
-  height: 120px;
-  background: white;
-  padding-left: 32px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  line-height: 100px;
-  font-weight: 400;
-  font-size: 22px;
-  border-radius: 100px;
-  position: absolute;
-  z-index: 5;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  top: 15px;
-  left: 15px;
-}
-.arc-wrapper {
-  width: 150px;
-  height: 150px;
-  border-radius: 100%;
-  background: #f4f4f4;
-  overflow: hidden;
-  position: absolute;
-}
-.arc-hider {
-  width: 150px;
-  height: 150px;
-  border-radius: 100%;
-  border: 10px solid white;
-  position: absolute;
-  z-index: 5;
-  box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
-  top: -10px;
-  left: -10px;
-}
-.arc-container {
+.item {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover .percent {
+    display: none;
+  }
+  &:hover .cancel {
+    display: block;
+  }
+  .percent {
+    position: absolute;
+    z-index: 100;
+    font-size: 12px;
+  }
+  .cancel {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    font-size: 13px;
+    color: lightgray;
+  }
+}
+
+.radial-inner-bg {
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  top: 8px;
+  left: 8px;
+  background: #fff;
+  position: absolute;
+}
+
+$step: 1; // step of % for created classes
+$loops: 100;
+$increment: (360 / $loops);
+$half: round($loops / 2);
+@for $i from 0 through $loops {
+  .progress-#{$i*$step} {
+    @if $i < 50 {
+      $nextdeg: 90deg + ($increment * $i);
+      background-image: linear-gradient(
+          90deg,
+          #fff 50%,
+          transparent 50%,
+          transparent
+        ),
+        linear-gradient($nextdeg, rgb(56, 132, 255) 50%, #fff 50%, #fff);
+    } @else {
+      $nextdeg: -90deg + ($increment * ($i - $half));
+      background-image: linear-gradient(
+          $nextdeg,
+          rgb(56, 132, 255) 50%,
+          transparent 50%,
+          transparent
+        ),
+        linear-gradient(270deg, rgb(56, 132, 255) 50%, #fff 50%, #fff);
+    }
+  }
 }
