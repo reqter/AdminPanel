@@ -613,7 +613,17 @@ const ViewRequest = props => {
                         </div>
                       </div>
                     )}
-                  <div className="content-inputs">
+                  <div
+                    className="content-inputs"
+                    style={{
+                      marginTop:
+                        item.settings &&
+                        item.settings.showHeader === true &&
+                        !item.settings.showRequestInfo
+                          ? 20
+                          : 0,
+                    }}
+                  >
                     {tab === 1 &&
                       fields &&
                       fields.map(field => (
