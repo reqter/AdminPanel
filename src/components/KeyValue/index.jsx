@@ -38,8 +38,10 @@ const KeyValueInput = props => {
   // set value to input update and reset form time
   useEffect(() => {
     if (formData[field.name]) {
-      if (field.isRequired === true) props.init(field.name, true);
-    } else if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
+    } else if (field.isRequired === true)
+      if (props.init) props.init(field.name, false);
 
     setKey(Math.random());
     const defaultValue = getSelectedOption();
@@ -49,26 +51,28 @@ const KeyValueInput = props => {
   }, [formData]);
 
   function setValueToParentForm(input) {
-    if (field.isList) {
-      let s = [];
-      for (let i = 0; i < input.length; i++) {
-        s.push(input[i].value);
+    if (props.onChangeValue) {
+      if (field.isList) {
+        let s = [];
+        for (let i = 0; i < input.length; i++) {
+          s.push(input[i].value);
+        }
+        if (field.isRequired) {
+          let isValid = false;
+          if (s.length > 0) {
+            isValid = true;
+          }
+          props.onChangeValue(field, s, isValid);
+        } else props.onChangeValue(field, s, true);
+      } else {
+        if (field.isRequired) {
+          let isValid = false;
+          if (input.value.length > 0) {
+            isValid = true;
+          }
+          props.onChangeValue(field, input.value, isValid);
+        } else props.onChangeValue(field, input.value, true);
       }
-      if (field.isRequired) {
-        let isValid = false;
-        if (s.length > 0) {
-          isValid = true;
-        }
-        props.onChangeValue(field, s, isValid);
-      } else props.onChangeValue(field, s, true);
-    } else {
-      if (field.isRequired) {
-        let isValid = false;
-        if (input.value.length > 0) {
-          isValid = true;
-        }
-        props.onChangeValue(field, input.value, isValid);
-      } else props.onChangeValue(field, input.value, true);
     }
   }
   function handleOnChange(selected) {

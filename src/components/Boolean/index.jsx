@@ -13,10 +13,12 @@ const BooleanComponent = props => {
   // set value to input
   useEffect(() => {
     if (formData[field.name] !== undefined && formData[field.name] !== null) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
       setValue(props.formData[field.name]);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
       if (field.defaultValue !== undefined && field.defaultValue !== null) {
         setValue(field.defaultValue);
         setValueToParentForm(field.defaultValue);
@@ -25,16 +27,17 @@ const BooleanComponent = props => {
   }, [formData]);
 
   function setValueToParentForm(inputValue) {
-    let value = inputValue;
-    if (field.isRequired) {
-      let isValid = false;
-      if (value) {
-        isValid = true;
-      }
-      props.onChangeValue(field, value, isValid);
-    } else props.onChangeValue(field, value, true);
+    if (props.onChangeValue) {
+      let value = inputValue;
+      if (field.isRequired) {
+        let isValid = false;
+        if (value) {
+          isValid = true;
+        }
+        props.onChangeValue(field, value, isValid);
+      } else props.onChangeValue(field, value, true);
+    }
   }
-
   function handleCheckboxValue(e) {
     if (props.viewMode) {
       e.preventDefault();

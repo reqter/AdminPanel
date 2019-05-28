@@ -154,6 +154,11 @@ const routes = [
     isPublic: true
   },
   {
+    path: '/viewContent/:id',
+    component: ContentView,
+    isPublic: true
+  },
+  {
     path: '/users/new',
     component: UpsertUser,
     isPublic: false
@@ -171,11 +176,6 @@ const routes = [
   {
     path: '/editAsset/:id',
     component: EditAsset,
-    isPublic: true
-  },
-  {
-    path: '/view/:spaceId/:id',
-    component: ContentView,
     isPublic: true
   }
 ]

@@ -16,9 +16,11 @@ const ReferenceInput = props => {
   // set value to selected otions
   useEffect(() => {
     if (formData[field.name]) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
     }
 
     if (spaceInfo) {
@@ -75,16 +77,21 @@ const ReferenceInput = props => {
         if (s.length > 0) {
           isValid = true;
         }
-        props.onChangeValue(field, s, isValid);
-      } else props.onChangeValue(field, s, true);
+        if (props.onChangeValue) props.onChangeValue(field, s, isValid);
+      } else {
+        if (props.onChangeValue) props.onChangeValue(field, s, true);
+      }
     } else {
       if (field.isRequired) {
         let isValid = false;
         if (input.value.length > 0) {
           isValid = true;
         }
-        props.onChangeValue(field, input.value, isValid);
-      } else props.onChangeValue(field, input.value, true);
+        if (props.onChangeValue)
+          props.onChangeValue(field, input.value, isValid);
+      } else {
+        if (props.onChangeValue) props.onChangeValue(field, input.value, true);
+      }
     }
   }
   function handleChange(selecteds) {

@@ -18,14 +18,17 @@ const LocationInput = props => {
   // set value to input update time and reset form time
   useEffect(() => {
     if (formData[field.name]) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
 
       setValueToInput(props.formData[field.name]);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
       if (field.defaultValue) {
         setValueToInput(field.defaultValue);
-        props.onChangeValue(field, field.defaultValue, true);
+        if (props.onChangeValue)
+          props.onChangeValue(field, field.defaultValue, true);
       } else setValueToInput({});
     }
   }, [formData]);
@@ -46,8 +49,10 @@ const LocationInput = props => {
       if (lat.length > 0 && long.length > 0) {
         isValid = true;
       }
-      props.onChangeValue(field, value, isValid);
-    } else props.onChangeValue(field, value, true);
+      if (props.onChangeValue) props.onChangeValue(field, value, isValid);
+    } else {
+      if (props.onChangeValue) props.onChangeValue(field, value, true);
+    }
   }
   function handleLatitudeChange(e) {
     setLatitude(e.target.value);

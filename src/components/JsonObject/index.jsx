@@ -13,12 +13,14 @@ const JsonInput = props => {
   // set value to input
   useEffect(() => {
     if (formData[field.name]) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
 
       if (field.isTranslate) setInput(props.formData[field.name][currentLang]);
       else setInput(props.formData[field.name]);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
 
       if (field.defaultValue) {
         setInput(field.defaultValue);
@@ -28,24 +30,26 @@ const JsonInput = props => {
   }, [formData]);
 
   function setValueToParentForm(inputValue) {
-    let value;
-    if (field.isTranslate) value = utility.applyeLangs(inputValue);
-    else value = inputValue;
+    if (props.onChangeValue) {
+      let value;
+      if (field.isTranslate) value = utility.applyeLangs(inputValue);
+      else value = inputValue;
 
-    let p;
-    try {
-      p = JSON.parse(inputValue);
-      if (error) setError();
+      let p;
+      try {
+        p = JSON.parse(inputValue);
+        if (error) setError();
 
-      if (field.isRequired) {
-        let isValid = false;
-        if (inputValue.length > 0) {
-          isValid = true;
-        }
-        props.onChangeValue(field, value, isValid);
-      } else props.onChangeValue(field, value, true);
-    } catch (e) {
-      setError(util.inspect(e));
+        if (field.isRequired) {
+          let isValid = false;
+          if (inputValue.length > 0) {
+            isValid = true;
+          }
+          props.onChangeValue(field, value, isValid);
+        } else props.onChangeValue(field, value, true);
+      } catch (e) {
+        setError(util.inspect(e));
+      }
     }
   }
   function handleOnChange(e) {

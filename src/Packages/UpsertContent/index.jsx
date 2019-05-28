@@ -622,7 +622,6 @@ const UpsertProduct = props => {
     }
   }
   function upsertRequestItem(closePage) {
-    debugger;
     if (updateMode) {
       let obj = {
         id: props.match.params.id,

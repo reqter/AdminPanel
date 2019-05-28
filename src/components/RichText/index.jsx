@@ -27,11 +27,13 @@ const RichTextInput = props => {
   //  set value to input
   useEffect(() => {
     if (formData[field.name]) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
       if (field.isTranslate) initValue(props.formData[field.name][currentLang]);
       else initValue(props.formData[field.name]);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
       initValue("<p></p>");
     }
   }, [formData]);
@@ -55,8 +57,10 @@ const RichTextInput = props => {
       if (inputValue.length > 0) {
         isValid = true;
       }
-      props.onChangeValue(field, value, isValid);
-    } else props.onChangeValue(field, value, true);
+      if (props.onChangeValue) props.onChangeValue(field, value, isValid);
+    } else {
+      if (props.onChangeValue) props.onChangeValue(field, value, true);
+    }
   }
   function handleOnChange(content) {
     setEditorState(content);

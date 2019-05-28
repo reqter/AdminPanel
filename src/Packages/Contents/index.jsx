@@ -639,7 +639,7 @@ const Products = props => {
   }
   function handleViewRow(row) {
     props.history.push({
-      pathname: `/view/${spaceInfo.id}/${row.original._id}`,
+      pathname: `/viewContent/${row.original._id}`,
     });
   }
   function handleEditRow(row) {
@@ -1001,7 +1001,7 @@ const Products = props => {
             <div className="p-content-right-body">
               <ReactTable
                 data={contents}
-                defaultPageSize={10}
+                defaultPageSize={100000}
                 minRows={2}
                 columns={columns}
                 showPaginationTop={false}

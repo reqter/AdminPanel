@@ -26,9 +26,11 @@ const StringInput = props => {
   // set value to input (update time and reset form)
   useEffect(() => {
     if (formData[field.name]) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
     }
 
     const val = initValue();
@@ -61,16 +63,17 @@ const StringInput = props => {
     return getCurrentDate() + " " + getCurrentTime();
   }
   function setValueToParentForm(inputValue) {
-    let value = inputValue;
+    if (props.onChangeValue) {
+      let value = inputValue;
 
-    if (field.isRequired) {
-      let isValid = false;
-      if (inputValue.length > 0) isValid = true;
+      if (field.isRequired) {
+        let isValid = false;
+        if (inputValue.length > 0) isValid = true;
 
-      props.onChangeValue(field, value, isValid);
-    } else props.onChangeValue(field, value, true);
+        props.onChangeValue(field, value, isValid);
+      } else props.onChangeValue(field, value, true);
+    }
   }
-
   function handleOnChange(e) {
     if (e["_d"]) {
       const val = moment(e["_d"]).format(

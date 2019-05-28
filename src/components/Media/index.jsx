@@ -3,7 +3,6 @@ import "./styles.scss";
 import { languageManager, utility } from "../../services";
 import AssetBrowser from "./../AssetBrowser";
 
-
 const MediaInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const { field, formData } = props;
@@ -13,7 +12,8 @@ const MediaInput = props => {
   // set form value update time
   useEffect(() => {
     if (formData[field.name] && formData[field.name].length > 0) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
 
       const d = formData[field.name].map(item => {
         return {
@@ -23,7 +23,8 @@ const MediaInput = props => {
       });
       setFiles(d);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
       if (files.length > 0) setFiles([]);
     }
   }, [formData]);
@@ -34,10 +35,12 @@ const MediaInput = props => {
     if (result.length === 0) result = [];
     if (field.isRequired === true) {
       if (result === undefined || result.length === 0)
-        props.onChangeValue(field, result, false);
-      else props.onChangeValue(field, result, true);
+        if (props.onChangeValue) props.onChangeValue(field, result, false);
+        else {
+          if (props.onChangeValue) props.onChangeValue(field, result, true);
+        }
     } else {
-      props.onChangeValue(field, result, true);
+      if (props.onChangeValue) props.onChangeValue(field, result, true);
     }
   }, [files]);
 

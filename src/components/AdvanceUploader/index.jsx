@@ -34,7 +34,8 @@ const FileUploaderInput = props => {
 
   useEffect(() => {
     if (formData[field.name] && formData[field.name].length > 0) {
-      if (field.isRequired === true) props.init(field.name, true);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, true);
 
       const d = formData[field.name].map(item => {
         return {
@@ -44,7 +45,8 @@ const FileUploaderInput = props => {
       });
       setFiles(d);
     } else {
-      if (field.isRequired === true) props.init(field.name, false);
+      if (field.isRequired === true)
+        if (props.init) props.init(field.name, false);
       if (files.length > 0) setFiles([]);
     }
   }, [formData]);
@@ -91,6 +93,7 @@ const FileUploaderInput = props => {
         const file = event.target.files[0];
         checkFileByType(file);
       }
+      event.target.value = null;
     }
   }
 
@@ -236,18 +239,21 @@ const FileUploaderInput = props => {
   }
   useEffect(() => {
     // send value to form after updateing
-    let result = files.map(item => item.url);
-    if (result.length === 0) result = [];
-    if (field.isRequired === true) {
-      if (result === undefined || result.length === 0)
-        props.onChangeValue(field, result, false);
-      else props.onChangeValue(field, result, true);
-    } else {
-      props.onChangeValue(field, result, true);
-    }
-    if (result.length === 0) {
-      toggleDropZoneViewBox(false);
-      toggleDroppableBox(true);
+    if (props.onChangeValue) {
+      let result = uploadedList.map(item => item.url);
+      if (result.length === 0) result = [];
+      if (field.isRequired === true) {
+        if (result === undefined || result.length === 0)
+          props.onChangeValue(field, result, false);
+        else props.onChangeValue(field, result, true);
+      } else {
+        props.onChangeValue(field, result, true);
+      }
+
+      if (result.length === 0) {
+        toggleDropZoneViewBox(false);
+        toggleDroppableBox(true);
+      }
     }
   }, [uploadedList]);
 
