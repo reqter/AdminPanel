@@ -7,9 +7,9 @@ const ProgressiveSpinner = props => {
     }
   }
   return (
-    <div class={"item progress-" + props.value}>
-      <div class="radial-inner-bg" />
-      <span className="percent">{props.value ? props.value : "0"}%</span>
+    <div className={"item progress-" + props.value}>
+      <div className="radial-inner-bg" />
+      <span className="percent">{props.value ? props.value : 0}%</span>
       <span
         className="cancel icon-cross"
         title="Cancel uploading"

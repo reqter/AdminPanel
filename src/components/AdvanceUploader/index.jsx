@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
-import { languageManager, useGlobalState, utility } from "../../services";
+import {
+  languageManager,
+  useGlobalState,
+  utility,
+  storageManager,
+} from "../../services";
 import ImageEditorModal from "./ImageEditorModal";
 import { uploadAssetFile, addAsset } from "./../../Api/asset-api";
 import SVGIcon from "./svg";
-import CircleSpinner from "./../CircleSpinner";
+import ProgressiveSpinner from "./../ProgressiveSpinner";
 import ListItem from "./ListItem";
 
+let xhr;
 const FileUploaderInput = props => {
   const currentLang = languageManager.getCurrentLanguage().name;
   const dropRef = useRef(null);
@@ -19,10 +25,8 @@ const FileUploaderInput = props => {
   const [dropZoneViewBox, toggleDropZoneViewBox] = useState(false);
   const [dropZoneFile, setDropZoneFile] = useState({});
 
-  const [isUploading, toggleIsUploading] = useState(false);
-  const [isListSpinner, toggleIsListSpinner] = useState({});
-  const [singleFilePercentage, setSinglePercentage] = useState("0");
-  const [progressPercentage, setPercentage] = useState({});
+  const [isUploading, toggleIsUploading] = useState(true);
+  const [singleFilePercentage, setSinglePercentage] = useState(33);
   const [selectedFile, setSelectedFile] = useState();
 
   const [files, setFiles] = useState([{}]);
@@ -64,20 +68,16 @@ const FileUploaderInput = props => {
   function handleDragIn(e) {
     e.preventDefault();
     e.stopPropagation();
-    //if (e.dataTransfer.items && e.dataTransfer.items.length > 0)
-    //  setDragging(true);
   }
 
   function handleDragOut(e) {
     e.preventDefault();
     e.stopPropagation();
-    //  setDragging(false);
   }
 
   function handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
-    // setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       checkFileByType(file);
@@ -120,93 +120,113 @@ const FileUploaderInput = props => {
       }
     }
   }
-  function uploadFile(localFile) {
-    uploadAssetFile()
-      .onOk(result => {
-        const { file } = result;
-        const obj = {
-          name: file.originalname,
-          title: file.originalname,
-          description: "",
-          url: {
-            [currentLang]:
-              process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
-          },
-          fileType: file.mimetype,
+  async function uploadFile(localFile) {
+    xhr = new XMLHttpRequest();
+    try {
+      const url = process.env.REACT_APP_FILE_UPLOADER_URL;
+      const token = storageManager.getItem("token");
+
+      xhr.open("POST", url);
+      xhr.onload = () => {
+        const status = xhr.status;
+        const result = JSON.parse(xhr.response);
+        switch (status) {
+          case 200:
+            const { file } = result;
+            const obj = {
+              name: file.originalname,
+              title: file.originalname,
+              description: "",
+              url: {
+                [currentLang]:
+                  process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+              },
+              fileType: file.mimetype,
+            };
+            addAsset()
+              .onOk(result => {
+                completeSingleUploading(localFile, file);
+              })
+              .onServerError(result => {
+                toggleIsUploading(false);
+                dispatch({
+                  type: "ADD_NOTIFY",
+                  value: {
+                    type: "error",
+                    message: languageManager.translate(
+                      "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
+                    ),
+                  },
+                });
+              })
+              .onBadRequest(result => {
+                toggleIsUploading(false);
+                dispatch({
+                  type: "ADD_NOTIFY",
+                  value: {
+                    type: "error",
+                    message: languageManager.translate(
+                      "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
+                    ),
+                  },
+                });
+              })
+              .unAuthorized(result => {
+                toggleIsUploading(false);
+                dispatch({
+                  type: "ADD_NOTIFY",
+                  value: {
+                    type: "warning",
+                    message: languageManager.translate(
+                      "UPSERT_ASSET_ADD_UN_AUTHORIZED"
+                    ),
+                  },
+                });
+              })
+              .notFound(result => {
+                toggleIsUploading(false);
+                dispatch({
+                  type: "ADD_NOTIFY",
+                  value: {
+                    type: "error",
+                    message: languageManager.translate(
+                      "UPSERT_ASSET_ADD_NOT_FOUND"
+                    ),
+                  },
+                });
+              })
+              .call(spaceInfo.id, obj);
+            break;
+          case 400:
+            break;
+          case 401:
+            break;
+          case 404:
+            break;
+          case 500:
+            break;
+          default:
+            break;
+        }
+      };
+      var formdata = new FormData();
+      formdata.append("file", localFile, localFile.name);
+
+      if (xhr.upload) {
+        xhr.upload.onprogress = event => {
+          if (event.lengthComputable) {
+            setSinglePercentage(
+              Math.round((event.loaded / event.total) * 100).toString()
+            );
+          }
         };
-        addAsset()
-          .onOk(result => {
-            completeSingleUploading(localFile, file);
-          })
-          .onServerError(result => {
-            toggleIsUploading(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "error",
-                message: languageManager.translate(
-                  "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
-                ),
-              },
-            });
-          })
-          .onBadRequest(result => {
-            toggleIsUploading(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "error",
-                message: languageManager.translate(
-                  "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
-                ),
-              },
-            });
-          })
-          .unAuthorized(result => {
-            toggleIsUploading(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "warning",
-                message: languageManager.translate(
-                  "UPSERT_ASSET_ADD_UN_AUTHORIZED"
-                ),
-              },
-            });
-          })
-          .notFound(result => {
-            toggleIsUploading(false);
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "error",
-                message: languageManager.translate(
-                  "UPSERT_ASSET_ADD_NOT_FOUND"
-                ),
-              },
-            });
-          })
-          .call(spaceInfo.id, obj);
-      })
-      .onServerError(result => {
-        toggleIsUploading(false);
-      })
-      .onBadRequest(result => {
-        toggleIsUploading(false);
-      })
-      .unAuthorized(result => {
-        toggleIsUploading(false);
-      })
-      .onRequestError(result => {
-        toggleIsUploading(false);
-      })
-      .unKnownError(result => {
-        toggleIsUploading(false);
-      })
-      .onProgress(result => {
-        setSinglePercentage(result);
-      })
-      .call(localFile);
+      }
+      xhr.setRequestHeader("authorization", "Bearer " + token);
+      xhr.setRequestHeader("spaceId", spaceInfo.id);
+      await xhr.send(formdata);
+    } catch (error) {
+      toggleIsUploading(false);
+    }
   }
   function removeFile(f) {
     setUploadedList([]);
@@ -279,6 +299,13 @@ const FileUploaderInput = props => {
   }
   function handleCancelUploading(file) {}
 
+  function handleCancelSingleFile() {
+    xhr.abort();
+    toggleIsUploading(false);
+    setDropZoneFile();
+    toggleDroppableBox(true);
+    toggleDropZoneViewBox(false);
+  }
   function onCloseEditor(result) {
     toggleEditorModal(false);
     if (result) {
@@ -314,8 +341,10 @@ const FileUploaderInput = props => {
           )}
           {isUploading && (
             <div className="dropbox-spinner">
-              <CircleSpinner show={isUploading} size="large" />
-              Uploading {singleFilePercentage + "%"}
+              <ProgressiveSpinner
+                value={singleFilePercentage}
+                onCancel={handleCancelSingleFile}
+              />
             </div>
           )}
           {dropZoneViewBox && (!field.isList || field.isList === false) && (
