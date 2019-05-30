@@ -1,0 +1,15 @@
+@mixin variable($variable, $property, $fallback) {
+  // Fallback for browsers that don't support css vars
+  #{$property}: $fallback;
+  #{$property}: var(--#{$variable});
+}
+.mp-sidebar {
+  position: fixed;
+  width: 300px;
+  height: calc(100% - 61px);
+  top: 61px;
+  //@include variable(mp-sidebar-background, background, whitesmoke);
+  //@include variable(mp-sidebar-top, top, 60px);
+  @include variable(mp-sidebar-left, left, 0);
+  @include variable(mp-sidebar-right, right, null);
+}

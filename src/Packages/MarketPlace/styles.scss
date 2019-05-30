@@ -1,0 +1,22 @@
+@mixin variable($variable, $property, $fallback) {
+  // Fallback for browsers that don't support css vars
+  #{$property}: $fallback;
+  #{$property}: var(--#{$variable});
+}
+
+body {
+}
+.mp-content {
+  @include variable(mp-header-height, margin-top, 60px);
+  padding: 3% 10%;
+}
+.mp-header {
+  &--inverter {
+  }
+  &__image-wrapper {
+  }
+  &__image {
+  }
+  &__content {
+  }
+}

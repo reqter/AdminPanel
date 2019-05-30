@@ -1,10 +1,11 @@
 import { languageManager, storageManager } from '../../services'
 const config = process.env
 const baseUrl = config.REACT_APP_REQUESTS_BASE_URL
+const public_baseUrl = config.REACT_APP_PUBLIC_REQUESTS_BASE_URL
 
 const getAllURL = baseUrl + config.REACT_APP_REQUESTS_GET_ALL
 const getByIdURL = baseUrl + config.REACT_APP_REQUESTS_GET_BY_ID
-const getBylinkURL = baseUrl + config.REACT_APP_REQUESTS_GET_BY_LINK
+const getBylinkURL = public_baseUrl + config.REACT_APP_PUBLIC_REQUESTS_GET_BY_LINK
 const filterURL = baseUrl + config.REACT_APP_REQUESTS_FILTER
 
 const addURL = baseUrl + config.REACT_APP_REQUESTS_ADD
@@ -17,6 +18,7 @@ const unPublishURL = baseUrl + config.REACT_APP_REQUESTS_UN_PUBLISH
 
 const getContentTypesURL =
   config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
+
 const getCategoriesURL =
   config.REACT_APP_CATEGORIES_BASE_URL + config.REACT_APP_CATEGORIES_GET_ALL
 
@@ -475,7 +477,6 @@ export function getContentTypes () {
     }
   }
 }
-
 export function getCategories () {
   let _onOkCallBack
   function _onOk (result) {
@@ -577,7 +578,6 @@ export function getCategories () {
     }
   }
 }
-
 export function addRequest () {
   let _onOkCallBack
   function _onOk (result) {
@@ -1029,7 +1029,6 @@ export function getRequestById () {
     }
   }
 }
-
 export function getRequestByLink () {
   let _onOkCallBack
   function _onOk (result) {
@@ -1076,7 +1075,7 @@ export function getRequestByLink () {
 
   const _call = async link => {
     try {
-      const url = getBylinkURL + '?link=' + link
+      const url = getBylinkURL + "/" + link
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
@@ -1143,7 +1142,6 @@ export function getRequestByLink () {
     }
   }
 }
-
 export function publish () {
   let _onOkCallBack
   function _onOk (result) {

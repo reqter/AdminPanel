@@ -18,8 +18,8 @@ const Provider = props => {
   const initialState = {
     isAuthenticated:
       token !== undefined && token !== null && token.length > 0 ? true : false,
-    spaceInfo: undefined,
-    userInfo: undefined,
+    spaceInfo: {},
+    userInfo: {},
     contentTypeTemlates: [],
     contentTypes: [],
     fields: [],
@@ -71,6 +71,7 @@ const Provider = props => {
     ],
     apiKeys: [],
     webhooks: [],
+    t: {},
   };
 
   const reducer = (state, action) => {
@@ -92,6 +93,12 @@ const Provider = props => {
           webhooks: [],
         };
         return logout;
+      case "SET_LOCALE":
+        const locale = {
+          ...state,
+          t: action.value,
+        };
+        return locale;
       case "SET_AUTHENTICATED":
         const auth = {
           ...state,

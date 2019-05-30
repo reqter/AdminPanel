@@ -7,7 +7,7 @@ import './styles/app.scss'
 import 'animate.css'
 import Notifies from './components/Notifies'
 
-import Routes from './routes'
+import Routes from './Routes/routes'
 import PrivateRoute from './PrivateRoute'
 
 const App = () => {
