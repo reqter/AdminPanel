@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Header, SideBar, List } from "./components";
+import { Header } from "./components";
 import { useTheme, useLayout, useLocale } from "../../hooks";
 import themes from "../../themes";
 import layouts from "../../Layouts";

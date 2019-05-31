@@ -1,4 +1,6 @@
-import SideBar from './Sidebar'
+import Categories from './Categories'
+import ContentTypes from './ContentType'
 import List from './List'
+import ListDetail from './ListDetail'
 
-export {  SideBar, List }
+export { Categories, ContentTypes, List, ListDetail }

@@ -1,3 +1,55 @@
-body {
+@mixin variable($variable, $property, $fallback) {
+  // Fallback for browsers that don't support css vars
+  #{$property}: $fallback;
+  #{$property}: var(--#{$variable});
 }
-
+.mp-page {
+  width: 1150px;
+  padding: 3% 0 ;
+  margin: auto;
+  padding-bottom: 0;
+  display: flex;
+  overflow: auto;
+  @include variable(mp-page-products-direction, flex-direction, row);
+}
+.mp-products {
+  &__left {
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+  }
+  &__search {
+    display: flex;
+    @include variable(rowDirection, flex-direction, row);
+    height: 40px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    @include variable(mp-page-products-searchbox, border, 1px solid lightgray);
+  }
+  &__iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    .icon {
+      @include variable(mp-page-products-searchIcon, color, black);
+    }
+  }
+  &__inputWrapper {
+    flex: 1;
+    display: flex;
+    input {
+      padding: 0 10px;
+      border-radius: 20px;
+      border: none;
+      width: 100%;
+      @include variable(textAlign, text-align, left);
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  &__right {
+    flex: 1;
+  }
+}

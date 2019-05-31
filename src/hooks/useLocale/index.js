@@ -9,20 +9,35 @@ const useLocale = () => {
   function setLocale (locale) {
     switch (locale) {
       case 'en':
-        setState(state => ({ ...state, appLocale: en }))
+        setState(state => ({
+          ...state,
+          appLocale: en,
+          currentLang: locale,
+          direction: 'ltr'
+        }))
         break
       case 'fa':
-        setState(state => ({ ...state, appLocale: fa }))
+        setState(state => ({
+          ...state,
+          appLocale: fa,
+          currentLang: locale,
+          direction: 'rtl'
+        }))
         break
       default:
-        setState(state => ({ ...state, appLocale: en }))
+        setState(state => ({
+          ...state,
+          appLocale: en,
+          currentLang: locale,
+          direction: 'ltr'
+        }))
         break
     }
   }
 
   return {
     setLocale,
-    appLocale: state.appLocale
+    appLocale: state.appLocale ? state.appLocale : {}
   }
 }
 
