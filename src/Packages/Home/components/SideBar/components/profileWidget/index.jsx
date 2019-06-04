@@ -44,7 +44,7 @@ const ProfileWidget = props => {
   }
   return (
     <div className="profile-widget">
-      {userInfo && userInfo.profile.avatar ? (
+      {userInfo && userInfo.profile && userInfo.profile.avatar ? (
         <div className="userImage">
           <img src={userInfo.profile.avatar} alt="" />
         </div>
