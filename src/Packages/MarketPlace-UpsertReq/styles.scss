@@ -1,0 +1,242 @@
+.up_r {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .up_r--body {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .up_r--error {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      min-width: 300px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .up_r--error-title {
+        font-weight: 500;
+        font-size: 25px;
+      }
+      .up_r--error-msg {
+      }
+    }
+    .up_r-form {
+      flex: 1;
+      .formContent {
+        margin: auto;
+        overflow: hidden;
+        .successRequest {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border-radius: 3px;
+          padding-bottom: 30px;
+          .title {
+            font-size: 30px;
+            margin-bottom: 10px;
+          }
+          .successMsg {
+            font-size: 14px;
+          }
+          .successBox-actions {
+            padding-top: 10px;
+          }
+        }
+        .content-userInfo {
+          margin-top: 20px;
+          height: 100px;
+          border-radius: 3px;
+          background: white;
+          border-radius: 5px;
+          //   box-shadow: 0 0 3px lightgray;
+        //   border: 0.5px solid lightgray;
+          padding: 0 2%;
+          margin-bottom: 20px;
+          display: flex;
+          align-items: center;
+          .userImage {
+            width: 80px;
+            height: 80px;
+            border: 1px solid gray;
+            padding: 3px;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+          .info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding-left: 20px;
+            font-size: 16px;
+            & span:first-child {
+              font-size: 16px;
+              margin-bottom: 5px;
+            }
+            & span:last-child {
+              font-weight: 500;
+            }
+          }
+          .requestDate {
+            font-size: 15px;
+          }
+        }
+        .content-inputs {
+          min-height: 200px;
+          background: white;
+          border-radius: 3px;
+          background: white;
+        //   border: 0.5px solid lightgray;
+          padding: 4%;
+          margin-bottom: 40px;
+          border-radius: 5px;
+          .actions {
+            display: flex;
+            flex-direction: row-reverse;
+            button {
+              margin-top: 10px;
+              margin-left: 10px;
+            }
+          }
+        }
+        .form-attachments {
+          min-height: 100px;
+          border-radius: 3px;
+          background: white;
+          box-shadow: 0 0 0px lightgray;
+          padding: 4%;
+          margin-bottom: 20px;
+          .attachments-files {
+            display: flex;
+            padding-top: 20px;
+            .attachmentItem {
+              border: 1px solid whitesmoke;
+              margin-right: 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 30px;
+              background: whitesmoke;
+              padding: 0 5px;
+              color: black;
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {
+  .up_r-form {
+    overflow: unset;
+  }
+  .formContent {
+    width: 100%;
+  }
+  .userInfo_withHeader {
+    margin-top: 20px;
+  }
+  .userInfo_noHeader {
+    margin-top: 0px;
+  }
+  .attachmentItem {
+    width: calc(33% - 20px);
+    height: 120px;
+  }
+}
+@media (min-width: 576px) {
+  .up_r-form {
+    overflow: unset;
+  }
+  .formContent {
+    width: 100%;
+  }
+  .userInfo_withHeader {
+    margin-top: 20px;
+  }
+  .userInfo_noHeader {
+    margin-top: 0px;
+  }
+  .attachmentItem {
+    width: calc(25% - 20px);
+    height: 150px;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .up_r-form {
+    overflow: auto;
+  }
+  .formContent {
+    width: 768px;
+  }
+  .userInfo_withHeader {
+    margin-top: 50px;
+  }
+  .userInfo_noHeader {
+    margin-top: 50px;
+  }
+  .attachmentItem {
+    width: calc(25% - 20px);
+    height: 150px;
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .up_r-form {
+    overflow: auto;
+  }
+  .formContent {
+    width: 768px;
+  }
+  .userInfo_withHeader {
+    margin-top: 50px;
+  }
+  .userInfo_noHeader {
+    margin-top: 50px;
+  }
+  .attachmentItem {
+    width: calc(25% - 20px);
+    height: 150px;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  .up_r-form {
+    overflow: auto;
+  }
+  .formContent {
+    width: 768px;
+  }
+  .userInfo_withHeader {
+    margin-top: 50px;
+  }
+  .userInfo_noHeader {
+    margin-top: 50px;
+  }
+  .attachmentItem {
+    width: calc(25% - 20px);
+    height: 150px;
+  }
+}

@@ -42,10 +42,12 @@ const UploaderView = props => {
   return (
     <>
       <div className="ad-uploader">
-        <span className="title">{field.title[currentLang]}</span>
-        <span className="description">
-          {field.description && field.description[currentLang]}
-        </span>
+        {field.title && (
+          <span className="title">{field.title[currentLang]}</span>
+        )}
+        {field.description && (
+          <span className="description">{field.description[currentLang]}</span>
+        )}
         <div className="dropBox">
           {dropZoneFile ? (
             <div className="dropbox-uploadedFile">

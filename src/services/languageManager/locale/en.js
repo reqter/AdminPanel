@@ -1,4 +1,5 @@
 export default {
+  REQTER:"REQTER",
   // COMMON
   BACK: 'Back',
   draft: 'Draft',

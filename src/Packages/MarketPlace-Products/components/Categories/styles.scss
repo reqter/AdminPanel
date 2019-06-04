@@ -1,0 +1,101 @@
+@mixin variable($variable, $property, $fallback) {
+  // Fallback for browsers that don't support css vars
+  #{$property}: $fallback;
+  #{$property}: var(--#{$variable});
+}
+.mp-p__c {
+  margin-bottom: 20px;
+  &__header {
+    @include variable(
+      mp-product-filter_header-border,
+      border-bottom,
+      1px solid rgb(230, 230, 230)
+    );
+    padding: 10px 0;
+    margin-bottom: 10px;
+  }
+  &__title {
+    @include variable(mp-product-filter_title_fontsize, font-size, 14px);
+    @include variable(textAlign, text-align, right);
+    font-weight: 450;
+    display: block;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  &_categoryItem {
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+
+    @include variable(rowDirection, flex-direction, row);
+    .categoryName {
+      flex: 1;
+      @include variable(mp-product-category_title_fontsize, font-size, 14px);
+      @include variable(textAlign, text-align, right);
+      cursor: pointer;
+      font-weight: 500;
+      &.--active {
+        @include variable(
+          mp-product-category_active_color,
+          color,
+          rgb(56, 132, 255)
+        );
+      }
+    }
+    .categoryCount {
+      @include variable(mp-product-category_count_fontsize, font-size, 13px);
+      @include variable(mp-product-category_count_color, color, gray);
+      &.--active {
+        @include variable(
+          mp-product-category_active_color,
+          color,
+          rgb(56, 132, 255)
+        );
+      }
+    }
+  }
+}
+.lineSkeleton {
+  display: flex;
+  .lines {
+    border-radius: 8px;
+    background: whitesmoke;
+    width: 100%;
+  }
+  .lines .line {
+    margin-bottom: 10px;
+    float: left;
+    height: 20px;
+    border-radius: 10px;
+    background-color: white;
+    background-image: linear-gradient(
+      90deg,
+      white 0px,
+      whitesmoke 40px,
+      white 80px
+    );
+    background-size: 600px;
+  }
+  .l1 {
+    width: 100%;
+    animation: shine-line 2s infinite ease-in-out;
+  }
+  .l2 {
+    animation: shine-line 2.5s infinite ease-in-out;
+    width: 90%;
+    margin-left: 10%;
+  }
+}
+
+@keyframes shine-line {
+  0% {
+    background-position: -32px;
+  }
+  40%,
+  100% {
+    background-position: 208px;
+  }
+}

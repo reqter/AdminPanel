@@ -18,7 +18,7 @@ import {
   CategoriesFilter,
   ContentTypesFilter,
   StatusFilter,
-} from "../../components/Commons/ContentFilters";
+} from "./../../components/Commons";
 
 const Requests = props => {
   let didCancel = false;
