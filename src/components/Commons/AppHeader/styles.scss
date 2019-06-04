@@ -122,41 +122,134 @@
   }
 }
 
-.button {
-  position: relative;
-  display: inline-flex;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.15s ease;
 
-  @include variable(button-margin-left, margin-left, 200px);
 
-  @include variable(button-border, border, none);
-  @include variable(button-padding, padding, 1rem);
-  @include variable(button-border-radius, border-radius, 0);
-  @include variable(button-font-weight, font-weight, normal);
-  @include variable(button-font-size, font-size, 1.2rem);
-  @include variable(button-text-transform, text-transform, uppercase);
 
-  @include variable(button-color, color, #000);
-  @include variable(button-background, background, #fff);
+body {
+  overflow: hidden;
+  @include variable(body-background, background, whitesmoke);
+}
+.mp-content {
+  @include variable(mp-header-height, margin-top, 60px);
+  height: 100vh;
+  overflow: auto;
+}
 
-  &:hover {
-    @include variable(button-hover-border, border, none);
-    @include variable(button-hover-color, color, #000);
-    @include variable(button-hover-background, background, #efefef);
-    @include variable(button-hover-transform, transform, none);
+.lineSkeleton {
+  display: flex;
+  .lines {
+    border-radius: 8px;
+    background: white;
+    width: 100%;
+  }
+  .lines .line {
+    margin-bottom: 10px;
+    float: left;
+    height: 20px;
+    border-radius: 10px;
+    background-color: whitesmoke;
+    background-image: linear-gradient(
+      90deg,
+      whitesmoke 0px,
+      #e8e8e8 40px,
+      whitesmoke 80px
+    );
+    background-size: 600px;
+  }
+  .l1 {
+    width: 100%;
+    animation: shine-line 2s infinite ease-in-out;
+  }
+  .l2 {
+    animation: shine-line 2.5s infinite ease-in-out;
+    width: 90%;
+    margin-left: 10%;
+  }
+}
+
+@keyframes shine-line {
+  0% {
+    background-position: -32px;
+  }
+  40%,
+  100% {
+    background-position: 208px;
+  }
+}
+
+.radioSkeleton {
+  display: flex;
+  @include variable(rowDirection, flex-direction, row);
+  .radioItem {
+    border-radius: 8px;
+    background: whitesmoke;
+    width: 100%;
+    display: flex;
+    @include variable(rowDirection, flex-direction, row);
+  }
+  .radioItem .radio__circle {
+    float: left;
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border-radius: 100%;
+    margin: 8px;
+    background-image: linear-gradient(
+      90deg,
+      white 0px,
+      whitesmoke 40px,
+      white 80px
+    );
+    background-size: 600px;
+    animation: shine-radio__circle 2.5s infinite ease-in-out;
+  }
+  .radioItem .lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .radioItem {
+    .lines .line {
+      float: left;
+      width: 100%;
+      height: 16px;
+      margin-top: 12px;
+      border-radius: 7px;
+      background-image: linear-gradient(
+        90deg,
+        white 0px,
+        whitesmoke 40px,
+        white 80px
+      );
+      background-size: 300px;
+      animation: shine-lines1 3s infinite ease-in-out;
+    }
   }
 
-  &:active {
-    @include variable(button-active-border, border, none);
-    @include variable(button-active-color, color, #000);
-    @include variable(button-active-background, background, #ccc);
-    @include variable(button-active-transform, transform, none);
+  .radioItem .radio__circle + .line {
+    margin-top: 11px;
+    width: 100px;
   }
+  .radioItem .line ~ .line {
+    background-color: red;
+  }
+}
+@keyframes shine-lines1 {
+  0% {
+    background-position: 100%;
+  }
+  60%,
+  100% {
+    background-position: 100px;
+  }
+}
 
-  &:focus {
-    // Don't do this in production for accessibility reasons
-    outline: 0;
+@keyframes shine-radio__circle {
+  0% {
+    background-position: -32px;
+  }
+  40%,
+  100% {
+    background-position: 208px;
   }
 }

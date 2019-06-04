@@ -5,57 +5,59 @@ import { getContentTypes } from "./../../../../Api/content-api";
 import "./styles.scss";
 
 const contentTypes = [
-  { _id: "1", name: { en: "Travel" } },
-  { _id: "2", name: { en: "Book" } },
-  { _id: "3", name: { en: "Game" } },
+  { _id: "1", title: { en: "Travel", fa: "مسافرت" } },
+  { _id: "2", title: { en: "Book", fa: "کتاب" } },
+  { _id: "3", title: { en: "Game", fa: "بازی" } },
 ];
 const ContentTypeFilter = props => {
-  const { appLocale } = useLocale();
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale , currentLang } = useLocale();
   //const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
   const [spinner, toggleSpinner] = useState(true);
   const [selected, setSelected] = useState({});
-  // useEffect(() => {
-  //   if (contentTypes === undefined || contentTypes.length === 0) {
-  //     getContentTypes()
-  //       .onOk(result => {
-  //         dispatch({
-  //           type: "SET_CONTENT_TYPES",
-  //           value: result,
-  //         });
-  //       })
-  //       .onServerError(result => {
-  //         dispatch({
-  //           type: "ADD_NOTIFY",
-  //           value: {
-  //             type: "error",
-  //             message: languageManager.translate(
-  //               "CONTENT_TYPE_ON_SERVER_ERROR"
-  //             ),
-  //           },
-  //         });
-  //       })
-  //       .onBadRequest(result => {
-  //         dispatch({
-  //           type: "ADD_NOTIFY",
-  //           value: {
-  //             type: "error",
-  //             message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
-  //           },
-  //         });
-  //       })
-  //       .unAuthorized(result => {
-  //         dispatch({
-  //           type: "ADD_NOTIFY",
-  //           value: {
-  //             type: "warning",
-  //             message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
-  //           },
-  //         });
-  //       })
-  //       .call(spaceInfo.id);
-  //   }
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      toggleSpinner(false);
+    }, 1000);
+    //   if (contentTypes === undefined || contentTypes.length === 0) {
+    //     getContentTypes()
+    //       .onOk(result => {
+    //         dispatch({
+    //           type: "SET_CONTENT_TYPES",
+    //           value: result,
+    //         });
+    //       })
+    //       .onServerError(result => {
+    //         dispatch({
+    //           type: "ADD_NOTIFY",
+    //           value: {
+    //             type: "error",
+    //             message: languageManager.translate(
+    //               "CONTENT_TYPE_ON_SERVER_ERROR"
+    //             ),
+    //           },
+    //         });
+    //       })
+    //       .onBadRequest(result => {
+    //         dispatch({
+    //           type: "ADD_NOTIFY",
+    //           value: {
+    //             type: "error",
+    //             message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
+    //           },
+    //         });
+    //       })
+    //       .unAuthorized(result => {
+    //         dispatch({
+    //           type: "ADD_NOTIFY",
+    //           value: {
+    //             type: "warning",
+    //             message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
+    //           },
+    //         });
+    //       })
+    //       .call(spaceInfo.id);
+    //   }
+  }, []);
   useEffect(() => {
     if (Object.keys(selected).length > 0) {
       const c = props.filters.find(item => item.type === "contentType");
@@ -65,10 +67,10 @@ const ContentTypeFilter = props => {
     }
   }, [props.filters]);
 
-  function handleClick(item) {
+  function handleChangeContentType(item) {
     if (item._id !== selected._id) {
       setSelected(item);
-      props.onContentTypeSelect(item);
+      if (props.onContentTypeSelect) props.onContentTypeSelect(item);
     }
   }
   return (
@@ -82,8 +84,8 @@ const ContentTypeFilter = props => {
         {spinner
           ? [1, 2, 3].map(c => (
               <div className="radioSkeleton">
-                <div className="post">
-                  <div className="avatar" />
+                <div className="radioItem">
+                  <div className="radio__circle" />
                   <div className="lines">
                     <div className="line" />
                   </div>
@@ -92,12 +94,22 @@ const ContentTypeFilter = props => {
             ))
           : contentTypes.map(listItem => (
               <div className="mp-p__ct__row" key={listItem._id}>
-                <label className="checkBox">
-                  <input type="checkbox" id="invisible" />
-                  <span className="checkmark" />
+                <label className="radio">
+                  <input
+                    type="radio"
+                    value={listItem._id}
+                    checked={selected._id === listItem._id}
+                    name="contentType"
+                    onChange={() => handleChangeContentType(listItem)}
+                    id={"contentTypeRdio" + listItem._id}
+                  />
+                  <span className="checkround" />
                 </label>
-                <label htmlFor="oneFileRadio">
-                  {listItem.name[currentLang]}
+                <label
+                  htmlFor={"contentTypeRdio" + listItem._id}
+                  className={selected._id === listItem._id ? "--active" : ""}
+                >
+                  {listItem.title[currentLang]}
                 </label>
               </div>
             ))}

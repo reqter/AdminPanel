@@ -1,19 +1,17 @@
 import withResolver from '../hoc/withResolver'
-import MarketPlace from '../Packages/MarketPlace'
-import Products from '../Packages//MarketPlace-Products'
+import Products from '../Packages/MarketPlace-Products'
+import NewRequest from '../Packages/MarketPlace-UpsertReq'
 
 const routes = [
   {
-    path: '/',
-    component: MarketPlace,
+    path: '/market',
+    component: Products,
     isPublic: true,
-    routes: [
-      {
-        path: '/products',
-        component: Products,
-        isPublic: false
-      }
-    ]
+  },
+  {
+    path: '/newRequest/:id',
+    component: NewRequest,
+    isPublic: true
   }
 ]
 export default routes

@@ -17,6 +17,7 @@
     "react-dom": "^16.8.1",
     "react-draft-wysiwyg": "^1.13.2",
     "react-email-editor": "^0.9.5",
+    "react-html-parser": "^2.0.2",
     "react-load-script": "0.0.6",
     "react-route-hook": "^1.2.1",
     "react-router-dom": "^4.3.1",

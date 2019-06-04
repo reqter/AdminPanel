@@ -7,6 +7,6 @@ export default {
   'mp-product-categoryItem-direction': 'row',
   textAlign: 'left',
   rowDirection: 'row',
-  'mp-products-list-paddingLeft': '50px',
-  'mp-products-list-paddingRight': '0'
+  'mp-products-list-padding': '0 0 0 30px',
+  products_list_filters_margin: '0 5px 0 0 '
 }

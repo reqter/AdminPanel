@@ -48,6 +48,48 @@ export default {
       }
     }
   },
+  getRequestMediaComponentByURL (url, customClass) {
+    if (url) {
+      const ext = url
+        .split('/')
+        .pop()
+        .split('.')
+        .pop()
+      const cls = 'unkownFileType ' + customClass
+
+      if (!ext) {
+        return (
+          <div className={cls}>
+            <i className='icon-file-text un-icon' />
+            <span className='un-text'>uknown</span>
+          </div>
+        )
+      } else {
+        if (imgs.indexOf(ext.toLowerCase()) !== -1) {
+          return <img src={url} alt='' />
+        } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
+          return (
+            <video controls>
+              <source src={url} />
+            </video>
+          )
+        } else if (audios.indexOf(ext.toLowerCase()) !== -1) {
+          return (
+            <audio controls>
+              <source src={url} />
+            </audio>
+          )
+        } else {
+          return (
+            <div className={cls}>
+              <i className='icon-file-text un-icon' />
+              <span className='un-text'>.{ext}</span>
+            </div>
+          )
+        }
+      }
+    }
+  },
   getMediaComponentByUrl (file, customClass) {
     const url = file.url[currentLang]
     if (url) {

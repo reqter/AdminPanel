@@ -37,7 +37,9 @@ const useLocale = () => {
 
   return {
     setLocale,
-    appLocale: state.appLocale ? state.appLocale : {}
+    appLocale: state.appLocale ? state.appLocale : {},
+    direction: state.direction ? state.direction : 'ltr',
+    currentLang: state.currentLang ? state.currentLang : 'en'
   }
 }
 

@@ -24,7 +24,8 @@ import {
   CategoriesFilter,
   ContentTypesFilter,
   StatusFilter,
-} from "../../components/FileUploader";
+} from "./../../components/Commons";
+
 
 const Products = props => {
   let didCancel = false;
