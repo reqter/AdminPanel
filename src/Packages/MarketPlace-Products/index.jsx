@@ -49,7 +49,6 @@ const MarketPlace_Products = props => {
     props.history.push("/market/news/sport");
   }
   function handleContentTypeSelect(contentType) {
-    props.history.goBack();
     let f = filters.filter(item => item.type !== "contentType");
     f.push({ title: contentType["title"][currentLang], type: "contentType" });
     setContentType(contentType);
