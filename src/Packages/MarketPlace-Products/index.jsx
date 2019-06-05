@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 import { Categories, ContentTypes } from "./components";
 import { useLocale } from "./../../hooks";
 import { useGlobalState } from "./../../services";
+import { getRequests_catgeories_list } from "./../../Api/content-delivery-api";
 import "./styles.scss";
 import List from "./../MarketPlace-Products-List";
 import Detail from "./../MarketPlace-Products-Detail";
@@ -24,12 +25,7 @@ const MarketPlace_Products = props => {
         type: "TOGGLE_SPINNER",
         value: true,
       });
-      setTimeout(() => {
-        dispatch({
-          type: "TOGGLE_SPINNER",
-          value: false,
-        });
-      }, 1000);
+      _getRequests_catgeories_list();
       if (categoryId === undefined || categoryId.length === 0) {
         if (selectedCategory) {
           removeFilter({ type: "category" });
@@ -54,6 +50,24 @@ const MarketPlace_Products = props => {
       }
     }
   }, [props.match.params.categoryId]);
+
+  function _getRequests_catgeories_list() {
+    getRequests_catgeories_list()
+      .onOk(result => {
+        console.log(result)
+        dispatch({
+          type: "SET_REQUESTS_CATEGORIES",
+          value: result,
+        });
+      })
+      .onServerError(result => {
+      })
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .onRequestError(result => {})
+      .unKnownError(result => {})
+      .call(currentLang);
+  }
 
   function handleBackClicked() {
     props.history.goBack();

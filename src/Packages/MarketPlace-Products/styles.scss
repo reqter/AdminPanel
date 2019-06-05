@@ -30,13 +30,9 @@ body {
 .mp-products {
   &__content {
     display: flex;
-    min-width: 1150px;
-    padding: 0 5%;
     margin: auto;
-    @include variable(mp-page-products-direction, flex-direction, row);
   }
   &__left {
-    width: 270px;
     display: flex;
     flex-direction: column;
   }
@@ -106,5 +102,87 @@ body {
     );
     padding: 5px;
     cursor: pointer;
+  }
+}
+
+// =====================
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {
+  .mp-products {
+    &__content {
+      min-width: 1150px;
+      margin: auto;
+      @include variable(mp-page-products-direction, flex-direction, row);
+    }
+    &__left {
+      width: 270px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+@media (min-width: 576px) {
+  .mp-products {
+    &__content {
+      min-width: 1150px;
+      padding: 0 5%;
+      margin: auto;
+      @include variable(mp-page-products-direction, flex-direction, row);
+    }
+    &__left {
+      width: 270px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .mp-products {
+    &__content {
+      min-width: 1150px;
+      padding: 0 5%;
+      margin: auto;
+      @include variable(mp-page-products-direction, flex-direction, row);
+    }
+    &__left {
+      width: 270px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .mp-products {
+    &__content {
+      min-width: 1150px;
+      padding: 0 5%;
+      margin: auto;
+      @include variable(mp-page-products-direction, flex-direction, row);
+    }
+    &__left {
+      width: 270px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  .mp-products {
+    &__content {
+      padding: 0 5%;
+      margin: auto;
+      @include variable(mp-page-products-direction, flex-direction, row);
+    }
+    &__left {
+      width: 270px;
+      display: flex;
+      flex-direction: column;
+    }
   }
 }
