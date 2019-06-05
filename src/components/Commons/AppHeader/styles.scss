@@ -14,10 +14,11 @@
   @include variable(mp-header-height, height, 60px);
 
   &__content {
-    max-width: 1150px;
+    min-width: 1150px;
     margin: auto;
     display: flex;
     height: 100%;
+    padding: 0 5%;
     @include variable(rowDirection, flex-direction, row);
   }
   &__left {
@@ -119,11 +120,18 @@
     }
   }
   &__right {
+    display: flex;
+    align-items: center;
+    .langs {
+      color: white;
+      span {
+        padding: 0 6px;
+        cursor: pointer;
+        text-decoration: underline
+      }
+    }
   }
 }
-
-
-
 
 body {
   overflow: hidden;

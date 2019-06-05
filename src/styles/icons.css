@@ -43,6 +43,9 @@
 .icon-more-h:before {
   content: "\e902";
 }
+.icon-order:before {
+  content: "\e92d";
+}
 .icon-empty-box-open:before {
   content: "\e92c";
 }

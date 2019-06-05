@@ -5,6 +5,7 @@ export default {
   'mp-header-menuWrappr-direction': 'row',
   'mp-page-products-direction': 'row',
   'mp-product-categoryItem-direction': 'row',
+  fontFamily: 'OpenSance',
   textAlign: 'left',
   rowDirection: 'row',
   'mp-products-list-padding': '0 0 0 30px',

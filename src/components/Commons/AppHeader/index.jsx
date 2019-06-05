@@ -6,13 +6,18 @@ import "./styles.scss";
 
 export default function Header() {
   const { setLocale, appLocale } = useLocale();
-  useTheme("theme1");
-  useLayout("rtl");
-  useEffect(() => {
-    setLocale("fa");
-  }, []);
+  const [lang, changeLang] = useState({ lang: "en", layout: "ltr" });
 
-  //const [{ t }, dispatch] = useGlobalState();
+  useTheme("theme1");
+  useLayout(lang ? lang.layout : "ltr");
+
+  useEffect(() => {
+    setLocale(lang ? lang.lang : "en");
+  }, [lang]);
+
+  function changeLanguage(lang) {
+    changeLang({ lang, layout: lang === "en" ? "ltr" : "rtl" });
+  }
 
   function t(key) {
     return appLocale ? appLocale[key] : "";
@@ -70,7 +75,12 @@ export default function Header() {
             </li>
           </ul>
         </div>
-        <div className="mp-header__right" />
+        <div className="mp-header__right">
+          <div className="langs">
+            <span onClick={() => changeLanguage("en")}>EN</span>/
+            <span onClick={() => changeLanguage("fa")}>فا</span>
+          </div>
+        </div>
       </div>
     </div>
   );

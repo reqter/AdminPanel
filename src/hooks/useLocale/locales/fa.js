@@ -11,4 +11,5 @@ export default {
   PRODUCTS_FILTERS_EMPTY:"لیست محصولات",
   PRODUCTS_CATEGORY_TITLE:"دسته بندی",
   PRODUCTS_CONTENT_TYPE_TITLE:"نوع درخواست",
+  PRODUCT_LIST_ITEN_ORDER_BTN_TITLE:"درخواست",
 }

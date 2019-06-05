@@ -4,7 +4,7 @@ import NewRequest from '../Packages/MarketPlace-UpsertReq'
 
 const routes = [
   {
-    path: '/market',
+    path: '/market/:categoryId?',
     component: Products,
     isPublic: true,
   },

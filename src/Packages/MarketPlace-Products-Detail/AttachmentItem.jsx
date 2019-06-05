@@ -20,7 +20,7 @@ const ListItem = props => {
   }
   function getFileByType() {
     return props.file.url ? (
-      utility.getRequestMediaComponentByURL(
+      utility.getRequestMediaThumbComponentByURL(
         props.file.url[currentLang],
         "unkownFile"
       )
