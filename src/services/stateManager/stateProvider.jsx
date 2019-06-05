@@ -18,8 +18,8 @@ const Provider = props => {
   const initialState = {
     isAuthenticated:
       token !== undefined && token !== null && token.length > 0 ? true : false,
-    spaceInfo: {},
-    userInfo: {},
+    spaceInfo: undefined,
+    userInfo: undefined,
     contentTypeTemlates: [],
     contentTypes: [],
     fields: [],
