@@ -4,8 +4,8 @@ import App from './App'
 import MApp from './M_App'
 import * as serviceWorker from './serviceWorker'
 
- const appName = process.env.REACT_APP_APPLICATION
-//const appName = 'admin'
+// const appName = process.env.REACT_APP_APPLICATION
+const appName = 'marketplace'
 
 const EndpointApp = appName === 'admin' ? <App /> : <MApp />
 ReactDOM.render(EndpointApp, document.getElementById('root'))

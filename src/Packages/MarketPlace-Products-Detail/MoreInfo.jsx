@@ -15,12 +15,15 @@ const MoreInfo = props => {
     }
   }
   return (
-    <div className="moreInfo">
+    <div className="moreInfo" onClick={handleCloseMoreInfo}>
       <spn
         className="icon-cross moreInfo__close"
         onClick={handleCloseMoreInfo}
       />
-      <div className="moreInfo__content animated fadeIn faster">
+      <div
+        className="moreInfo__content animated fadeIn faster"
+        onClick={e => e.stopPropagation()}
+      >
         {/* <img
           src="https://www.setaswall.com/wp-content/uploads/2017/03/Green-Nature-Grass-Bokeh-Blurred-Wallpaper-1920x1200.jpg"
           alt=""

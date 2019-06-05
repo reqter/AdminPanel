@@ -2,31 +2,59 @@ import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 import { Categories, ContentTypes } from "./components";
 import { useLocale } from "./../../hooks";
+import { useGlobalState } from "./../../services";
 import "./styles.scss";
 import List from "./../MarketPlace-Products-List";
 import Detail from "./../MarketPlace-Products-Detail";
 
 const MarketPlace_Products = props => {
-  const [lang, setLang] = useState(true);
-  const { setLocale, appLocale, currentLang } = useLocale();
+  const [{ mp_categories, spinner }, dispatch] = useGlobalState();
+  const { appLocale, currentLang } = useLocale();
 
-  const [isListView, toggleIsListView] = useState(true);
   const [filters, setFilters] = useState([]);
 
   const [searchInput, setSearchText] = useState();
   const [selectedCategory, setCategory] = useState();
   const [selectedContentType, setContentType] = useState();
 
-  function handleClick() {
-    setLocale(lang ? "fa" : "en");
-    setLang(l => !l);
-  }
-  function handleProductClicked(data) {
-    toggleIsListView(false);
-  }
-  function handleRequestButtonClicked() {
-    props.history.push("/market/view/12");
-  }
+  useEffect(() => {
+    const categoryId = props.match.params.categoryId;
+    if (categoryId !== "view") {
+      dispatch({
+        type: "TOGGLE_SPINNER",
+        value: true,
+      });
+      setTimeout(() => {
+        dispatch({
+          type: "TOGGLE_SPINNER",
+          value: false,
+        });
+      }, 1000);
+      if (categoryId === undefined || categoryId.length === 0) {
+        if (selectedCategory) {
+          removeFilter({ type: "category" });
+        }
+      }
+    } else {
+      if (categoryId === undefined || categoryId.length === 0) {
+        if (selectedCategory) {
+          removeFilter({ type: "category" });
+        }
+      } else {
+        dispatch({
+          type: "TOGGLE_SPINNER",
+          value: true,
+        });
+        setTimeout(() => {
+          dispatch({
+            type: "TOGGLE_SPINNER",
+            value: false,
+          });
+        }, 500);
+      }
+    }
+  }, [props.match.params.categoryId]);
+
   function handleBackClicked() {
     props.history.goBack();
   }
@@ -35,18 +63,30 @@ const MarketPlace_Products = props => {
     setSearchText(e.target.value);
   }
   function handleSearchClicked(category) {
-    //props.history.goBack();
     let f = filters.filter(item => item.type !== "text");
     f.push({ title: searchInput, type: "text" });
     setFilters(f);
   }
+  let n = "";
+  function getPathFromCategories(data, parentId) {
+    for (let i = 0; i < data.length; i++) {
+      const c = data[i];
+      if (c._id === parentId) {
+        n = "/" + c.name[currentLang] + n;
+        if (c.parentId) return getPathFromCategories(mp_categories, c.parentId);
+        else return n;
+      }
+      if (c.items) return getPathFromCategories(c.items, parentId);
+    }
+  }
   function handleCategorySelect(category) {
     //props.history.goBack();
     let f = filters.filter(item => item.type !== "category");
-    f.push({ title: category["name"][currentLang], type: "category" });
+    f.push({ title: category["name"], type: "category" });
     setCategory(category);
     setFilters(f);
-    props.history.push("/market/news/sport");
+
+    // const treePath = getPathFromCategories(mp_categories, category.parentId);
   }
   function handleContentTypeSelect(contentType) {
     let f = filters.filter(item => item.type !== "contentType");
@@ -58,6 +98,12 @@ const MarketPlace_Products = props => {
   function removeFilter(filter) {
     const f = filters.filter(item => item.type !== filter.type);
     setFilters(f);
+    if (filter.type === "category") {
+      setCategory();
+      props.history.push("/market");
+    }
+    if (filter.type === "contentType") setContentType();
+    if (filter.type === "text") setSearchText();
   }
 
   return (
@@ -81,8 +127,14 @@ const MarketPlace_Products = props => {
               <span className="icon-search icon" />
             </div>
           </div>
-          <Categories onCatgorySelect={handleCategorySelect} />
-          <ContentTypes onContentTypeSelect={handleContentTypeSelect} />
+          <Categories
+            onCatgorySelect={handleCategorySelect}
+            filters={filters}
+          />
+          {/* <ContentTypes
+            onContentTypeSelect={handleContentTypeSelect}
+            filters={filters}
+          /> */}
         </div>
         <div className="mp-products__right">
           <Switch>
@@ -104,7 +156,7 @@ const MarketPlace_Products = props => {
               )}
             />
             <Route
-              path="/market"
+              path="/market/:categoryId?"
               render={props => (
                 <div className="mp-products__list">
                   <div className="mp-products__list__header">
@@ -112,7 +164,9 @@ const MarketPlace_Products = props => {
                       {filters && filters.length > 0 ? (
                         filters.map(f => (
                           <div className="filters" key={f.type}>
-                            <span className="filters__title">{f.title}</span>
+                            <span className="filters__title">
+                              {f.title[currentLang]}
+                            </span>
                             <i
                               className="icon-cross filters__icon"
                               onClick={() => removeFilter(f)}
@@ -123,13 +177,9 @@ const MarketPlace_Products = props => {
                         <span>{appLocale["PRODUCTS_FILTERS_EMPTY"]}</span>
                       )}
                     </div>
-                    <div>Latest</div>
+                    {/* <div>Latest</div> */}
                   </div>
-                  <List
-                    {...props}
-                    onListItemClicked={handleProductClicked}
-                    onRequestButtonClicked={handleRequestButtonClicked}
-                  />
+                  <List {...props} />
                 </div>
               )}
             />

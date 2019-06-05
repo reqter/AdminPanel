@@ -4,60 +4,10 @@ import { useLocale } from "./../../../../hooks";
 import { getContentTypes } from "./../../../../Api/content-api";
 import "./styles.scss";
 
-const contentTypes = [
-  { _id: "1", title: { en: "Travel", fa: "مسافرت" } },
-  { _id: "2", title: { en: "Book", fa: "کتاب" } },
-  { _id: "3", title: { en: "Game", fa: "بازی" } },
-];
 const ContentTypeFilter = props => {
-  const { appLocale , currentLang } = useLocale();
-  //const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
-  const [spinner, toggleSpinner] = useState(true);
+  const { appLocale, currentLang } = useLocale();
+  const [{ mp_contentTypes, spinner, spaceInfo }, dispatch] = useGlobalState();
   const [selected, setSelected] = useState({});
-  useEffect(() => {
-    setTimeout(() => {
-      toggleSpinner(false);
-    }, 1000);
-    //   if (contentTypes === undefined || contentTypes.length === 0) {
-    //     getContentTypes()
-    //       .onOk(result => {
-    //         dispatch({
-    //           type: "SET_CONTENT_TYPES",
-    //           value: result,
-    //         });
-    //       })
-    //       .onServerError(result => {
-    //         dispatch({
-    //           type: "ADD_NOTIFY",
-    //           value: {
-    //             type: "error",
-    //             message: languageManager.translate(
-    //               "CONTENT_TYPE_ON_SERVER_ERROR"
-    //             ),
-    //           },
-    //         });
-    //       })
-    //       .onBadRequest(result => {
-    //         dispatch({
-    //           type: "ADD_NOTIFY",
-    //           value: {
-    //             type: "error",
-    //             message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
-    //           },
-    //         });
-    //       })
-    //       .unAuthorized(result => {
-    //         dispatch({
-    //           type: "ADD_NOTIFY",
-    //           value: {
-    //             type: "warning",
-    //             message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
-    //           },
-    //         });
-    //       })
-    //       .call(spaceInfo.id);
-    //   }
-  }, []);
   useEffect(() => {
     if (Object.keys(selected).length > 0) {
       const c = props.filters.find(item => item.type === "contentType");
@@ -92,7 +42,8 @@ const ContentTypeFilter = props => {
                 </div>
               </div>
             ))
-          : contentTypes.map(listItem => (
+          : mp_contentTypes &&
+            mp_contentTypes.map(listItem => (
               <div className="mp-p__ct__row" key={listItem._id}>
                 <label className="radio">
                   <input

@@ -3,6 +3,24 @@
   #{$property}: $fallback;
   #{$property}: var(--#{$variable});
 }
+@font-face {
+  font-family: "Samim";
+  src: url("./../../../node_modules/samim-font/dist/Samim.eot");
+  src: url("./../../../node_modules/samim-font/dist/Samim.eot?#iefix")
+      format("embedded-opentype"),
+    url("./../../../node_modules/samim-font/dist/Samim.woff") format("woff"),
+    url("./../../../node_modules/samim-font/dist/Samim.ttf") format("truetype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "OpenSance";
+  src: url("./../../assets/fonts/OpenSans-Regular.ttf");
+  font-weight: bold;
+}
+body {
+  //@include variable(fontFamily, font-family, null);
+  font-family: Samim, OpenSance;
+}
 .mp-page {
   height: 100vh;
   padding: 3% 0;
@@ -12,7 +30,8 @@
 .mp-products {
   &__content {
     display: flex;
-    width: 1150px;
+    min-width: 1150px;
+    padding: 0 5%;
     margin: auto;
     @include variable(mp-page-products-direction, flex-direction, row);
   }
