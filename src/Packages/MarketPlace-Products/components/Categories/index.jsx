@@ -49,17 +49,37 @@ const Tree = props => {
         }
       }
     }
+    let id;
+    function getNodeIdByLink(data, link) {
+      if (data) {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].items) {
+            getNodeIdByLink(data[i].items, link);
+          }
+          if (data[i].sys.link === link) {
+            id = data[i]._id;
+          }
+        }
+      }
+    }
     if (!spinner) {
       if (innerSpinner) {
         toggleSpinner(false);
-        const categoryId = props.match.params.categoryId;
-        if (categoryId !== "view") {
-          findNodeById(mp_categories, categoryId);
-          if (result) {
-            setSelected(result);
-            findParent(mp_categories, result);
-            setId(expandObj);
-            if (props.onCatgorySelect) props.onCatgorySelect(result);
+        const categoryLink = props.match.params.categoryId;
+        if (
+          categoryLink !== "view" &&
+          categoryLink &&
+          categoryLink.length > 0
+        ) {
+          getNodeIdByLink(mp_categories, categoryLink);
+          if (id) {
+            findNodeById(mp_categories, id);
+            if (result) {
+              setSelected(result);
+              findParent(mp_categories, result);
+              setId(expandObj);
+              if (props.onCatgorySelect) props.onCatgorySelect(result);
+            }
           }
         }
       }
@@ -74,7 +94,7 @@ const Tree = props => {
       if (node._id !== selected._id) {
         setSelected(node);
         if (props.onCatgorySelect) props.onCatgorySelect(node);
-        history.push("/market/" + node._id);
+        history.push("/market/" + node.sys.link);
       }
     }
   }

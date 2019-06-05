@@ -73,200 +73,9 @@ const Provider = props => {
     webhooks: [],
     t: {},
     spinner: true,
-    mp_categories: [
-      {
-        _id: "1",
-        sys: {},
-        name: { en: "News", fa: "اخبار" },
-        count: 23,
-        items: [
-          {
-            _id: "11",
-            parentId: "1",
-            sys: {},
-            name: { en: "Sport", fa: "ورزش" },
-            count: 23,
-            items: [
-              {
-                _id: "111",
-                parentId: "11",
-                sys: {},
-                name: { en: "ّFootball", fa: "فوتبال" },
-                count: 55,
-                items: [
-                  {
-                    _id: "1111",
-                    parentId: "111",
-                    sys: {},
-                    name: { en: "ّFootball Beach", fa: " فوتبال ساحلی" },
-                    count: 9
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            _id: "12",
-            parentId: "1",
-            sys: {},
-            name: { en: "Basketball", fa: "بسکتبال" },
-            count: 76,
-          },
-        ],
-      },
-      { _id: "2", sys: {}, name: { en: "Economy", fa: "اقتصاد" }, count: 56 },
-      { _id: "3", sys: {}, name: { en: "Social", fa: "جامعه" }, count: 14 },
-      { _id: "4", sys: {}, name: { en: "Business", fa: "بازار" }, count: 7 },
-      { _id: "5", sys: {}, name: { en: "War", fa: "حوادث" }, count: 49 },
-    ],
-    mp_contentTypes: [
-      { _id: "1", name: "travel", title: { en: "Travel", fa: "مسافرت" } },
-      { _id: "2", name: "book", title: { en: "Book", fa: "کتاب" } },
-      { _id: "3", name: "game", title: { en: "Game", fa: "بازی" } },
-    ],
-    mp_requests: [
-      {
-        _id: 1,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://targetcarrental.com/wp-content/uploads/2017/11/target-rent-a-car.jpg",
-      },
-      {
-        _id: 2,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5Rwhg5Ck5yd78IL3usb8TNeIBk8ehcLqhAsVFSI_9E1ZQfqwt",
-      },
-      {
-        _id: 3,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://www.mytravelomart.com/wp-content/uploads/2018/09/car-rental-services-udaipur.png",
-      },
-      {
-        _id: 1,
-        sys: {
-          link: "xsxs",
-        },
-        img: "http://www.zakcars.com/images/zakcars1.jpg",
-      },
-      {
-        _id: 2,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVC_kZkWOsWqgB2rVlMs1ADk4maXJTjvJdIQyDW07DO5I1G68",
-      },
-      {
-        _id: 3,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpgFgj75UT57JSznEAHtNT1UU6B8PooI3xbMadON7aREexTsyS2Q",
-      },
-      {
-        _id: 1,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://targetcarrental.com/wp-content/uploads/2017/11/target-rent-a-car.jpg",
-      },
-      {
-        _id: 2,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5Rwhg5Ck5yd78IL3usb8TNeIBk8ehcLqhAsVFSI_9E1ZQfqwt",
-      },
-      {
-        _id: 3,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://www.mytravelomart.com/wp-content/uploads/2018/09/car-rental-services-udaipur.png",
-      },
-      {
-        _id: 1,
-        sys: {
-          link: "xsxs",
-        },
-        img: "http://www.zakcars.com/images/zakcars1.jpg",
-      },
-      {
-        _id: 2,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVC_kZkWOsWqgB2rVlMs1ADk4maXJTjvJdIQyDW07DO5I1G68",
-      },
-      {
-        _id: 3,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpgFgj75UT57JSznEAHtNT1UU6B8PooI3xbMadON7aREexTsyS2Q",
-      },
-      {
-        _id: 1,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://targetcarrental.com/wp-content/uploads/2017/11/target-rent-a-car.jpg",
-      },
-      {
-        _id: 2,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5Rwhg5Ck5yd78IL3usb8TNeIBk8ehcLqhAsVFSI_9E1ZQfqwt",
-      },
-      {
-        _id: 3,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://www.mytravelomart.com/wp-content/uploads/2018/09/car-rental-services-udaipur.png",
-      },
-      {
-        _id: 1,
-        sys: {
-          link: "xsxs",
-        },
-        img: "http://www.zakcars.com/images/zakcars1.jpg",
-      },
-      {
-        _id: 2,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVC_kZkWOsWqgB2rVlMs1ADk4maXJTjvJdIQyDW07DO5I1G68",
-      },
-      {
-        _id: 3,
-        sys: {
-          link: "xsxs",
-        },
-        img:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpgFgj75UT57JSznEAHtNT1UU6B8PooI3xbMadON7aREexTsyS2Q",
-      },
-    ],
+    mp_categories: [],
+    mp_contentTypes: [],
+    mp_requests: [],
   };
 
   const reducer = (state, action) => {
@@ -294,6 +103,22 @@ const Provider = props => {
           spinner: action.value,
         };
         return spinner;
+      case "SET_REQUESTS_CATEGORIES":
+        const rc = {
+          ...state,
+          spinner: false,
+          mp_categories: action.value.data
+            ? action.value.data.categories
+              ? action.value.data.categories
+              : []
+            : [],
+          mp_requests: action.value.data
+            ? action.value.data.requestlist
+              ? action.value.data.requestlist
+              : []
+            : [],
+        };
+        return rc;
       case "SET_LOCALE":
         const locale = {
           ...state,

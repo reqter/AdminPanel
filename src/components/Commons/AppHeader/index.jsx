@@ -6,7 +6,7 @@ import "./styles.scss";
 
 export default function Header() {
   const { setLocale, appLocale } = useLocale();
-  const [lang, changeLang] = useState({ lang: "en", layout: "ltr" });
+  const [lang, changeLang] = useState({ lang: "fa", layout: "rtl" });
 
   useTheme("theme1");
   useLayout(lang ? lang.layout : "ltr");

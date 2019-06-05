@@ -4,7 +4,7 @@ import { useLocale } from "./../../hooks";
 
 function ListItem(props) {
   const { match, location, history, data } = props;
-  const { appLocale } = useLocale();
+  const { appLocale, currentLang } = useLocale();
   function handleClick() {
     // if (props.onItemClicked) props.onItemClicked(data);
     history.push("/market/view/" + data._id);
@@ -20,7 +20,12 @@ function ListItem(props) {
         <img src={data.img} alt="" />
       </div>
       <div className="product__detail">
-        <div className="product__name">اجاره ماشین</div>
+        <div className="product__name">
+          {data &&
+            data.title &&
+            data.title[currentLang] &&
+            data.title[currentLang]}
+        </div>
         <div className="product__action">
           <button
             className="btn btn-warning btn-sm"
