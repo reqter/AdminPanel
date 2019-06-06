@@ -132,15 +132,11 @@
     }
   }
 }
-
-body {
-  overflow: hidden;
-  @include variable(body-background, background, whitesmoke);
-}
 .mp-content {
-  @include variable(mp-header-height, margin-top, 60px);
-  height: 100vh;
-  overflow: auto;
+  // @include variable(mp-header-height, margin-top, 60px);
+  // height: 100vh;
+  // overflow: auto;
+  // background: red
 }
 
 .lineSkeleton {

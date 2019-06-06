@@ -19,9 +19,9 @@ const ListItem = props => {
     props.onPreview(props.file);
   }
   function getFileByType() {
-    return props.file.url ? (
+    return props.file ? (
       utility.getRequestMediaThumbComponentByURL(
-        props.file.url[currentLang],
+        props.file[currentLang],
         "unkownFile"
       )
     ) : (

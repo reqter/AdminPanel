@@ -66,9 +66,9 @@
     font-weight: 500;
     @include variable(textAlign, text-align, left);
   }
-  &__action{
-    .icon{
-      font-size: 20px
+  &__action {
+    .icon {
+      font-size: 20px;
     }
   }
 }

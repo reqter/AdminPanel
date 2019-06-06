@@ -7,7 +7,7 @@ function ListItem(props) {
   const { appLocale, currentLang } = useLocale();
   function handleClick() {
     // if (props.onItemClicked) props.onItemClicked(data);
-    history.push("/market/view/" + data._id);
+    history.push("/market/view/" + data.sys.link);
   }
   function handleRequestClicked(e) {
     e.stopPropagation();
@@ -17,7 +17,9 @@ function ListItem(props) {
   return (
     <div className="product" onClick={handleClick}>
       <div className="product__thumb">
-        <img src={data.img} alt="" />
+        {data.thumbnail && data.thumbnail.length > 0 && (
+          <img src={data.thumbnail[0][currentLang]} alt="" />
+        )}
       </div>
       <div className="product__detail">
         <div className="product__name">

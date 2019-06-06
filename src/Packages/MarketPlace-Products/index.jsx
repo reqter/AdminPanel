@@ -3,7 +3,11 @@ import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 import { Categories, ContentTypes } from "./components";
 import { useLocale } from "./../../hooks";
 import { useGlobalState } from "./../../services";
-import { getRequests_catgeories_list } from "./../../Api/content-delivery-api";
+import {
+  getRequests_catgeories_list,
+  filterRequestsByCategory,
+  getRequestDetail,
+} from "./../../Api/content-delivery-api";
 import "./styles.scss";
 import List from "./../MarketPlace-Products-List";
 import Detail from "./../MarketPlace-Products-Detail";
@@ -25,13 +29,17 @@ const MarketPlace_Products = props => {
         type: "TOGGLE_SPINNER",
         value: true,
       });
-      _getRequests_catgeories_list();
       if (categoryId === undefined || categoryId.length === 0) {
+        _getRequests_catgeories_list();
         if (selectedCategory) {
           removeFilter({ type: "category" });
         }
+      } else {
+        _filterRequestsByCategory(categoryId);
       }
     } else {
+      const link = props.location.pathname.split("/").pop();
+      _getRequestDetail(link);
       if (categoryId === undefined || categoryId.length === 0) {
         if (selectedCategory) {
           removeFilter({ type: "category" });
@@ -54,19 +62,57 @@ const MarketPlace_Products = props => {
   function _getRequests_catgeories_list() {
     getRequests_catgeories_list()
       .onOk(result => {
-        console.log(result)
+        console.log(result);
         dispatch({
           type: "SET_REQUESTS_CATEGORIES",
           value: result,
         });
       })
-      .onServerError(result => {
-      })
+      .onServerError(result => {})
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .onRequestError(result => {})
       .unKnownError(result => {})
       .call(currentLang);
+  }
+  function _filterRequestsByCategory(link) {
+    let loadCategory = false;
+    if (!mp_categories || mp_categories.length === 0) {
+      loadCategory = true;
+    }
+    filterRequestsByCategory()
+      .onOk(result => {
+        dispatch({
+          type: "SET_REQUEST_LIST",
+          value: result,
+        });
+      })
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .onRequestError(result => {})
+      .unKnownError(result => {})
+      .call(currentLang, link, loadCategory);
+  }
+
+  function _getRequestDetail(link) {
+    let loadCategory = false;
+    if (!mp_categories || mp_categories.length === 0) {
+      loadCategory = true;
+    }
+    getRequestDetail()
+      .onOk(result => {
+        dispatch({
+          type: "SET_REQUEST_DETAIL",
+          value: result,
+        });
+      })
+      .onServerError(result => {})
+      .onBadRequest(result => {})
+      .unAuthorized(result => {})
+      .onRequestError(result => {})
+      .unKnownError(result => {})
+      .call(currentLang, link, loadCategory);
   }
 
   function handleBackClicked() {
