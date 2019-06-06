@@ -5,9 +5,12 @@ import ReactHtmlParser, {
   convertNodeToElement,
   htmlparser2,
 } from "react-html-parser";
+import { RichText } from "./../../components";
+import { useLocale } from "./../../hooks";
 
 const MoreInfo = props => {
-  const html = "<div>Example HTML string</div>";
+  const { currentLang } = useLocale();
+  const html = props.longDesc ? props.longDesc[currentLang] : "<div></div>";
 
   function handleCloseMoreInfo() {
     if (props.onClose) {
@@ -18,7 +21,7 @@ const MoreInfo = props => {
     <div className="moreInfo" onClick={handleCloseMoreInfo}>
       <spn
         className="icon-cross moreInfo__close"
-        onClick={handleCloseMoreInfo}
+        
       />
       <div
         className="moreInfo__content animated fadeIn faster"
@@ -28,7 +31,14 @@ const MoreInfo = props => {
           src="https://www.setaswall.com/wp-content/uploads/2017/03/Green-Nature-Grass-Bokeh-Blurred-Wallpaper-1920x1200.jpg"
           alt=""
         /> */}
-        {ReactHtmlParser(html)}
+        {/* {ReactHtmlParser(html)} */}
+        <RichText
+          viewMode={true}
+          field={{ name: "longDesc" }}
+          formData={{ longDesc: html }}
+          init={() => {}}
+          onChangeValue={() => {}}
+        />
       </div>
     </div>
   );

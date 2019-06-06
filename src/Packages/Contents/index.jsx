@@ -24,8 +24,7 @@ import {
   CategoriesFilter,
   ContentTypesFilter,
   StatusFilter,
-} from "./../../components/Commons";
-
+} from "./../../components/Commons/ContentFilters";
 
 const Products = props => {
   let didCancel = false;

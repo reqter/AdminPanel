@@ -101,7 +101,12 @@ const MarketPlace_ProductDetail = props => {
           </div>
         </div>
       )}
-      {moreInfo && <MoreInfo onClose={handleToggleMoreInfo} />}
+      {moreInfo && (
+        <MoreInfo
+          onClose={handleToggleMoreInfo}
+          longDesc={mp_requestDetail ? mp_requestDetail.longDesc : ""}
+        />
+      )}
     </div>
   );
 };

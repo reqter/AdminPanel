@@ -283,7 +283,7 @@ export function getRequestDetail () {
     try {
       let url =
         baseUrl +
-        `/graphql?query={request(link:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} thumbnail{${currentLang}} attachments{${currentLang}} contentType{sys{link}name fields title{fa} media{fa} } }   `
+        `/graphql?query={request(link:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} longDesc{${currentLang}} thumbnail{${currentLang}} attachments{${currentLang}} contentType{sys{link}name fields title{fa} media{fa} } }   `
       if (loadCategory) {
         url =
           url +
