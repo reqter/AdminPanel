@@ -5,7 +5,8 @@ const public_baseUrl = config.REACT_APP_PUBLIC_REQUESTS_BASE_URL
 
 const getAllURL = baseUrl + config.REACT_APP_REQUESTS_GET_ALL
 const getByIdURL = baseUrl + config.REACT_APP_REQUESTS_GET_BY_ID
-const getBylinkURL = public_baseUrl + config.REACT_APP_PUBLIC_REQUESTS_GET_BY_LINK
+const getBylinkURL =
+  public_baseUrl + config.REACT_APP_PUBLIC_REQUESTS_GET_BY_LINK
 const filterURL = baseUrl + config.REACT_APP_REQUESTS_FILTER
 
 const addURL = baseUrl + config.REACT_APP_REQUESTS_ADD
@@ -744,6 +745,7 @@ export function updateRequest () {
           receiver: request.receiver,
           thumbnail: request.thumbnail,
           attachments: request.attachments,
+          longDesc: request.longDesc,
           settings: request.settings
         })
       })
@@ -1075,7 +1077,7 @@ export function getRequestByLink () {
 
   const _call = async link => {
     try {
-      const url = getBylinkURL + "/" + link
+      const url = getBylinkURL + '/' + link
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {

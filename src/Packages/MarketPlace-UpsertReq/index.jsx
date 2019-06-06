@@ -160,7 +160,9 @@ const MarketPlace_upsertRequest = props => {
         !item.settings.userFields ||
         item.settings.userFields.length === 0
       ) {
-        f = item.contentType.fields;
+        if (item.contentType) {
+          f = item.contentType.fields;
+        }
       } else {
         for (let i = 0; i < item.contentType.fields.length; i++) {
           const field = item.contentType.fields[i];
