@@ -1,8 +1,9 @@
 body {
-  background: whitesmoke;
+  background: whitesmoke!important;
 }
 .up-wrapper {
   min-height: 100vh;
+    overflow: auto!important;
   .up-header {
     position: fixed;
     height: 60px;

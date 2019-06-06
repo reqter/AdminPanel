@@ -7,49 +7,21 @@ import AttachmentItem from "./AttachmentItem";
 import MoreInfo from "./MoreInfo";
 
 const MarketPlace_ProductDetail = props => {
-  const [{ spinner }, dispatch] = useGlobalState();
+  const [{ spinner, mp_requestDetail }, dispatch] = useGlobalState();
   const { appLocale, currentLang } = useLocale();
 
-  const [item, setItem] = useState({
-    attachments: [
-      {
-        id: "1",
-        url: {
-          en: "https://app-spanel.herokuapp.com/blobs/file-1559658041600.mp4",
-          fa: "https://app-spanel.herokuapp.com/blobs/file-1559658041600.mp4",
-        },
-      },
-      {
-        id: "2",
-        url: {
-          en:
-            "https://targetcarrental.com/wp-content/uploads/2017/11/target-rent-a-car.jpg",
-          fa:
-            "https://targetcarrental.com/wp-content/uploads/2017/11/target-rent-a-car.jpg",
-        },
-      },
-      {
-        id: "3",
-        url: {
-          en: "https://app-spanel.herokuapp.com/blobs/file-1559662983130.mp3",
-          fa: "https://app-spanel.herokuapp.com/blobs/file-1559662983130.mp3",
-        },
-      },
-      {
-        id: "6",
-        url: {
-          en: "http://www.zakcars.com/images/zakcars1.jpg",
-          fa: "http://www.zakcars.com/images/zakcars1.jpg",
-        },
-      },
-    ],
-  });
   const [selectedAttachment, setSelectedAttachment] = useState();
   const [moreInfo, toggleMoreInfo] = useState();
 
   useState(() => {
-    setSelectedAttachment(item.attachments[0]);
-  }, []);
+    if (
+      mp_requestDetail &&
+      mp_requestDetail.attachments &&
+      mp_requestDetail.attachments.length > 0
+    ) {
+      setSelectedAttachment(mp_requestDetail.attachments[0]);
+    }
+  }, [spinner]);
 
   function handleRequestClicked() {
     props.history.push("/newRequest/12");
@@ -67,14 +39,16 @@ const MarketPlace_ProductDetail = props => {
         <div className="detail">
           <div className="detail__left animated zoomIn faster">
             <div className="mediaViewer">
-              {!item || !item.attachments || item.attachments.length === 0 ? (
+              {!mp_requestDetail ||
+              !mp_requestDetail.attachments ||
+              mp_requestDetail.attachments.length === 0 ? (
                 <div className="mediaViewer__empty">
                   <EmptySvg />
                   <span>No media attachments for this request</span>
                 </div>
               ) : selectedAttachment ? (
                 utility.getRequestMediaComponentByURL(
-                  selectedAttachment.url[currentLang],
+                  selectedAttachment[currentLang],
                   "mediaViewer__unkown"
                 )
               ) : (
@@ -84,26 +58,33 @@ const MarketPlace_ProductDetail = props => {
                 </div>
               )}
             </div>
-            {item && item.attachments && item.attachments.length > 0 && (
-              <div className="mediaViews_attachments">
-                {item.attachments.map(file => (
-                  <AttachmentItem
-                    key={file.id}
-                    file={file}
-                    selectedFile={selectedAttachment}
-                    onPreview={handleAttachmentSelect}
-                  />
-                ))}
-              </div>
-            )}
+            {mp_requestDetail &&
+              mp_requestDetail.attachments &&
+              mp_requestDetail.attachments.length > 0 && (
+                <div className="mediaViews_attachments">
+                  {mp_requestDetail.attachments.map(file => (
+                    <AttachmentItem
+                      key={file.id}
+                      file={file}
+                      selectedFile={selectedAttachment}
+                      onPreview={handleAttachmentSelect}
+                    />
+                  ))}
+                </div>
+              )}
           </div>
           <div className="detail__right">
             <h3 className="animated fadeIn faster detail__title">
-              اجاره ماشین
+              {mp_requestDetail &&
+                mp_requestDetail.title &&
+                mp_requestDetail.title[currentLang] &&
+                mp_requestDetail.title[currentLang]}
             </h3>
             <span className="animated fadeIn faster detail__description">
-              اجاره ماشین به صورت آنی و در سریعترین زمان ممکن / انواع ماشین های
-              خارجی و ایرانی اتومات
+              {mp_requestDetail &&
+                mp_requestDetail.description &&
+                mp_requestDetail.description[currentLang] &&
+                mp_requestDetail.description[currentLang]}
             </span>
             <div className="detail__actions animated fadeIn faster">
               <button

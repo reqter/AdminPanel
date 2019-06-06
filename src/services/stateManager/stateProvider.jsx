@@ -76,6 +76,7 @@ const Provider = props => {
     mp_categories: [],
     mp_contentTypes: [],
     mp_requests: [],
+    mp_requestDetail: {},
   };
 
   const reducer = (state, action) => {
@@ -119,6 +120,38 @@ const Provider = props => {
             : [],
         };
         return rc;
+      case "SET_REQUEST_LIST":
+        const rmp = {
+          ...state,
+          spinner: false,
+          mp_requests: action.value.data
+            ? action.value.data.request
+              ? action.value.data.request
+              : []
+            : [],
+          mp_categories: action.value.data
+            ? action.value.data.categories
+              ? action.value.data.categories
+              : state.mp_categories
+            : state.mp_categories,
+        };
+        return rmp;
+      case "SET_REQUEST_DETAIL":
+        const rdmp = {
+          ...state,
+          spinner: false,
+          mp_requestDetail: action.value.data
+            ? action.value.data.request
+              ? action.value.data.request
+              : {}
+            : {},
+          mp_categories: action.value.data
+            ? action.value.data.categories
+              ? action.value.data.categories
+              : state.mp_categories
+            : state.mp_categories,
+        };
+        return rdmp;
       case "SET_LOCALE":
         const locale = {
           ...state,

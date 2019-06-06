@@ -365,22 +365,7 @@ const UpsertProduct = props => {
       })
       .call(spaceInfo.id, id);
   }
-  // useState(() => {
-  //   if (contentType) {
-  //     console.log("0");
-  //     const f = contentType.fields.reduce((preValue, currentValue) => {
-  //       preValue.push({ value: currentValue.name });
-  //       return preValue;
-  //     }, []);
-  //     const r_f = requestFields.map(rF => {
-  //       if (rF.name === "userFields") {
-  //         rF.options = f;
-  //       }
-  //       return rF;
-  //     });
-  //     setFields(r_f);
-  //   }
-  // }, [form]);
+
   function initEditMode(result) {
     if (isRequest) {
       let obj = {};
@@ -622,6 +607,7 @@ const UpsertProduct = props => {
     }
   }
   function upsertRequestItem(closePage) {
+    
     if (updateMode) {
       let obj = {
         id: props.match.params.id,
