@@ -125,8 +125,8 @@ const Provider = props => {
           ...state,
           spinner: false,
           mp_requests: action.value.data
-            ? action.value.data.request
-              ? action.value.data.request
+            ? action.value.data.requests
+              ? action.value.data.requests
               : []
             : [],
           mp_categories: action.value.data
@@ -143,19 +143,26 @@ const Provider = props => {
         };
         return CRmp;
       case "SET_REQUEST_DETAIL":
-        const rdmp = {
-          ...state,
-          spinner: false,
+        let newR = {
           mp_requestDetail: action.value.data
             ? action.value.data.request
               ? action.value.data.request
               : {}
             : {},
-          mp_categories: action.value.data
-            ? action.value.data.categories
-              ? action.value.data.categories
-              : state.mp_categories
-            : state.mp_categories,
+        };
+        if (
+          action.value.data &&
+          action.value.data.categories &&
+          action.value.data.categories
+        ) {
+          newR["mp_categories"] = action.value.data.categories;
+        } else {
+          newR["mp_categories"] = state.mp_categories;
+        }
+        const rdmp = {
+          ...state,
+          spinner: false,
+          ...newR,
         };
         return rdmp;
       case "SET_LOCALE":

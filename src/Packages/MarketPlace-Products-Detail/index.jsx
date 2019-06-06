@@ -14,7 +14,7 @@ const MarketPlace_ProductDetail = props => {
   const [selectedAttachment, setSelectedAttachment] = useState();
   const [moreInfo, toggleMoreInfo] = useState();
 
-  useState(() => {
+  useEffect(() => {
     if (
       mp_requestDetail &&
       mp_requestDetail.attachments &&
@@ -22,7 +22,7 @@ const MarketPlace_ProductDetail = props => {
     ) {
       setSelectedAttachment(mp_requestDetail.attachments[0]);
     }
-  }, [spinner]);
+  }, [mp_requestDetail]);
 
   function handleRequestClicked() {
     props.history.push("/newRequest/12");

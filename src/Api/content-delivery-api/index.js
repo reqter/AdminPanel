@@ -172,7 +172,8 @@ export function filterRequestsByCategory () {
         method: 'GET',
         headers: {
           authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          clientid:"5cf3883dcce4de00174d48cf"
         }
       })
       const status = rawResponse.status

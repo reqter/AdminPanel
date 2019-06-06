@@ -140,6 +140,20 @@ const requestFields = [
   },
   {
     id: "9",
+    name: "longDesc",
+    title: {
+      en: "More Info",
+      fa:"اطلاعات بیشتر"
+    },
+    description: {
+      fa: "",
+      en: "",
+    },
+    type: "richText",
+    isTranslate: true,
+  },
+  {
+    id: "10",
     name: "userFields",
     title: {
       en: "User Fields",
