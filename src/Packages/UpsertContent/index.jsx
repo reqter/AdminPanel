@@ -140,6 +140,20 @@ const requestFields = [
   },
   {
     id: "9",
+    name: "longDesc",
+    title: {
+      en: "More Info",
+      fa:"اطلاعات بیشتر"
+    },
+    description: {
+      fa: "",
+      en: "",
+    },
+    type: "richText",
+    isTranslate: true,
+  },
+  {
+    id: "10",
     name: "userFields",
     title: {
       en: "User Fields",
@@ -219,7 +233,10 @@ const UpsertProduct = props => {
   }, [contentType]);
   useEffect(() => {
     if (Object.keys(form).length > 0 && checkFormValidation()) {
-      toggleIsValidForm(true);
+      if (isRequest) {
+        if (category) toggleIsValidForm(true);
+        else toggleIsValidForm(false);
+      } else toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [formValidation, category]);
 
@@ -607,7 +624,6 @@ const UpsertProduct = props => {
     }
   }
   function upsertRequestItem(closePage) {
-    
     if (updateMode) {
       let obj = {
         id: props.match.params.id,

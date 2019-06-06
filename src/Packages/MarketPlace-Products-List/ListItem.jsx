@@ -15,7 +15,7 @@ function ListItem(props) {
     history.push("/newRequest/" + (data.sys ? data.sys.link : ""));
   }
   return (
-    <div className="product" onClick={handleClick}>
+    <div className="product animated zoomIn faster" onClick={handleClick}>
       <div className="product__thumb">
         {data.thumbnail && data.thumbnail.length > 0 && (
           <img src={data.thumbnail[0][currentLang]} alt="" />

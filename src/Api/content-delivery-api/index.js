@@ -163,16 +163,17 @@ export function filterRequestsByCategory () {
     }
   }
 
-  const _call = async (currentLang,link, loadCategory) => {
+  const _call = async (currentLang, link, loadCategory) => {
     try {
       const url =
-        baseUrl + 
+        baseUrl +
         `/graphql?query={requests(category:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} thumbnail{${currentLang}} attachments{${currentLang}} contentType category } categories{sys{link} name{${currentLang}} shortDesc{${currentLang}} _id items parentId image{${currentLang}} } }`
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
           authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          clientid:"5cf3883dcce4de00174d48cf"
         }
       })
       const status = rawResponse.status
@@ -280,15 +281,20 @@ export function getRequestDetail () {
 
   const _call = async (currentLang, link, loadCategory) => {
     try {
-      const url =
+      let url =
         baseUrl +
-        `/graphql?query={request(link:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} thumbnail{${currentLang}} attachments{${currentLang}} contentType{sys{link}} } ${loadCategory &&`categories{sys{link} name{${currentLang}} shortDesc{${currentLang}} _id items parentId image{${currentLang}} }`}   }`
+        `/graphql?query={request(link:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} thumbnail{${currentLang}} attachments{${currentLang}} contentType{sys{link}} }   `
+      if (loadCategory) {
+        url =
+          url +
+          `categories{sys{link} name{${currentLang}} shortDesc{${currentLang}} _id items parentId image{${currentLang}} } }`
+      } else url = url + '}'
+
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
           authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json',
-          clientid: ''
+          'Content-Type': 'application/json'
         }
       })
       const status = rawResponse.status

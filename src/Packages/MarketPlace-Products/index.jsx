@@ -21,48 +21,70 @@ const MarketPlace_Products = props => {
   const [searchInput, setSearchText] = useState();
   const [selectedCategory, setCategory] = useState();
   const [selectedContentType, setContentType] = useState();
-
   useEffect(() => {
-    const categoryId = props.match.params.categoryId;
-    if (categoryId !== "view") {
+    if (!spinner) {
       dispatch({
         type: "TOGGLE_SPINNER",
         value: true,
       });
+      const categoryId = props.match.params.categoryId;
+      if (categoryId !== "view") {
+        if (categoryId === undefined || categoryId.length === 0) {
+          _getRequests_catgeories_list(currentLang);
+          if (selectedCategory) {
+            removeFilter({ type: "category" });
+          }
+        } else {
+          _filterRequestsByCategory(currentLang, categoryId, true);
+        }
+      } else {
+        const link = props.location.pathname.split("/").pop();
+        _getRequestDetail(currentLang, link, true);
+        if (categoryId === undefined || categoryId.length === 0) {
+          if (selectedCategory) {
+            removeFilter({ type: "category" });
+          }
+        }
+      }
+    }
+  }, [currentLang]);
+  useEffect(() => {
+    dispatch({
+      type: "TOGGLE_SPINNER",
+      value: true,
+    });
+    const categoryId = props.match.params.categoryId;
+    if (categoryId !== "view") {
       if (categoryId === undefined || categoryId.length === 0) {
-        _getRequests_catgeories_list();
+        _getRequests_catgeories_list(currentLang);
         if (selectedCategory) {
           removeFilter({ type: "category" });
         }
       } else {
-        _filterRequestsByCategory(categoryId);
+        _filterRequestsByCategory(
+          currentLang,
+          categoryId,
+          !mp_categories || mp_categories.length === 0 ? true : false
+        );
       }
     } else {
       const link = props.location.pathname.split("/").pop();
-      _getRequestDetail(link);
+      _getRequestDetail(
+        currentLang,
+        link,
+        !mp_categories || mp_categories.length === 0 ? true : false
+      );
       if (categoryId === undefined || categoryId.length === 0) {
         if (selectedCategory) {
           removeFilter({ type: "category" });
         }
-      } else {
-        dispatch({
-          type: "TOGGLE_SPINNER",
-          value: true,
-        });
-        setTimeout(() => {
-          dispatch({
-            type: "TOGGLE_SPINNER",
-            value: false,
-          });
-        }, 500);
       }
     }
   }, [props.match.params.categoryId]);
 
-  function _getRequests_catgeories_list() {
+  function _getRequests_catgeories_list(lang) {
     getRequests_catgeories_list()
       .onOk(result => {
-        console.log(result);
         dispatch({
           type: "SET_REQUESTS_CATEGORIES",
           value: result,
@@ -73,13 +95,9 @@ const MarketPlace_Products = props => {
       .unAuthorized(result => {})
       .onRequestError(result => {})
       .unKnownError(result => {})
-      .call(currentLang);
+      .call(lang);
   }
-  function _filterRequestsByCategory(link) {
-    let loadCategory = false;
-    if (!mp_categories || mp_categories.length === 0) {
-      loadCategory = true;
-    }
+  function _filterRequestsByCategory(lang, link, loadCategory) {
     filterRequestsByCategory()
       .onOk(result => {
         dispatch({
@@ -92,27 +110,33 @@ const MarketPlace_Products = props => {
       .unAuthorized(result => {})
       .onRequestError(result => {})
       .unKnownError(result => {})
-      .call(currentLang, link, loadCategory);
+      .call(lang, link, loadCategory);
   }
 
-  function _getRequestDetail(link) {
-    let loadCategory = false;
-    if (!mp_categories || mp_categories.length === 0) {
-      loadCategory = true;
-    }
+  function _getRequestDetail(lang, link, loadCategory) {
     getRequestDetail()
       .onOk(result => {
-        dispatch({
-          type: "SET_REQUEST_DETAIL",
-          value: result,
-        });
+        if (result.data.request) {
+          const r = result.data.request;
+          if (r.attachments && r.attachments.length > 0) {
+            const att = r.attachments.map(a => {
+              a.id = Math.random();
+              return a;
+            });
+            result.data.request.attachments = att;
+          }
+          dispatch({
+            type: "SET_REQUEST_DETAIL",
+            value: result,
+          });
+        }
       })
       .onServerError(result => {})
       .onBadRequest(result => {})
       .unAuthorized(result => {})
       .onRequestError(result => {})
       .unKnownError(result => {})
-      .call(currentLang, link, loadCategory);
+      .call(lang, link, loadCategory);
   }
 
   function handleBackClicked() {
