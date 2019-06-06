@@ -1,3 +1,8 @@
+@mixin variable($variable, $property, $fallback) {
+  // Fallback for browsers that don't support css vars
+  #{$property}: $fallback;
+  #{$property}: var(--#{$variable});
+}
 .up_r {
   height: 100vh;
   display: flex;
@@ -33,6 +38,7 @@
       .formContent {
         margin: auto;
         overflow: hidden;
+        @include variable(mp-header-height, margin-top, 60px);
         .successRequest {
           display: flex;
           flex-direction: column;
@@ -52,7 +58,7 @@
           }
         }
         .content-userInfo {
-          margin-top: 20px;
+            margin-top: 20px;
           height: 100px;
           border-radius: 3px;
           background: white;

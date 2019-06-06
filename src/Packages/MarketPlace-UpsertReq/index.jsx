@@ -6,8 +6,9 @@ import {
   storageManager,
   utility,
 } from "../../services";
+import { useLocale } from "./../../hooks";
 import { addContent } from "./../../Api/content-api";
-import { getRequestByLink } from "./../../Api/request-api";
+import { getRequestDetail } from "./../../Api/content-delivery-api";
 import { getUserInfo } from "./../../Api/account-api";
 import {
   NotFound,
@@ -70,9 +71,9 @@ const userDetailFields = [
   },
 ];
 
-const currentLang = languageManager.getCurrentLanguage().name;
-
 const MarketPlace_upsertRequest = props => {
+  const { currentLang } = useLocale();
+
   const viewMode = false;
   const updateMode = false;
 
@@ -113,8 +114,8 @@ const MarketPlace_upsertRequest = props => {
       setError(obj);
       toggleSpinner(false);
     } else {
-      const token = storageManager.getItem("token");
-      if (token) fetchUserInfo();
+      // const token = storageManager.getItem("token");
+      // if (token) fetchUserInfo();
       getItemById(params.id);
     }
   }, [props.match.params.id]);
@@ -176,8 +177,13 @@ const MarketPlace_upsertRequest = props => {
     }
   }, [item]);
   function getItemById(link) {
-    getRequestByLink()
-      .onOk(result => {
+    getRequestDetail()
+      .onOk(res => {
+        const result = res.data
+          ? res.data.request
+            ? res.data.request
+            : undefined
+          : undefined;
         if (result) {
           if (!result.contentType) {
             const obj = {
@@ -259,7 +265,7 @@ const MarketPlace_upsertRequest = props => {
         setError(obj);
         toggleSpinner(false);
       })
-      .call(link);
+      .call(currentLang, link, false);
   }
   function getFieldItem(field) {
     switch (field.type.toLowerCase()) {
@@ -537,16 +543,21 @@ const MarketPlace_upsertRequest = props => {
                 <>
                   <div className="content-userInfo">
                     <div className="userImage">
-                      <img
-                        src="https://www.mytravelomart.com/wp-content/uploads/2018/09/car-rental-services-udaipur.png"
-                        alt=""
-                      />
+                      {item && item.thumbnail && item.thumbnail.length > 0 && (
+                        <img src={item.thumbnail[0][currentLang]} alt="" />
+                      )}
                     </div>
                     <div className="info">
                       <span>
-                        <strong>Car Renting</strong>
+                        {item && item.title && item.title[currentLang] && (
+                          <strong>{item.title[currentLang]} </strong>
+                        )}
                       </span>
-                      <span>Rate a car per day or month</span>
+                      {item &&
+                        item.description &&
+                        item.description[currentLang] && (
+                          <span>{item.description[currentLang]} </span>
+                        )}
                     </div>
                     <div className="requestDate">
                       <DateFormater date={item.sys.issueDate} />
