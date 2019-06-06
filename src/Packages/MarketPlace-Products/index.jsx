@@ -23,12 +23,12 @@ const MarketPlace_Products = props => {
   const [selectedContentType, setContentType] = useState();
 
   useEffect(() => {
+    dispatch({
+      type: "TOGGLE_SPINNER",
+      value: true,
+    });
     const categoryId = props.match.params.categoryId;
     if (categoryId !== "view") {
-      dispatch({
-        type: "TOGGLE_SPINNER",
-        value: true,
-      });
       if (categoryId === undefined || categoryId.length === 0) {
         _getRequests_catgeories_list();
         if (selectedCategory) {
@@ -44,17 +44,6 @@ const MarketPlace_Products = props => {
         if (selectedCategory) {
           removeFilter({ type: "category" });
         }
-      } else {
-        dispatch({
-          type: "TOGGLE_SPINNER",
-          value: true,
-        });
-        setTimeout(() => {
-          dispatch({
-            type: "TOGGLE_SPINNER",
-            value: false,
-          });
-        }, 500);
       }
     }
   }, [props.match.params.categoryId]);
@@ -102,10 +91,20 @@ const MarketPlace_Products = props => {
     }
     getRequestDetail()
       .onOk(result => {
-        dispatch({
-          type: "SET_REQUEST_DETAIL",
-          value: result,
-        });
+        if (result.data.request) {
+          const r = result.data.request;
+          if (r.attachments && r.attachments.length > 0) {
+            const att = r.attachments.map(a => {
+              a.id = Math.random();
+              return a;
+            });
+            result.data.request.attachments = att;
+          }
+          dispatch({
+            type: "SET_REQUEST_DETAIL",
+            value: result,
+          });
+        }
       })
       .onServerError(result => {})
       .onBadRequest(result => {})

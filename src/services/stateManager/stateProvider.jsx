@@ -136,6 +136,12 @@ const Provider = props => {
             : state.mp_categories,
         };
         return rmp;
+      case "CLEAN_REQUEST_LIST":
+        const CRmp = {
+          ...state,
+          mp_requests: [],
+        };
+        return CRmp;
       case "SET_REQUEST_DETAIL":
         const rdmp = {
           ...state,

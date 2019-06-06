@@ -10,6 +10,7 @@ const MarketPlace_ProductDetail = props => {
   const [{ spinner, mp_requestDetail }, dispatch] = useGlobalState();
   const { appLocale, currentLang } = useLocale();
 
+  const [innerSpinner, toggleInnerSpinner] = useState();
   const [selectedAttachment, setSelectedAttachment] = useState();
   const [moreInfo, toggleMoreInfo] = useState();
 

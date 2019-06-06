@@ -6,8 +6,18 @@ import ItemSkeleton from "./ItemSkeleton";
 import "./styles.scss";
 
 const MarketPlace_List = props => {
+  const [{}, dispatch] = useGlobalState();
   const { appLocale } = useLocale();
   const [{ spinner, mp_requests }] = useGlobalState();
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: "CLEAN_REQUESTS_LIST",
+        value: [],
+      });
+    };
+  });
 
   function handleItemClicked(data) {
     if (props.onListItemClicked) props.onListItemClicked(data);
