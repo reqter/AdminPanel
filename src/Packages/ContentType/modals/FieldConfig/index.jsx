@@ -897,6 +897,7 @@ const FieldConfig = props => {
                       </label>
                     </div>
                   </div>
+              
                 </>
               )}
               {selectedField.type === "reference" && (
