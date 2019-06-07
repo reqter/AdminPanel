@@ -618,6 +618,7 @@ export function addRequest () {
   }
   const _call = async (spaceId, content) => {
     try {
+      console.log(content)
       const url = addURL
       const token = storageManager.getItem('token')
       var rawResponse = await fetch(url, {

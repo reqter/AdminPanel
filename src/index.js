@@ -4,7 +4,7 @@ import App from './App'
 import MApp from './M_App'
 import * as serviceWorker from './serviceWorker'
 
-const appName = process.env.REACT_APP_APPLICATION || 'marketplace'
+const appName = process.env.REACT_APP_APPLICATION || 'admin'
 // const appName = 'admin'
 
 const EndpointApp = appName === 'admin' ? <App /> : <MApp />
