@@ -111,7 +111,7 @@ export default {
           return <img src={url} alt='' />
         } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
           return (
-            <video controls>
+            <video>
               <source src={url} />
             </video>
           )

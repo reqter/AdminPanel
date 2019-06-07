@@ -89,7 +89,7 @@
   }
   &__unkown {
     .un-icon {
-      font-size: 50px!important;
+      font-size: 50px !important;
       margin-bottom: 10px;
     }
   }
@@ -215,6 +215,8 @@
   background: rgba(0, 0, 0, 0.8);
   overflow: auto;
   display: flex;
+  z-index: 10001;
+
   &__close {
     position: absolute;
     top: 20px;
@@ -226,28 +228,27 @@
     width: 992px;
     margin: auto;
     min-height: 100vh;
-    background: whitesmoke;
+    background: white;
     position: relative;
     border: 1px solid lightgray;
-    img {
-      width: 100%;
-      height: 100vh;
-      object-fit: cover;
-      position: absolute;
-      z-index: 1;
+    padding: 0 10px;
+    .editor-class {
+      min-height: 300px;
+      border: 0px solid white !important;
+      
     }
-    &__html {
-      position: absolute;
-      z-index: 2;
-      img {
-        width: 100%;
-        height: 100vh;
-        object-fit: cover;
-        position: absolute;
-        z-index: 1;
-        display: none;
-      }
-    }
+    // &__html {
+    //   position: absolute;
+    //   z-index: 2;
+    //   img {
+    //     width: 100%;
+    //     height: 100vh;
+    //     object-fit: cover;
+    //     position: absolute;
+    //     z-index: 1;
+    //     display: none;
+    //   }
+    // }
     //@include variable(mp-product-moreInfo-bg, background, "");
     // background: url("https://www.setaswall.com/wp-content/uploads/2017/03/Green-Nature-Grass-Bokeh-Blurred-Wallpaper-1920x1200.jpg");
     //     background-repeat: no-repeat;

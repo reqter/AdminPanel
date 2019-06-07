@@ -1,3 +1,8 @@
+@mixin variable($variable, $property, $fallback) {
+  // Fallback for browsers that don't support css vars
+  #{$property}: $fallback;
+  #{$property}: var(--#{$variable});
+}
 .up_r {
   height: 100vh;
   display: flex;
@@ -33,6 +38,7 @@
       .formContent {
         margin: auto;
         overflow: hidden;
+        @include variable(mp-header-height, margin-top, 60px);
         .successRequest {
           display: flex;
           flex-direction: column;
@@ -58,10 +64,11 @@
           background: white;
           border-radius: 5px;
           //   box-shadow: 0 0 3px lightgray;
-        //   border: 0.5px solid lightgray;
+          //   border: 0.5px solid lightgray;
           padding: 0 2%;
           margin-bottom: 20px;
           display: flex;
+          @include variable(rowDirection, flex-direction, row);
           align-items: center;
           .userImage {
             width: 80px;
@@ -78,8 +85,9 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            padding-left: 20px;
+            padding: 0 20px;
             font-size: 16px;
+            @include variable(textAlign, text-align, left);
             & span:first-child {
               font-size: 16px;
               margin-bottom: 5px;
@@ -97,13 +105,45 @@
           background: white;
           border-radius: 3px;
           background: white;
-        //   border: 0.5px solid lightgray;
+          //   border: 0.5px solid lightgray;
           padding: 4%;
           margin-bottom: 40px;
           border-radius: 5px;
+          .content__userinfo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            @include variable(rowDirection, flex-direction, row);
+            &__icon {
+              width: 45px;
+              height: 45px;
+              // background: rgb(56,132,255);
+              background: goldenrod;
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 100%;
+              font-size: 22px;
+            }
+            span {
+              margin: 0 10px;
+              font-size: 20px;
+              font-weight: bold;
+            }
+          }
+          p {
+            border-top: 1px solid lightgray;
+            margin-top: 35px;
+            padding-top: 15px;
+            font-size: 14px;
+            @include variable(textAlign, text-align, left);
+            line-height: 2
+          }
           .actions {
             display: flex;
-            flex-direction: row-reverse;
+            @include variable(rowDirection, flex-direction, row);
+            justify-content: flex-end;
             button {
               margin-top: 10px;
               margin-left: 10px;

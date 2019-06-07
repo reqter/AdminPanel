@@ -9,6 +9,7 @@
   left: 0;
   width: 100%;
   box-shadow: 0 0 2px lightgray;
+  z-index: 1000;
 
   @include variable(mp-header-background, background, black);
   @include variable(mp-header-height, height, 60px);
@@ -127,7 +128,7 @@
       span {
         padding: 0 6px;
         cursor: pointer;
-        text-decoration: underline
+        text-decoration: underline;
       }
     }
   }

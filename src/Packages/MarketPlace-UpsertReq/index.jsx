@@ -6,8 +6,11 @@ import {
   storageManager,
   utility,
 } from "../../services";
-import { addContent } from "./../../Api/content-api";
-import { getRequestByLink } from "./../../Api/request-api";
+import { useLocale } from "./../../hooks";
+import {
+  getRequestDetail,
+  submitRequest,
+} from "./../../Api/content-delivery-api";
 import { getUserInfo } from "./../../Api/account-api";
 import {
   NotFound,
@@ -32,7 +35,7 @@ import {
 const userDetailFields = [
   {
     id: "1",
-    name: "email",
+    name: "___email",
     title: {
       en: "Email",
       fa: "ایمیل",
@@ -46,7 +49,7 @@ const userDetailFields = [
   },
   {
     id: "2",
-    name: "fullName",
+    name: "___fullName",
     title: {
       en: "Full Name",
       fa: "نام و نام خانوادگی",
@@ -59,7 +62,7 @@ const userDetailFields = [
   },
   {
     id: "3",
-    name: "phoneNumber",
+    name: "___phoneNumber",
     title: {
       en: "Phone Number",
     },
@@ -68,11 +71,26 @@ const userDetailFields = [
     },
     type: "number",
   },
+  {
+    id: "4",
+    name: "___city",
+    title: {
+      en: "City",
+    },
+    description: {
+      en: "Choose your city",
+    },
+    type: "keyValue",
+    options: [
+      { value: "Tehran", selected: true },
+      { value: "Esfahan", selected: true },
+    ],
+  },
 ];
 
-const currentLang = languageManager.getCurrentLanguage().name;
-
 const MarketPlace_upsertRequest = props => {
+  const { appLocale, currentLang } = useLocale();
+
   const viewMode = false;
   const updateMode = false;
 
@@ -101,6 +119,7 @@ const MarketPlace_upsertRequest = props => {
 
   const [newContentTypeBox, toggleNewContentTypeBox] = useState(false);
   const [submitSpinner, toggleSubmitSpinner] = useState(false);
+  const [urgent, toggleUrgent] = useState(false);
 
   useEffect(() => {
     const { params } = props.match;
@@ -113,8 +132,8 @@ const MarketPlace_upsertRequest = props => {
       setError(obj);
       toggleSpinner(false);
     } else {
-      const token = storageManager.getItem("token");
-      if (token) fetchUserInfo();
+      // const token = storageManager.getItem("token");
+      // if (token) fetchUserInfo();
       getItemById(params.id);
     }
   }, [props.match.params.id]);
@@ -159,7 +178,9 @@ const MarketPlace_upsertRequest = props => {
         !item.settings.userFields ||
         item.settings.userFields.length === 0
       ) {
-        f = item.contentType.fields;
+        if (item.contentType) {
+          f = item.contentType.fields;
+        }
       } else {
         for (let i = 0; i < item.contentType.fields.length; i++) {
           const field = item.contentType.fields[i];
@@ -176,8 +197,13 @@ const MarketPlace_upsertRequest = props => {
     }
   }, [item]);
   function getItemById(link) {
-    getRequestByLink()
-      .onOk(result => {
+    getRequestDetail()
+      .onOk(res => {
+        const result = res.data
+          ? res.data.request
+            ? res.data.request
+            : undefined
+          : undefined;
         if (result) {
           if (!result.contentType) {
             const obj = {
@@ -198,7 +224,14 @@ const MarketPlace_upsertRequest = props => {
             //   setCategory(result.category);
             setError();
           }
-        } else setItem({});
+        } else {
+          const obj = {
+            type: "CONTENT_TYPE",
+            title: "Not Found!",
+            message: "Request not found.",
+          };
+          setError(obj);
+        }
         toggleSpinner(false);
       })
       .onServerError(result => {
@@ -259,7 +292,7 @@ const MarketPlace_upsertRequest = props => {
         setError(obj);
         toggleSpinner(false);
       })
-      .call(link);
+      .call(currentLang, link, false);
   }
   function getFieldItem(field) {
     switch (field.type.toLowerCase()) {
@@ -391,12 +424,13 @@ const MarketPlace_upsertRequest = props => {
     props.history.push("/panel/profile");
   }
   function backToContent() {
-    setCurrentBox("form");
+    changeTab(1);
   }
   function handleSubmitMore() {
-    changeTab(1);
-    toggleSubmitSpinner(false);
-    setCurrentBox("form");
+    props.history.push("/market");
+  }
+  function handleReuqestType(e) {
+    toggleUrgent(e.target.value === "true" ? true : false);
   }
   function upsertContent(closePage) {
     if (!submitSpinner) {
@@ -407,40 +441,28 @@ const MarketPlace_upsertRequest = props => {
       }
     }
   }
-  function submit(closePage) {
+  function submit() {
     toggleSubmitSpinner(true);
     let obj = {
-      contentType: item.contentType._id,
-      // category:
-      //   item.contentType.categorization === true
-      //     ? item.category
-      //       ? item.category._id
-      //       : null
-      //     : null,
       fields: form,
+      request: props.match.params.id,
     };
     if (item.settings && item.settings.userDetail === true) {
-      delete obj["fields"]["email"];
-      delete obj["fields"]["fullName"];
-      delete obj["fields"]["phoneNumber"];
-      obj["request"] = {
-        email: form["email"],
-        fullName: form["fullName"],
-        phoneNumber: form["phoneNumber"],
+      delete obj["fields"]["___email"];
+      delete obj["fields"]["___fullname"];
+      delete obj["fields"]["___phonenumber"];
+      delete obj["fields"]["___city"];
+      obj["userinfo"] = {
+        email: form["___email"],
+        fullname: form["___fullName"],
+        phonenumber: form["___phoneNumber"],
+        city: form["___city"],
+        urgent: urgent,
       };
     }
-    addContent()
+    submitRequest()
       .onOk(result => {
         setCurrentBox("successBox");
-        // toggleSubmitSpinner(false);
-        // dispatch({
-        //   type: "ADD_NOTIFY",
-        //   value: {
-        //     type: "success",
-        //     message: languageManager.translate("UPSERT_ITEM_ADD_ON_OK"),
-        //   },
-        // });
-
         setFormData({});
         setForm({});
         setFormValidation({});
@@ -489,8 +511,9 @@ const MarketPlace_upsertRequest = props => {
           },
         });
       })
-      .call(item.sys.spaceId, obj);
+      .call(obj);
   }
+
   return spinner ? (
     <div className="loaderBox">
       <div className="loader" />
@@ -518,17 +541,18 @@ const MarketPlace_upsertRequest = props => {
               {currentBox === "successBox" && (
                 <div className="successRequest animated fadeIn">
                   <Success />
-                  <span className="title">Submitted!</span>
+                  <span className="title">
+                    {appLocale["REQUEST_SUBMIT_SUCCESS_TITLE"]}
+                  </span>
                   <span className="successMsg">
-                    Request Successfully submitted.only requester will know the
-                    content
+                    {appLocale["REQUEST_SUBMIT_SUCCESS_MESSAGE"]}
                   </span>
                   <div className="successBox-actions">
                     <button
                       className="btn btn-primary"
                       onClick={handleSubmitMore}
                     >
-                      Submit More
+                      {appLocale["REQUEST_SUBMIT_SUCCESS_BTN"]}
                     </button>
                   </div>
                 </div>
@@ -537,38 +561,179 @@ const MarketPlace_upsertRequest = props => {
                 <>
                   <div className="content-userInfo">
                     <div className="userImage">
-                      <img
-                        src="https://www.mytravelomart.com/wp-content/uploads/2018/09/car-rental-services-udaipur.png"
-                        alt=""
-                      />
+                      {item && item.thumbnail && item.thumbnail.length > 0 && (
+                        <img src={item.thumbnail[0][currentLang]} alt="" />
+                      )}
                     </div>
                     <div className="info">
                       <span>
-                        <strong>Car Renting</strong>
+                        {item && item.title && item.title[currentLang] && (
+                          <strong>{item.title[currentLang]} </strong>
+                        )}
                       </span>
-                      <span>Rate a car per day or month</span>
+                      {item &&
+                        item.description &&
+                        item.description[currentLang] && (
+                          <span>{item.description[currentLang]} </span>
+                        )}
                     </div>
                     <div className="requestDate">
-                      <DateFormater date={item.sys.issueDate} />
+                      {item && item.sys && (
+                        <DateFormater date={item.sys.issueDate} />
+                      )}
                     </div>
                   </div>
                   <div className="content-inputs" style={{ marginTop: 20 }}>
-                    {tab === 1 &&
-                      fields &&
-                      fields.map(field => (
-                        <div key={field.id} className="rowItem">
-                          {getFieldItem(field)}
+                    <div style={{ display: tab === 1 ? "block" : "none" }}>
+                      {fields &&
+                        fields.map(field => (
+                          <div key={field.id} className="rowItem">
+                            {getFieldItem(field)}
+                          </div>
+                        ))}
+                    </div>
+                    <div style={{ display: tab === 2 ? "block" : "none" }}>
+                      <div className="content__userinfo">
+                        <div className="content__userinfo__icon">
+                          <i className="icon-request" />
                         </div>
-                      ))}
+                        <span>{appLocale["REQUEST_USERINFO_TITLE"]}</span>
+                      </div>
+                      <div className="row animated fadeIn">
+                        <div className="col">
+                          <String
+                            viewMode={viewMode}
+                            updateMode={updateMode}
+                            field={userDetailFields[1]}
+                            formData={formData}
+                            init={setNameToFormValidation}
+                            onChangeValue={handleOnChangeValue}
+                          />
+                        </div>
+                        <div className="col">
+                          <String
+                            viewMode={viewMode}
+                            updateMode={updateMode}
+                            field={userDetailFields[0]}
+                            formData={formData}
+                            init={setNameToFormValidation}
+                            onChangeValue={handleOnChangeValue}
+                          />
+                        </div>
+                      </div>
+                      <div className="row animated fadeIn">
+                        <div className="col">
+                          <Number
+                            viewMode={viewMode}
+                            updateMode={updateMode}
+                            field={userDetailFields[2]}
+                            formData={formData}
+                            init={setNameToFormValidation}
+                            onChangeValue={handleOnChangeValue}
+                          />
+                        </div>
+                        <div className="col">
+                          <KeyValue
+                            viewMode={viewMode}
+                            updateMode={updateMode}
+                            field={userDetailFields[3]}
+                            formData={formData}
+                            init={setNameToFormValidation}
+                            onChangeValue={handleOnChangeValue}
+                          />
+                        </div>
+                      </div>
+                      <div className="custom_checkbox ">
+                        <div className="left">
+                          <label className="radio">
+                            <input
+                              type="radio"
+                              value="false"
+                              checked={urgent === false}
+                              name="requestType"
+                              onChange={handleReuqestType}
+                              id="requestTypeNormal"
+                            />
+                            <span className="checkround" />
+                          </label>
+                        </div>
+                        <div className="right">
+                          <label htmlFor="requestTypeNormal">
+                            {appLocale["REQUEST_USERINFO_REQUEST_NORMAL"]}
+                          </label>
+                          <label htmlFor="requestTypeNormal">
+                            {appLocale["REQUEST_USERINFO_REQUEST_NORMAL_INFO"]}
+                          </label>
+                        </div>
+                      </div>
+                      <div className="custom_checkbox">
+                        <div className="left">
+                          <label className="radio">
+                            <input
+                              type="radio"
+                              value="true"
+                              checked={urgent === true}
+                              name="requestType"
+                              onChange={handleReuqestType}
+                              id="requestTypeUrgent"
+                            />
+                            <span className="checkround" />
+                          </label>
+                        </div>
+                        <div className="right">
+                          <label htmlFor="requestTypeUrgent">
+                            {appLocale["REQUEST_USERINFO_REQUEST_URGENT"]}
+                          </label>
+                          <label htmlFor="requestTypeUrgent">
+                            {appLocale["REQUEST_USERINFO_REQUEST_URGENT_INFO"]}
+                          </label>
+                        </div>
+                      </div>
+                      <p>{appLocale["REQUEST_USERINFO_TERMS"]}</p>
+                    </div>
+
                     <div className="actions">
-                      <button
-                        className="btn btn-primary"
-                        onClick={upsertContent}
-                        disabled={!isValidForm}
-                      >
-                        <CircleSpinner show={submitSpinner} size="small" />
-                        {!submitSpinner && "Submit"}
-                      </button>
+                      {item &&
+                      item.settings &&
+                      item.settings.userDetail === true ? (
+                        tab === 1 ? (
+                          <button
+                            className="btn btn-primary"
+                            onClick={upsertContent}
+                          >
+                            {appLocale["NEXT"]}
+                          </button>
+                        ) : (
+                          <>
+                            <button
+                              className="btn btn-secondary"
+                              onClick={backToContent}
+                            >
+                              {appLocale["PREVIOUS"]}
+                            </button>
+                            <button
+                              className="btn btn-primary"
+                              onClick={upsertContent}
+                              disabled={!isValidForm}
+                            >
+                              <CircleSpinner
+                                show={submitSpinner}
+                                size="small"
+                              />
+                              {!submitSpinner && appLocale["SUBMIT"]}
+                            </button>
+                          </>
+                        )
+                      ) : (
+                        <button
+                          className="btn btn-primary"
+                          onClick={upsertContent}
+                          disabled={!isValidForm}
+                        >
+                          <CircleSpinner show={submitSpinner} size="small" />
+                          {!submitSpinner && appLocale["SUBMIT"]}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </>

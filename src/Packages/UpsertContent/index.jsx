@@ -143,7 +143,7 @@ const requestFields = [
     name: "longDesc",
     title: {
       en: "More Info",
-      fa:"اطلاعات بیشتر"
+      fa: "اطلاعات بیشتر",
     },
     description: {
       fa: "",
@@ -639,6 +639,7 @@ const UpsertProduct = props => {
         receiver: form["receiver"] ? form["receiver"] : "",
         thumbnail: form["thumbnail"],
         attachments: form["attachments"],
+        longDesc: form["longDesc"],
         settings: {
           showHeader: form["showHeader"],
           showRequestInfo: form["showRequestInfo"],
@@ -750,6 +751,7 @@ const UpsertProduct = props => {
         receiver: form["receiver"] ? form["receiver"] : "",
         thumbnail: form["thumbnail"],
         attachments: form["attachments"],
+        longDesc: form["longDesc"],
         settings: {
           showHeader: form["showHeader"],
           showRequestInfo: form["showRequestInfo"],

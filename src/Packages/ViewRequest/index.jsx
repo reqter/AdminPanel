@@ -200,7 +200,14 @@ const ViewRequest = props => {
             //   setCategory(result.category);
             setError();
           }
-        } else setItem({});
+        } else {
+          const obj = {
+            type: "CONTENT_TYPE",
+            title: "Not Found!",
+            message: "Request not found.",
+          };
+          setError(obj);
+        }
         toggleSpinner(false);
       })
       .onServerError(result => {
@@ -662,6 +669,7 @@ const ViewRequest = props => {
                         </button>
                       )}
                     </div>
+                
                   </div>
                   {item.attachments && item.attachments.length > 0 && (
                     <div className="form-attachments">

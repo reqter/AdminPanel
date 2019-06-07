@@ -25,7 +25,7 @@ const MarketPlace_ProductDetail = props => {
   }, [mp_requestDetail]);
 
   function handleRequestClicked() {
-    props.history.push("/newRequest/12");
+    props.history.push("/newRequest/" + mp_requestDetail.sys.link);
   }
   function handleAttachmentSelect(file) {
     setSelectedAttachment(file);
@@ -101,7 +101,12 @@ const MarketPlace_ProductDetail = props => {
           </div>
         </div>
       )}
-      {moreInfo && <MoreInfo onClose={handleToggleMoreInfo} />}
+      {moreInfo && (
+        <MoreInfo
+          onClose={handleToggleMoreInfo}
+          longDesc={mp_requestDetail ? mp_requestDetail.longDesc : ""}
+        />
+      )}
     </div>
   );
 };
