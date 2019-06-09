@@ -13,35 +13,6 @@
       },
       "icon": "icon-database",
       "fields": [
-        {
-          "name": "name",
-          "title": {
-            "en": "Name",
-            "fa": "Name"
-          },
-          "description": {
-            "fa": "name of each product",
-            "en": "name of each product"
-          },
-          "type": "string",
-          "isBase": true,
-          "isTranslate": true,
-          "isRequired": true
-        },
-        {
-          "name": "description",
-          "title": {
-            "fa": "توضیحات",
-            "en": "Description"
-          },
-          "description": {
-            "fa": "",
-            "en": ""
-          },
-          "type": "string",
-          "isBase": true,
-          "isTranslate": true
-        }
       ],
       "allowCustomFields": true
     },
