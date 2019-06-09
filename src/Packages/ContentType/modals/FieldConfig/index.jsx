@@ -46,6 +46,14 @@ const fieldsApearance = {
     { name: "url", title: { en: "URL" }, apearance: "" },
     { name: "phoneNumber", title: { en: "Phone Number" }, apearance: "" },
   ],
+  number: [
+    { name: "number", title: { en: "Number" }, apearance: "", selected: true },
+    {
+      name: "currency",
+      title: { en: "Currency" },
+      apearance: "",
+    },
+  ],
 };
 
 const FieldConfig = props => {
@@ -1040,6 +1048,28 @@ const FieldConfig = props => {
                   </label>
                 </div>
               </div>
+              {selectedField.type === "text" && (
+                <div className="custom_checkbox">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="isRequired"
+                        checked={isRequired}
+                        onChange={handleRequireCheckBox}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label htmlFor="isRequired">Limit character count</label>
+                    <label>
+                      Specify a minimum and/or maximum allowed number of
+                      characters
+                    </label>
+                  </div>
+                </div>
+              )}
               {selectedField.type === "media" && (
                 <div className="custom_checkbox">
                   <div className="left">
