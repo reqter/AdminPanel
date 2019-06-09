@@ -45,7 +45,15 @@ const MarketPlace_ProductDetail = props => {
                 mp_requestDetail.title[currentLang] &&
                 mp_requestDetail.title[currentLang]}
             </h3>
-            <span className="animated fadeIn faster detail__description">
+            <span
+              className="animated fadeIn faster detail__description"
+              title={
+                mp_requestDetail &&
+                mp_requestDetail.description &&
+                mp_requestDetail.description[currentLang] &&
+                mp_requestDetail.description[currentLang]
+              }
+            >
               {/* <div class="text ellipsis">
                 <span class="text-concat">
                   {mp_requestDetail &&
