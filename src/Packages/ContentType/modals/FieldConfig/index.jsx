@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Modal, ModalFooter } from "reactstrap";
 import { languageManager, useGlobalState, utility } from "../../../../services";
 import { updateContentType } from "./../../../../Api/contentType-api";
@@ -92,6 +92,31 @@ const FieldConfig = props => {
     selectedField.isRequired === true ? true : false
   );
 
+  const [textLimit, setTextLimit] = useState({
+    checked: selectedField.limit ? true : false,
+    type: selectedField.limit ? selectedField.limit.type : "between",
+    min: selectedField.limit ? selectedField.limit.min : undefined,
+    max: selectedField.limit ? selectedField.limit.max : undefined,
+  });
+  const [numberLimitChecked, toggleNumberLimitChecked] = useState(
+    selectedField.limit ? true : false
+  );
+  const [numberLimitType, setNumberLimitType] = useState(
+    selectedField.limit ? selectedField.limit.type : "between"
+  );
+  const [numberLimitMin, setNumberLimitMin] = useState(
+    selectedField.limit ? selectedField.limit.min : undefined
+  );
+  const [numberLimitMax, setNumberLimitMax] = useState(
+    selectedField.limit ? selectedField.limit.max : undefined
+  );
+  const [matchRegex, toggleMatchRegex] = useState(
+    selectedField.pattern ? true : false
+  );
+  const [matchRegexValue, setMatchRegexValue] = useState(
+    selectedField.pattern ? selectedField.pattern : ""
+  );
+
   const [imageUploadMethod, setImageUploadMethod] = useState(
     selectedField.isList === true ? "manyFiles" : "oneFile"
   );
@@ -130,22 +155,6 @@ const FieldConfig = props => {
           }
         }
       : []
-    //   () => {
-    //   if (
-    //     selectedField.mediaType === undefined ||
-    //     selectedField.mediaType === "all"
-    //   ) {
-    //     return acceptedMediaTypes[0];
-    //   } else {
-    //     return [];
-    //     for (let i = 0; i < acceptedMediaTypes.length; i++) {
-    //       if (acceptedMediaTypes[i].name === selectedField.mediaType) {
-    //         return acceptedMediaTypes[i];
-    //       }
-    //     }
-    //   }
-
-    // }
   );
 
   const [referenceContentTypeChk, toggleReferenceContentType] = useState(
@@ -306,6 +315,77 @@ const FieldConfig = props => {
   function handleRequireCheckBox(e) {
     toggleRequired(e.target.checked);
   }
+  function handleTextLimitChanged(e) {
+    const obj = { ...textLimit, checked: e.target.checked };
+    setTextLimit(obj);
+  }
+
+  function handleTextLimitTypeChanged(e) {
+    const obj = { ...textLimit, type: e.target.value };
+    setTextLimit(obj);
+  }
+  function handleTextLimitMinimum(e) {
+    const min = e.target.value;
+    let max = textLimit.max;
+    let obj;
+
+    if (
+      !max ||
+      parseInt(min) > parseInt(max) ||
+      parseInt(min) === parseInt(max)
+    ) {
+      max = parseInt(min) + 1;
+      obj = { ...textLimit, min, max };
+    } else {
+      obj = { ...textLimit, min };
+    }
+    setTextLimit(obj);
+  }
+  function handleTextLimitMaximum(e) {
+    let min = textLimit.min;
+    let max = e.target.value;
+    let obj;
+    if (min && parseInt(min) > parseInt(max)) {
+      max = parseInt(min) + 1;
+      obj = { ...textLimit, min, max };
+    } else {
+      obj = { ...textLimit, max };
+    }
+    setTextLimit(obj);
+  }
+  function handleNumberLimitChanged(e) {
+    toggleNumberLimitChecked(e.target.checked);
+  }
+  function handleNumberLimitTypeChanged(e) {
+    setNumberLimitType(e.target.value);
+  }
+  function handleNumberLimitMinimum(e) {
+    if (
+      !numberLimitMax ||
+      parseInt(e.target.value) > parseInt(numberLimitMax) ||
+      parseInt(e.target.value) === parseInt(numberLimitMax)
+    )
+      setNumberLimitMax(parseInt(e.target.value) + 1);
+
+    setNumberLimitMin(e.target.value);
+  }
+
+  function handleNumberLimitMaximum(e) {
+    if (numberLimitMin && parseInt(numberLimitMin) > parseInt(e.target.value)) {
+      setNumberLimitMax(
+        Math.max(
+          parseInt(numberLimitMin) + 1,
+          parseInt(e.target.value)
+        ).toString()
+      );
+    } else setNumberLimitMax(e.target.value);
+  }
+  function handleRegexChanged(e) {
+    toggleMatchRegex(e.target.checked);
+  }
+  function handleMatchRegexValueChanged(e) {
+    setMatchRegexValue(e.target.value);
+  }
   function handleImageUploadMethod(e) {
     setImageUploadMethod(e.target.value);
   }
@@ -430,9 +510,67 @@ const FieldConfig = props => {
       if (selectedField.type === "string") {
         if (textDefaultValue.length > 0) obj["defaultValue"] = textDefaultValue;
         obj["isMultiLine"] = isMultiLine;
+
+        if (textLimit.checked) {
+          if (textLimit.type === "between") {
+            obj["limit"] = {
+              type: textLimit.type,
+              min: textLimit.min,
+              max: textLimit.max,
+            };
+          } else {
+            if (textLimit.type === "atLeast") {
+              obj["limit"] = {
+                type: textLimit.type,
+                min: textLimit.min,
+              };
+            } else {
+              obj["limit"] = {
+                type: textLimit.type,
+                max: textLimit.max,
+              };
+            }
+          }
+        } else {
+          delete obj["limit"];
+        }
+        if (matchRegex) {
+          obj["pattern"] = matchRegexValue;
+        } else {
+          delete obj["pattern"];
+        }
       }
-      if (selectedField.type === "number" && numberDefaultValue.length > 0) {
-        obj["defaultValue"] = numberDefaultValue;
+      if (selectedField.type === "number") {
+        if (numberDefaultValue.length > 0)
+          obj["defaultValue"] = numberDefaultValue;
+        if (numberLimitChecked) {
+          if (numberLimitType === "between") {
+            obj["limit"] = {
+              type: numberLimitType,
+              min: numberLimitMin,
+              max: numberLimitMax,
+            };
+          } else {
+            if (textLimit.type === "greatEqual") {
+              obj["limit"] = {
+                type: numberLimitType,
+                min: numberLimitMin,
+              };
+            } else {
+              obj["limit"] = {
+                type: numberLimitType,
+                max: numberLimitMax,
+              };
+            }
+          }
+        } else {
+          delete obj["limit"];
+        }
+        if (matchRegex) {
+          obj["pattern"] = matchRegexValue;
+        } else {
+          delete obj["pattern"];
+        }
       }
       if (selectedField.type === "dateTime") {
         obj["showCurrent"] = dateDefaultValue;
@@ -1048,25 +1186,158 @@ const FieldConfig = props => {
                   </label>
                 </div>
               </div>
-              {selectedField.type === "text" && (
+              {selectedField.type === "string" && (
                 <div className="custom_checkbox">
                   <div className="left">
                     <label className="checkBox">
                       <input
                         type="checkbox"
-                        id="isRequired"
-                        checked={isRequired}
-                        onChange={handleRequireCheckBox}
+                        id="textLimit"
+                        checked={textLimit.checked}
+                        onChange={handleTextLimitChanged}
                       />
                       <span className="checkmark" />
                     </label>
                   </div>
                   <div className="right">
-                    <label htmlFor="isRequired">Limit character count</label>
-                    <label>
+                    <label htmlFor="textLimit">Limit character count</label>
+                    <label htmlFor="textLimit">
                       Specify a minimum and/or maximum allowed number of
                       characters
                     </label>
+                    {textLimit.checked && (
+                      <div className="validation-configs text-limit-validation">
+                        <select
+                          className="form-control"
+                          onChange={handleTextLimitTypeChanged}
+                          value={textLimit.type}
+                        >
+                          <option value="between">Between</option>
+                          <option value="atLeast">At least</option>
+                          <option value="noMoreThan">No more than</option>
+                        </select>
+                        {(textLimit.type === "between" ||
+                          textLimit.type === "atLeast") && (
+                          <input
+                            type="number"
+                            className="form-control"
+                            placeholder="min"
+                            value={textLimit.min}
+                            onChange={handleTextLimitMinimum}
+                          />
+                        )}
+                        {textLimit.type === "between" && <span>and</span>}
+                        {(textLimit.type === "between" ||
+                          textLimit.type === "noMoreThan") && (
+                          <input
+                            type="number"
+                            className="form-control"
+                            placeholder="max"
+                            value={textLimit.max}
+                            onChange={handleTextLimitMaximum}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {selectedField.type === "number" && (
+                <div className="custom_checkbox">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="numberLimitRange"
+                        checked={numberLimitChecked}
+                        onChange={handleNumberLimitChanged}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label htmlFor="numberLimitRange">
+                      Accept only specified number range
+                    </label>
+                    <label htmlFor="numberLimitRange">
+                      Specify a minimum and/or maximum allowed number for this
+                      field
+                    </label>
+                    {numberLimitChecked && (
+                      <div className="validation-configs text-limit-validation">
+                        <select
+                          className="form-control input-sm"
+                          onChange={handleNumberLimitTypeChanged}
+                          value={numberLimitType}
+                        >
+                          <option value="between">Between</option>
+                          <option value="greatEqual">
+                            Greater or equal than
+                          </option>
+                          <option value="lessEqual">Less or equal than</option>
+                        </select>
+                        {(numberLimitType === "between" ||
+                          numberLimitType === "greatEqual") && (
+                          <input
+                            type="number"
+                            className="form-control input-sm"
+                            placeholder="min"
+                            value={numberLimitMin}
+                            onChange={handleNumberLimitMinimum}
+                          />
+                        )}
+                        {numberLimitType === "between" && <span>and</span>}
+                        {(numberLimitType === "between" ||
+                          numberLimitType === "lessEqual") && (
+                          <input
+                            type="number"
+                            className="form-control input-sm"
+                            placeholder="max"
+                            value={numberLimitMax}
+                            onChange={handleNumberLimitMaximum}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {(selectedField.type === "string" ||
+                selectedField.type === "number") && (
+                <div className="custom_checkbox">
+                  <div className="left">
+                    <label className="checkBox">
+                      <input
+                        type="checkbox"
+                        id="matchRegex"
+                        checked={matchRegex}
+                        onChange={handleRegexChanged}
+                      />
+                      <span className="checkmark" />
+                    </label>
+                  </div>
+                  <div className="right">
+                    <label htmlFor="matchRegex">Match a specific pattern</label>
+                    <label htmlFor="matchRegex">
+                      Make this field match a pattern: e-mail address, URI, or a
+                      custom regular expression
+                    </label>
+                    {matchRegex && (
+                      <div className="validation-configs">
+                        <input
+                          className="form-control input-sm"
+                          placeholder="[^0-9]*[12]?[0-9]{1,2}[^0-9]*"
+                          value={matchRegexValue}
+                          onChange={handleMatchRegexValueChanged}
+                        />
+                        <a
+                          href="https://projects.lukehaas.me/regexhub/"
+                          target="_blank"
+                        >
+                          Examples
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

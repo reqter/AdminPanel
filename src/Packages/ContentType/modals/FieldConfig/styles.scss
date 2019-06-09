@@ -47,6 +47,25 @@
         button {
           margin-right: 10px;
         }
+        a {
+          float: left;
+        }
+        &.text-limit-validation {
+          display: flex;
+          align-items: center;
+
+          span {
+            font-size: 16px;
+          }
+          select {
+            width: 170px;
+          }
+          input {
+            margin-left: 10px;
+            margin-right: 10px;
+            width: 100px;
+          }
+        }
       }
     }
     .thirdTab {
@@ -73,7 +92,7 @@
             transition-duration: 0.2s;
             border-color: gray;
           }
-          &.active{
+          &.active {
             border-color: rgb(56, 132, 255);
           }
           .activeItem {
@@ -90,7 +109,7 @@
             color: white;
             font-size: 14px;
             transform: translate(50%, 50%);
-            z-index: 100
+            z-index: 100;
           }
         }
       }

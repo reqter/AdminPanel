@@ -30,7 +30,7 @@ const Requests = props => {
       //show: false,
       width: 70,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       Cell: props => {
         return (
@@ -43,9 +43,9 @@ const Requests = props => {
     {
       width: 100,
       Header: () => <div className="p-header-td">Thumbnail</div>,
-      //show: false,
+     // show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "thumbnail",
       Cell: props => {
@@ -65,7 +65,7 @@ const Requests = props => {
     },
     {
       Header: () => <div className="p-header-td">Title</div>,
-      //show: false,
+      show: false,
       headerStyle: {
         display: "block",
       },
@@ -85,7 +85,7 @@ const Requests = props => {
       width: 130,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "sys",
       Cell: props => (
@@ -102,7 +102,7 @@ const Requests = props => {
       width: 110,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "contentType",
       Cell: props => {
@@ -135,7 +135,7 @@ const Requests = props => {
       width: 110,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "status",
       Cell: props => (
@@ -150,7 +150,7 @@ const Requests = props => {
       Header: "Actions",
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       clickable: false,
       Cell: props => {

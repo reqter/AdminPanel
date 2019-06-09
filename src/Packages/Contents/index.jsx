@@ -36,7 +36,7 @@ const Products = props => {
       //show: false,
       width: 70,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       Cell: props => {
         return (
@@ -51,7 +51,7 @@ const Products = props => {
       Header: () => <div className="p-header-td">Thumbnail</div>,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "fields.thumbnail",
       Cell: props => {
@@ -73,7 +73,7 @@ const Products = props => {
       Header: () => <div className="p-header-td">Name</div>,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "fields",
       Cell: props => {
@@ -98,7 +98,7 @@ const Products = props => {
       width: 130,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "sys",
       Cell: props => (
@@ -115,7 +115,7 @@ const Products = props => {
       width: 110,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "contentType",
       Cell: props => {
@@ -148,7 +148,7 @@ const Products = props => {
       width: 110,
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       accessor: "status",
       Cell: props => (
@@ -163,7 +163,7 @@ const Products = props => {
       Header: "Actions",
       //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
       clickable: false,
       Cell: props => {
