@@ -38,6 +38,51 @@ const MarketPlace_ProductDetail = props => {
     <div className="mp-products__detail__content">
       {!spinner && (
         <div className="detail">
+          <div className="detail__right">
+            <h3 className="animated fadeIn faster detail__title">
+              {mp_requestDetail &&
+                mp_requestDetail.title &&
+                mp_requestDetail.title[currentLang] &&
+                mp_requestDetail.title[currentLang]}
+            </h3>
+            <span
+              className="animated fadeIn faster detail__description"
+              title={
+                mp_requestDetail &&
+                mp_requestDetail.description &&
+                mp_requestDetail.description[currentLang] &&
+                mp_requestDetail.description[currentLang]
+              }
+            >
+              {/* <div class="text ellipsis">
+                <span class="text-concat">
+                  {mp_requestDetail &&
+                    mp_requestDetail.description &&
+                    mp_requestDetail.description[currentLang] &&
+                    mp_requestDetail.description[currentLang]}
+                </span>
+              </div> */}
+              {mp_requestDetail &&
+                mp_requestDetail.description &&
+                mp_requestDetail.description[currentLang] &&
+                mp_requestDetail.description[currentLang]}
+            </span>
+            <div className="detail__actions animated fadeIn faster">
+              <button
+                className="btn btn-primary"
+                onClick={handleRequestClicked}
+              >
+                {appLocale["REQUEST"]}
+              </button>
+              <button
+                className="btn btn-light"
+                onClick={handleToggleMoreInfo}
+              >
+                {appLocale["MORE_INFO"]}
+              </button>
+            </div>
+          </div>
+
           <div className="detail__left animated zoomIn faster">
             <div className="mediaViewer">
               {!mp_requestDetail ||
@@ -73,31 +118,6 @@ const MarketPlace_ProductDetail = props => {
                   ))}
                 </div>
               )}
-          </div>
-          <div className="detail__right">
-            <h3 className="animated fadeIn faster detail__title">
-              {mp_requestDetail &&
-                mp_requestDetail.title &&
-                mp_requestDetail.title[currentLang] &&
-                mp_requestDetail.title[currentLang]}
-            </h3>
-            <span className="animated fadeIn faster detail__description">
-              {mp_requestDetail &&
-                mp_requestDetail.description &&
-                mp_requestDetail.description[currentLang] &&
-                mp_requestDetail.description[currentLang]}
-            </span>
-            <div className="detail__actions animated fadeIn faster">
-              <button
-                className="btn btn-primary"
-                onClick={handleRequestClicked}
-              >
-                {appLocale["REQUEST"]}
-              </button>
-              <button className="btn btn-light" onClick={handleToggleMoreInfo}>
-                {appLocale["MORE_INFO"]}
-              </button>
-            </div>
           </div>
         </div>
       )}

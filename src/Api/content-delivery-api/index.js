@@ -168,14 +168,13 @@ export function filterRequestsByCategory () {
       const url =
         baseUrl +
         `/graphql?query={requests(category:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} thumbnail{${currentLang}} attachments{${currentLang}} contentType category } categories{sys{link} name{${currentLang}} shortDesc{${currentLang}} _id items parentId image{${currentLang}} } }`
-        
+
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
           authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
-         clientid: process.env.REACT_APP_CLIENT_IDENTITY
-
+          clientid: process.env.REACT_APP_CLIENT_IDENTITY
         }
       })
       const status = rawResponse.status
@@ -286,13 +285,12 @@ export function getRequestDetail () {
       let url =
         baseUrl +
         // `/graphql?query={request(link:"${link}"){sys{link} title{fa} description{fa} thumbnail{fa} attachments{fa}  contentType{sys{link} name fields title{fa} media{fa}} category{  sys{link} name{fa} shortDesc{fa} image{fa}} }}`
-        `/graphql?query={request(link:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} longDesc{${currentLang}} thumbnail{${currentLang}} settings attachments{${currentLang}} contentType{sys{link} name fields title{${currentLang}} media{${currentLang}}}}`
+        `/graphql?query={request(link:"${link}"){sys{link} title{${currentLang}} description{${currentLang}} longDesc{${currentLang}} thumbnail{${currentLang}} settings attachments{${currentLang}} contentType{sys{link} name fields title{${currentLang}} media{${currentLang}}} }`
       if (loadCategory) {
         url =
           url +
-          `categories{sys{link} name{${currentLang}} shortDesc{${currentLang}} _id items parentId image{${currentLang}} } }`
+          ` categories{sys{link} name{${currentLang}} shortDesc{${currentLang}} _id items parentId image{${currentLang}} } }`
       } else url = url + '}'
-
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {

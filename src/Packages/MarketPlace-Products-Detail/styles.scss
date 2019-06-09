@@ -33,9 +33,9 @@
         }
       }
       &__right {
-        height: 370px;
         flex: 1;
         padding: 20px;
+        padding-top: 0px;
         display: flex;
         flex-direction: column;
       }
@@ -43,10 +43,11 @@
         @include variable(textAlign, text-align, left);
       }
       &__description {
-        @include variable(textAlign, text-align, left);
+        @include variable(direction, direction, ltr);
+        text-align: justify;
+        margin-bottom: 20px;
       }
       &__actions {
-        flex: 1;
         display: flex;
         align-items: flex-end;
         @include variable(rowDirection, flex-direction, row);
@@ -235,7 +236,6 @@
     .editor-class {
       min-height: 300px;
       border: 0px solid white !important;
-      
     }
     // &__html {
     //   position: absolute;

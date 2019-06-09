@@ -62,7 +62,7 @@ const UpsertTemplate = props => {
     selectedContentType ? selectedContentType.accessRight : false
   );
   const [categorization, toggleCategorization] = useState(
-    selectedContentType ? selectedContentType.categorization : false
+    selectedContentType ? selectedContentType.categorization : true
   );
 
   useEffect(() => {

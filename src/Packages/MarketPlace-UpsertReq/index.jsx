@@ -577,11 +577,7 @@ const MarketPlace_upsertRequest = props => {
                           <span>{item.description[currentLang]} </span>
                         )}
                     </div>
-                    <div className="requestDate">
-                      {item && item.sys && (
-                        <DateFormater date={item.sys.issueDate} />
-                      )}
-                    </div>
+                    <div className="requestDate" />
                   </div>
                   <div className="content-inputs" style={{ marginTop: 20 }}>
                     <div style={{ display: tab === 1 ? "block" : "none" }}>
