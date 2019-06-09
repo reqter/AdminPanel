@@ -44,6 +44,7 @@ const fieldsApearance = {
     { name: "email", title: { en: "Email" }, apearance: "" },
     { name: "password", title: { en: "Password" }, apearance: "" },
     { name: "url", title: { en: "URL" }, apearance: "" },
+    { name: "phoneNumber", title: { en: "Phone Number" }, apearance: "" },
   ],
 };
 
