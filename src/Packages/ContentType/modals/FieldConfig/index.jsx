@@ -72,7 +72,12 @@ const FieldConfig = props => {
   const [isOpen, toggleModal] = useState(true);
   const [tab, changeTab] = useState(1);
   const [name] = useState(selectedField.name);
-  const [title, setTitle] = useState(selectedField.title[currentLang]);
+  const [title, setTitle] = useState(
+    selectedField.title ? selectedField.title[currentLang] : ""
+  );
+  const [description, setDescription] = useState(
+    selectedField.description ? selectedField.description[currentLang] : ""
+  );
   const [translation, toggleTranslation] = useState(selectedField.isTranslate);
   const [isRequired, toggleRequired] = useState(
     selectedField.isRequired === true ? true : false
@@ -277,6 +282,9 @@ const FieldConfig = props => {
   function handleChangeTitle(e) {
     setTitle(e.target.value);
   }
+  function handleDescriptionChanged(e) {
+    setDescription(e.target.value);
+  }
   function handleLatitudeChange(e) {
     setLatitude(e.target.value);
   }
@@ -398,6 +406,7 @@ const FieldConfig = props => {
         ...selectedField,
       };
       obj["title"] = utility.applyeLangs(title);
+      obj["description"] = utility.applyeLangs(description);
       obj["isTranslate"] = translation;
       obj["isRequired"] = isRequired;
       obj["appearance"] = !fieldsUI
@@ -623,6 +632,20 @@ const FieldConfig = props => {
                   />
                   <small className="form-text text-muted">
                     {languageManager.translate("TITLE_INFO")}
+                  </small>
+                </div>
+              </div>
+              <div className="row">
+                <div className="form-group col">
+                  <label>{languageManager.translate("Description")}</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={description}
+                    onChange={handleDescriptionChanged}
+                  />
+                  <small className="form-text text-muted">
+                    {languageManager.translate("field description")}
                   </small>
                 </div>
               </div>
@@ -897,7 +920,6 @@ const FieldConfig = props => {
                       </label>
                     </div>
                   </div>
-              
                 </>
               )}
               {selectedField.type === "reference" && (
