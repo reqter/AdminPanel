@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Modal, ModalFooter } from "reactstrap";
 import { languageManager, useGlobalState, utility } from "../../../../services";
+import { useDebounce } from "./../../../../hooks";
 import { updateContentType } from "./../../../../Api/contentType-api";
 import "./styles.scss";
 import { CircleSpinner } from "../../../../components";
@@ -88,6 +89,7 @@ const FieldConfig = props => {
     selectedField.description ? selectedField.description[currentLang] : ""
   );
   const [translation, toggleTranslation] = useState(selectedField.isTranslate);
+
   const [isRequired, toggleRequired] = useState(
     selectedField.isRequired === true ? true : false
   );
@@ -321,8 +323,8 @@ const FieldConfig = props => {
   }
 
   function handleTextLimitTypeChanged(e) {
-    const obj = { ...textLimit, type: e.target.value };
-    setTextLimit(obj);
+    const type = e.target.value;
+    setTextLimit({ checked: true, type, min: "", max: "" });
   }
   function handleTextLimitMinimum(e) {
     const min = e.target.value;
@@ -341,23 +343,32 @@ const FieldConfig = props => {
     }
     setTextLimit(obj);
   }
+  let timer;
   function handleTextLimitMaximum(e) {
-    let min = textLimit.min;
-    let max = e.target.value;
-    let obj;
-    if (min && parseInt(min) > parseInt(max)) {
-      max = parseInt(min) + 1;
-      obj = { ...textLimit, min, max };
-    } else {
-      obj = { ...textLimit, max };
-    }
+    clearTimeout(timer);
+    const max = e.target.value;
+    let obj = { ...textLimit, max };
     setTextLimit(obj);
+    // let v = e.target.value;
+    // timer = setTimeout(() => checkTextMaxValue(v), 2000);
+  }
+  function checkTextMaxValue(max) {
+    let obj = { ...textLimit, max };
+    setTextLimit(obj);
+    let min = textLimit.min;
+    if (min && parseInt(min) > parseInt(max)) {
+      var m = parseInt(min) + 1;
+      const obj1 = { ...textLimit, max: m };
+      setTextLimit(obj1);
+    }
   }
   function handleNumberLimitChanged(e) {
     toggleNumberLimitChecked(e.target.checked);
   }
   function handleNumberLimitTypeChanged(e) {
     setNumberLimitType(e.target.value);
+    setNumberLimitMin("");
+    setNumberLimitMax("");
   }
   function handleNumberLimitMinimum(e) {
     if (
@@ -371,14 +382,15 @@ const FieldConfig = props => {
   }
 
   function handleNumberLimitMaximum(e) {
-    if (numberLimitMin && parseInt(numberLimitMin) > parseInt(e.target.value)) {
-      setNumberLimitMax(
-        Math.max(
-          parseInt(numberLimitMin) + 1,
-          parseInt(e.target.value)
-        ).toString()
-      );
-    } else setNumberLimitMax(e.target.value);
+    // if (numberLimitMin && parseInt(numberLimitMin) > parseInt(e.target.value)) {
+    //   setNumberLimitMax(
+    //     Math.max(
+    //       parseInt(numberLimitMin) + 1,
+    //       parseInt(e.target.value)
+    //     ).toString()
+    //   );
+    // } else setNumberLimitMax(e.target.value)
+    setNumberLimitMax(e.target.value);
   }
   function handleRegexChanged(e) {
     toggleMatchRegex(e.target.checked);
@@ -1233,6 +1245,7 @@ const FieldConfig = props => {
                             type="number"
                             className="form-control"
                             placeholder="max"
+                            min="0"
                             value={textLimit.max}
                             onChange={handleTextLimitMaximum}
                           />
@@ -1293,6 +1306,7 @@ const FieldConfig = props => {
                             type="number"
                             className="form-control input-sm"
                             placeholder="max"
+                            min="0"
                             value={numberLimitMax}
                             onChange={handleNumberLimitMaximum}
                           />
