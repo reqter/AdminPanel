@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { languageManager, useGlobalState } from "../services";
+import { useGlobalState } from "../services";
+import { useLocale } from "./../hooks";
 import { getUserInfo } from "../Api/account-api";
 const widthResolver = WrappedComponent => {
   // const { cmp: Component } = props;

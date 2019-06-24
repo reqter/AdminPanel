@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
-import { languageManager, utility } from "../../services";
+import { utility } from "../../services";
+import { useLocale } from "./../../hooks";
 
 const NumberInput = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
 
   const { field, formData } = props;
   const [error, setError] = useState();

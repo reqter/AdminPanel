@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
-import { languageManager, useGlobalState, utility } from "../../services";
+import { useGlobalState, utility } from "../../services";
+import { useLocale } from "./../../hooks";
 import AssetFile from "./../AssetFile";
 import ImageEditorModal from "./ImageEditorModal";
 import { uploadAssetFile } from "./../../Api/asset-api";
 
 const FileUploaderInput = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const [{}, dispatch] = useGlobalState();
 
   const [editorModal, toggleEditorModal] = useState(false);

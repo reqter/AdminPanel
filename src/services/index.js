@@ -1,5 +1,4 @@
 // import themeManager from "./lib/themeManager";
-import languageManager from './languageManager'
 import storageManager from './storageManager'
 import useGlobalState from './stateManager'
 import utility from './utility'
@@ -9,8 +8,6 @@ import utility from './utility'
 // import apiManager from "./lib/apiManager";
 
 export {
-  // themeManager,
-  languageManager,
   useGlobalState,
   utility,
   storageManager

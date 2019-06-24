@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Modal, ModalBody } from "reactstrap";
 import CircleSpinner from "./../CircleSpinner";
 import "./styles.scss";
-import { languageManager } from "../../services";
+import { useLocale } from "./../../hooks";
+
 const PopupAlert = props => {
+  const { appLocale, t, currentLang } = useLocale();
   const okBtn = useRef(null);
   const { data } = props;
   const [spinner, toggleSpinner] = useState(false);
@@ -40,12 +42,11 @@ const PopupAlert = props => {
           </div>
           <div className="popup-ations">
             <button className="btn btn-light" onClick={closeModal}>
-              {data.cancelTitle || languageManager.translate("DONT_REMOVE")}
+              {data.cancelTitle || t("DONT_REMOVE")}
             </button>
             <button className="btn btn-primary" onClick={okClicked} ref={okBtn}>
               {spinner && <CircleSpinner show={spinner} size="small" />}
-              {!spinner &&
-                (data.okTitle || languageManager.translate("REMOVE"))}
+              {!spinner && (data.okTitle || t("REMOVE"))}
             </button>
           </div>
         </div>

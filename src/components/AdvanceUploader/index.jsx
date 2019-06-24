@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
 import {
-  languageManager,
   useGlobalState,
   utility,
   storageManager,
 } from "../../services";
+import { useLocale } from "./../../hooks";
 import ImageEditorModal from "./ImageEditorModal";
 import { uploadAssetFile, addAsset } from "./../../Api/asset-api";
 import SVGIcon from "./svg";
@@ -15,7 +15,7 @@ import ListItem from "./ListItem";
 
 let xhr;
 const FileUploaderInput = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+ const { appLocale, t, currentLang } = useLocale();
   const dropRef = useRef(null);
 
   const [{ spaceInfo }, dispatch] = useGlobalState();
@@ -115,7 +115,7 @@ const FileUploaderInput = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate(
+            message: t(
               `You just choose ${field.mediaType.join(" ")}`
             ),
           },
@@ -156,7 +156,7 @@ const FileUploaderInput = props => {
                   type: "ADD_NOTIFY",
                   value: {
                     type: "error",
-                    message: languageManager.translate(
+                    message: t(
                       "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
                     ),
                   },
@@ -168,7 +168,7 @@ const FileUploaderInput = props => {
                   type: "ADD_NOTIFY",
                   value: {
                     type: "error",
-                    message: languageManager.translate(
+                    message: t(
                       "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
                     ),
                   },
@@ -180,7 +180,7 @@ const FileUploaderInput = props => {
                   type: "ADD_NOTIFY",
                   value: {
                     type: "warning",
-                    message: languageManager.translate(
+                    message: t(
                       "UPSERT_ASSET_ADD_UN_AUTHORIZED"
                     ),
                   },
@@ -192,7 +192,7 @@ const FileUploaderInput = props => {
                   type: "ADD_NOTIFY",
                   value: {
                     type: "error",
-                    message: languageManager.translate(
+                    message: t(
                       "UPSERT_ASSET_ADD_NOT_FOUND"
                     ),
                   },

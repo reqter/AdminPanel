@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
-import { languageManager, utility } from "../../services";
+import { utility } from "../../services";
+import { useLocale } from "./../../hooks";
 import SVGIcon from "./svg";
 import ListItem from "./ListItem";
 
 const UploaderView = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
 
   const { field, formData } = props;
   const [dropZoneViewBox, toggleDropZoneViewBox] = useState(false);

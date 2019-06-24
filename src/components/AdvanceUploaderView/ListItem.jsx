@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { utility, languageManager } from "../../services";
-
-const currentLang = languageManager.getCurrentLanguage().name;
+import { utility } from "../../services";
+import { useLocale } from "./../../hooks";
 
 const ListItem = props => {
+  const { appLocale, t, currentLang } = useLocale();
   const [isActive, setActive] = useState(false);
 
   useEffect(() => {

@@ -14,11 +14,12 @@ import htmlToDraft from "html-to-draftjs";
 import "./../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import "./styles.scss";
-import { languageManager, utility } from "../../services";
+import { utility } from "../../services";
+import { useLocale } from "./../../hooks";
 import AssetBrowser from "./../AssetBrowser";
 
 const RichTextInput = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const { field, formData } = props;
 
   const [assetBrowser, toggleAssetBrowser] = useState(false);

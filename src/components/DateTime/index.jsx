@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
-import { languageManager } from "../../services";
+import { useLocale } from "./../../hooks";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 var moment = require("moment");
-const StringInput = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+const DateTimeInput = props => {
+  const { appLocale, t, currentLang } = useLocale();
 
   const { field, formData } = props;
   const [cmpKey, setKey] = useState();
@@ -127,4 +127,4 @@ const StringInput = props => {
   );
 };
 
-export default StringInput;
+export default DateTimeInput;

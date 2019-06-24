@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import AsyncCreatableSelect from "react-select/lib/AsyncCreatable";
 import "./styles.scss";
-import { languageManager, useGlobalState } from "../../services";
+import { useGlobalState } from "../../services";
+import { useLocale } from "./../../hooks";
 import { filterContents } from "./../../Api/content-api";
-const currentLang = languageManager.getCurrentLanguage().name;
+
 
 const ReferenceInput = props => {
+  const { appLocale, t, currentLang } = useLocale();
   const [{ spaceInfo }, dispatch] = useGlobalState();
   const { field, formData } = props;
 
@@ -152,6 +154,7 @@ const ReferenceInput = props => {
 
 export default ReferenceInput;
 const SingleValue = props => {
+  const { appLocale, t, currentLang } = useLocale();
   const { data } = props;
   return (
     <components.SingleValue {...props}>
@@ -171,6 +174,7 @@ const SingleValue = props => {
   );
 };
 const MultiValueLabel = props => {
+  const { appLocale, t, currentLang } = useLocale();
   const { data } = props;
   return (
     <components.MultiValueLabel {...props}>
@@ -189,6 +193,7 @@ const MultiValueLabel = props => {
 };
 
 const CustomOption = ({ innerProps, isDisabled, data }) => {
+  const { appLocale, t, currentLang } = useLocale();
   if (!isDisabled) {
     return (
       <div {...innerProps} className="custom-select-item">
@@ -212,7 +217,7 @@ const CustomOption = ({ innerProps, isDisabled, data }) => {
         <div className="itemStatus">
           <span>
             {data.fields.status &&
-              languageManager.translate(data.fields.status)}
+              t(data.fields.status)}
           </span>
         </div>
       </div>

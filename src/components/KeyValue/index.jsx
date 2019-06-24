@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Select, { components } from "react-select";
 import "./styles.scss";
-import { languageManager } from "./../../services";
+import { useLocale } from "./../../hooks";
 
 const KeyValueInput = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const { field, formData } = props;
 
   const [cmpKey, setKey] = useState();

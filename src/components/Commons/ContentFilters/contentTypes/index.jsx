@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { languageManager, useGlobalState, utility } from "../../../../services";
+import { useGlobalState, utility } from "../../../../services";
 import { getContentTypes } from "./../../../../Api/content-api";
+import { useLocale } from "./../../../../hooks";
+
 const ContentTypeFilter = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
   const [selected, setSelected] = useState({});
   useEffect(() => {
@@ -19,7 +21,7 @@ const ContentTypeFilter = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate(
+              message: t(
                 "CONTENT_TYPE_ON_SERVER_ERROR"
               ),
             },
@@ -30,7 +32,7 @@ const ContentTypeFilter = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CONTENT_TYPE_ON_BAD_REQUEST"),
+              message: t("CONTENT_TYPE_ON_BAD_REQUEST"),
             },
           });
         })
@@ -39,7 +41,7 @@ const ContentTypeFilter = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("CONTENT_TYPE_UN_AUTHORIZED"),
+              message: t("CONTENT_TYPE_UN_AUTHORIZED"),
             },
           });
         })

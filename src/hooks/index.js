@@ -1,6 +1,15 @@
 import useTheme from './useTheme'
+import useNumberRegex from './useNumberRegex'
 import useLayout from './useLayout'
 import useLocale from './useLocale'
-import useDebounce from './useDebounce'
+import useGlobalState from './useGlobalState'
+import useCookie from './useCookie'
 
-export { useTheme, useLayout, useLocale, useDebounce }
+export {
+  useGlobalState,
+  useCookie,
+  useTheme,
+  useLayout,
+  useLocale,
+  useNumberRegex
+}

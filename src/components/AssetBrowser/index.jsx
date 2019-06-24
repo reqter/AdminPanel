@@ -3,7 +3,8 @@ import Modal from "reactstrap/es/Modal";
 import String from "./../String";
 import FileUploader from "./../FileUploader";
 import { AssetFile, CircleSpinner } from "./../../components";
-import { languageManager, useGlobalState } from "./../../services";
+import { useGlobalState } from "./../../services";
+import { useLocale } from "./../../hooks";
 import "./styles.scss";
 
 import { filterAssets, addAsset } from "./../../Api/asset-api";
@@ -59,7 +60,7 @@ const fields = [
 ];
 
 const AssetBrowser = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const [{ assets, spaceInfo }, dispatch] = useGlobalState();
   const [isOpen, toggleModal] = useState(props.isOpen);
   const [tab, changeTab] = useState(1);
@@ -113,7 +114,7 @@ const AssetBrowser = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_SERVER_ERROR"),
+            message: t("ASSET_GET_ON_SERVER_ERROR"),
           },
         });
       })
@@ -122,7 +123,7 @@ const AssetBrowser = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: languageManager.translate("ASSET_GET_ON_BAD_REQUEST"),
+            message: t("ASSET_GET_ON_BAD_REQUEST"),
           },
         });
       })
@@ -131,7 +132,7 @@ const AssetBrowser = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: languageManager.translate("ASSET_GET_UN_AUTHORIZED"),
+            message: t("ASSET_GET_UN_AUTHORIZED"),
           },
         });
       })
@@ -168,7 +169,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: languageManager.translate("UPSERT_ASSET_ADD_ON_OK"),
+              message: t("UPSERT_ASSET_ADD_ON_OK"),
             },
           });
           if (closePage) {
@@ -191,7 +192,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate(
+              message: t(
                 "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
               ),
             },
@@ -207,7 +208,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate(
+              message: t(
                 "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
               ),
             },
@@ -223,7 +224,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate(
+              message: t(
                 "UPSERT_ASSET_ADD_UN_AUTHORIZED"
               ),
             },
@@ -239,7 +240,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("UPSERT_ASSET_ADD_NOT_FOUND"),
+              message: t("UPSERT_ASSET_ADD_NOT_FOUND"),
             },
           });
         })

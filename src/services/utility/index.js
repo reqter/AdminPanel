@@ -1,13 +1,12 @@
 import React from 'react'
-import languageManager from './../languageManager'
-const currentLang = languageManager.getCurrentLanguage().name
+
 const imgs = ['jpg', 'jpeg', 'gif', 'bmp', 'png']
 const videos = ['mp4', '3gp', 'ogg', 'wmv', 'flv', 'avi']
 const audios = ['wav', 'mp3', 'ogg']
 
 export default {
   applyeLangs (value) {
-    const langs = languageManager.getAllLanguages()
+    const langs = { en: '', fa: '' }
     const data = {}
     for (const key in langs) {
       data[key] = value
@@ -129,7 +128,7 @@ export default {
     }
   },
   getMediaComponentByUrl (file, customClass) {
-    const url = file.url[currentLang]
+    const url = file.url["en"]
     if (url) {
       const ext = url
         .split('/')

@@ -1,8 +1,8 @@
 import React from 'react'
-import { languageManager } from '../../services'
-const currentLang = languageManager.getCurrentLanguage().name
+import { useLocale } from "./../../hooks";
 
 const AssetFile = props => {
+  const { appLocale, t, currentLang } = useLocale()
   const imgs = ['jpg', 'jpeg', 'gif', 'bmp', 'png']
   const videos = ['mp4', '3gp', 'ogg', 'wmv', 'flv', 'avi']
   const audios = ['wav', 'mp3', 'ogg']

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
-import { languageManager } from "../../services";
+import { useLocale } from "./../../hooks";
 
 const LocationInput = props => {
   let autocomplete;
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const autocompleteInput = useRef(null);
 
   const { field, formData } = props;
@@ -100,7 +100,7 @@ const LocationInput = props => {
             ref={autocompleteInput}
             type="text"
             className="form-control"
-            placeholder={languageManager.translate("LATITUDE")}
+            placeholder={t("LATITUDE")}
             value={latitude}
             onChange={handleLatitudeChange}
             readOnly={props.viewMode}
@@ -109,7 +109,7 @@ const LocationInput = props => {
         <div className="col">
           <input
             type="number"
-            placeholder={languageManager.translate("LONGITUDE")}
+            placeholder={t("LONGITUDE")}
             className="form-control"
             value={longitude}
             onChange={handleLongitudeChange}
@@ -136,7 +136,7 @@ const LocationInput = props => {
           ref={autocompleteInput}
           type="text"
           className="form-control"
-          placeholder={languageManager.translate("enter your address")}
+          placeholder={t("enter your address")}
           // value={latitude}
           // onChange={handleLatitudeChange}
           readOnly={props.viewMode}

@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import ImageEditorRc from "./../ImageEditorRc";
 import "./styles.scss";
-import { languageManager, useGlobalState } from "../../services";
+import { useGlobalState } from "../../services";
+import { useLocale } from "./../../hooks";
 import { uploadAssetFile } from "./../../Api/asset-api";
 import CircleSpinner from "./../CircleSpinner";
 
 const ImageEditorModal = props => {
+  const { appLocale, t, currentLang } = useLocale();
   const [{}, dispatch] = useGlobalState();
 
   const cropper = useRef(null);
@@ -20,7 +22,7 @@ const ImageEditorModal = props => {
   const [progressPercentage, setPercentage] = useState("0");
 
   function translate(key) {
-    return languageManager.translate(key);
+    return t(key);
   }
   function upload(e) {
     if (!isUploading) {
@@ -41,7 +43,7 @@ const ImageEditorModal = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "success",
-                  message: languageManager.translate("ASSERS_UPLOAD_ON_OK"),
+                  message: t("ASSERS_UPLOAD_ON_OK"),
                 },
               });
               props.onClose(file);
@@ -52,9 +54,7 @@ const ImageEditorModal = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: languageManager.translate(
-                    "ASSERS_UPLOAD_ON_SERVER_ERROR"
-                  ),
+                  message: t("ASSERS_UPLOAD_ON_SERVER_ERROR"),
                 },
               });
             })
@@ -64,7 +64,7 @@ const ImageEditorModal = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: languageManager.translate(
+                  message: t(
                     "ASSERS_UPLOAD_ON_BAD_REQUEST"
                   ),
                 },
@@ -76,7 +76,7 @@ const ImageEditorModal = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "warning",
-                  message: languageManager.translate(
+                  message: t(
                     "ASSERS_UPLOAD_UN_AUTHORIZED"
                   ),
                 },
@@ -154,7 +154,7 @@ const ImageEditorModal = props => {
         <div className="imageCropper-header-left">
           <button className="btn btn-light" onClick={backToUpsertAsset}>
             <i className="icon-arrow-left2" />
-            {languageManager.translate("CANCEL")}
+            {t("CANCEL")}
           </button>
         </div>
         <div className="imageCropper-header-center">

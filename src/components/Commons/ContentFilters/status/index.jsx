@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { languageManager, useGlobalState } from "../../../../services";
+import { useGlobalState } from "../../../../services";
+import { useLocale } from "./../../../../hooks";
 
 const StatusFilter = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const [selected, setSelected] = useState({});
   const [{ status }, dispatch] = useGlobalState();
 
@@ -42,7 +43,7 @@ const StatusFilter = props => {
                   selected.id === listItem.id ? "rgb(56,132,255)" : "gray"
               }}
             >
-              {languageManager.translate(listItem.name)}
+              {t(listItem.name)}
             </div>
           </div>
         ))}

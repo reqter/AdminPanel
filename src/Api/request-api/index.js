@@ -1,4 +1,4 @@
-import { languageManager, storageManager } from '../../services'
+import { storageManager } from '../../services'
 const config = process.env
 const baseUrl = config.REACT_APP_REQUESTS_BASE_URL
 const public_baseUrl = config.REACT_APP_PUBLIC_REQUESTS_BASE_URL

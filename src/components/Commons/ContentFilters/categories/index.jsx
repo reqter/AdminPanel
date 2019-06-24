@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { languageManager, useGlobalState } from "../../../../services";
+import { useGlobalState } from "../../../../services";
+import { useLocale } from "./../../../../hooks";
 import { getCategories } from "./../../../../Api/content-api";
 
 const Tree = props => {
-  const currentLang = languageManager.getCurrentLanguage().name;
+  const { appLocale, t, currentLang } = useLocale();
   const [{ categories, spaceInfo }, dispatch] = useGlobalState();
   const [selected, setSelected] = useState({});
   const [idState, setId] = useState({});
@@ -21,7 +22,7 @@ const Tree = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CATEGORY_ON_SERVER_ERROR"),
+              message: t("CATEGORY_ON_SERVER_ERROR"),
             },
           });
         })
@@ -30,7 +31,7 @@ const Tree = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: languageManager.translate("CATEGORY_ON_BAD_REQUEST"),
+              message: t("CATEGORY_ON_BAD_REQUEST"),
             },
           });
         })
@@ -39,7 +40,7 @@ const Tree = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: languageManager.translate("CATEGORY_UN_AUTHORIZED"),
+              message: t("CATEGORY_UN_AUTHORIZED"),
             },
           });
         })
