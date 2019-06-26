@@ -1,0 +1,21 @@
+@import "./../../styles/mixins.scss";
+.mainPage {
+  background: whitesmoke;
+  height: 100vh;
+  display: flex;
+  &__left {
+    width: 300px;
+    position: fixed;
+    height: 100vh;
+    width: 300px;
+    background-color: white;
+    z-index: 100;
+    @include variable(sideBar-left, left, 0);
+    @include variable(sideBar-right, right, 0);
+  }
+  &__right {
+    @include variable(mainpage-content-margin, margin, 0 300px);
+    flex: 1;
+    display: flex;
+  }
+}

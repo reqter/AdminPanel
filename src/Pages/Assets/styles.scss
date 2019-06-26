@@ -1,3 +1,4 @@
+@import "./../../styles/mixins.scss";
 .as-wrapper {
   flex: 1;
   margin: 3% 3% 1%;
@@ -33,11 +34,11 @@
       box-shadow: 0 0 3px lightgray;
       width: 300px;
       border-radius: 4px;
-      margin-right: 20px;
       display: flex;
       flex-direction: column;
       padding: 20px;
       max-height: 100%;
+      @include variable(users-filter-margin, margin, 0 0 0 0);
       .left-text {
         font-size: 13px;
         text-align: justify;
@@ -60,7 +61,7 @@
         }
         .left-filters {
           padding: 20px 0;
-          margin-right: 5px;
+          @include variable(users-filter-typesBox-margin, margin, 0);
           .title {
             font-size: 13px;
             padding-bottom: 10px;
@@ -78,7 +79,7 @@
               transition-duration: 0.2s;
             }
             .icon {
-              margin-right: 15px;
+              @include variable(users-filter-itemIcon-margin, margin, 0);
             }
             .name {
               font-size: 13px;
@@ -103,129 +104,101 @@
       .header {
         height: 50px;
         display: flex;
-        justify-content: flex-start
+        justify-content: flex-start;
       }
-      .rightTable {
+      .content {
         display: flex;
         flex: 1;
+        overflow: auto;
         table {
           height: calc(100% - 45px);
-        }
-        tbody {
-          height: calc(100%);
-          overflow-y: auto;
-        }
-
-        thead,
-        tbody {
-          display: block;
-        }
-        thead {
-          border: none !important;
-          height: 35px;
-          box-shadow: 0 3px 2px -2px lightgray;
-        }
-        tr {
-          display: flex;
-        }
-
-        td,
-        th {
-          display: block; /* Needed for IE */
-          flex: 1;
-        }
-        tr th:first-child,
-        tr td:first-child {
-          flex: 0.5;
-        }
-        //tr th:last-child,
-        tr td:last-child {
-          flex: 2;
-          text-align: center;
-          justify-content: flex-end;
-        }
-        table {
-          border-collapse: collapse;
-        }
-        td {
-          padding: 10px;
-          display: flex;
-          align-items: center;
-          flex: 1;
-          .btn {
-            margin-left: 5px;
-          }
-          .as-table-number {
-            width: 30px;
-            height: 30px;
-            color: gray;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: whitesmoke;
-            .as-table-number-value {
-            }
-          }
-          .as-table-image {
-            width: 65px;
-            height: 55px;
-            border: 1px solid whitesmoke;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            background: whitesmoke;
-            border-radius: 5px;
-            color: gray;
-            img {
-              width: 60px;
-              height: 50px;
-              border-radius: 5px;
-            }
-          }
-          .as-table-name {
-            font-size: 10px;
-            display: flex;
-            flex-direction: column;
-            .name {
-              width: 100px;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              overflow: hidden;
-              height: 20px;
+          width: 100%;
+          thead {
+            border: none !important;
+            height: 35px;
+            box-shadow: 0 3px 2px -2px lightgray;
+            th {
+              border: none;
+              font-size: 14px;
+              height: 35px;
+              padding: 0 10px;
               font-weight: 500;
-              font-size: 13px;
-            }
-          }
-          .as-table-type {
-            font-size: 12px;
-          }
-
-          .as-table-by {
-            font-size: 11px;
-            display: flex;
-            flex-direction: column;
-          }
-          .as-table-status {
-            font-size: 10px;
-            display: flex;
-            flex: 1;
-            span {
-              padding: 5px 15px;
-              border-radius: 3px;
+              border-right: 1px solid whitesmoke;
             }
           }
         }
-        th {
-          border: none;
-          font-size: 14px;
-          height: 35px;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          padding-left: 10px;
-          font-weight: 500;
-          border-right: 1px solid whitesmoke;
+        tbody {
+          td {
+            padding: 10px ;
+            .btn {
+              margin: 0 2.5px;
+            }
+            &:nth-child(2) {
+              width: 100px;
+              display: flex;
+              justify-content: center;
+            }
+            .as-table-number {
+              width: 30px;
+              height: 30px;
+              color: gray;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background: whitesmoke;
+              .as-table-number-value {
+              }
+            }
+            .as-table-image {
+              width: 65px;
+              height: 55px;
+              border: 0.5px solid lightgray;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 30px;
+              border-radius: 5px;
+              color: gray;
+              img {
+                width: 100%;
+                height: 100%;
+                border-radius: 5px;
+                object-fit: contain;
+              }
+            }
+            .as-table-name {
+              font-size: 10px;
+              display: flex;
+              flex-direction: column;
+              .name {
+                width: 100px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                height: 20px;
+                font-weight: 500;
+                font-size: 13px;
+              }
+            }
+            .as-table-type {
+              font-size: 12px;
+            }
+
+            .as-table-by {
+              font-size: 11px;
+              display: flex;
+              flex-direction: column;
+            }
+            .as-table-status {
+              font-size: 10px;
+              display: flex;
+              flex: 1;
+              span {
+                padding: 5px 15px;
+                border-radius: 3px;
+              }
+            }
+          }
         }
       }
     }

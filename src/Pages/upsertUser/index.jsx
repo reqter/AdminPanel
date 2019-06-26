@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
-import { useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import { addUser, updateUser, getUserById } from "../../Api/userManagement-api";
 import String from "../../components/String";
 

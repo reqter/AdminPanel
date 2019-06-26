@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useGlobalState } from "../services";
-import { useLocale } from "./../hooks";
+import { useGlobalState, useLocale } from "./../hooks";
 import { getUserInfo } from "../Api/account-api";
 const widthResolver = WrappedComponent => {
   // const { cmp: Component } = props;
@@ -47,9 +46,9 @@ const widthResolver = WrappedComponent => {
         })
         .notFound(result => {
           console.log("not found");
-           setError(
-             "There is an error which has occured in the request.\ntry again "
-           );
+          setError(
+            "There is an error which has occured in the request.\ntry again "
+          );
           toggleLoading(false);
         })
         .onRequestError(result => {

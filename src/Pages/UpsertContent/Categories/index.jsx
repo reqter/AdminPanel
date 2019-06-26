@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import Tree from "./tree";
-import { useGlobalState } from "../../../services";
-import { useLocale } from "./../../../hooks";
+import { useGlobalState, useLocale } from "./../../../hooks";
 import { getCategories } from "./../../../Api/content-api";
 
 const Categories = props => {

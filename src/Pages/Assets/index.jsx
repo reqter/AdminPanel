@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
-import { useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
-import { AssetFile, Alert, CircleSpinner } from "../../components";
+import { useGlobalState, useLocale } from "./../../hooks";
+import {
+  AssetFile,
+  Alert,
+  CircleSpinner,
+  DateFormater,
+} from "../../components";
 import {
   getAssets,
   deleteAsset,
@@ -17,32 +21,47 @@ const filters = [
   {
     id: "0",
     name: "all",
+    title: {
+      en: "All Assets",
+      fa: "همه",
+    },
     icon: "icon-folder",
   },
   {
     id: "1",
     name: "image",
+    title: {
+      en: "Image",
+      fa: "تصاویر",
+    },
     icon: "icon-images",
   },
   {
     id: "2",
     name: "video",
+    title: {
+      en: "Video",
+      fa: "ویدیو",
+    },
     icon: "icon-video",
   },
   {
     id: "3",
     name: "audio",
+    title: {
+      en: "Audio",
+      fa: "فایل صوتی",
+    },
     icon: "icon-audio",
   },
   {
     id: "4",
-    name: "pdf",
+    name: "application/pdf",
+    title: {
+      en: "PDF",
+      fa: "پی دی اف",
+    },
     icon: "icon-pdf",
-  },
-  {
-    id: "5",
-    name: "spreadsheet",
-    icon: "icon-spreadsheet",
   },
 ];
 
@@ -116,9 +135,6 @@ const Assets = props => {
   const [selectedStatus, setStatus] = useState({});
   const [alertData, setAlertData] = useState();
 
-  function translate(key) {
-    return t(key);
-  }
   function doFilter(fileType, status) {
     toggleSpinner(true);
     filterAssets()
@@ -475,24 +491,22 @@ const Assets = props => {
       <div className="as-wrapper">
         <div className="as-header">
           <div className="as-header-left">
-            <span className="as-header-title">{pageTitle}</span>
-            <span className="as-header-description">{pageDescription}</span>
+            <span className="as-header-title">{t(pageTitle)}</span>
+            <span className="as-header-description">{t(pageDescription)}</span>
           </div>
           <div className="as-header-right" />
         </div>
         <div className="as-content">
           <div className="as-content-left">
-            <div className="left-text">{translate("ASSET_FILTER_TITLE")}</div>
+            <div className="left-text">{t("ASSET_FILTER_TITLE")}</div>
             <div className="left-btnContent">
               <button className="btn btn-primary" onClick={openUploader}>
-                {translate("ASSET_FILTER_BTN_TEXT")}
+                {t("ASSET_FILTER_BTN_TEXT")}
               </button>
             </div>
             <div className="filterContent">
               <div className="left-filters">
-                <div className="title">
-                  {translate("ASSET_FILTER_BY_TYPE_TITLE")}
-                </div>
+                <div className="title">{t("ASSET_FILTER_BY_TYPE_TITLE")}</div>
                 {filters.map(f => (
                   <div
                     className="filter"
@@ -506,7 +520,7 @@ const Assets = props => {
                     }}
                   >
                     <i className={["icon", f.icon].join(" ")} />
-                    <span className="name">{translate(f.name)}</span>
+                    <span className="name">{f.title[currentLang]}</span>
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
@@ -518,9 +532,7 @@ const Assets = props => {
                 ))}
               </div>
               <div className="left-filters">
-                <div className="title">
-                  {translate("ASSET_FILTER_BY_STATUS_TITLE")}
-                </div>
+                <div className="title">{t("ASSET_FILTER_BY_STATUS_TITLE")}</div>
                 {status.map(f => (
                   <div
                     className="filter"
@@ -534,7 +546,7 @@ const Assets = props => {
                     }}
                   >
                     <i className={["icon", f.icon].join(" ")} />
-                    <span className="name">{translate(f.name)}</span>
+                    <span className="name">{t(f.name)}</span>
                     <span
                       className="icon-circle-o iconSelected"
                       style={{
@@ -548,19 +560,18 @@ const Assets = props => {
           </div>
           <div className="as-content-right">
             <div className="header">
-              {translate("ASSET_TABLE_HEADER_ALL_ASSETS")}&nbsp;&nbsp;
+              {t("ASSET_TABLE_HEADER_ALL_ASSETS")}&nbsp;&nbsp;
               <CircleSpinner show={spinner} size="small" />
             </div>
-            <div className="rightTable">
-              <table className="table">
-                <thead className="table__head">
+            <div className="content">
+              <table>
+                <thead>
                   <tr>
                     <th>#</th>
-                    <th>{translate("ASSET_TABLE_HEAD_PREVIEW")}</th>
-                    <th>{translate("ASSET_TABLE_HEAD_NAME")}</th>
-                    <th>{translate("ASSET_TABLE_HEAD_BY")}</th>
-                    <th>{translate("ASSET_TABLE_HEAD_STATUS")}</th>
-                    <th>{translate("ASSET_TABLE_HEAD_ACTIONS")}</th>
+                    <th>{t("ASSET_TABLE_HEAD_PREVIEW")}</th>
+                    <th>{t("ASSET_TABLE_HEAD_NAME")}</th>
+                    <th>{t("ASSET_TABLE_HEAD_BY")}</th>
+                    <th>{t("ASSET_TABLE_HEAD_STATUS")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -595,15 +606,21 @@ const Assets = props => {
                       <td>
                         <div className="as-table-name">
                           <span className="name">
-                            {file.title[currentLang]}
+                            {file.title
+                              ? file.title[currentLang]
+                                ? file.title[currentLang]
+                                : file.title
+                              : ""}
                           </span>
                           <span>{file.fileType}</span>
                         </div>
                       </td>
                       <td>
                         <div className="as-table-by">
-                          <span>{file.sys.issuer.fullName}</span>
-                          <span>{file.sys.issueDate}</span>
+                          <span>
+                            {file.sys.issuer && file.sys.issuer.fullName}
+                          </span>
+                          <DateFormater date={file.sys.issueDate} />
                         </div>
                       </td>
                       <td>
@@ -620,13 +637,13 @@ const Assets = props => {
                               className="btn btn-light btn-sm"
                               onClick={() => publishAsset(file)}
                             >
-                              {translate("PUBLISH")}
+                              {t("PUBLISH")}
                             </button>
                             <button
                               className="btn btn-light btn-sm"
                               onClick={() => archiveAsset(file)}
                             >
-                              {translate("ARCHIVE")}
+                              {t("ARCHIVE")}
                             </button>
                           </>
                         ) : file.status === "changed" ? (
@@ -635,13 +652,13 @@ const Assets = props => {
                               className="btn btn-light btn-sm"
                               onClick={() => publishAsset(file)}
                             >
-                              {translate("PUBLISH")}
+                              {t("PUBLISH")}
                             </button>
                             <button
                               className="btn btn-light btn-sm"
                               onClick={() => archiveAsset(file)}
                             >
-                              {translate("ARCHIVE")}
+                              {t("ARCHIVE")}
                             </button>
                           </>
                         ) : file.status === "archived" ? (
@@ -649,14 +666,14 @@ const Assets = props => {
                             className="btn btn-light btn-sm"
                             onClick={() => unArchiveAsset(file)}
                           >
-                            {translate("UN_ARCHIVE")}
+                            {t("UN_ARCHIVE")}
                           </button>
                         ) : file.status === "published" ? (
                           <button
                             className="btn btn-light btn-sm"
                             onClick={() => unPublishAsset(file)}
                           >
-                            {translate("UN_PUBLISH")}
+                            {t("UN_PUBLISH")}
                           </button>
                         ) : (
                           ""

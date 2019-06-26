@@ -63,6 +63,7 @@ const ContentTypeFilter = props => {
       props.onContentTypeSelect(item);
     }
   }
+  
   return (
     <div className="filterBox">
       <div className="filter-header">Content Types</div>

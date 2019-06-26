@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 import "./styles.scss";
 import { Gitlab } from "./templates";
 
@@ -167,7 +166,7 @@ const WebHookCreating = props => {
   const [tab, changeTab] = useState(selectedWebhook ? 2 : 1);
 
   useEffect(() => {}, []);
-  
+
   function getTemplates() {
     return list.find(t => t.name === selectedWebhook.type);
   }

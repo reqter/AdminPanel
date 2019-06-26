@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import "./styles.scss";
-import { useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import { AssetBrowser, CircleSpinner, Alert } from "../../components";
 import { uploadAssetFile, addAsset } from "./../../Api/asset-api";
 import {
@@ -455,8 +454,8 @@ const Profile = props => {
       <div className="pro-wrapper">
         <div className="pro-header">
           <div className="pro-header-left">
-            <span className="pro-header-title">{pageTitle}</span>
-            <span className="pro-header-description">{pageDescription}</span>
+            <span className="pro-header-title">{t(pageTitle)}</span>
+            <span className="pro-header-description">{t(pageDescription)}</span>
           </div>
           <div className="pro-header-right" />
         </div>
@@ -503,8 +502,8 @@ const Profile = props => {
                   </div>
                 </div>
                 <div className="uploadInfo">
-                  Some tips: Use a photo or image rather than text and upload an
-                  image that is 132px square or larger.
+                  Some tips: Use a photo or image rather than text and upload
+                  an image that is 132px square or larger.
                 </div>
                 <div className="form-group">
                   <label>First Name</label>

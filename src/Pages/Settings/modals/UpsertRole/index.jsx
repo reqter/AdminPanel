@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 import { updateSpace } from "./../../../../Api/space-api";
 import { CircleSpinner } from "../../../../components";
 

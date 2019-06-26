@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useGlobalState } from "../../../../services";
 import { getWebhooks, setWebhooks } from "../../../../Api/webhook-api";
 import { CircleSpinner, Alert } from "../../../../components";
+import { useGlobalState } from "./../../../../hooks";
 
 const Webhooks = props => {
   const [{ webhooks, spaceInfo }, dispatch] = useGlobalState();

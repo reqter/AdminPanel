@@ -298,7 +298,8 @@ const ViewRequest = props => {
             )}
           </div>
         </div>
-      )}
+     
+     )}
 
       <div
         className="viewRequest--body"

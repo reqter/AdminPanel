@@ -9,14 +9,14 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { utility, useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { utility } from "../../../../services";
+import { useLocale, useGlobalState } from "../../../../hooks";
 import {
   getTemplates,
   addContentType,
   updateContentType,
-} from "./../../../../Api/contentType-api";
-import AssetBrowser from "./../../../../components/AssetBrowser";
+} from "../../../../Api/questionType-api";
+import AssetBrowser from "../../../../components/AssetBrowser";
 import "./styles.scss";
 import { CircleSpinner } from "../../../../components";
 
@@ -315,173 +315,77 @@ const UpsertTemplate = props => {
       </ModalHeader>
       <ModalBody>
         <div className="c-category-templates-body">
-          {tab === 1 ? (
-            <div className="fieldsTab">
-              {contentTypeTemlates.map(tmp => (
-                <div
-                  key={tmp.id}
-                  className="add-field-types"
-                  onClick={() => handleChooseTemplate(tmp)}
-                >
-                  <div
-                    className="add-field-icon"
-                    style={{
-                      backgroundColor:
-                        selectedContentType &&
-                        selectedContentType.template === tmp.name
-                          ? "lightgray"
-                          : "whitesmoke",
-                    }}
-                  >
-                    <i className={tmp.icon ? tmp.icon : "icon-item-type"} />
-                  </div>
-                  <span className="title">{tmp.title[currentLang]}</span>
-                  <span className="description">
-                    {tmp.description[currentLang]}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ padding: "2%", paddingBottom: 0 }}>
-              <div className="row">
-                <div className="form-group col">
-                  <label>{t("CONTENT_TYPE_MODAL_NAME")}</label>
-                  <input
-                    ref={nameInput}
-                    type="text"
-                    className="form-control"
-                    placeholder={t("CONTENT_TYPE_MODAL_NAME_PLACEHOLDER")}
-                    value={name}
-                    required
-                    onChange={handleNameChanged}
-                  />
-                  <small className="form-text text-muted">
-                    {t("CONTENT_TYPE_MODAL_NAME_DESCRIPTION")}
-                  </small>
-                </div>
-
-                <FormGroup className="col">
-                  <Label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE")}</Label>
-                  <Input
-                    type="string"
-                    value={title}
-                    placeholder={t(
-                      "CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_PLACEHOLDER"
-                    )}
-                    onChange={handleTitleChanged}
-                  />
-                  <small id="emailHelp" className="form-text text-muted">
-                    {t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_INFO")}
-                  </small>
-                </FormGroup>
+          <div style={{ padding: "2%", paddingBottom: 0 }}>
+            <div className="row">
+              <div className="form-group col">
+                <label>{t("CONTENT_TYPE_MODAL_NAME")}</label>
+                <input
+                  ref={nameInput}
+                  type="text"
+                  className="form-control"
+                  placeholder={t("CONTENT_TYPE_MODAL_NAME_PLACEHOLDER")}
+                  value={name}
+                  required
+                  onChange={handleNameChanged}
+                />
+                <small className="form-text text-muted">
+                  {t("CONTENT_TYPE_MODAL_NAME_DESCRIPTION")}
+                </small>
               </div>
 
-              <FormGroup>
-                <Label>{t("CONTENT_TYPE_MODAL_DESCRIPTION")}</Label>
+              <FormGroup className="col">
+                <Label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE")}</Label>
                 <Input
                   type="string"
-                  placeholder={t("CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER")}
-                  value={description}
-                  onChange={handleDescriptionChanged}
+                  value={title}
+                  placeholder={t(
+                    "CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_PLACEHOLDER"
+                  )}
+                  onChange={handleTitleChanged}
                 />
+                <small id="emailHelp" className="form-text text-muted">
+                  {t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_INFO")}
+                </small>
               </FormGroup>
-              <div className="row">
-                <div className="custom_checkbox col">
-                  <div className="left">
-                    <label className="checkBox">
-                      <input
-                        type="checkbox"
-                        id="version"
-                        checked={versioning}
-                        onChange={handleChangeVersion}
-                      />
-                      <span className="checkmark" />
-                    </label>
-                  </div>
-                  <div className="right">
-                    <label htmlFor="version">
-                      Enable versioning of this content type
-                    </label>
-                    <label>
-                      This item type stores all updates as a version
-                    </label>
-                  </div>
-                </div>
-                <div className="custom_checkbox col">
-                  <div className="left">
-                    <label className="checkBox">
-                      <input
-                        type="checkbox"
-                        id="categorize"
-                        checked={categorization}
-                        onChange={handleChangeCategorization}
-                      />
-                      <span className="checkmark" />
-                    </label>
-                  </div>
-                  <div className="right">
-                    <label htmlFor="categorize">
-                      Enable categorization of this content type
-                    </label>
-                    <label htmlFor="categorize">
-                      This content type can categorize entering data
-                    </label>
-                  </div>
-                </div>
-              </div>
+            </div>
 
-              <div className="custom_checkbox ">
-                <div className="left">
-                  <label className="checkBox">
-                    <input
-                      type="checkbox"
-                      id="accessRight"
-                      checked={accessRight}
-                      onChange={handleAccessRightChanged}
-                    />
-                    <span className="checkmark" />
-                  </label>
-                </div>
-                <div className="right">
-                  <label htmlFor="accessRight">
-                    Enable access right of this content type
-                  </label>
-                  <label htmlFor="accessRight">
-                    You can set acceess rights on this contebt type
-                  </label>
-                </div>
-              </div>
+            <FormGroup>
+              <Label>{t("CONTENT_TYPE_MODAL_DESCRIPTION")}</Label>
+              <Input
+                type="string"
+                placeholder={t("CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER")}
+                value={description}
+                onChange={handleDescriptionChanged}
+              />
+            </FormGroup>
+            <div className="up-uploader">
+              <span className="title">
+                {t("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
+              </span>
+              <span className="description">
+                {t("CONTENT_TYPE_MODAL_IMAGES_DESC")}
+              </span>
 
-              <div className="up-uploader">
-                <span className="title">
-                  {t("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
-                </span>
-                <span className="description">
-                  {t("CONTENT_TYPE_MODAL_IMAGES_DESC")}
-                </span>
-
-                <div className="files">
-                  {media.map((url, index) => (
-                    <div key={index} className="files-uploaded">
-                      <div
-                        className="files-uploaded-icon"
-                        onClick={() => removeFile(url)}
-                      >
-                        <i className="icon-bin" />
-                      </div>
-                      <div className="updatedFileType">
-                        {utility.getAssetIconByURL(url[currentLang])}
-                      </div>
+              <div className="files">
+                {media.map((url, index) => (
+                  <div key={index} className="files-uploaded">
+                    <div
+                      className="files-uploaded-icon"
+                      onClick={() => removeFile(url)}
+                    >
+                      <i className="icon-bin" />
                     </div>
-                  ))}
-                  <div className="files-input" onClick={openAssetBrowser}>
-                    <i className="icon-camera" />
+                    <div className="updatedFileType">
+                      {utility.getAssetIconByURL(url[currentLang])}
+                    </div>
                   </div>
+                ))}
+                <div className="files-input" onClick={openAssetBrowser}>
+                  <i className="icon-camera" />
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </ModalBody>
       {tab !== 1 ? (

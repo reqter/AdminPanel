@@ -899,8 +899,8 @@ const Products = props => {
       <div className="p-wrapper">
         <div className="p-header">
           <div className="p-header-left">
-            <span className="p-header-title">{pageTitle}</span>
-            <span className="p-header-description">{pageDescription}</span>
+            <span className="p-header-title">{t(pageTitle)}</span>
+            <span className="p-header-description">{t(pageDescription)}</span>
           </div>
           <div className="p-header-right">
             <div className="input-group">
@@ -925,7 +925,11 @@ const Products = props => {
               isOpen={headerActions}
               toggle={() => toggleHeaderActions(prevState => !prevState)}
             >
-              <DropdownToggle className="btn btn-primary" caret color="primary">
+              <DropdownToggle
+                className="btn btn-primary"
+                caret
+                color="primary"
+              >
                 Create
               </DropdownToggle>
               <DropdownMenu>

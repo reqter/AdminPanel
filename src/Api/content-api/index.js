@@ -1,4 +1,4 @@
-import {  storageManager } from './../../services'
+import { storageManager } from "./../../services";
 const config = process.env
 // const getAllURL =
 //   config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
@@ -69,7 +69,14 @@ export function filterContents () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async (spaceId, name, contentType, category, contentStatus) => {
+  const _call = async (
+    token,
+    spaceId,
+    name,
+    contentType,
+    category,
+    contentStatus
+  ) => {
     try {
       let url = filterURL + '?'
       if (contentType !== undefined) url = url + 'contentType=' + contentType
@@ -93,7 +100,7 @@ export function filterContents () {
       if (url[url.length - 1] === '?') url = url.substring(0, url.length - 1)
 
       if (url[url.length - 1] === '&') url = url.substring(0, url.length - 1)
-      const token = storageManager.getItem('token')
+      
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {

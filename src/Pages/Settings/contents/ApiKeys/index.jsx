@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useGlobalState } from "../../../../services";
 import { getApiKeys, deleteApiKey } from "../../../../Api/apiKey-api";
 import { CircleSpinner, Alert } from "../../../../components";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 
 const ApiKeys = props => {
   const { appLocale, t, currentLang } = useLocale();

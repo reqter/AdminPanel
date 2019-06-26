@@ -1,9 +1,4 @@
 import React, { useEffect } from "react";
-import {
-  NotificationBar,
-  setNotif,
-  useNotification,
-} from "./../../components/Commons/NotficationBar";
 import { StateProvider } from "./index";
 import storageManager from "./../storageManager";
 const Provider = props => {
@@ -71,12 +66,6 @@ const Provider = props => {
     ],
     apiKeys: [],
     webhooks: [],
-    t: {},
-    spinner: true,
-    mp_categories: [],
-    mp_contentTypes: [],
-    mp_requests: [],
-    mp_requestDetail: {},
   };
 
   const reducer = (state, action) => {

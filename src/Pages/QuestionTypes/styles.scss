@@ -1,6 +1,8 @@
+@import "./../../styles//mixins.scss";
 .closeIcon {
   position: absolute;
-  right: 20px;
+  @include variable(questions-remove-icon-left, left, 20px);
+  @include variable(questions-remove-icon-right, right, 20px);
   top: 40px;
   color: gray;
   font-size: 13px;
@@ -50,7 +52,7 @@
       border-radius: 4px;
     }
     .ct-content-right {
-      margin-left: 20px;
+      @include variable(templates-questions-margin, margin, 0);
       flex: 1;
       background-color: white;
       box-shadow: 0 0 3px lightgray;
@@ -146,6 +148,7 @@
   }
   .listGroupItem {
     padding: 10px;
+    border-bottom: 0.5px solid lightgray;
     &.active {
       background: rgb(251, 251, 251);
     }
@@ -160,7 +163,7 @@
       .treeItem-img {
         width: 70px;
         height: 60px;
-        margin-right: 10px;
+        @include variable(templates-list-image-margin, margin, 0 10px);
         border: 1px solid rgb(220, 220, 220);
         .treeItem-ext {
           display: flex;
@@ -187,7 +190,8 @@
         background: rgb(56, 132, 255);
         width: 70px;
         height: 60px;
-        margin-right: 10px;
+        @include variable(templates-list-image-margin, margin, 0);
+        margin-right: 0px;
         padding: 3px;
         border: 1px solid rgb(220, 220, 220);
         .contentIcon {

@@ -1,11 +1,10 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { storageManager, useGlobalState } from "./services";
+import { useCookie } from "./hooks";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const [{ isAuthenticated, userInfo }, dispatch] = useGlobalState();
-
-  return storageManager.getItem("token") ? (
+  const [token] = useCookie("token");
+  return token ? (
     <Route {...rest} />
   ) : (
     <Route

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
-import { useGlobalState } from "./../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import {
   addContent,
   updateContent,
@@ -169,7 +168,7 @@ const requestFields = [
 ];
 
 const UpsertProduct = props => {
-  const { appLocale, t, currentLang } = useLocale();  
+  const { appLocale, t, currentLang } = useLocale();
   const requestBaseLink = process.env.REACT_APP_REQUESTS_DELIVERY_URL;
   const [{ categories, spaceInfo }, dispatch] = useGlobalState();
 
@@ -259,9 +258,7 @@ const UpsertProduct = props => {
               type: "CONTEN_TYPE_UNDEFINED",
               sender: "getItemById",
               errorType: "contentType",
-              message: t(
-                "UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"
-              ),
+              message: t("UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"),
             };
             setError(obj);
             toggleTab(3);
@@ -277,9 +274,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: t(
-            "UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"
-          ),
+          message: t("UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"),
         };
         setError(obj);
       })
@@ -288,9 +283,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: t(
-            "UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"
-          ),
+          message: t("UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"),
         };
         setError(obj);
       })
@@ -299,9 +292,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: t(
-            "UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"
-          ),
+          message: t("UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"),
         };
         setError(obj);
       })
@@ -326,9 +317,7 @@ const UpsertProduct = props => {
               type: "CONTEN_TYPE_UNDEFINED",
               sender: "getItemById",
               errorType: "contentType",
-              message: t(
-                "UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"
-              ),
+              message: t("UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"),
             };
             setError(obj);
             toggleTab(3);
@@ -344,9 +333,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: t(
-            "UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"
-          ),
+          message: t("UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"),
         };
         setError(obj);
       })
@@ -355,9 +342,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: t(
-            "UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"
-          ),
+          message: t("UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"),
         };
         setError(obj);
       })
@@ -366,9 +351,7 @@ const UpsertProduct = props => {
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
-          message: t(
-            "UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"
-          ),
+          message: t("UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"),
         };
         setError(obj);
       })
@@ -549,16 +532,7 @@ const UpsertProduct = props => {
     }
   }
   function backToProducts() {
-    if (isRequest) {
-      if (
-        props.location.params &&
-        props.location.params.requestFromContents === true
-      )
-        props.history.push("/panel/contents");
-      else props.history.push("/panel/requests");
-    } else {
-      props.history.push("/panel/contents");
-    }
+    props.history.push("/panel/forms");
 
     //else
   }
@@ -670,9 +644,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"),
             },
           });
         })
@@ -683,9 +655,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"),
             },
           });
         })
@@ -696,9 +666,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_UN_AUTHORIZED"),
             },
           });
         })
@@ -709,9 +677,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "UPSERT_ITEM_UPDATE_NOT_FOUND"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_NOT_FOUND"),
             },
           });
         })
@@ -786,9 +752,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
-              ),
+              message: t("UPSERT_ITEM_ADD_ON_SERVER_ERROR"),
             },
           });
         })
@@ -799,9 +763,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
-              ),
+              message: t("UPSERT_ITEM_ADD_ON_BAD_REQUEST"),
             },
           });
         })
@@ -812,9 +774,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
-              ),
+              message: t("UPSERT_ITEM_ADD_UN_AUTHORIZED"),
             },
           });
         })
@@ -863,9 +823,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"),
             },
           });
         })
@@ -876,9 +834,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"),
             },
           });
         })
@@ -889,9 +845,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "UPSERT_ITEM_UPDATE_UN_AUTHORIZED"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_UN_AUTHORIZED"),
             },
           });
         })
@@ -902,9 +856,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "UPSERT_ITEM_UPDATE_NOT_FOUND"
-              ),
+              message: t("UPSERT_ITEM_UPDATE_NOT_FOUND"),
             },
           });
         })
@@ -950,9 +902,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_ADD_ON_SERVER_ERROR"
-              ),
+              message: t("UPSERT_ITEM_ADD_ON_SERVER_ERROR"),
             },
           });
         })
@@ -963,9 +913,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ITEM_ADD_ON_BAD_REQUEST"
-              ),
+              message: t("UPSERT_ITEM_ADD_ON_BAD_REQUEST"),
             },
           });
         })
@@ -976,9 +924,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "UPSERT_ITEM_ADD_UN_AUTHORIZED"
-              ),
+              message: t("UPSERT_ITEM_ADD_UN_AUTHORIZED"),
             },
           });
         })
@@ -1166,9 +1112,7 @@ const UpsertProduct = props => {
                 {error.sender === "getItemById" && (
                   <>
                     <div className="btns">
-                      <button className="btn btn-light">
-                        {t("Reload")}
-                      </button>
+                      <button className="btn btn-light">{t("Reload")}</button>
                       {error.errorType === "contentType" && (
                         <button
                           className="btn btn-light"

@@ -1,15 +1,14 @@
-
-
 import withResolver from './hoc/withResolver'
 
 import Login from './Pages/Login'
 import Signup from './Pages/Signup'
 import ForgotPassword from './Pages/ForgotPassword'
-import HomeComponent from './Pages/Home'
+import MainPage from './Pages/MainPage'
+import Home from './Pages/Home'
 import Categories from './Pages/Categories'
-import ContentType from './Pages/ContentType'
+import QuestionTypes from './Pages/QuestionTypes'
 import Users from './Pages/Users'
-import Requests from './Pages/Requests'
+import Forms from './Pages/Forms'
 import Contents from './Pages/Contents'
 import UpsertContent from './Pages/UpsertContent'
 import Assets from './Pages/Assets'
@@ -20,7 +19,7 @@ import UpsertUser from './Pages/upsertUser'
 import ContentView from './Pages/ViewContent'
 import ViewRequest from './Pages/ViewRequest'
 
-const Home = withResolver(HomeComponent)
+const Main = withResolver(MainPage)
 const AddAsset = withResolver(UpdateFile)
 const EditAsset = withResolver(UpdateFile)
 const AddContent = withResolver(UpsertContent)
@@ -45,15 +44,31 @@ const routes = [
   },
   {
     path: '/panel',
-    component: Home,
+    component: Main,
     isPublic: false,
     routes: [
       {
-        name: 'HOME_SIDE_NAV_CONTENT_TYPE',
+        name: 'HOME_SIDE_NAV_HOME',
+        icon: 'home',
+        path: '/panel/home',
+        desc: 'HOME_SIDE_NAV_HOME_DESC',
+        component: Home,
+        isPublic: false
+      },
+      {
+        name: 'HOME_SIDE_NAV_QUESTION_TYPES',
         icon: 'item-type',
-        path: '/panel/contentType',
-        desc: 'HOME_SIDE_NAV_CONTENT_TYPE_DEC',
-        component: ContentType,
+        path: '/panel/questionTypes',
+        desc: 'HOME_SIDE_NAV_QUESTION_TYPES_DESC',
+        component: QuestionTypes,
+        isPublic: false
+      },
+      {
+        name: 'HOME_SIDE_NAV_FORMS',
+        icon: 'users',
+        path: '/panel/forms',
+        desc: 'HOME_SIDE_NAV_FORMS_DESC',
+        component: Forms,
         isPublic: false
       },
       {
@@ -72,14 +87,7 @@ const routes = [
         component: Contents,
         isPublic: false
       },
-      {
-        name: 'HOME_SIDE_NAV_REQUESTS',
-        icon: 'users',
-        path: '/panel/requests',
-        desc: 'HOME_SIDE_NAV_REQUESTS_DESC',
-        component: Requests,
-        isPublic: false
-      },
+
       {
         name: 'HOME_SIDE_NAV_ASSETS_MANAGER',
         icon: 'images',

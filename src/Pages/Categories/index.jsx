@@ -13,8 +13,8 @@ import {
 import "./styles.scss";
 import Tree from "./tree";
 import AddNewItemType from "./modals/AddItemType";
-import { useGlobalState, utility } from "../../services";
-import { useLocale } from "./../../hooks";
+import { utility } from "../../services";
+import { useGlobalState, useLocale } from "./../../hooks";
 import {
   getCategories,
   deleteCategory,
@@ -133,12 +133,8 @@ const Categories = props => {
     handleDesciptionChanged("");
   }
   function toggleModal() {
-    setModalHeader(
-      t("CATEGORIES_MODAL_HEADER_TITLE_NEW")
-    );
-    setModalUpsertBtnText(
-      t("CATEGORIES_MODAL_FOOTER_UPSERT_BTN_NEW")
-    );
+    setModalHeader(t("CATEGORIES_MODAL_HEADER_TITLE_NEW"));
+    setModalUpsertBtnText(t("CATEGORIES_MODAL_FOOTER_UPSERT_BTN_NEW"));
     setModal(prevModal => !prevModal);
     initModalForm();
   }
@@ -158,12 +154,8 @@ const Categories = props => {
     setManageCategory(true);
     setSelectedCategory(item);
     setUpdateMode(false);
-    setModalHeader(
-      t("CATEGORIES_MODAL_HEADER_TITLE_NEW")
-    );
-    setModalUpsertBtnText(
-      t("CATEGORIES_MODAL_FOOTER_UPSERT_BTN_NEW")
-    );
+    setModalHeader(t("CATEGORIES_MODAL_HEADER_TITLE_NEW"));
+    setModalUpsertBtnText(t("CATEGORIES_MODAL_FOOTER_UPSERT_BTN_NEW"));
   }
   function editCategory(item) {
     setModal(prevModal => !prevModal);
@@ -174,12 +166,8 @@ const Categories = props => {
     handleNameChanged(item.name[currentLang]);
     handleDesciptionChanged(item.shortDesc ? item.shortDesc[currentLang] : "");
 
-    setModalHeader(
-      t("CATEGORIES_MODAL_HEADER_TITLE_EDIT")
-    );
-    setModalUpsertBtnText(
-      t("CATEGORIES_MODAL_FOOTER_UPSERT_BTN_EDIT")
-    );
+    setModalHeader(t("CATEGORIES_MODAL_HEADER_TITLE_EDIT"));
+    setModalUpsertBtnText(t("CATEGORIES_MODAL_FOOTER_UPSERT_BTN_EDIT"));
     setManageCategory(true);
   }
   function addNodeInList(list, node) {
@@ -244,9 +232,7 @@ const Categories = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "CATEGORY_ADD_ON_SERVER_ERROR"
-                  ),
+                  message: t("CATEGORY_ADD_ON_SERVER_ERROR"),
                 },
               });
             })
@@ -256,9 +242,7 @@ const Categories = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "CATEGORY_ADD_ON_BAD_REQUEST"
-                  ),
+                  message: t("CATEGORY_ADD_ON_BAD_REQUEST"),
                 },
               });
             })
@@ -268,9 +252,7 @@ const Categories = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "warning",
-                  message: t(
-                    "CATEGORY_ADD_UN_AUTHORIZED"
-                  ),
+                  message: t("CATEGORY_ADD_UN_AUTHORIZED"),
                 },
               });
             })
@@ -312,9 +294,7 @@ const Categories = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "CATEGORY_UPDATE_ON_SERVER_ERROR"
-                  ),
+                  message: t("CATEGORY_UPDATE_ON_SERVER_ERROR"),
                 },
               });
             })
@@ -324,9 +304,7 @@ const Categories = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "CATEGORY_UPDATE_ON_BAD_REQUEST"
-                  ),
+                  message: t("CATEGORY_UPDATE_ON_BAD_REQUEST"),
                 },
               });
             })
@@ -336,9 +314,7 @@ const Categories = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "warning",
-                  message: t(
-                    "CATEGORY_UPDATE_UN_AUTHORIZED"
-                  ),
+                  message: t("CATEGORY_UPDATE_UN_AUTHORIZED"),
                 },
               });
             })
@@ -348,9 +324,7 @@ const Categories = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "CATEGORY_UPDATE_NOT_FOUND"
-                  ),
+                  message: t("CATEGORY_UPDATE_NOT_FOUND"),
                 },
               });
             })
@@ -380,9 +354,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CATEGORY_ADD_ON_SERVER_ERROR"
-                ),
+                message: t("CATEGORY_ADD_ON_SERVER_ERROR"),
               },
             });
           })
@@ -392,9 +364,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CATEGORY_ADD_ON_BAD_REQUEST"
-                ),
+                message: t("CATEGORY_ADD_ON_BAD_REQUEST"),
               },
             });
           })
@@ -404,9 +374,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "CATEGORY_ADD_UN_AUTHORIZED"
-                ),
+                message: t("CATEGORY_ADD_UN_AUTHORIZED"),
               },
             });
           })
@@ -451,9 +419,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CATEGORY_REMOVE_ON_SERVER_ERROR"
-                ),
+                message: t("CATEGORY_REMOVE_ON_SERVER_ERROR"),
               },
             });
           })
@@ -463,9 +429,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CATEGORY_REMOVE_ON_BAD_REQUEST"
-                ),
+                message: t("CATEGORY_REMOVE_ON_BAD_REQUEST"),
               },
             });
           })
@@ -475,9 +439,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "CATEGORY_REMOVE_UN_AUTHORIZED"
-                ),
+                message: t("CATEGORY_REMOVE_UN_AUTHORIZED"),
               },
             });
           })
@@ -528,9 +490,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "success",
-                message: t(
-                  "CATEGORY_REMOVE_CONTENT_TYPE_ON_OK"
-                ),
+                message: t("CATEGORY_REMOVE_CONTENT_TYPE_ON_OK"),
               },
             });
             handleRemoveContenType(result, item);
@@ -541,9 +501,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"
-                ),
+                message: t("CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"),
               },
             });
           })
@@ -553,9 +511,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"
-                ),
+                message: t("CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"),
               },
             });
           })
@@ -565,9 +521,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"
-                ),
+                message: t("CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"),
               },
             });
           })
@@ -577,9 +531,7 @@ const Categories = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"
-                ),
+                message: t("CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"),
               },
             });
           })
@@ -623,8 +575,8 @@ const Categories = props => {
       <div className="c-wrapper">
         <div className="c-header">
           <div className="c-header-left">
-            <span className="c-header-title">{pageTitle}</span>
-            <span className="c-header-description">{pageDescription}</span>
+            <span className="c-header-title">{t(pageTitle)}</span>
+            <span className="c-header-description">{t(pageDescription)}</span>
           </div>
           <div className="c-header-right">
             <button className="btn btn-primary" onClick={toggleModal}>
@@ -665,14 +617,10 @@ const Categories = props => {
             <div className="c-content-right animated slideInRight faster">
               <div className="c-content-right-header">
                 <span className="c-right-header-title">
-                  {t(
-                    "CATEGORIES_ITEM_TYPES_HEADER_TITLE"
-                  )}
+                  {t("CATEGORIES_ITEM_TYPES_HEADER_TITLE")}
                 </span>
                 <span className="c-right-header-description">
-                  {t(
-                    "CATEGORIES_ITEM_TYPES_HEADER_DESC"
-                  )}
+                  {t("CATEGORIES_ITEM_TYPES_HEADER_DESC")}
                 </span>
                 <span
                   className="icon-cross closeIcon"
@@ -725,35 +673,25 @@ const Categories = props => {
           <div className="c-category-modal-body">
             <Form>
               <div className="form-group">
-                <label>
-                  {t("CATEGORIES_MODAL_NAME")}
-                </label>
+                <label>{t("CATEGORIES_MODAL_NAME")}</label>
                 <input
                   ref={nameInput}
                   type="text"
                   className="form-control"
-                  placeholder={t(
-                    "CATEGORIES_MODAL_NAME_PLACEHOLDER"
-                  )}
+                  placeholder={t("CATEGORIES_MODAL_NAME_PLACEHOLDER")}
                   value={name}
                   required
                   onChange={e => handleNameChanged(e.target.value)}
                 />
                 <small className="form-text text-muted">
-                  {t(
-                    "CATEGORIES_MODAL_NAME_DESCRIPTION"
-                  )}
+                  {t("CATEGORIES_MODAL_NAME_DESCRIPTION")}
                 </small>
               </div>
               <FormGroup>
-                <label>
-                  {t("CATEGORIES_MODAL_DESCRIPTION")}
-                </label>
+                <label>{t("CATEGORIES_MODAL_DESCRIPTION")}</label>
                 <Input
                   type="string"
-                  placeholder={t(
-                    "CATEGORIES_MODAL_DESCRIPTION_PLACEHOLDER"
-                  )}
+                  placeholder={t("CATEGORIES_MODAL_DESCRIPTION_PLACEHOLDER")}
                   value={description}
                   onChange={e => handleDesciptionChanged(e.target.value)}
                 />

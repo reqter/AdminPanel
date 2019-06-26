@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import Select, { components } from "react-select";
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 import { CircleSpinner, AssetBrowser } from "../../../../components";
 import { addApiKey, updateApiKey } from "./../../../../Api/apiKey-api";
 

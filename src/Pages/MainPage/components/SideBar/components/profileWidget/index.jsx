@@ -7,8 +7,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { useGlobalState } from "../../../../../../services";
-import { useLocale } from "./../../../../../../hooks";
+import { useGlobalState, useLocale } from "../../../../../../hooks";
 const ProfileWidget = props => {
   const { match, location, history } = props;
   const { appLocale, t, currentLang } = useLocale();

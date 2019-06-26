@@ -3,8 +3,7 @@ import Modal from "reactstrap/es/Modal";
 import String from "./../String";
 import FileUploader from "./../FileUploader";
 import { AssetFile, CircleSpinner } from "./../../components";
-import { useGlobalState } from "./../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import "./styles.scss";
 
 import { filterAssets, addAsset } from "./../../Api/asset-api";
@@ -192,9 +191,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
-              ),
+              message: t("UPSERT_ASSET_ADD_ON_SERVER_ERROR"),
             },
           });
         })
@@ -208,9 +205,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
-              ),
+              message: t("UPSERT_ASSET_ADD_ON_BAD_REQUEST"),
             },
           });
         })
@@ -224,9 +219,7 @@ const AssetBrowser = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "UPSERT_ASSET_ADD_UN_AUTHORIZED"
-              ),
+              message: t("UPSERT_ASSET_ADD_UN_AUTHORIZED"),
             },
           });
         })

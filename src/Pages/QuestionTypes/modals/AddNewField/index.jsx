@@ -11,9 +11,9 @@ import {
   Input,
 } from "reactstrap";
 import { utility, useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
-import { CheckBox, CircleSpinner } from "./../../../../components";
-import { updateContentType } from "./../../../../Api/contentType-api";
+import { useLocale } from "../../../../hooks";
+import { CheckBox, CircleSpinner } from "../../../../components";
+import { updateContentType } from "../../../../Api/questionType-api";
 import "./styles.scss";
 
 const fields = [

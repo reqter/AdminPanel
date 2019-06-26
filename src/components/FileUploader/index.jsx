@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
-import { useGlobalState, utility } from "../../services";
-import { useLocale } from "./../../hooks";
+import {  utility } from "../../services";
+import { useGlobalState, useLocale } from "./../../hooks";
 import AssetFile from "./../AssetFile";
 import ImageEditorModal from "./ImageEditorModal";
 import { uploadAssetFile } from "./../../Api/asset-api";

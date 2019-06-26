@@ -1,5 +1,18 @@
 export default {
   'text-align': 'right',
   'flex-direction': 'row-reverse',
-  direction: 'rtl'
+  direction: 'rtl',
+  'sideBar-left': null,
+  'sideBar-right': 0,
+  "mainpage-content-margin":"0 300px 0 0",
+  "sideBar-items-border-right":0,
+  "sideBar-items-border-left":"2px solid rgb(56, 132, 255)",
+  'sideBar-image-margin': '0 0 0 15px',
+  "templates-list-image-margin":"0 0 0 10px",
+  "templates-questions-margin":"0 20px 0 0",
+  'questions-remove-icon-left': "20px",
+  'questions-remove-icon-right': null,
+  "users-filter-margin":"0 0 0 20px",
+  'users-filter-typesBox-margin': '0 0px 0 5px',
+  'users-filter-itemIcon-margin': '0 0px 0 15px',
 }

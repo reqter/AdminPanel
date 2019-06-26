@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
-import { useGlobalState } from "./../../services";
-import { useLocale } from "../../hooks";
+import { useGlobalState, useLocale } from "../../hooks";
 import { getAssetById, addAsset, updateAsset } from "./../../Api/asset-api";
 import {
   String,
@@ -127,9 +126,7 @@ const UpsertFile = props => {
       .onServerError(result => {
         const obj = {
           type: "ON_SERVER_ERROR",
-          message: t(
-            "UPSERT_ASSET_GET_BY_ID_ON_SERVER_ERROR"
-          ),
+          message: t("UPSERT_ASSET_GET_BY_ID_ON_SERVER_ERROR"),
         };
         changeTab(2);
         setError(obj);
@@ -139,9 +136,7 @@ const UpsertFile = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t(
-              "UPSERT_ASSET_GET_BY_ID_ON_BAD_REQUEST"
-            ),
+            message: t("UPSERT_ASSET_GET_BY_ID_ON_BAD_REQUEST"),
           },
         });
       })
@@ -150,18 +145,14 @@ const UpsertFile = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: t(
-              "UPSERT_ASSET_GET_BY_ID_UN_AUTHORIZED"
-            ),
+            message: t("UPSERT_ASSET_GET_BY_ID_UN_AUTHORIZED"),
           },
         });
       })
       .notFound(result => {
         const obj = {
           type: "NOT_FOUND",
-          message: t(
-            "UPSERT_ASSET_GET_BY_ID_NOT_FOUND"
-          ),
+          message: t("UPSERT_ASSET_GET_BY_ID_NOT_FOUND"),
         };
         changeTab(2);
         setError(obj);
@@ -197,7 +188,13 @@ const UpsertFile = props => {
           en: value["en"],
           fa: value["fa"],
         };
-        f.fileType = value.fileType.split("/")[0];
+        if (
+          value.fileType.includes("image") ||
+          value.fileType.includes("video") ||
+          value.fileType.includes("audio")
+        ) {
+          f.fileType = value.fileType.split("/")[0];
+        } else f.fileType = value.fileType;
         f.name = value["name"];
         f["title"] = {
           en: value["name"],
@@ -343,9 +340,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "UPSERT_ASSET_UPDATE_ON_SERVER_ERROR"
-                ),
+                message: t("UPSERT_ASSET_UPDATE_ON_SERVER_ERROR"),
               },
             });
           })
@@ -359,9 +354,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "UPSERT_ASSET_UPDATE_ON_BAD_REQUEST"
-                ),
+                message: t("UPSERT_ASSET_UPDATE_ON_BAD_REQUEST"),
               },
             });
           })
@@ -375,9 +368,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "UPSERT_ASSET_UPDATE_UN_AUTHORIZED"
-                ),
+                message: t("UPSERT_ASSET_UPDATE_UN_AUTHORIZED"),
               },
             });
           })
@@ -391,9 +382,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "UPSERT_ASSET_UPDATE_NOT_FOUND"
-                ),
+                message: t("UPSERT_ASSET_UPDATE_NOT_FOUND"),
               },
             });
           })
@@ -439,9 +428,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
-                ),
+                message: t("UPSERT_ASSET_ADD_ON_SERVER_ERROR"),
               },
             });
           })
@@ -455,9 +442,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
-                ),
+                message: t("UPSERT_ASSET_ADD_ON_BAD_REQUEST"),
               },
             });
           })
@@ -471,9 +456,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "UPSERT_ASSET_ADD_UN_AUTHORIZED"
-                ),
+                message: t("UPSERT_ASSET_ADD_UN_AUTHORIZED"),
               },
             });
           })
@@ -487,9 +470,7 @@ const UpsertFile = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "UPSERT_ASSET_ADD_NOT_FOUND"
-                ),
+                message: t("UPSERT_ASSET_ADD_NOT_FOUND"),
               },
             });
           })
@@ -510,12 +491,8 @@ const UpsertFile = props => {
         <div className="tabItems">
           <div className="item active">
             {updateMode
-              ? `1.${t(
-                  "UPSERT_ASSET_HEADER_EDIT_TITLE"
-                )}`
-              : `1.${t(
-                  "UPSERT_ASSET_HEADER_ADD_TITLE"
-                )}`}
+              ? `1.${t("UPSERT_ASSET_HEADER_EDIT_TITLE")}`
+              : `1.${t("UPSERT_ASSET_HEADER_ADD_TITLE")}`}
           </div>
         </div>
       </div>
@@ -564,14 +541,10 @@ const UpsertFile = props => {
               <div className="alert alert-danger">{error.message}</div>
               <div className="actions">
                 <button className="btn btn-light" onClick={refreshCurrentPage}>
-                  {t(
-                    "UPSERT_ASSET_ERROR_BOX_REFRESH_BTN"
-                  )}
+                  {t("UPSERT_ASSET_ERROR_BOX_REFRESH_BTN")}
                 </button>
                 <button className="btn btn-light" onClick={backToAssets}>
-                  {t(
-                    "UPSERT_ASSET_ERROR_BOX_MEDIA_BTN"
-                  )}
+                  {t("UPSERT_ASSET_ERROR_BOX_MEDIA_BTN")}
                 </button>
               </div>
             </div>

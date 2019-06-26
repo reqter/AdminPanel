@@ -6,8 +6,7 @@ import {
   DropdownMenu,
 } from "reactstrap";
 import "./styles.scss";
-import {  useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import { Locales, Roles, ApiKeys, Webhooks } from "./contents";
 import "./contentStyles.scss";
 import UpsertLocale from "./modals/UpsertLocale";
@@ -91,8 +90,8 @@ const Settings = props => {
       <div className="se-wrapper">
         <div className="se-header">
           <div className="se-header-left">
-            <span className="se-header-title">{pageTitle}</span>
-            <span className="se-header-description">{pageDescription}</span>
+            <span className="se-header-title">{t(pageTitle)}</span>
+            <span className="se-header-description">{t(pageDescription)}</span>
           </div>
           <div className="se-header-right">
             {tabContent === "locales" && (
@@ -182,7 +181,7 @@ const Settings = props => {
           {tabContent === "locales" && (
             <Locales onEditLocale={handleEditLocale} />
           )}
-          
+
           {tabContent === "roles" && <Roles onEditRole={handleEditRole} />}
 
           {tabContent === "apiKeys" && (

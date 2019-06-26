@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "../../hooks";
 import {
   getRequests,
   filterRequests,
@@ -19,14 +18,14 @@ import {
   CategoriesFilter,
   ContentTypesFilter,
   StatusFilter,
-} from "./../../components/Commons";
+} from "../../components/Commons";
 
 const Requests = props => {
   const { appLocale, t, currentLang } = useLocale();
 
   let didCancel = false;
   //#region controller
-  
+
   let baseFieldColumnsConfig = [
     {
       Header: "#",
@@ -46,7 +45,7 @@ const Requests = props => {
     {
       width: 100,
       Header: () => <div className="p-header-td">Thumbnail</div>,
-     // show: false,
+      // show: false,
       headerStyle: {
         display: "none",
       },
@@ -143,9 +142,7 @@ const Requests = props => {
       accessor: "status",
       Cell: props => (
         <div className="p-contentType">
-          <span className="badge badge-primary">
-            {t(props.value)}
-          </span>
+          <span className="badge badge-primary">{t(props.value)}</span>
         </div>
       ),
     },
@@ -544,9 +541,7 @@ const Requests = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENTS_DELETE_ON_SERVER_ERROR"
-                ),
+                message: t("CONTENTS_DELETE_ON_SERVER_ERROR"),
               },
             });
           })
@@ -556,9 +551,7 @@ const Requests = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENTS_DELETE_ON_BAD_REQUEST"
-                ),
+                message: t("CONTENTS_DELETE_ON_BAD_REQUEST"),
               },
             });
           })
@@ -568,9 +561,7 @@ const Requests = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "CONTENTS_DELETE_UN_AUTHORIZED"
-                ),
+                message: t("CONTENTS_DELETE_UN_AUTHORIZED"),
               },
             });
           })
@@ -829,8 +820,8 @@ const Requests = props => {
       <div className="p-wrapper">
         <div className="p-header">
           <div className="p-header-left">
-            <span className="p-header-title">{pageTitle}</span>
-            <span className="p-header-description">{pageDescription}</span>
+            <span className="p-header-title">{t(pageTitle)}</span>
+            <span className="p-header-description">{t(pageDescription)}</span>
           </div>
           <div className="p-header-right">
             <div className="input-group">
@@ -858,7 +849,7 @@ const Requests = props => {
               <i className="icon-filter" />
             </button>
             <button className="btn btn-primary" onClick={openNewItemBox}>
-              New Request
+              New Form
             </button>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useGlobalState } from "../../../../services";
 import { updateSpace } from "./../../../../Api/space-api";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 
 const Locale = props => {
   const { appLocale, t, currentLang } = useLocale();

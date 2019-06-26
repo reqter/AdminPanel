@@ -1,43 +1,45 @@
-.as-wrapper {
+@import "./../../styles/mixins.scss";
+
+.users-wrapper {
   flex: 1;
   margin: 3% 3% 1%;
   display: flex;
   flex-direction: column;
-  .as-header {
+  .users-header {
     height: 80px;
     display: flex;
-    .as-header-left {
+    .users-header-left {
       display: flex;
       justify-content: center;
       flex-direction: column;
       flex: 1;
-      .as-header-title {
+      .users-header-title {
         font-size: 25px;
         font-weight: 500;
       }
-      .as-header-description {
+      .users-header-description {
         font-size: 11px;
         color: gray;
       }
     }
-    .as-header-right {
+    .users-header-right {
       display: flex;
       align-items: center;
     }
   }
-  .as-content {
+  .users-content {
     flex: 1;
     display: flex;
-    .as-content-left {
+    .users-content-left {
       background-color: white;
       box-shadow: 0 0 3px lightgray;
       width: 300px;
       border-radius: 4px;
-      margin-right: 20px;
       display: flex;
       flex-direction: column;
       padding: 20px;
       max-height: 100%;
+      @include variable(users-filter-margin, margin, 0 0 0 0);
       .left-text {
         font-size: 13px;
         text-align: justify;
@@ -60,6 +62,7 @@
         }
         .left-filters {
           padding: 20px 0;
+          @include variable(users-filter-typesBox-margin, margin, 0);
           margin-right: 5px;
           .title {
             font-size: 13px;
@@ -78,7 +81,7 @@
               transition-duration: 0.2s;
             }
             .icon {
-              margin-right: 15px;
+              @include variable(users-filter-itemIcon-margin, margin, 0);
             }
             .name {
               font-size: 13px;
@@ -92,7 +95,7 @@
         }
       }
     }
-    .as-content-right {
+    .users-content-right {
       margin-top: 0px;
       flex: 1;
       background-color: white;
@@ -153,7 +156,7 @@
           .btn {
             margin-left: 5px;
           }
-          .as-table-number {
+          .users-table-number {
             width: 30px;
             height: 30px;
             color: gray;
@@ -161,10 +164,10 @@
             justify-content: center;
             align-items: center;
             background: whitesmoke;
-            .as-table-number-value {
+            .users-table-number-value {
             }
           }
-          .as-table-image {
+          .users-table-image {
             width: 65px;
             height: 55px;
             border: 1px solid whitesmoke;
@@ -180,11 +183,11 @@
               height: 50px;
               border-radius: 5px;
             }
-            .as-table-image-empty {
+            .users-table-image-empty {
               font-size: 11px;
             }
           }
-          .as-table-name {
+          .users-table-name {
             font-size: 10px;
             display: flex;
             flex-direction: column;
@@ -198,7 +201,7 @@
               font-size: 13px;
             }
           }
-          .as-table-type {
+          .users-table-type {
             font-size: 12px;
           }
 
@@ -210,7 +213,7 @@
               margin: 0 3px;
             }
           }
-          .as-table-status {
+          .users-table-status {
             font-size: 10px;
             display: flex;
             flex: 1;

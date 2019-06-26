@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
-import { useGlobalState } from "../../services";
-import { useLocale } from "../../hooks";
+import { useGlobalState, useLocale } from "../../hooks";
 import {
   getUsers,
   getRoles,
@@ -229,9 +228,7 @@ const Users = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t(
-              "USERS_DEACTIVE_ON_SERVER_ERROR"
-            ),
+            message: t("USERS_DEACTIVE_ON_SERVER_ERROR"),
           },
         });
       })
@@ -306,9 +303,7 @@ const Users = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "USERS_ASSIGN_ROLE_ON_SERVER_ERROR"
-                ),
+                message: t("USERS_ASSIGN_ROLE_ON_SERVER_ERROR"),
               },
             });
           })
@@ -318,9 +313,7 @@ const Users = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "USERS_ASSIGN_ROLE_ON_BAD_REQUEST"
-                ),
+                message: t("USERS_ASSIGN_ROLE_ON_BAD_REQUEST"),
               },
             });
           })
@@ -330,9 +323,7 @@ const Users = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "USERS_ASSIGN_ROLE_UN_AUTHORIZED"
-                ),
+                message: t("USERS_ASSIGN_ROLE_UN_AUTHORIZED"),
               },
             });
           })
@@ -342,9 +333,7 @@ const Users = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "USERS_ASSIGN_ROLE_NOT_FOUND"
-                ),
+                message: t("USERS_ASSIGN_ROLE_NOT_FOUND"),
               },
             });
           })
@@ -380,9 +369,7 @@ const Users = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "USERS_ASSIGN_ROLE_ON_SERVER_ERROR"
-              ),
+              message: t("USERS_ASSIGN_ROLE_ON_SERVER_ERROR"),
             },
           });
         })
@@ -391,9 +378,7 @@ const Users = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "USERS_ASSIGN_ROLE_ON_BAD_REQUEST"
-              ),
+              message: t("USERS_ASSIGN_ROLE_ON_BAD_REQUEST"),
             },
           });
         })
@@ -402,9 +387,7 @@ const Users = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "USERS_ASSIGN_ROLE_UN_AUTHORIZED"
-              ),
+              message: t("USERS_ASSIGN_ROLE_UN_AUTHORIZED"),
             },
           });
         })
@@ -422,16 +405,18 @@ const Users = props => {
   }
   return (
     <>
-      <div className="as-wrapper">
-        <div className="as-header">
-          <div className="as-header-left">
-            <span className="as-header-title">{pageTitle}</span>
-            <span className="as-header-description">{pageDescription}</span>
+      <div className="users-wrapper">
+        <div className="users-header">
+          <div className="users-header-left">
+            <span className="users-header-title">{t(pageTitle)}</span>
+            <span className="users-header-description">
+              {t(pageDescription)}
+            </span>
           </div>
-          <div className="as-header-right" />
+          <div className="users-header-right" />
         </div>
-        <div className="as-content">
-          <div className="as-content-left">
+        <div className="users-content">
+          <div className="users-content-left">
             <div className="left-text">{translate("USERS_FILTER_TITLE")}</div>
             <div className="left-btnContent">
               <button className="btn btn-primary" onClick={addNewUser}>
@@ -452,9 +437,7 @@ const Users = props => {
                   }}
                 >
                   <i className="icon icon-file-text-o" />
-                  <span className="name">
-                    {t("USERS_FILTER_BY_ROLE_ALL")}
-                  </span>
+                  <span className="name">{t("USERS_FILTER_BY_ROLE_ALL")}</span>
                   <span
                     className="icon-circle-o iconSelected"
                     style={{
@@ -549,7 +532,7 @@ const Users = props => {
               </div>
             </div>
           </div>
-          <div className="as-content-right">
+          <div className="users-content-right">
             <div className="header">
               {translate("USERS_TABLE_HEADER_TITLE")}
             </div>
@@ -569,23 +552,25 @@ const Users = props => {
                   {users.map((user, index) => (
                     <tr key={index}>
                       <td>
-                        <div className="as-table-number">
-                          <div className="as-table-number-value">
+                        <div className="users-table-number">
+                          <div className="users-table-number-value">
                             {index + 1}
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div className="as-table-image">
+                        <div className="users-table-image">
                           {user.profile && user.profile.avatar ? (
                             <img src={user.profile.avatar} alt="" />
                           ) : (
-                            <div className="as-table-image-empty">No Image</div>
+                            <div className="users-table-image-empty">
+                              No Image
+                            </div>
                           )}
                         </div>
                       </td>
                       <td>
-                        <div className="as-table-name">
+                        <div className="users-table-name">
                           <span className="name">{user.userName}</span>
                           <span>{user.email}</span>
                         </div>
@@ -601,11 +586,9 @@ const Users = props => {
                         </div>
                       </td>
                       <td>
-                        <div className="as-table-status">
+                        <div className="users-table-status">
                           <span className="adge badge-primary">
-                            {user.status === true
-                              ? t("active")
-                              : t("inactive")}
+                            {user.status === true ? t("active") : t("inactive")}
                           </span>
                         </div>
                       </td>

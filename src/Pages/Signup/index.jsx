@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useGlobalState } from "./../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import { signup } from "./../../Api/account-api";
 import { CircleSpinner } from "./../../components";
 import "./styles.scss";

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal, ModalFooter } from "reactstrap";
 import { CircleSpinner } from "./../../../../components";
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 import "./styles.scss";
 import { setWebhooks } from "./../../../../Api/webhook-api";
 const util = require("util");

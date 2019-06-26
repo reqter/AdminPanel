@@ -24,7 +24,6 @@
     "react-table": "^6.9.2",
     "react-transition-group": "^2.9.0",
     "reactstrap": "^7.1.0",
-    "samim-font": "^1.0.2",
     "source-map-explorer": "^1.8.0"
   },
   "scripts": {

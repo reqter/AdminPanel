@@ -4,25 +4,25 @@ import List from "./list";
 import AddNewField from "./modals/AddNewField";
 import FieldConfig from "./modals/FieldConfig";
 import AddNewItemType from "./modals/AddNewItemType";
-import { useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale, useCookie } from "../../hooks";
 import {
-  getContentTypes,
+  getQuestionTypes,
   deleteContentType,
   removeContentTypeField,
   setAccessRight,
   updateContentType,
-} from "./../../Api/contentType-api";
+} from "./../../Api/questionType-api";
 import { AssignRole, Alert, RowSkeleton } from "../../components";
 
 const ItemTypes = props => {
-  const { appLocale, t, currentLang } = useLocale();
-
   const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
+  const { appLocale, t, currentLang, direction } = useLocale();
+  const [token] = useCookie("reqter_token");
   const [spinner, setSpinner] = useState(true);
+
   useEffect(() => {
     let didCancel = false;
-    getContentTypes()
+    getQuestionTypes()
       .onOk(result => {
         if (!didCancel) {
           setSpinner(false);
@@ -39,9 +39,7 @@ const ItemTypes = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CONTENT_TYPE_ON_SERVER_ERROR"
-              ),
+              message: t("CONTENT_TYPE_ON_SERVER_ERROR"),
             },
           });
         }
@@ -70,7 +68,7 @@ const ItemTypes = props => {
           });
         }
       })
-      .call(spaceInfo.id);
+      .call();
     return () => {
       didCancel = true;
     };
@@ -135,9 +133,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_ON_SERVER_ERROR"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_ON_SERVER_ERROR"),
               },
             });
           })
@@ -147,9 +143,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_ON_BAD_REQUEST"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_ON_BAD_REQUEST"),
               },
             });
           })
@@ -159,9 +153,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_UN_AUTHORIZED"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_UN_AUTHORIZED"),
               },
             });
           })
@@ -171,9 +163,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENT_TYPE_REMOVE__NOT_FOUND"
-                ),
+                message: t("CONTENT_TYPE_REMOVE__NOT_FOUND"),
               },
             });
           })
@@ -228,9 +218,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "success",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_FIELD_ON_OK"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_FIELD_ON_OK"),
               },
             });
             setFields(f);
@@ -245,9 +233,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_FIELD_ON_SERVER_ERROR"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_FIELD_ON_SERVER_ERROR"),
               },
             });
           })
@@ -257,9 +243,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_FIELD_ON_BAD_REQUEST"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_FIELD_ON_BAD_REQUEST"),
               },
             });
           })
@@ -269,9 +253,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_FIELD_UN_AUTHORIZED"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_FIELD_UN_AUTHORIZED"),
               },
             });
           })
@@ -281,9 +263,7 @@ const ItemTypes = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENT_TYPE_REMOVE_FIELD_NOT_FOUND"
-                ),
+                message: t("CONTENT_TYPE_REMOVE_FIELD_NOT_FOUND"),
               },
             });
           })
@@ -321,9 +301,7 @@ const ItemTypes = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: t(
-                "CONTENT_TYPE_ASSIGN_ROLE_ON_OK"
-              ),
+              message: t("CONTENT_TYPE_ASSIGN_ROLE_ON_OK"),
             },
           });
           dispatch({
@@ -336,9 +314,7 @@ const ItemTypes = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CONTENT_TYPE_ASSIGN_ROLE_SERVER_ERROR"
-              ),
+              message: t("CONTENT_TYPE_ASSIGN_ROLE_SERVER_ERROR"),
             },
           });
         })
@@ -347,9 +323,7 @@ const ItemTypes = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CONTENT_TYPE_ASSIGN_ROLE_ON_BAD_REQUEST"
-              ),
+              message: t("CONTENT_TYPE_ASSIGN_ROLE_ON_BAD_REQUEST"),
             },
           });
         })
@@ -358,9 +332,7 @@ const ItemTypes = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "CONTENT_TYPE_ASSIGN_ROLE_UN_AUTHORIZED"
-              ),
+              message: t("CONTENT_TYPE_ASSIGN_ROLE_UN_AUTHORIZED"),
             },
           });
         })
@@ -369,9 +341,7 @@ const ItemTypes = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "CONTENT_TYPE_ASSIGN_ROLE_NOT_FOUND"
-              ),
+              message: t("CONTENT_TYPE_ASSIGN_ROLE_NOT_FOUND"),
             },
           });
         })
@@ -383,8 +353,8 @@ const ItemTypes = props => {
       <div className="ct-wrapper">
         <div className="ct-header">
           <div className="ct-header-left">
-            <span className="ct-header-title">{pageTitle}</span>
-            <span className="ct-header-description">{pageDescription}</span>
+            <span className="ct-header-title">{t(pageTitle)}</span>
+            <span className="ct-header-description">{t(pageDescription)}</span>
           </div>
           <div className="ct-header-right">
             <button className="btn btn-primary" onClick={openAddItemTypeModal}>
@@ -422,7 +392,12 @@ const ItemTypes = props => {
             )}
           </div>
           {rightContent && (
-            <div className="ct-content-right animated slideInRight faster">
+            <div
+              className={
+                "ct-content-right animated faster " +
+                (direction === "ltr" ? "slideInRight" : "slideInLeft")
+              }
+            >
               <div className="ct-content-right-header">
                 <span className="ct-right-header-title">
                   {t("CONTENT_TYPE_MODEL_HEADER_TITLE")}

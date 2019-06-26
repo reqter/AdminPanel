@@ -1,7 +1,11 @@
-import { storageManager } from './../../services'
+import { storageManager } from '../../services'
 const config = process.env
-const getAllURL =
-  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
+const spaceId = config.REACT_APP_SPACE_ID;
+const contentTypeID = config.REACT_APP_QUESTION_TYPE_CONTENT_TYPE_ID
+const token = config.REACT_APP_TOKEN
+const baseUrl = config.REACT_APP_QUESTION_TYPE_BASE_URL
+
+
 const addURL =
   config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_ADD
 const updateURL =
@@ -104,7 +108,7 @@ export function getTemplates () {
     }
   }
 }
-export function getContentTypes () {
+export function getQuestionTypes () {
   let _onOkCallBack
   function _onOk (result) {
     if (_onOkCallBack) {
@@ -141,10 +145,11 @@ export function getContentTypes () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async spaceId => {
+  const _call = async () => {
     try {
-      const url = getAllURL
-      const token = storageManager.getItem('token')
+      //contentTypeID
+        
+      const url = baseUrl + `/graphql?query={contentlist(contentType:"${contentTypeID}"){fields status}}`
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {

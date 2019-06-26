@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.scss";
 import LinkItem from "./linkItem";
-import { useLocale } from "./../../../../../../hooks";
+import { useLocale } from "../../../../../../hooks";
 
 const NavLinks = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -12,14 +12,14 @@ const NavLinks = props => {
     {
       name: translate("HOME_SIDE_NAV_HOME"),
       icon: "home",
-      path: "/panel",
+      path: "/panel/home",
       desc: translate("HOME_SIDE_NAV_HOME_DESC"),
     },
     {
-      name: translate("HOME_SIDE_NAV_FORM_TEMPLATES"),
+      name: translate("HOME_SIDE_NAV_QUESTION_TYPES"),
       icon: "item-type",
-      path: "/panel/templates",
-      desc: translate("HOME_SIDE_NAV_FORM_TEMPLATES_DESC"),
+      path: "/panel/questionTypes",
+      desc: translate("HOME_SIDE_NAV_QUESTION_TYPES_DESC"),
     },
     {
       name: translate("HOME_SIDE_NAV_FORMS"),
