@@ -14,7 +14,6 @@ import {
 
 import UpdatePassword from "./modals/updatePassword";
 
-
 const Profile = props => {
   const { name: pageTitle, desc: pageDescription } = props.component;
   const { appLocale, t, currentLang } = useLocale();
@@ -179,15 +178,15 @@ const Profile = props => {
 
       uploadAssetFile()
         .onOk(result => {
-           dispatch({
-             type: "ADD_NOTIFY",
-             value: {
-               type: "success",
-               message: t(
-                 "Image uploaded successfully.now it is changing avatar"
-               ),
-             },
-           });
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "success",
+              message: t(
+                "Image uploaded successfully.now it is changing avatar"
+              ),
+            },
+          });
           const { file } = result;
           const obj = {
             name: file.originalname,
@@ -231,9 +230,7 @@ const Profile = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "UPSERT_ASSET_ADD_ON_SERVER_ERROR"
-                  ),
+                  message: t("UPSERT_ASSET_ADD_ON_SERVER_ERROR"),
                 },
               });
             })
@@ -243,9 +240,7 @@ const Profile = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "UPSERT_ASSET_ADD_ON_BAD_REQUEST"
-                  ),
+                  message: t("UPSERT_ASSET_ADD_ON_BAD_REQUEST"),
                 },
               });
             })
@@ -255,9 +250,7 @@ const Profile = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "warning",
-                  message: t(
-                    "UPSERT_ASSET_ADD_UN_AUTHORIZED"
-                  ),
+                  message: t("UPSERT_ASSET_ADD_UN_AUTHORIZED"),
                 },
               });
             })
@@ -267,9 +260,7 @@ const Profile = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "UPSERT_ASSET_ADD_NOT_FOUND"
-                  ),
+                  message: t("UPSERT_ASSET_ADD_NOT_FOUND"),
                 },
               });
             })
@@ -327,9 +318,7 @@ const Profile = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: t(
-                "PROFILE_EMAIL_CONFRIMATION_ON_OK"
-              ),
+              message: t("PROFILE_EMAIL_CONFRIMATION_ON_OK"),
             },
           });
           toggleConfirmEmailSpinner(false);
@@ -339,9 +328,7 @@ const Profile = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "PROFILE_EMAIL_CONFRIMATION_ON_SERVER_ERROR"
-              ),
+              message: t("PROFILE_EMAIL_CONFRIMATION_ON_SERVER_ERROR"),
             },
           });
           toggleConfirmEmailSpinner(false);
@@ -352,9 +339,7 @@ const Profile = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "PROFILE_EMAIL_CONFRIMATION_BAD_REQUEST"
-              ),
+              message: t("PROFILE_EMAIL_CONFRIMATION_BAD_REQUEST"),
             },
           });
         })
@@ -367,9 +352,7 @@ const Profile = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "PROFILE_EMAIL_CONFRIMATION_NOT_FOUND"
-              ),
+              message: t("PROFILE_EMAIL_CONFRIMATION_NOT_FOUND"),
             },
           });
         })
@@ -467,11 +450,11 @@ const Profile = props => {
               }
               onClick={() => showBoxContent(1)}
             >
-              Personal Info
+              {t("PROFILE_FIRST_BOX_TITLE")}
             </div>
             {currentBox === 1 && (
               <div className="pro-box-content animated fadeIn">
-                <label>Avatar</label>
+                <label>{t("PROFILE_AVATAR_TITLE")}</label>
                 <div className="pro-box-content-upload">
                   <div className="uploadAvatar">
                     {isUploading && (
@@ -493,42 +476,39 @@ const Profile = props => {
                     }}
                   >
                     <div className="dropText">
-                      Drop your file here
+                      {t("PROFILE_DROP_FILE_TEXT")}
                       <span onClick={showAssetBrowser}>
-                        <a>or Browse</a>
+                        <a>{t("PROFILE_DROP_FILE_LINK")}</a>
                         {/* <input type="file" onChange={handleImageBrowsed} /> */}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="uploadInfo">
-                  Some tips: Use a photo or image rather than text and upload
-                  an image that is 132px square or larger.
-                </div>
+                <div className="uploadInfo">{t("PROFILE_DROP_FILE_DESC")}</div>
                 <div className="form-group">
-                  <label>First Name</label>
+                  <label>{t("PROFILE_FIRST_NAME_INPUT_TITLE")}</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="first name"
+                    placeholder={t("PROFILE_FIRST_NAME_INPUT_PLACEHOLDER")}
                     value={firstName}
                     onChange={handleFirstName}
                   />
                   <small className="form-text text-muted">
-                    Enter your first name
+                    {t("PROFILE_FIRST_NAME_INPUT_INFO")}
                   </small>
                 </div>
                 <div className="form-group">
-                  <label>Last Name</label>
+                  <label>{t("PROFILE_LAST_NAME_INPUT_TITLE")}</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="last name"
+                    placeholder={t("PROFILE_LAST_NAME_INPUT_PLACEHOLDER")}
                     value={lastName}
                     onChange={handleLastName}
                   />
                   <small className="form-text text-muted">
-                    Enter your last name
+                    {t("PROFILE_LAST_NAME_INPUT_INFO")}
                   </small>
                 </div>
                 <div className="firstTabActions">
@@ -537,7 +517,7 @@ const Profile = props => {
                     onClick={updateProfileInfo}
                   >
                     <CircleSpinner show={updateSpinner} size="small" />
-                    <span>Update</span>
+                    <span>{t("UPDATE")}</span>
                   </button>
                 </div>
               </div>
@@ -550,18 +530,18 @@ const Profile = props => {
               }
               onClick={() => showBoxContent(2)}
             >
-              Login
+              {t("PROFILE_SECOND_TAB_TITLE")}
             </div>
             {currentBox === 2 && (
               <>
                 <div className="pro-box-content">
                   <div className="text-switch">
                     <div className="left-text">
-                      <span className="left-text-title">Emails</span>
+                      <span className="left-text-title">
+                        {t("PROFILE_EMAIL_VERIFY")}
+                      </span>
                       <span className="left-text-description">
-                        Verify your email to better protect your account. It
-                        will be used for account-related notifications and
-                        sign-in.
+                        {t("PROFILE_EMAIL_VERIFY_INFO")}
                       </span>
                     </div>
                     <div className="right-switch">
@@ -571,7 +551,7 @@ const Profile = props => {
                           className="btn btn-success btn-sm"
                         >
                           <span className="icon-checkmark" />
-                          &nbsp; Email Confirmed
+                          &nbsp; {t("PROFILE_PROFILE_EMAIL_VERIFY_BTN")}
                         </button>
                       )}
                       {userInfo &&
@@ -586,7 +566,8 @@ const Profile = props => {
                               show={confirmEmailSpinner}
                               size="small"
                             />
-                            {!confirmEmailSpinner && "Send Confirmation"}
+                            {!confirmEmailSpinner &&
+                              t("PROFILE_SEND_CONFIRMATION")}
                           </button>
                         )}
                     </div>
@@ -595,10 +576,11 @@ const Profile = props => {
                 <div className="pro-box-content">
                   <div className="text-switch">
                     <div className="left-text">
-                      <span className="left-text-title">Password</span>
+                      <span className="left-text-title">
+                        {t("PROFILE_PASSWORD")}
+                      </span>
                       <span className="left-text-description">
-                        Secure your REQTER account with a strong and unique
-                        password.
+                        {t("PROFILE_PASSWORD_INFO")}
                       </span>
                     </div>
                     <div className="right-switch">
@@ -607,7 +589,7 @@ const Profile = props => {
                         className="btn btn-primary btn-sm"
                         onClick={showUpdatePassModal}
                       >
-                        Update password
+                        {t("PROFILE_PASSWORD_BTN")}
                       </button>
                     </div>
                   </div>
@@ -622,15 +604,17 @@ const Profile = props => {
               }
               onClick={() => showBoxContent(3)}
             >
-              Notifications
+              {t("PROFILE_THIRD_BOX_TITLE")}
             </div>
             {currentBox === 3 && (
               <div className="pro-box-content">
                 <label for="notify" className="text-switch">
                   <div className="left-text">
-                    <span className="left-text-title">Emails</span>
+                    <span className="left-text-title">
+                      {t("PROFILE_EMAIL_NOTIF")}
+                    </span>
                     <span className="left-text-description">
-                      Receive email notifications for comments, activities.
+                      {t("PROFILE_EMAIL_NOTIF_INFO")}
                     </span>
                   </div>
                   <div className="right-switch">
@@ -656,16 +640,17 @@ const Profile = props => {
               }
               onClick={() => showBoxContent(4)}
             >
-              Danger Zone
+              {t("PROFILE_FOURTH_BOX_TITLE")}
             </div>
             {currentBox === 4 && (
               <div className="pro-box-content">
                 <div className="text-switch">
                   <div className="left-text">
-                    <span className="left-text-title">Delete Account</span>
+                    <span className="left-text-title">
+                      {t("PROFILE_DELETE_ACCOUNT")}
+                    </span>
                     <span className="left-text-description">
-                      Permanently delete your account.You will no longer have
-                      access to your account.
+                      {t("PROFILE_DELETE_ACCOUNT_INFO")}
                     </span>
                   </div>
                   <div className="right-switch">
@@ -675,7 +660,7 @@ const Profile = props => {
                       onClick={handleDeleteAccount}
                     >
                       <CircleSpinner show={deleteAccountSpinner} />
-                      {!deleteAccountSpinner && "Delete Account"}
+                      {!deleteAccountSpinner && t("PROFILE_DELETE_ACCOUNT_BTN")}
                     </button>
                   </div>
                 </div>

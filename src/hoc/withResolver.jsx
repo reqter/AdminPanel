@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useGlobalState, useLocale } from "./../hooks";
+import { useGlobalState, useLocale, useCookie } from "./../hooks";
 import { getUserInfo } from "../Api/account-api";
 const widthResolver = WrappedComponent => {
   // const { cmp: Component } = props;
 
   return props => {
+    const [token] = useCookie("reqter_token");
     const [{ userInfo }, dispatch] = useGlobalState();
     const [loading, toggleLoading] = useState(userInfo ? false : true);
     const [error, setError] = useState();
@@ -65,7 +66,7 @@ const widthResolver = WrappedComponent => {
           );
           toggleLoading(false);
         })
-        .call();
+        .call(token);
     }
     return !loading ? (
       error ? (

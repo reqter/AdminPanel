@@ -191,19 +191,24 @@ const Assets = props => {
     doFilter(selectedFileType.name, selected.name);
   }
   function openUploader() {
-    props.history.push("/addAsset");
+    props.history.push("/asset/new");
   }
-  function openUploaderForEdit(file) {
-    props.history.push(`/editAsset/${file._id}`);
+  function openUploaderForEdit(e, file) {
+    props.history.push(`/asset/edit/${file._id}`);
+    e.stopPropagation();
   }
-  function showRemoveAlert(item) {
+  function viewAsset(file) {
+    props.history.push(`/asset/view/${file._id}`);
+  }
+  function showRemoveAlert(e, item) {
+    e.stopPropagation();
     setAlertData({
       type: "error",
-      title: "Remove Asset",
-      message: "Are you sure to remove ?",
+      title: t("ASSET_REMOVE_ALERT_TITLE"),
+      message: t("ASSET_REMOVE_ALERT_INFO"),
       isAjaxCall: true,
-      okTitle: "Remove",
-      cancelTitle: "Don't remove",
+      okTitle: t("ASSET_REMOVE_ALERT_BTN_OK"),
+      cancelTitle: t("ASSET_REMOVE_ALERT_TITLE_BTN_CANCEL"),
       onOk: () => removeAsset(item),
       onCancel: () => {
         setAlertData();
@@ -269,7 +274,8 @@ const Assets = props => {
       })
       .call(spaceInfo ? spaceInfo.id : undefined, item._id);
   }
-  function archiveAsset(file) {
+  function archiveAsset(e, file) {
+    e.stopPropagation();
     archive()
       .onOk(result => {
         doFilter(selectedFileType.name, selectedStatus.name);
@@ -277,7 +283,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: t("The asset is archived"),
+            message: t("ASSET_ARCHIVIED_ON_OK"),
           },
         });
         dispatch({
@@ -290,7 +296,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Internal server error"),
+            message: t("INTERNAL_SERVER_ERROR"),
           },
         });
       })
@@ -299,7 +305,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Bad request"),
+            message: t("BAD_REQUEST"),
           },
         });
       })
@@ -317,13 +323,14 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Asset not found"),
+            message: t("NOT_FOUND"),
           },
         });
       })
       .call(spaceInfo.id, file._id);
   }
-  function unArchiveAsset(file) {
+  function unArchiveAsset(e, file) {
+    e.stopPropagation();
     unArchive()
       .onOk(result => {
         doFilter(selectedFileType.name, selectedStatus.name);
@@ -331,7 +338,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: t("The asset is unarchived"),
+            message: t("ASSET_UN_ARCHIVED_ON_OK"),
           },
         });
         dispatch({
@@ -344,7 +351,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Internal server error"),
+            message: t("INTERNAL_SERVER_ERROR"),
           },
         });
       })
@@ -353,7 +360,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Bad request"),
+            message: t("BAD_REQUEST"),
           },
         });
       })
@@ -371,13 +378,14 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Asset not found"),
+            message: t("NOT_FOUND"),
           },
         });
       })
       .call(spaceInfo.id, file._id);
   }
-  function publishAsset(file) {
+  function publishAsset(e, file) {
+    e.stopPropagation();
     publish()
       .onOk(result => {
         doFilter(selectedFileType.name, selectedStatus.name);
@@ -385,7 +393,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: t("The asset is published"),
+            message: t("ASSET_UN_PUBLISHED_ON_OK"),
           },
         });
         dispatch({
@@ -398,7 +406,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Internal server error"),
+            message: t("INTERNAL_SERVER_ERROR"),
           },
         });
       })
@@ -407,7 +415,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Bad request"),
+            message: t("BAD_REQUEST"),
           },
         });
       })
@@ -425,13 +433,14 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Asset not found"),
+            message: t("NOT_FOUND"),
           },
         });
       })
       .call(spaceInfo.id, file._id);
   }
-  function unPublishAsset(file) {
+  function unPublishAsset(e, file) {
+    e.stopPropagation();
     unPublish()
       .onOk(result => {
         doFilter(selectedFileType.name, selectedStatus.name);
@@ -439,7 +448,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "success",
-            message: t("The asset is unpublished"),
+            message: t("ASSET_UN_UN_PUBLISHED_ON_OK"),
           },
         });
         dispatch({
@@ -452,7 +461,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Internal server error"),
+            message: t("INTERNAL_SERVER_ERROR"),
           },
         });
       })
@@ -461,7 +470,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Bad request"),
+            message: t("BAD_REQUEST"),
           },
         });
       })
@@ -479,7 +488,7 @@ const Assets = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("Asset not found"),
+            message: t("NOT_FOUND"),
           },
         });
       })
@@ -576,7 +585,7 @@ const Assets = props => {
                 </thead>
                 <tbody>
                   {assets.map((file, index) => (
-                    <tr key={index}>
+                    <tr key={index} onClick={() => viewAsset(file)}>
                       <td>
                         <div className="as-table-number">
                           <div className="as-table-number-value">
@@ -635,13 +644,13 @@ const Assets = props => {
                           <>
                             <button
                               className="btn btn-light btn-sm"
-                              onClick={() => publishAsset(file)}
+                              onClick={e => publishAsset(e, file)}
                             >
                               {t("PUBLISH")}
                             </button>
                             <button
                               className="btn btn-light btn-sm"
-                              onClick={() => archiveAsset(file)}
+                              onClick={e => archiveAsset(e, file)}
                             >
                               {t("ARCHIVE")}
                             </button>
@@ -650,13 +659,13 @@ const Assets = props => {
                           <>
                             <button
                               className="btn btn-light btn-sm"
-                              onClick={() => publishAsset(file)}
+                              onClick={e => publishAsset(e, file)}
                             >
                               {t("PUBLISH")}
                             </button>
                             <button
                               className="btn btn-light btn-sm"
-                              onClick={() => archiveAsset(file)}
+                              onClick={e => archiveAsset(e, file)}
                             >
                               {t("ARCHIVE")}
                             </button>
@@ -664,14 +673,14 @@ const Assets = props => {
                         ) : file.status === "archived" ? (
                           <button
                             className="btn btn-light btn-sm"
-                            onClick={() => unArchiveAsset(file)}
+                            onClick={e => unArchiveAsset(e, file)}
                           >
                             {t("UN_ARCHIVE")}
                           </button>
                         ) : file.status === "published" ? (
                           <button
                             className="btn btn-light btn-sm"
-                            onClick={() => unPublishAsset(file)}
+                            onClick={e => unPublishAsset(e, file)}
                           >
                             {t("UN_PUBLISH")}
                           </button>
@@ -683,14 +692,14 @@ const Assets = props => {
                           file.status !== "archived" && (
                             <button
                               className="btn btn-light btn-sm"
-                              onClick={() => showRemoveAlert(file)}
+                              onClick={e => showRemoveAlert(e, file)}
                             >
                               <i className="icon-bin" />
                             </button>
                           )}
                         <button
                           className="btn btn-light btn-sm"
-                          onClick={() => openUploaderForEdit(file)}
+                          onClick={e => openUploaderForEdit(e, file)}
                         >
                           <i className="icon-pencil" />
                         </button>

@@ -144,7 +144,7 @@ export function getCategories () {
   const _call = async spaceId => {
     try {
       const url = getAllURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
@@ -245,7 +245,7 @@ export function addCategory () {
   const _call = async (spaceId, category) => {
     try {
       const url = addURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'POST',
         headers: {
@@ -366,7 +366,7 @@ export function updateCategory () {
   const _call = async (spaceId, category) => {
     try {
       const url = updateURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
 
       var rawResponse = await fetch(url, {
         method: 'PUT',
@@ -478,7 +478,7 @@ export function deleteCategory () {
   const _call = async (spaceId, id) => {
     try {
       const url = removeURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'DELETE',
         headers: {

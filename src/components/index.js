@@ -18,10 +18,12 @@ import RowSkeleton from './RowSkeleton'
 import JsonObject from './JsonObject'
 import AdvanceUploader from './AdvanceUploader'
 import AdvanceUploaderView from './AdvanceUploaderView'
+import AssetUploaderView from './AssetUploaderView'
 import DateFormater from './DateFormater'
 import ProgressiveSpinner from './ProgressiveSpinner'
 
 export {
+  AssetUploaderView,
   ProgressiveSpinner,
   DateFormater,
   AdvanceUploaderView,

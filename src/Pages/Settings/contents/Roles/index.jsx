@@ -29,9 +29,11 @@ const Locale = props => {
     <div className="tabContents animated fadeIn faster">
       <div className="tabContent">
         <div className="tabContent-header">
-          <span className="tabContent-header-title">Roles</span>
+          <span className="tabContent-header-title">
+            {t("SETTINGS_EMAILES_CONTENT_TITLE")}
+          </span>
           <span className="tabContent-header-desc">
-            Lorem ipsum has no many contribute
+            {t("SETTINGS_EMAILES_CONTENT_DESC")}
           </span>
         </div>
         <table className="table myTable">

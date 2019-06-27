@@ -1,6 +1,11 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
+  UPDATE: 'بروز رسانی',
+  DOWNLAOD: 'دانلود',
+  ASSET: 'رسانه',
+  VIEW_MODE: 'پیش نمایش',
+  EMPTY_LIST: 'لیست خالی می باشد',
   BACK: 'برگشت',
   draft: 'پیش نویس',
   archived: 'بایگانی شده',
@@ -25,10 +30,10 @@ export default {
   video: 'ویدیو',
   audio: 'صدا',
   pdf: 'پی دی اف',
-  UN_PUBLISH: 'عدم انتشار',
+  UN_PUBLISH: 'لغو انتشار',
   PUBLISH: 'انتشار',
   ARCHIVE: 'بایگانی',
-  UN_ARCHIVE: 'عدم بایگانی',
+  UN_ARCHIVE: 'لغو بایگانی',
   active: 'فعال',
   inactive: 'غیر فعال',
   ALL: 'همه',
@@ -60,11 +65,11 @@ export default {
   SIGNUP_CONFIRM_PASSWORD_INPUT_PLACEHOLDER: 'تایید رمز عبور',
   SIGNUP_CONFIRM_PASSWORD_INPUT_DESCRIPTION: 'رمز عبور حداقل 6 کاراکتر می باشد',
   SIGNUP_SUCCESS_TITLE: 'ایجاد با موفقیت',
-  SIGNUP_SUCCESS_MESSAGE:
-    'به رکتر خوش امدید.حساب شما با موفقیت ایجاد شد.',
+  SIGNUP_SUCCESS_MESSAGE: 'به رکتر خوش امدید.حساب شما با موفقیت ایجاد شد.',
   SIGNUP_SUCCESS_BTN: 'ورود',
   SIGNUP_CREATING_TITLE: 'در حال ایجاد کردن',
-  SIGNUP_CREATING_MESSAGE: 'ما داریم برای شما فضا ایجاد می کنیم،صبور باشید لطفا.',
+  SIGNUP_CREATING_MESSAGE:
+    'ما داریم برای شما فضا ایجاد می کنیم،صبور باشید لطفا.',
   SIGNUP_ERROR_TITLE: 'Sign Up Failed',
   SIGNUP_ON_SERVER_ERROR: 'Internal server error',
   SIGNUP_BAD_REQUEST: 'Bad request',
@@ -106,15 +111,58 @@ export default {
   HOME_SIDE_NAV_FORMS: 'فرم ها',
   HOME_SIDE_NAV_FORMS_DESC: 'فرم های خود را اینجا مدیریت کنید',
   HOME_SIDE_NAV_ASSETS_MANAGER: 'رسانه',
-  HOME_SIDE_NAV_ASSETS_MANAGER_DESC: 'فایل تصاویر ویدیو ... را اینجا مدیریت کنید',
+  HOME_SIDE_NAV_ASSETS_MANAGER_DESC:
+    'فایل تصاویر ویدیو ... را اینجا مدیریت کنید',
   HOME_SIDE_NAV_ASSETS_MANAGER_UPLOAD: 'بارگذاری فایل',
   HOME_SIDE_NAV_ASSETS_MANAGER_DESC_UPLOAD:
     'بارگذاری فایل برای مثال عکس و ویدیو و صدا',
   HOME_SIDEBAR_PROFILE_PROFILE: 'پروفایل',
-  HOME_SIDEBAR_PROFILE_SETTINGS: 'تنضیمات',
+  HOME_SIDEBAR_PROFILE_SETTINGS: 'تنظیمات',
   HOME_SIDEBAR_PROFILE_LIBRARY: 'رسانه',
   HOME_SIDEBAR_PROFILE_CATEGORIES: 'دسته بندی ها',
   HOME_SIDEBAR_PROFILE_LOGOUT: 'خروج',
+  // PROFILE
+  PROFILE_FIRST_BOX_TITLE: 'اطلاعات شخصی',
+  PROFILE_AVATAR_TITLE: 'نمایه پروفایل',
+  PROFILE_DROP_FILE_TEXT: 'فایل خود را اینجا رها کنید',
+  PROFILE_DROP_FILE_LINK: 'یا از اینجا انتخاب کنید',
+  PROFILE_DROP_FILE_DESC: 'چند نکته : از عکس با کیفیت 132 پیکسل انتخاب کنید.',
+  PROFILE_FIRST_NAME_INPUT_TITLE: 'نام',
+  PROFILE_FIRST_NAME_INPUT_PLACEHOLDER: 'نام خود را وارد کنید',
+  PROFILE_FIRST_NAME_INPUT_INFO: 'نام می تواند خالی باشد',
+  PROFILE_LAST_NAME_INPUT_TITLE: 'نام خانوادگی',
+  PROFILE_LAST_NAME_INPUT_PLACEHOLDER: 'نام خانوادگی خود را وارد کنید',
+  PROFILE_LAST_NAME_INPUT_INFO: 'نام خانوادگی می تواند خالی باشد',
+  PROFILE_SECOND_TAB_TITLE: 'حساب',
+  PROFILE_EMAIL_VERIFY: 'ایمبل ها',
+  PROFILE_EMAIL_VERIFY_INFO: ' ایمیل خود را برای محافظت از پروژه تایید کنید',
+  PROFILE_PROFILE_EMAIL_VERIFY_BTN: 'ایمیل تایید شد',
+  PROFILE_SEND_CONFIRMATION: 'ارسال تاییدیه ایمیل',
+  PROFILE_PASSWORD: 'رمز عبور',
+  PROFILE_PASSWORD_INFO: 'حساب خود را با رمز عبور قوی محافظ نگه دارید',
+  PROFILE_PASSWORD_BTN: 'ویرایش پسورد',
+  PROFILE_THIRD_BOX_TITLE: 'اطلاعیه',
+  PROFILE_EMAIL_NOTIF: 'ایمیل ها',
+  PROFILE_EMAIL_NOTIF_INFO: 'دریافت ایمیل برای فعالیت های من',
+  PROFILE_FOURTH_BOX_TITLE: 'منطقه خطرناک',
+  PROFILE_DELETE_ACCOUNT: 'حذف حساب کاربری',
+  PROFILE_DELETE_ACCOUNT_INFO:
+    'حساب شما به صورت موقت حذف خواهد شد. شما دیگر به حساب خود دسترسی نخواهید داشت',
+  PROFILE_DELETE_ACCOUNT_BTN: 'حذف',
+  // SETTINGS
+  SETTINGS_NEW_LOCALE_BTN: 'زبان جدید',
+  SETTINGS_NEW_EMAIL_BTN: 'ایمیل جدید',
+  SETTINGS_TABS_LOCALES: 'زبان ها',
+  SETTINGS_TABS_EMAILES: 'ایمیل ها',
+  SETTINGS_LOCALES_CONTENT_TITLE: 'لیست زبان ها',
+  SETTINGS_LOCALES_CONTENT_DESC: 'زیان های خود را اینجا مدیریت کنید',
+  SETTINGS_LOCALES_CONTENT_TABLE_ICON: 'آیکون',
+  SETTINGS_LOCALES_CONTENT_TABLE_NAME: 'نام',
+  SETTINGS_LOCALES_CONTENT_TABLE_TITLE: 'عنوان',
+  SETTINGS_LOCALES_CONTENT_TABLE_FALLBACK: 'زبان جایگزین',
+  SETTINGS_EMAILES_CONTENT_TITLE: 'لیست ایمیل ها',
+  SETTINGS_EMAILES_CONTENT_DESC:
+    'ایمیل های مشتری و پارتنر های خود را اینجا مدیریت کنید',
   // category
   CATEGORIES_MODAL_HEADER_TITLE_NEW: 'New Category',
   CATEGORIES_MODAL_HEADER_TITLE_EDIT: 'Edit Category',
@@ -166,7 +214,9 @@ export default {
   CATEGORY_REMOVE_CONTENT_TYPE_ALERT_MESSAGE:
     'Are you sure to remove content type from category ?',
   // CONTENT TYPE
-  CONTENT_TYPE_MODAL_HEADER_TITLE_NEW: 'Add New Content Type',
+  QUESTION_TYPES_EMPTY_LIST:
+    'شما هنوز فالبی ایجاد نکرده اید،اولین فالب خود را بسازید',
+  CONTENT_TYPE_MODAL_HEADER_TITLE_NEW: 'ایجاد قالب جدید',
   CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW: 'Create',
   CONTENT_TYPE_MODAL_HEADER_TITLE_EDIT: 'Edit Content Type',
   CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_EDIT: 'Edit',
@@ -181,7 +231,7 @@ export default {
   CONTENT_TYPE_MODAL_IMAGES_DESC:
     'A content type can have multi images and videos',
   CONTENT_TYPE_MODAL_TEMPLATE_BTN: 'Templates',
-  CONTENT_TYPE_NEW_ITEM_BTN: 'New Content Type',
+  CONTENT_TYPE_NEW_ITEM_BTN: 'ایجاد قالب جدید',
   CONTENT_TYPE_ADD_FIELD_TITLE: 'Add New Field',
   CONTENT_TYPE_ADD_FIELD_MODAL_NAME: 'Name',
   CONTENT_TYPE_ADD_FIELD_MODAL_NAME_PLACEHOLDER: 'Enter name of your field',
@@ -400,10 +450,11 @@ export default {
   ASSET_TABLE_HEAD_NAME: 'نام',
   ASSET_TABLE_HEAD_BY: 'توسط',
   ASSET_TABLE_HEAD_STATUS: 'وضعیت',
+  ASSET_VIEW_MEDIA_FAILED: 'خطا در بازگذاری فایل',
 
   UPSERT_ASSET_WRONG_URL: 'You have entered wrong url',
-  UPSERT_ASSET_HEADER_ADD_TITLE: 'Upload new file',
-  UPSERT_ASSET_HEADER_EDIT_TITLE: 'Edit a file ',
+  UPSERT_ASSET_HEADER_ADD_TITLE: 'آپلود فایل جدید',
+  UPSERT_ASSET_HEADER_EDIT_TITLE: 'ویرایش فایل',
   // ASSETS-API-GET
 
   ASSET_GET_ON_SERVER_ERROR:
@@ -412,19 +463,19 @@ export default {
     'Error in request assets.report this to aministarator',
   ASSET_GET_UN_AUTHORIZED: 'You have not authorized.login to get new token',
   // ASSETS-API-GET
-  ASSET_DELETE_ON_OK: 'Asset is deleted successfully',
+  ASSET_DELETE_ON_OK: 'فایل شما با موفقیت حذف شد.',
   ASSET_DELETE_ON_SERVER_ERROR:
     'Internal server error.please report that to administrtor',
   ASSET_DELETE_ON_BAD_REQUEST:
     'Error in request assets.report this to aministarator',
   ASSET_DELETE_UN_AUTHORIZED: 'You have not authorized.login to get new token',
   ASSET_DELETE_NOT_FOUND: 'File not found.make sure to choose content ',
-  UPSERT_ASSET_UPDATE_ON_OK: 'the asset is updated successfully',
+  UPSERT_ASSET_UPDATE_ON_OK: 'فایل شما با موفقیت ویرایش شد.',
   UPSERT_ASSET_UPDATE_ON_SERVER_ERROR: 'Internal server error',
   UPSERT_ASSET_UPDATE_ON_BAD_REQUEST: '',
   UPSERT_ASSET_UPDATE_UN_AUTHORIZED: '',
   UPSERT_ASSET_UPDATE_NOT_FOUND: 'Not found asset',
-  UPSERT_ASSET_ADD_ON_OK: 'New asset is added successfully',
+  UPSERT_ASSET_ADD_ON_OK: 'فایل جدید با موفقیت ایجاد شد.',
   UPSERT_ASSET_ADD_ON_SERVER_ERROR:
     'Internal server error . please make a call with adminstrator ',
   UPSERT_ASSET_ADD_ON_BAD_REQUEST: '',
@@ -448,6 +499,14 @@ export default {
   ASSET_IMAGE_EDITOR_FLIP_VERTICAL: 'Flip Vertical',
   ASSET_IMAGE_EDITOR_CROP_IMAGE: 'Crop',
   ASSET_IMAGE_EDITOR_CLEAR: 'Clear',
+  ASSET_REMOVE_ALERT_TITLE: 'حذف فایل',
+  ASSET_REMOVE_ALERT_INFO: 'آیا برای حذف اطمینان دارید؟',
+  ASSET_REMOVE_ALERT_BTN_OK: 'حذف',
+  ASSET_REMOVE_ALERT_TITLE_BTN_CANCEL: 'حذف نکن',
+  ASSET_ARCHIVIED_ON_OK: 'فایل شما با موفقیت بایگانی شد.',
+  ASSET_UN_ARCHIVED_ON_OK: 'فایل شما با موفقیت لغو بایگانی شد.',
+  ASSET_UN_PUBLISHED_ON_OK: 'فایل شما با موفقیت منتشر شد',
+  ASSET_UN_UN_PUBLISHED_ON_OK: 'فایل شما با موفقیت لغو انتشار شد',
   // PROFILE
   PROFILE_EMAIL_CONFRIMATION_ON_OK: 'Confirmation email sent to your email.',
   PROFILE_EMAIL_CONFRIMATION_ON_SERVER_ERROR: 'Internal server error',
@@ -458,5 +517,10 @@ export default {
   COMPONENTS_ASSET_BROWSER_HEADER: 'Choose your asset',
   ASSIGN_ROLE_MODAL_HEADER_TITLE: 'Assign role',
   ASSIGN_ROLE_SAVE_BTN: 'Save Changes',
-  COMPONENT_DESCRIPTION: 'Empty description'
+  COMPONENT_DESCRIPTION: 'Empty description',
+  INTERNAL_SERVER_ERROR: 'مشکل سیستمی',
+  BAD_REQUEST: 'ارسال با خطا',
+  NOT_FOUND: 'ابجکت مورد نظر وجود ندارد',
+  UNKNOWN_ERROR: 'مشکل ناشناخته',
+  ON_REQUEST_ERROR: 'درخواست با خطا'
 }

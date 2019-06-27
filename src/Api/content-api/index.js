@@ -305,7 +305,7 @@ export function getContents () {
   const _call = async spaceId => {
     try {
       const url = getAllURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
@@ -407,7 +407,7 @@ export function getContentTypes () {
   const _call = async spaceId => {
     try {
       const url = getContentTypesURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
@@ -509,7 +509,7 @@ export function getCategories () {
   const _call = async spaceId => {
     try {
       const url = getCategoriesURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
@@ -611,7 +611,7 @@ export function addContent () {
   const _call = async (spaceId, content) => {
     try {
       const url = addURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'POST',
         headers: {
@@ -713,7 +713,7 @@ export function updateContent () {
   const _call = async (spaceId, content) => {
     try {
       const url = updateURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -821,7 +821,7 @@ export function deleteContent () {
   const _call = async (spaceId, contentId) => {
     try {
       const url = deleteURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'DELETE',
         headers: {
@@ -935,7 +935,7 @@ export function getContentById () {
   const _call = async (spaceId, contentId) => {
     try {
       const url = getByIdURL + '?id=' + contentId
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
@@ -1042,7 +1042,7 @@ export function publish () {
   const _call = async (spaceId, assetId) => {
     try {
       const url = publishURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -1146,7 +1146,7 @@ export function unPublish () {
   const _call = async (spaceId, contentId) => {
     try {
       const url = unPublishURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -1253,7 +1253,7 @@ export function archive () {
   const _call = async (spaceId, contentId) => {
     try {
       const url = archiveURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -1358,7 +1358,7 @@ export function unArchive () {
   const _call = async (spaceId, contentId) => {
     try {
       const url = unArchiveURL
-      const token = storageManager.getItem('token')
+      const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
         method: 'PUT',
         headers: {

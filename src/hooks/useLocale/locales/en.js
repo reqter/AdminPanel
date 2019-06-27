@@ -1,6 +1,11 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
+  UPDATE: 'Update',
+  DOWNLAOD: 'Download',
+  ASSET: 'Asset',
+  VIEW_MODE: 'View Mode',
+  EMPTY_LIST: 'Empty List',
   BACK: 'Back',
   draft: 'Draft',
   archived: 'Archived',
@@ -126,6 +131,51 @@ export default {
   HOME_SIDEBAR_PROFILE_LIBRARY: 'Library',
   HOME_SIDEBAR_PROFILE_CATEGORIES: 'Categories',
   HOME_SIDEBAR_PROFILE_LOGOUT: 'Logout',
+  // PROFILE
+  PROFILE_FIRST_BOX_TITLE: 'Personal Info',
+  PROFILE_AVATAR_TITLE: 'Avatar',
+  PROFILE_DROP_FILE_TEXT: 'Drop your file here',
+  PROFILE_DROP_FILE_LINK: 'or Browse',
+  PROFILE_DROP_FILE_DESC:
+    'Some tips: Use a photo or image rather than text and upload an image that is 132px square or larger.',
+  PROFILE_FIRST_NAME_INPUT_TITLE: 'First Name',
+  PROFILE_FIRST_NAME_INPUT_PLACEHOLDER: 'Enter your first name',
+  PROFILE_FIRST_NAME_INPUT_INFO: 'First name can be empty',
+  PROFILE_LAST_NAME_INPUT_TITLE: 'Last Name',
+  PROFILE_LAST_NAME_INPUT_PLACEHOLDER: 'Enter your last name',
+  PROFILE_LAST_NAME_INPUT_INFO: 'Last name can be empty',
+  PROFILE_SECOND_TAB_TITLE: 'Login',
+  PROFILE_EMAIL_VERIFY: 'Emails',
+  PROFILE_EMAIL_VERIFY_INFO:
+    ' Verify your email to better protect your account. It will be used for account-related notifications and sign-in.',
+  PROFILE_PROFILE_EMAIL_VERIFY_BTN: 'Email Confirmed',
+  PROFILE_SEND_CONFIRMATION: 'Send Confirmation',
+  PROFILE_PASSWORD: 'Password',
+  PROFILE_PASSWORD_INFO:
+    'Secure your REQTER account with a strong and unique password.',
+  PROFILE_PASSWORD_BTN: 'Update password',
+  PROFILE_THIRD_BOX_TITLE: 'Notifications',
+  PROFILE_EMAIL_NOTIF: 'Emails',
+  PROFILE_EMAIL_NOTIF_INFO:
+    'Receive email notifications for comments, activities.',
+  PROFILE_FOURTH_BOX_TITLE: 'Danger Zone',
+  PROFILE_DELETE_ACCOUNT: 'Delete Account',
+  PROFILE_DELETE_ACCOUNT_INFO:
+    'Permanently delete your account.You will no longer have access to your account.',
+  PROFILE_DELETE_ACCOUNT_BTN: 'Delete Account',
+  // SETTINGS
+  SETTINGS_NEW_LOCALE_BTN: 'New Locale',
+  SETTINGS_NEW_EMAIL_BTN: 'New Email',
+  SETTINGS_TABS_LOCALES: 'Locales',
+  SETTINGS_TABS_EMAILES: 'Emails',
+  SETTINGS_LOCALES_CONTENT_TITLE: 'Locales List',
+  SETTINGS_LOCALES_CONTENT_DESC: 'Manage your locales',
+  SETTINGS_LOCALES_CONTENT_TABLE_ICON: 'Icon',
+  SETTINGS_LOCALES_CONTENT_TABLE_NAME: 'Name',
+  SETTINGS_LOCALES_CONTENT_TABLE_TITLE: 'Title',
+  SETTINGS_LOCALES_CONTENT_TABLE_FALLBACK: 'Fallback',
+  SETTINGS_EMAILES_CONTENT_TITLE: 'Emailes List',
+  SETTINGS_EMAILES_CONTENT_DESC: 'Manage your customer and partenrs emailes',
   // category
   CATEGORIES_MODAL_HEADER_TITLE_NEW: 'New Category',
   CATEGORIES_MODAL_HEADER_TITLE_EDIT: 'Edit Category',
@@ -176,7 +226,8 @@ export default {
   CATEGORY_REMOVE_CONTENT_TYPE_ALERT_TITLE: 'Remove Content Type',
   CATEGORY_REMOVE_CONTENT_TYPE_ALERT_MESSAGE:
     'Are you sure to remove content type from category ?',
-  // CONTENT TYPE
+  // question type
+  QUESTION_TYPES_EMPTY_LIST: 'You have not created any content types yet',
   CONTENT_TYPE_MODAL_HEADER_TITLE_NEW: 'Add New Content Type',
   CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW: 'Create',
   CONTENT_TYPE_MODAL_HEADER_TITLE_EDIT: 'Edit Content Type',
@@ -412,6 +463,7 @@ export default {
   ASSET_TABLE_HEAD_BY: 'By',
   ASSET_TABLE_HEAD_STATUS: 'Status',
   ASSET_TABLE_HEAD_ACTIONS: 'Actions',
+  ASSET_VIEW_MEDIA_FAILED: 'There is no uploaded file',
 
   UPSERT_ASSET_WRONG_URL: 'You have entered wrong url',
   UPSERT_ASSET_HEADER_ADD_TITLE: 'Upload new file',
@@ -460,6 +512,14 @@ export default {
   ASSET_IMAGE_EDITOR_FLIP_VERTICAL: 'Flip Vertical',
   ASSET_IMAGE_EDITOR_CROP_IMAGE: 'Crop',
   ASSET_IMAGE_EDITOR_CLEAR: 'Clear',
+  ASSET_REMOVE_ALERT_TITLE: 'Remove Asset',
+  ASSET_REMOVE_ALERT_INFO: 'Are you sure to remove ?',
+  ASSET_REMOVE_ALERT_BTN_OK: 'Remove',
+  ASSET_REMOVE_ALERT_TITLE_BTN_CANCEL: "Don't Remove",
+  ASSET_ARCHIVIED_ON_OK: 'Asset archived successfully.',
+  ASSET_UN_ARCHIVED_ON_OK: 'Asset unarchived successfully.',
+  ASSET_UN_PUBLISHED_ON_OK: 'Asset published successfully.',
+  ASSET_UN_UN_PUBLISHED_ON_OK: 'Asset unpublished successfully.',
   // PROFILE
   PROFILE_EMAIL_CONFRIMATION_ON_OK: 'Confirmation email sent to your email.',
   PROFILE_EMAIL_CONFRIMATION_ON_SERVER_ERROR: 'Internal server error',
@@ -470,5 +530,10 @@ export default {
   COMPONENTS_ASSET_BROWSER_HEADER: 'Choose your asset',
   ASSIGN_ROLE_MODAL_HEADER_TITLE: 'Assign role',
   ASSIGN_ROLE_SAVE_BTN: 'Save Changes',
-  COMPONENT_DESCRIPTION: 'Empty description'
+  COMPONENT_DESCRIPTION: 'Empty description',
+  INTERNAL_SERVER_ERROR: 'Internal server error',
+  BAD_REQUEST: 'Bad Request',
+  NOT_FOUND: 'Not found',
+  UNKNOWN_ERROR: 'uknown error',
+  ON_REQUEST_ERROR: 'Request error'
 }

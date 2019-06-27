@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { setLocales } from "./../../../../Api/space-api";
-import { useGlobalState } from "./../../../../hooks";
+import { useLocale, useGlobalState } from "./../../../../hooks";
 const Locale = props => {
+  const { appLocale, currentLang, t } = useLocale();
   const [{ sysLocales, spaceInfo }, dispatch] = useGlobalState();
 
   function getLocaleTitle(localeName, type) {
@@ -34,20 +35,21 @@ const Locale = props => {
     <div className="tabContents animated fadeIn faster">
       <div className="tabContent">
         <div className="tabContent-header">
-          <span className="tabContent-header-title">Locales</span>
+          <span className="tabContent-header-title">
+            {t("SETTINGS_LOCALES_CONTENT_TITLE")}
+          </span>
           <span className="tabContent-header-desc">
-            Lorem ipsum has no many contribute
+            {t("SETTINGS_LOCALES_CONTENT_DESC")}
           </span>
         </div>
         <table className="table myTable">
           <thead className="myTable-header">
             <tr>
               <th>#</th>
-              <th>Locale</th>
-              <th>Fallback</th>
-              <th>Inc.in responce</th>
-              <th>Editing</th>
-              <th>Required Fields</th>
+              <th>{t("SETTINGS_LOCALES_CONTENT_TABLE_ICON")}</th>
+              <th>{t("SETTINGS_LOCALES_CONTENT_TABLE_NAME")}</th>
+              <th>{t("SETTINGS_LOCALES_CONTENT_TABLE_TITLE")}</th>
+              <th>{t("SETTINGS_LOCALES_CONTENT_TABLE_FALLBACK")}</th>
               <th />
             </tr>
           </thead>

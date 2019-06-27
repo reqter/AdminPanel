@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-// let setNotif = (title, type) => [title, type]
+let setNotif = (title, type) => [title, type]
 const useNotification = () => {
   const [showNotif, setShowNotif] = useState(false)
   const [information, setInformation] = useState({
@@ -12,7 +12,7 @@ const useNotification = () => {
     if (showNotif) setTimeout(() => setShowNotif(false), 3000)
   })
 
-  function setNotif (title, type = 'alert') {
+  setNotif = (title, type = 'alert') => {
     setShowNotif(true)
     setInformation({
       title,

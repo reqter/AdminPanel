@@ -369,15 +369,13 @@ const ItemTypes = props => {
             ) : !contentTypes || contentTypes.length === 0 ? (
               <div className="emptyContenType animated fadeIn">
                 <i className="icon-empty-box-open icon" />
-                <span className="title">Empty List!</span>
-                <span className="info">
-                  You have not created any content types yet.
-                </span>
+                <span className="title">{t("EMPTY_LIST")}!</span>
+                <span className="info">{t("QUESTION_TYPES_EMPTY_LIST")}!</span>
                 <button
                   className="btn btn-sm btn-primary"
                   onClick={openAddItemTypeModal}
                 >
-                  New Content Type
+                  {t("CONTENT_TYPE_NEW_ITEM_BTN")}
                 </button>
               </div>
             ) : (

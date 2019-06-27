@@ -13,6 +13,7 @@ import {
   RichText,
   FileUploader,
   CircleSpinner,
+  AssetUploaderView,
 } from "./../../components";
 
 const fields = [
@@ -51,12 +52,12 @@ const fields = [
     id: "3",
     name: "url",
     title: {
-      fa: "Your File",
+      fa: "فایل شما",
       en: "Your File",
     },
     description: {
-      fa: "",
-      en: "Click on file selector to choose your file",
+      fa: "فایل انتخابی برای مثال تصویر ویدیو صدا ",
+      en: "Choosen file for example image audio video",
     },
     type: "fileUploader",
     mediaType: "file",
@@ -71,6 +72,7 @@ const UpsertFile = props => {
   const { appLocale, t, currentLang } = useLocale();
 
   // variables
+  const [viewMode] = useState(props.match.url.includes("view") ? true : false);
   const [updateMode, toggleUpdateMode] = useState();
   const [tab, changeTab] = useState(); // tab1 ; form , tab2 : errors
   const [error, setError] = useState();
@@ -215,6 +217,8 @@ const UpsertFile = props => {
       case "string":
         return (
           <String
+            viewMode={viewMode}
+            updateMode={updateMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -224,6 +228,7 @@ const UpsertFile = props => {
       case "number":
         return (
           <Number
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -233,6 +238,7 @@ const UpsertFile = props => {
       case "datetime":
         return (
           <DateTime
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -242,42 +248,38 @@ const UpsertFile = props => {
       case "location":
         return (
           <Location
+            viewMode={viewMode}
             field={field}
             formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "media":
-        return (
-          <Media
-            formData={formData}
-            field={field}
             init={setNameToFormValidation}
             onChangeValue={handleOnChangeValue}
           />
         );
       case "fileuploader":
-        return (
-          <FileUploader
-            formData={formData}
-            field={field}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "boolean":
-        return (
-          <Boolean
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
+        if (viewMode) {
+          return (
+            <AssetUploaderView
+              viewMode={viewMode}
+              formData={formData}
+              field={field}
+              init={setNameToFormValidation}
+              onChangeValue={handleOnChangeValue}
+            />
+          );
+        } else
+          return (
+            <FileUploader
+              viewMode={viewMode}
+              formData={formData}
+              field={field}
+              init={setNameToFormValidation}
+              onChangeValue={handleOnChangeValue}
+            />
+          );
       case "keyvalue":
         return (
           <KeyValue
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -287,6 +289,7 @@ const UpsertFile = props => {
       case "richtext":
         return (
           <RichText
+            viewMode={viewMode}
             field={field}
             formData={formData}
             init={setNameToFormValidation}
@@ -489,11 +492,7 @@ const UpsertFile = props => {
           {t("BACK")}
         </button>
         <div className="tabItems">
-          <div className="item active">
-            {updateMode
-              ? `1.${t("UPSERT_ASSET_HEADER_EDIT_TITLE")}`
-              : `1.${t("UPSERT_ASSET_HEADER_ADD_TITLE")}`}
-          </div>
+          <div className="item active">{t("ASSET")}</div>
         </div>
       </div>
       <div className="up-file-content">
@@ -501,7 +500,9 @@ const UpsertFile = props => {
           {tab === 1 && (
             <>
               <div className="up-file-content-title">
-                {updateMode
+                {viewMode
+                  ? t("VIEW_MODE")
+                  : updateMode
                   ? t("UPSERT_ASSET_HEADER_EDIT_TITLE")
                   : t("UPSERT_ASSET_HEADER_ADD_TITLE")}
               </div>
@@ -511,28 +512,30 @@ const UpsertFile = props => {
                     {getFieldItem(field)}
                   </div>
                 ))}
-                <div className="upf-actions">
-                  {!updateMode && (
+                {!viewMode && (
+                  <div className="upf-actions">
+                    {!updateMode && (
+                      <button
+                        className="btn btn-primary ajax-button"
+                        onClick={() => upsertItem(false)}
+                        disabled={!isFormValid}
+                      >
+                        <CircleSpinner show={spinner} size="small" />
+                        <span>Save & New</span>
+                      </button>
+                    )}
                     <button
                       className="btn btn-primary ajax-button"
-                      onClick={() => upsertItem(false)}
+                      onClick={() => upsertItem(true)}
                       disabled={!isFormValid}
                     >
-                      <CircleSpinner show={spinner} size="small" />
-                      <span>Save & New</span>
+                      <CircleSpinner show={closeSpinner} size="small" />
+                      <span>
+                        {updateMode ? "Update & Close" : "Save & Close"}
+                      </span>
                     </button>
-                  )}
-                  <button
-                    className="btn btn-primary ajax-button"
-                    onClick={() => upsertItem(true)}
-                    disabled={!isFormValid}
-                  >
-                    <CircleSpinner show={closeSpinner} size="small" />
-                    <span>
-                      {updateMode ? "Update & Close" : "Save & Close"}
-                    </span>
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
             </>
           )}

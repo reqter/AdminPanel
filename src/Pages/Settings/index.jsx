@@ -99,7 +99,7 @@ const Settings = props => {
                 className="btn btn-primary"
                 onClick={toggleNewLocaleModal}
               >
-                New Locale
+                {t("SETTINGS_NEW_LOCALE_BTN")}
               </button>
             )}
             {tabContent === "roles" && (
@@ -107,7 +107,7 @@ const Settings = props => {
                 className="btn btn-primary"
                 onClick={toggleUpsertRoleModal}
               >
-                New Role
+                {t("SETTINGS_NEW_EMAIL_BTN")}
               </button>
             )}
             {tabContent === "apiKeys" && (
@@ -153,30 +153,30 @@ const Settings = props => {
               }
               onClick={() => toggleTab("locales")}
             >
-              Locales
+              {t("SETTINGS_TABS_LOCALES")}
             </div>
             <div
               className={"tabItem " + (tabContent === "roles" ? "active" : "")}
               onClick={() => toggleTab("roles")}
             >
-              Roles
+              {t("SETTINGS_TABS_EMAILES")}
             </div>
-            <div
+            {/* <div
               className={
                 "tabItem " + (tabContent === "apiKeys" ? "active" : "")
               }
               onClick={() => toggleTab("apiKeys")}
             >
               Connected Apps
-            </div>
-            <div
+            </div> */}
+            {/* <div
               className={
                 "tabItem " + (tabContent === "webHooks" ? "active" : "")
               }
               onClick={() => toggleTab("webHooks")}
             >
               Webhooks
-            </div>
+            </div> */}
           </div>
           {tabContent === "locales" && (
             <Locales onEditLocale={handleEditLocale} />

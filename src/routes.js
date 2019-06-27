@@ -173,12 +173,17 @@ const routes = [
     isPublic: false
   },
   {
-    path: '/addAsset',
+    path: '/asset/new',
     component: AddAsset,
     isPublic: false
   },
   {
-    path: '/editAsset/:id',
+    path: '/asset/edit/:id',
+    component: EditAsset,
+    isPublic: true
+  },
+  {
+    path: '/asset/view/:id',
     component: EditAsset,
     isPublic: true
   }

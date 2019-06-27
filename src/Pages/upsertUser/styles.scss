@@ -9,10 +9,11 @@
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0px 0px 8px 2px lightgray;
+    box-shadow: 0px 0px 3px lightgray;
     display: flex;
     padding: 0 3%;
     align-items: center;
+    z-index: 20;
     .btn {
       i {
         margin-right: 10px;
