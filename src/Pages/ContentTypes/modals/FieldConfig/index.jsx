@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Modal, ModalFooter } from "reactstrap";
 import { useGlobalState, utility } from "../../../../services";
 import { useLocale } from "../../../../hooks";
-import { updateContentType } from "../../../../Api/questionType-api";
+import { updateContentType } from "../../../../Api/contentType-api";
 import "./styles.scss";
 import { CircleSpinner } from "../../../../components";
 

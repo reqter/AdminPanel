@@ -148,7 +148,8 @@
   }
   .listGroupItem {
     padding: 10px;
-    border-bottom: 0.5px solid lightgray;
+    border: 0.3px solid lightgray;
+    border-bottom: none;
     &.active {
       background: rgb(251, 251, 251);
     }

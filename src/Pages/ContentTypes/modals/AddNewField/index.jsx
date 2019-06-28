@@ -10,10 +10,10 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { utility, useGlobalState } from "../../../../services";
-import { useLocale } from "../../../../hooks";
+import { utility } from "../../../../services";
+import { useGlobalState, useLocale } from "../../../../hooks";
 import { CheckBox, CircleSpinner } from "../../../../components";
-import { updateContentType } from "../../../../Api/questionType-api";
+import { updateContentType } from "../../../../Api/contentType-api";
 import "./styles.scss";
 
 const fields = [
@@ -34,7 +34,7 @@ const fields = [
   {
     name: "dateTime",
     title: "FIELD_TYPE_DATE_TIME",
-    description:"FIELD_TYPE_DATE_TIME_INFO",
+    description: "FIELD_TYPE_DATE_TIME_INFO",
     icon: "icon-calendar",
     appearance: "default",
   },

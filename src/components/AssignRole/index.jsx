@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
-import { useGlobalState } from "./../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import "./styles.scss";
 
 const AssignRole = props => {

@@ -15,5 +15,7 @@ export default {
   'users-filter-margin': '0 20px 0 0',
   'users-filter-typesBox-margin': '0 5px 0 0',
   'users-filter-itemIcon-margin': '0 15px 0 0',
-
+  'notify-box-position-left': null,
+  'notify-box-position-right': 0,
+  'media-uploaded-item-margin': '0 20px 0 0'
 }

@@ -159,7 +159,7 @@ const UpsertFile = props => {
   }
 
   function backToUsers() {
-    props.history.push("/panel/users");
+    props.history.push("/users");
   }
 
   function upsertItem(closePage) {

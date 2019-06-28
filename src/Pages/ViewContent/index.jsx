@@ -248,7 +248,7 @@ const ViewRequest = props => {
   }
 
   function showProfile() {
-    props.history.push("/panel/profile");
+    props.history.push("/profile");
   }
 
   return spinner ? (

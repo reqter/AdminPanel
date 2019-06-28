@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ImageEditorRc from "./../ImageEditorRc";
 import "./styles.scss";
-import { useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
+import { useLocale, useGlobalState } from "./../../hooks";
 import { uploadAssetFile } from "./../../Api/asset-api";
 import CircleSpinner from "./../CircleSpinner";
 
@@ -64,9 +63,7 @@ const ImageEditorModal = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "error",
-                  message: t(
-                    "ASSERS_UPLOAD_ON_BAD_REQUEST"
-                  ),
+                  message: t("ASSERS_UPLOAD_ON_BAD_REQUEST"),
                 },
               });
             })
@@ -76,9 +73,7 @@ const ImageEditorModal = props => {
                 type: "ADD_NOTIFY",
                 value: {
                   type: "warning",
-                  message: t(
-                    "ASSERS_UPLOAD_UN_AUTHORIZED"
-                  ),
+                  message: t("ASSERS_UPLOAD_UN_AUTHORIZED"),
                 },
               });
             })

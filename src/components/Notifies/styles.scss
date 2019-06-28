@@ -1,12 +1,14 @@
+@import "./../../styles/mixins.scss";
 .notifies {
   position: fixed;
   top: 0px;
   width: 370px;
-  right: 0px;
   display: flex;
   flex-direction: column;
   padding: 10px 20px;
   z-index: 100000000000;
+  @include variable(notify-box-position-left, left, 0);
+  @include variable(notify-box-position-right, right, 0);
   .custom-notify {
     min-height: 55px;
     width: 100%;

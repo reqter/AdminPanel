@@ -191,14 +191,14 @@ const Assets = props => {
     doFilter(selectedFileType.name, selected.name);
   }
   function openUploader() {
-    props.history.push("/asset/new");
+    props.history.push(`/${currentLang}/asset/new`);
   }
   function openUploaderForEdit(e, file) {
-    props.history.push(`/asset/edit/${file._id}`);
+    props.history.push(`/${currentLang}/asset/edit/${file._id}`);
     e.stopPropagation();
   }
   function viewAsset(file) {
-    props.history.push(`/asset/view/${file._id}`);
+    props.history.push(`/${currentLang}/asset/view/${file._id}`);
   }
   function showRemoveAlert(e, item) {
     e.stopPropagation();
@@ -640,69 +640,71 @@ const Assets = props => {
                         </div>
                       </td>
                       <td>
-                        {file.status === "draft" ? (
-                          <>
+                        <div className="asset_actions">
+                          {file.status === "draft" ? (
+                            <>
+                              <button
+                                className="btn btn-light btn-sm"
+                                onClick={e => publishAsset(e, file)}
+                              >
+                                {t("PUBLISH")}
+                              </button>
+                              <button
+                                className="btn btn-light btn-sm"
+                                onClick={e => archiveAsset(e, file)}
+                              >
+                                {t("ARCHIVE")}
+                              </button>
+                            </>
+                          ) : file.status === "changed" ? (
+                            <>
+                              <button
+                                className="btn btn-light btn-sm"
+                                onClick={e => publishAsset(e, file)}
+                              >
+                                {t("PUBLISH")}
+                              </button>
+                              <button
+                                className="btn btn-light btn-sm"
+                                onClick={e => archiveAsset(e, file)}
+                              >
+                                {t("ARCHIVE")}
+                              </button>
+                            </>
+                          ) : file.status === "archived" ? (
                             <button
                               className="btn btn-light btn-sm"
-                              onClick={e => publishAsset(e, file)}
+                              onClick={e => unArchiveAsset(e, file)}
                             >
-                              {t("PUBLISH")}
+                              {t("UN_ARCHIVE")}
                             </button>
+                          ) : file.status === "published" ? (
                             <button
                               className="btn btn-light btn-sm"
-                              onClick={e => archiveAsset(e, file)}
+                              onClick={e => unPublishAsset(e, file)}
                             >
-                              {t("ARCHIVE")}
+                              {t("UN_PUBLISH")}
                             </button>
-                          </>
-                        ) : file.status === "changed" ? (
-                          <>
-                            <button
-                              className="btn btn-light btn-sm"
-                              onClick={e => publishAsset(e, file)}
-                            >
-                              {t("PUBLISH")}
-                            </button>
-                            <button
-                              className="btn btn-light btn-sm"
-                              onClick={e => archiveAsset(e, file)}
-                            >
-                              {t("ARCHIVE")}
-                            </button>
-                          </>
-                        ) : file.status === "archived" ? (
-                          <button
-                            className="btn btn-light btn-sm"
-                            onClick={e => unArchiveAsset(e, file)}
-                          >
-                            {t("UN_ARCHIVE")}
-                          </button>
-                        ) : file.status === "published" ? (
-                          <button
-                            className="btn btn-light btn-sm"
-                            onClick={e => unPublishAsset(e, file)}
-                          >
-                            {t("UN_PUBLISH")}
-                          </button>
-                        ) : (
-                          ""
-                        )}
-
-                        {file.status !== "published" &&
-                          file.status !== "archived" && (
-                            <button
-                              className="btn btn-light btn-sm"
-                              onClick={e => showRemoveAlert(e, file)}
-                            >
-                              <i className="icon-bin" />
-                            </button>
+                          ) : (
+                            ""
                           )}
-                        <button
-                          className="btn btn-light btn-sm"
-                          onClick={e => openUploaderForEdit(e, file)}
-                        >
-                          <i className="icon-pencil" />
-                        </button>
+
+                          {file.status !== "published" &&
+                            file.status !== "archived" && (
+                              <button
+                                className="btn btn-light btn-sm"
+                                onClick={e => showRemoveAlert(e, file)}
+                              >
+                                <i className="icon-bin" />
+                              </button>
+                            )}
+                          <button
+                            className="btn btn-light btn-sm"
+                            onClick={e => openUploaderForEdit(e, file)}
+                          >
+                            <i className="icon-pencil" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

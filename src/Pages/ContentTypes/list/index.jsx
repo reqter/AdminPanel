@@ -40,16 +40,14 @@ const List = props => {
           )}
           <div className="treeItem-text">
             <span className="treeItem-name">
-              {listItem.title[currentLang]
+              {listItem.title
                 ? listItem.title[currentLang]
-                : listItem.title}
+                  ? listItem.title[currentLang]
+                  : listItem.title
+                : ""}
             </span>
             <span className="treeItem-desc">
-              {listItem.description[currentLang]
-                ? listItem.description[currentLang]
-                : listItem.description
-                ? listItem.description
-                : "Lorem ipsum dolor sit amet, consectetur"}
+              {listItem.description[currentLang]}
             </span>
           </div>
           {listItem.template !== "generic" && (
@@ -68,7 +66,7 @@ const List = props => {
           >
             <i className="icon-pencil" />
           </button>
-          {listItem.accessRight && (
+          {/* {listItem.accessRight && (
             <button
               className="btn btn-light treeItem-action"
               size="xs"
@@ -80,7 +78,7 @@ const List = props => {
                 {t("ITEM_TYPES_ACCESS_RIGHT")}
               </span>
             </button>
-          )}
+          )} */}
           <button
             className="btn btn-light treeItem-action"
             size="xs"

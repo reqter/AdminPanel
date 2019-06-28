@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
-import { useGlobalState, useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "../../hooks";
 import {
   addContent,
   updateContent,
   getContentById,
   getContentTypes,
-} from "./../../Api/content-api";
+} from "../../Api/content-api";
 import {
   addRequest,
   updateRequest,
@@ -26,7 +26,7 @@ import {
   Reference,
   CircleSpinner,
   JsonObject,
-} from "./../../components";
+} from "../../components";
 
 const requestFields = [
   {
@@ -77,7 +77,7 @@ const requestFields = [
     name: "showHeader",
     title: {
       en: "Show Header Info",
-      fa: "عنوان",
+      fa: "",
     },
     description: {
       en: "If checked, request page will have a header at top of the page",
@@ -174,7 +174,7 @@ const UpsertProduct = props => {
 
   // variables
   const requestLinkInput = useRef(null);
-  const isRequest = props.match.url.includes("requests") ? true : false;
+  const isRequest = true;
 
   const [updateMode, toggleUpdateMode] = useState(
     props.match.params.id
@@ -366,7 +366,6 @@ const UpsertProduct = props => {
       })
       .call(spaceInfo.id, id);
   }
-
   function initEditMode(result) {
     if (isRequest) {
       let obj = {};
@@ -531,10 +530,8 @@ const UpsertProduct = props => {
         break;
     }
   }
-  function backToProducts() {
-    props.history.push("/forms");
-
-    //else
+  function backToForms() {
+    props.history.push(`/${currentLang}/forms`);
   }
   function changeTab(tab) {
     if (tab === 2) {
@@ -814,7 +811,7 @@ const UpsertProduct = props => {
               message: t("UPSERT_ITEM_UPDATE_ON_OK"),
             },
           });
-          backToProducts();
+          backToForms();
         })
         .onServerError(result => {
           if (closePage) toggleCloseSpinner(false);
@@ -882,7 +879,7 @@ const UpsertProduct = props => {
             },
           });
           if (closePage) {
-            backToProducts();
+            backToForms();
           } else {
             if (closePage) toggleCloseSpinner(false);
             else toggleSpinner(false);
@@ -956,7 +953,7 @@ const UpsertProduct = props => {
   return (
     <div className="up-wrapper">
       <div className="up-header">
-        <button className="btn btn-light" onClick={backToProducts}>
+        <button className="btn btn-light" onClick={backToForms}>
           <i className="icon-arrow-left2" />
           Back
         </button>
@@ -1066,8 +1063,8 @@ const UpsertProduct = props => {
                 </div>
               )}
               <div className="up-formInputs animated fadeIn">
-                {fields &&
-                  fields.map(field => (
+                {requestFields &&
+                  requestFields.map(field => (
                     <div key={field.id} className="rowItem">
                       {getFieldItem(field)}
                     </div>
@@ -1191,7 +1188,7 @@ const UpsertProduct = props => {
                 </div>
               </div>
               <div className="requestLink-actions">
-                <button className="btn btn-light" onClick={backToProducts}>
+                <button className="btn btn-light" onClick={backToForms}>
                   {t("Close")}
                 </button>
               </div>

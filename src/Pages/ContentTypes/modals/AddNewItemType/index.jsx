@@ -15,7 +15,7 @@ import {
   getTemplates,
   addContentType,
   updateContentType,
-} from "../../../../Api/questionType-api";
+} from "../../../../Api/contentType-api";
 import AssetBrowser from "../../../../components/AssetBrowser";
 import "./styles.scss";
 import { CircleSpinner } from "../../../../components";

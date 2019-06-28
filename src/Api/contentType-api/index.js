@@ -1,11 +1,7 @@
 import { storageManager } from '../../services'
 const config = process.env
-const spaceId = config.REACT_APP_SPACE_ID;
-const contentTypeID = config.REACT_APP_QUESTION_TYPE_CONTENT_TYPE_ID
-const token = config.REACT_APP_TOKEN
-const baseUrl = config.REACT_APP_QUESTION_TYPE_BASE_URL
-
-
+const getAllURL =
+  config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_GET_ALL
 const addURL =
   config.REACT_APP_CONTENT_TYPE_BASE_URL + config.REACT_APP_CONTENT_TYPE_ADD
 const updateURL =
@@ -108,7 +104,7 @@ export function getTemplates () {
     }
   }
 }
-export function getQuestionTypes () {
+export function getContentTypes () {
   let _onOkCallBack
   function _onOk (result) {
     if (_onOkCallBack) {
@@ -145,11 +141,9 @@ export function getQuestionTypes () {
       _onConnectionErrorCallBack(result)
     }
   }
-  const _call = async () => {
+  const _call = async (spaceId, token) => {
     try {
-      //contentTypeID
-        
-      const url = baseUrl + `/graphql?query={contentlist(contentType:"${contentTypeID}"){fields status}}`
+      const url = getAllURL
       var rawResponse = await fetch(url, {
         method: 'GET',
         headers: {
@@ -374,8 +368,7 @@ export function updateContentType () {
           media: contentType.media,
           fields: contentType.fields,
           allowCustomFields: contentType.allowCustomFields,
-          accessRight: contentType.accessRight,
-          categorization: contentType.categorization
+          accessRight: contentType.accessRight
         })
       })
 
@@ -401,9 +394,7 @@ export function updateContentType () {
         default:
           break
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
 
   return {

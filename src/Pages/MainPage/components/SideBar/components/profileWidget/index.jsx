@@ -7,8 +7,9 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { useGlobalState, useLocale } from "../../../../../../hooks";
+import { useGlobalState, useLocale, useCookie } from "../../../../../../hooks";
 const ProfileWidget = props => {
+  const [token, setToken] = useCookie("reqter_token");
   const { match, location, history } = props;
   const { appLocale, t, currentLang } = useLocale();
   const [{ userInfo, isAuthenticated }, dispatch] = useGlobalState();
@@ -18,24 +19,24 @@ const ProfileWidget = props => {
     toggleVisibility(prevState => !prevState);
   }
   function logout() {
+    setToken(undefined);
     dispatch({
       type: "LOGOUT",
       value: false,
     });
-    history.replace("/login");
-    postMessage(false);
+    history.replace(`/${currentLang}/login`);
   }
   function showProfile() {
-    history.push("/panel/profile");
+    history.push(`/${currentLang}/profile`);
   }
   function showSettings() {
-    history.push("/panel/settings");
+    history.push(`/${currentLang}/settings`);
   }
   function showCategories() {
-    history.push("/panel/categories");
+    history.push(`/${currentLang}/categories`);
   }
   function showAssets() {
-    history.push("/panel/assets");
+    history.push(`/${currentLang}/assets`);
   }
   return (
     <div className="profile-widget">
@@ -81,9 +82,9 @@ const ProfileWidget = props => {
             <DropdownItem onClick={showCategories}>
               {t("HOME_SIDEBAR_PROFILE_CATEGORIES")}
             </DropdownItem>
-            <DropdownItem onClick={showSettings}>
+            {/* <DropdownItem onClick={showSettings}>
               {t("HOME_SIDEBAR_PROFILE_SETTINGS")}
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem onClick={logout}>
               {t("HOME_SIDEBAR_PROFILE_LOGOUT")}
             </DropdownItem>

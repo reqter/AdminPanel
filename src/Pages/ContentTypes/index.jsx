@@ -6,12 +6,12 @@ import FieldConfig from "./modals/FieldConfig";
 import AddNewItemType from "./modals/AddNewItemType";
 import { useGlobalState, useLocale, useCookie } from "../../hooks";
 import {
-  getQuestionTypes,
+  getContentTypes,
   deleteContentType,
   removeContentTypeField,
   setAccessRight,
   updateContentType,
-} from "./../../Api/questionType-api";
+} from "../../Api/contentType-api";
 import { AssignRole, Alert, RowSkeleton } from "../../components";
 
 const ItemTypes = props => {
@@ -22,7 +22,7 @@ const ItemTypes = props => {
 
   useEffect(() => {
     let didCancel = false;
-    getQuestionTypes()
+    getContentTypes()
       .onOk(result => {
         if (!didCancel) {
           setSpinner(false);
@@ -68,7 +68,7 @@ const ItemTypes = props => {
           });
         }
       })
-      .call();
+      .call(spaceInfo.id, token);
     return () => {
       didCancel = true;
     };

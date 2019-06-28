@@ -43,6 +43,18 @@
 .icon-more-h:before {
   content: "\e902";
 }
+.icon-add:before {
+  content: "\e92e";
+}
+.icon-envelope:before {
+  content: "\e930";
+}
+.icon-minus:before {
+  content: "\e931";
+}
+.icon-phone:before {
+  content: "\e932";
+}
 .icon-order:before {
   content: "\e92d";
 }
@@ -216,6 +228,9 @@
 }
 .icon-plus-o:before {
   content: "\ea0a";
+}
+.icon-info:before {
+  content: "\ea0c";
 }
 .icon-cancel-circle:before {
   content: "\ea0d";

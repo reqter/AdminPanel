@@ -34,7 +34,16 @@ const PopupAlert = props => {
         <div className="popup">
           <span className="icon-cross closeIcon" onClick={closeModal} />
           <div className="popup-icon">
-            <i className="icon-audio" />
+            <i
+              className={
+                "icon-" +
+                (data.type === "warning"
+                  ? "warning warning"
+                  : data.type === "error"
+                  ? "shield error"
+                  : "info info")
+              }
+            />
           </div>
           <div className="popup-messsages">
             <span className="popup-title">{data.title}</span>
@@ -44,7 +53,18 @@ const PopupAlert = props => {
             <button className="btn btn-light" onClick={closeModal}>
               {data.cancelTitle || t("DONT_REMOVE")}
             </button>
-            <button className="btn btn-primary" onClick={okClicked} ref={okBtn}>
+            <button
+              className={
+                "btn btn-" +
+                (data.type === "warning"
+                  ? "primary"
+                  : data.type === "error"
+                  ? "primary"
+                  : "primary")
+              }
+              onClick={okClicked}
+              ref={okBtn}
+            >
               {spinner && <CircleSpinner show={spinner} size="small" />}
               {!spinner && (data.okTitle || t("REMOVE"))}
             </button>

@@ -1,16 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+} from "reactstrap";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { useGlobalState, useLocale } from "../../hooks";
 import {
-  getRequests,
-  filterRequests,
-  deleteRequest,
+  getContents,
+  filterContents,
+  deleteContent,
   publish,
   unPublish,
   archive,
   unArchive,
-} from "../../Api/request-api";
+} from "../../Api/content-api";
 import "./styles.scss";
 
 import { Alert, CircleSpinner, DateFormater } from "../../components";
@@ -18,11 +24,10 @@ import {
   CategoriesFilter,
   ContentTypesFilter,
   StatusFilter,
-} from "../../components/Commons";
+} from "../../components/Commons/ContentFilters";
 
-const Requests = props => {
+const Products = props => {
   const { appLocale, t, currentLang } = useLocale();
-
   let didCancel = false;
   //#region controller
 
@@ -45,11 +50,11 @@ const Requests = props => {
     {
       width: 100,
       Header: () => <div className="p-header-td">Thumbnail</div>,
-      // show: false,
+      //show: false,
       headerStyle: {
         display: "none",
       },
-      accessor: "thumbnail",
+      accessor: "fields.thumbnail",
       Cell: props => {
         return (
           <div className="p-image">
@@ -66,18 +71,25 @@ const Requests = props => {
       },
     },
     {
-      Header: () => <div className="p-header-td">Title</div>,
-      show: false,
+      Header: () => <div className="p-header-td">Name</div>,
+      //show: false,
       headerStyle: {
-        display: "block",
+        display: "none",
       },
-      //accessor: "title",
+      accessor: "fields",
       Cell: props => {
-        const { title, description } = props.row._original;
         return (
           <div className="p-name">
-            <span>{title && title[currentLang]}</span>
-            <span>{description && description[currentLang]}</span>
+            <span>
+              {props.value &&
+                props.value["name"] &&
+                props.value["name"][currentLang]}
+            </span>
+            <span>
+              {props.value &&
+                props.value["shortDesc"] &&
+                props.value["shortDesc"][currentLang]}
+            </span>
           </div>
         );
       },
@@ -157,6 +169,38 @@ const Requests = props => {
         const { status } = props.original;
         return (
           <div className="p-actions">
+            {/* <Dropdown
+              isOpen={contentActions[props.original._id]}
+              toggle={() => handleContentActions(props.original._id)}
+            >
+              <DropdownToggle
+                className="btn btn-primary btn-sm"
+                color="primary"
+              >
+                <i className="icon-more-h" />
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={openNewItemBox}>
+                  {t("New Content")}
+                </DropdownItem>
+                <DropdownItem onClick={newRequest}>
+                  {t("New Request")}
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown> */}
+
+            <button
+              className="btn btn-light btn-sm"
+              onClick={() => handleViewRow(props)}
+            >
+              View
+            </button>
+            <button
+              className="btn btn-light btn-sm"
+              onClick={() => handleRequestRow(props)}
+            >
+              Requst
+            </button>
             <button
               className="btn btn-light btn-sm"
               onClick={() => handleEditRow(props)}
@@ -227,12 +271,13 @@ const Requests = props => {
 
   // variables
   const [
-    { requests, categories, contentTypes, spaceInfo },
+    { contents, categories, contentTypes, spaceInfo },
     dispatch,
   ] = useGlobalState();
 
   const tableBox = useRef(null);
-
+  const [contentActions, toggleContentActions] = useState({});
+  const [headerActions, toggleHeaderActions] = useState(false);
   const [spinner, toggleSpinner] = useState(true);
   const [leftContent, toggleLeftContent] = useState(false);
   const [alertData, setAlertData] = useState();
@@ -248,21 +293,21 @@ const Requests = props => {
   const [dataStatus, toggleDataStatus] = useState(false);
 
   useEffect(() => {
-    loadRequests();
+    loadContents();
     return () => {
       didCancel = true;
     };
   }, []);
 
-  function loadRequests() {
-    getRequests()
+  function loadContents() {
+    getContents()
       .onOk(result => {
         if (!didCancel) {
-          toggleSpinner(false);
           dispatch({
-            type: "SET_REQUESTS",
+            type: "SET_CONTENTS",
             value: result,
           });
+          toggleSpinner(false);
         }
       })
       .onServerError(result => {
@@ -301,31 +346,23 @@ const Requests = props => {
           });
         }
       })
-      .unKnownError(result => {
-        if (!didCancel) {
-          toggleSpinner(false);
-        }
-      })
-      .onRequestError(result => {
-        if (!didCancel) {
-          toggleSpinner(false);
-        }
-      })
       .call(spaceInfo.id);
   }
   // methods
+  function handleContentActions(id) {
+    let newObj = { ...contentActions };
+    newObj[id] = !newObj[id];
+    toggleContentActions(newObj);
+  }
   const imgs = ["jpg", "jpeg", "gif", "bmp", "png"];
   const videos = ["mp4", "3gp", "ogg", "wmv", "flv", "avi"];
   const audios = ["wav", "mp3", "ogg"];
   function getAssetUi(url) {
-    const ext =
-      url && url.length > 0
-        ? url
-            .split("/")
-            .pop()
-            .split(".")
-            .pop()
-        : "";
+    const ext = url
+      .split("/")
+      .pop()
+      .split(".")
+      .pop();
     if (imgs.indexOf(ext.toLowerCase()) !== -1)
       return <img className="p-image-value" src={url} alt="" />;
     else if (videos.indexOf(ext.toLowerCase()) !== -1)
@@ -365,10 +402,18 @@ const Requests = props => {
   }
   function openNewItemBox(contentType) {
     props.history.push({
-      pathname: "/" + currentLang + "/form/new",
+      pathname: "/contents/new",
       // search: "?sort=name",
       //hash: "#the-hash",
-      //params: { isRequest: true },
+      //params: { contentType, hasContentType }
+    });
+  }
+  function newRequest() {
+    props.history.push({
+      pathname: "/requests/new",
+      params: {
+        requestFromContents: true,
+      },
     });
   }
   function makeTableFieldView(type, props) {
@@ -466,11 +511,11 @@ const Requests = props => {
 
   function filterData(text, contentTypeId, categoryId, status) {
     toggleSpinner(true);
-    filterRequests()
+    filterContents()
       .onOk(result => {
         toggleSpinner(false);
         dispatch({
-          type: "SET_REQUESTS",
+          type: "SET_CONTENTS",
           value: result,
         });
         if (dataStatus) toggleDataStatus(false);
@@ -516,17 +561,20 @@ const Requests = props => {
   function handleDeleteRow(row) {
     setAlertData({
       type: "error",
-      title: "Remove request",
-      message: "Are you sure to remove?",
+      title: "Remove Content",
+      message: "Are you sure to remove ?",
       isAjaxCall: true,
       okTitle: "Remove",
       cancelTitle: "Don't remove",
       onOk: () => {
         const deleted = row.original;
-        deleteRequest()
+        deleteContent()
           .onOk(result => {
-            loadRequests();
             setAlertData();
+            dispatch({
+              type: "DELETE_CONTENT",
+              value: deleted,
+            });
             dispatch({
               type: "ADD_NOTIFY",
               value: {
@@ -582,15 +630,28 @@ const Requests = props => {
       },
     });
   }
-
+  function handleViewRow(row) {
+    props.history.push({
+      pathname: `/${currentLang}/quote/view/${row.original._id}`,
+    });
+  }
   function handleEditRow(row) {
     props.history.push({
-      pathname: `/${currentLang}/form/edit/${row.original._id}`,
+      pathname: `/${currentLang}/quote/edit/${row.original._id}`,
+    });
+  }
+  function handleRequestRow(row) {
+    props.history.push({
+      pathname: `/${currentLang}/quote/new`,
+      params: {
+        requestFromContents: true,
+        content: row.original,
+      },
     });
   }
   function viewContent(row) {
     props.history.push({
-      pathname: `/${currentLang}/form/view/${row._id}`,
+      pathname: `/${currentLang}/quote/view/${row._id}`,
       viewMode: true,
     });
   }
@@ -616,6 +677,10 @@ const Requests = props => {
           },
         });
         toggleDataStatus(true);
+        // dispatch({
+        //   type: "CHANGE_CONTENT_STATUS",
+        //   value: result,
+        // });
       })
       .onServerError(result => {
         dispatch({
@@ -720,6 +785,11 @@ const Requests = props => {
           },
         });
         toggleDataStatus(true);
+
+        // dispatch({
+        //   type: "CHANGE_CONTENT_STATUS",
+        //   value: result,
+        // });
       })
       .onServerError(result => {
         dispatch({
@@ -834,23 +904,30 @@ const Requests = props => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search requests by title"
+                placeholder="Search name of content"
                 value={searchText}
                 onChange={e => setSearchText(e.target.value)}
               />
             </div>
-            {/* <button className="btn btn-primary">
-              <i className="icon-folder" />
-            </button>
-            <button className="btn btn-primary">
-              <i className="icon-list" />
-            </button> */}
             <button className="btn btn-primary" onClick={toggleFilterBox}>
               <i className="icon-filter" />
             </button>
-            <button className="btn btn-primary" onClick={openNewItemBox}>
-              New Form
-            </button>
+            <Dropdown
+              isOpen={headerActions}
+              toggle={() => toggleHeaderActions(prevState => !prevState)}
+            >
+              <DropdownToggle className="btn btn-primary" caret color="primary">
+                Create
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={openNewItemBox}>
+                  {t("New Content")}
+                </DropdownItem>
+                <DropdownItem onClick={newRequest}>
+                  {t("New Request")}
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         </div>
         <div className="p-content">
@@ -916,8 +993,8 @@ const Requests = props => {
             </div>
             <div className="p-content-right-body">
               <ReactTable
-                data={requests}
-                defaultPageSize={1000000}
+                data={contents}
+                defaultPageSize={100000}
                 minRows={2}
                 columns={columns}
                 showPaginationTop={false}
@@ -947,4 +1024,4 @@ const Requests = props => {
   );
 };
 
-export default Requests;
+export default Products;

@@ -136,8 +136,12 @@ const FileUploaderInput = props => {
   return (
     <>
       <div className="up-uploader">
-        <span className="title">{field.title[currentLang]}</span>
-        <span className="description">{field.description[currentLang]}</span>
+        <span className="title">
+          {field.title && field.title[currentLang]}
+        </span>
+        <span className="description">
+          {field.description && field.description[currentLang]}
+        </span>
         <div className="files">
           {files.map(file => (
             <div key={file.id} className="files-uploaded">

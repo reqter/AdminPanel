@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useGlobalState, useLocale } from "./../../../hooks";
-import { getContentTypes } from "./../../../Api/content-api";
+import { useGlobalState, useLocale } from "../../../hooks";
+import { getContentTypes } from "../../../Api/content-api";
 import { CircleSpinner } from "../../../components";
 
 

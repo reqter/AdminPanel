@@ -1,3 +1,4 @@
+@import "./../../styles/mixins.scss";
 .isList-files {
   display: flex;
   margin-bottom: 20px;
@@ -119,7 +120,7 @@
       width: 120px;
       height: 120px;
       position: relative;
-      margin-right: 20px;
+       @include variable(media-uploaded-item-margin, margin, 0 10px);
       border: 1px solid lightgray;
       padding: 2px;
       border-radius: 5px;

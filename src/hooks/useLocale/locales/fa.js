@@ -6,6 +6,9 @@ export default {
   ASSET: 'رسانه',
   VIEW_MODE: 'پیش نمایش',
   EMPTY_LIST: 'لیست خالی می باشد',
+  SAVE_AND_NEW: 'ذخیره و ایجاد',
+  SAVE_AND_CLOSE: 'ذخیره و برگشت',
+  UPDATE_AND_CLOSE: 'ویرایش و برگشت',
   BACK: 'برگشت',
   draft: 'پیش نویس',
   archived: 'بایگانی شده',
@@ -103,7 +106,7 @@ export default {
   HOME_SIDE_NAV_CATEGRIES: 'دسته بندی ها',
   HOME_SIDE_NAV_CATEGORIES_DEC: 'دسته بندی های خود را مدیریت کنید',
   HOME_SIDE_NAV_QUESTION_TYPES: 'قالب فرم',
-  HOME_SIDE_NAV_QUESTION_TYPES_DESC: 'فالب های فرم خود را مدیریت کنید',
+  HOME_SIDE_NAV_QUESTION_TYPES_DESC: 'قالب های فرم خود را مدیریت کنید',
   HOME_SIDE_NAV_REQUESTS: 'درخواست ها',
   HOME_SIDE_NAV_REQUESTS_DESC: 'مدیریت درخواست ها',
   HOME_SIDE_NAV_QUOTES: 'پیشنهادات',
@@ -215,7 +218,7 @@ export default {
     'Are you sure to remove content type from category ?',
   // CONTENT TYPE
   QUESTION_TYPES_EMPTY_LIST:
-    'شما هنوز فالبی ایجاد نکرده اید،اولین فالب خود را بسازید',
+    'شما هنوز قالبی ایجاد نکرده اید،اولین قالب خود را بسازید',
   CONTENT_TYPE_MODAL_HEADER_TITLE_NEW: 'ایجاد قالب جدید',
   CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_NEW: 'Create',
   CONTENT_TYPE_MODAL_HEADER_TITLE_EDIT: 'Edit Content Type',

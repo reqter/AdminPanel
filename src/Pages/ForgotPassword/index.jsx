@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useGlobalState } from "./../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "./../../hooks";
 import { signup } from "./../../Api/account-api";
 import { CircleSpinner } from "./../../components";
 import "./styles.scss";
@@ -84,7 +83,7 @@ const ForgotPassword = props => {
   //#endregion first tab
   //#region second tab
   function navToLogin() {
-    props.history.push("login");
+    props.history.push(`/${currentLang}/login`);
   }
   //#endregion second tab
   return (
@@ -99,21 +98,15 @@ const ForgotPassword = props => {
         <div className="formBody">
           {tab === 1 && (
             <form onSubmit={signupUser}>
-              <div className="message">
-                {t("FORGOT_PASS_MESSAGE")}
-              </div>
+              <div className="message">{t("FORGOT_PASS_MESSAGE")}</div>
               <div className="form-group">
-                <label>
-                  {t("LOGIN_EMAIL_INPUT_TITLE")}
-                </label>
+                <label>{t("LOGIN_EMAIL_INPUT_TITLE")}</label>
                 <input
                   type="email"
                   className="form-control"
                   id="emailInput"
                   aria-describedby="emailHelp"
-                  placeholder={t(
-                    "LOGIN_EMAIL_INPUT_PLACEHOLDER"
-                  )}
+                  placeholder={t("LOGIN_EMAIL_INPUT_PLACEHOLDER")}
                   onChange={handleEmailChanged}
                   autoFocus
                 />
@@ -132,26 +125,20 @@ const ForgotPassword = props => {
                 }
               >
                 <CircleSpinner show={spinner} size="small" />
-                {!spinner
-                  ? t("FORGOT_PASS_SEND_EMAIL_BTN")
-                  : null}
+                {!spinner ? t("FORGOT_PASS_SEND_EMAIL_BTN") : null}
               </button>
             </form>
           )}
           {tab === 2 && (
             <form>
               <div className="form-group">
-                <label>
-                  {t("LOGIN_EMAIL_INPUT_TITLE")}
-                </label>
+                <label>{t("LOGIN_EMAIL_INPUT_TITLE")}</label>
                 <input
                   type="email"
                   className="form-control"
                   id="emailInput"
                   aria-describedby="emailHelp"
-                  placeholder={t(
-                    "LOGIN_EMAIL_INPUT_PLACEHOLDER"
-                  )}
+                  placeholder={t("LOGIN_EMAIL_INPUT_PLACEHOLDER")}
                   onChange={handleEmailChanged}
                 />
                 <small id="emailHelp" className="form-text text-muted">
@@ -170,9 +157,7 @@ const ForgotPassword = props => {
                 }
               >
                 <CircleSpinner show={spinner} size="small" />
-                {!spinner
-                  ? t("LOGIN_SUBMIT_BTN")
-                  : null}
+                {!spinner ? t("LOGIN_SUBMIT_BTN") : null}
               </button>
             </form>
           )}
@@ -198,7 +183,7 @@ const ForgotPassword = props => {
             {t("SIGNUP_LOGIN_LINK_TITLE")}
             &nbsp;
           </span>
-          <Link to="/login">
+          <Link to={"/" + currentLang + "/login"}>
             {t("SIGNUP_LOGIN_LINK")}
           </Link>
         </div>

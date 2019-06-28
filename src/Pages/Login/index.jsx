@@ -86,7 +86,9 @@ const Login = props => {
   useEffect(() => {
     if (redirectToReferrer) {
       props.history.replace(
-        !props.location.state ? "panel" : props.location.state.from.pathname
+        !props.location.state
+          ? "/" + currentLang
+          : props.location.state.from.pathname
       );
     }
     return () => {
@@ -128,7 +130,9 @@ const Login = props => {
                 {t("LOGIN_PASSWORD_INPUT_DESCRIPTION")}
               </small>
             </div>
-            <Link to="/forgotPassword">{t("LOGIN_FORGOT_PASS")}</Link>
+            <Link to={"/" + currentLang + "/forgotPassword"}>
+              {t("LOGIN_FORGOT_PASS")}
+            </Link>
             <button
               type="submit"
               className="btn btn-primary btn-block btn-submit"
@@ -151,7 +155,7 @@ const Login = props => {
 
       <div className="signUpBox">
         <span>{t("LOGIN_SIGNUP_LINK_TITLE")}&nbsp;</span>
-        <Link to="/signup">{t("LOGIN_SIGNUP_LINK")}</Link>
+        <Link to={"/" + currentLang + "/signup"}>{t("LOGIN_SIGNUP_LINK")}</Link>
       </div>
     </div>
   );

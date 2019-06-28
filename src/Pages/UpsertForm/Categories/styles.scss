@@ -1,0 +1,51 @@
+.up-categories {
+  padding: 0;
+  min-height: 250px;
+  .treeItem {
+    display: flex;
+    align-items: center;
+    border: 0;
+    .btnCategoryCollapse {
+      margin-right: 5px;
+      font-size: 14px;
+      width: 30px;
+      height: 30px;
+      color: rgb(56, 132, 255);
+      font-size: 23px;
+      font-weight: bolder;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .btnCategoryLeaf {
+      width: 30px;
+      height: 25px;
+      font-size: 6px;
+      margin-right: 13px;
+    }
+    .treeItem-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .treeItem-name {
+      font-weight: 600;
+    }
+    .treeItem-desc {
+      font-size: 10px;
+    }
+    .treeItem-action {
+      margin-left: 5px;
+      display: flex;
+    }
+    .hoverAction {
+      display: none;
+    }
+  }
+  .treeItemParent {
+    &:hover .hoverAction {
+      display: flex;
+    }
+  }
+}

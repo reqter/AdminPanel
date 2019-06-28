@@ -7,8 +7,7 @@ import {
 } from "reactstrap";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { useGlobalState } from "./../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState, useLocale } from "../../hooks";
 import {
   getContents,
   filterContents,
@@ -17,21 +16,21 @@ import {
   unPublish,
   archive,
   unArchive,
-} from "./../../Api/content-api";
+} from "../../Api/content-api";
 import "./styles.scss";
 
-import { Alert, CircleSpinner, DateFormater } from "./../../components";
+import { Alert, CircleSpinner, DateFormater } from "../../components";
 import {
   CategoriesFilter,
   ContentTypesFilter,
   StatusFilter,
-} from "./../../components/Commons/ContentFilters";
+} from "../../components/Commons/ContentFilters";
 
-const Products = props => {
+const Requests = props => {
   const { appLocale, t, currentLang } = useLocale();
   let didCancel = false;
   //#region controller
-  
+
   let baseFieldColumnsConfig = [
     {
       Header: "#",
@@ -155,9 +154,7 @@ const Products = props => {
       accessor: "status",
       Cell: props => (
         <div className="p-contentType">
-          <span className="badge badge-primary">
-            {t(props.value)}
-          </span>
+          <span className="badge badge-primary">{t(props.value)}</span>
         </div>
       ),
     },
@@ -592,9 +589,7 @@ const Products = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENTS_DELETE_ON_SERVER_ERROR"
-                ),
+                message: t("CONTENTS_DELETE_ON_SERVER_ERROR"),
               },
             });
           })
@@ -604,9 +599,7 @@ const Products = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t(
-                  "CONTENTS_DELETE_ON_BAD_REQUEST"
-                ),
+                message: t("CONTENTS_DELETE_ON_BAD_REQUEST"),
               },
             });
           })
@@ -616,9 +609,7 @@ const Products = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "warning",
-                message: t(
-                  "CONTENTS_DELETE_UN_AUTHORIZED"
-                ),
+                message: t("CONTENTS_DELETE_UN_AUTHORIZED"),
               },
             });
           })
@@ -925,11 +916,7 @@ const Products = props => {
               isOpen={headerActions}
               toggle={() => toggleHeaderActions(prevState => !prevState)}
             >
-              <DropdownToggle
-                className="btn btn-primary"
-                caret
-                color="primary"
-              >
+              <DropdownToggle className="btn btn-primary" caret color="primary">
                 Create
               </DropdownToggle>
               <DropdownMenu>
@@ -1037,4 +1024,4 @@ const Products = props => {
   );
 };
 
-export default Products;
+export default Requests;

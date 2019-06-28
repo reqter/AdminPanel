@@ -11,20 +11,30 @@ import Notifies from './components/Notifies'
 import Routes from './routes'
 import PrivateRoute from './PrivateRoute'
 
-const App = () => {
+const possibleLangs = {
+  en: {
+    direction: 'ltr'
+  },
+  fa: {
+    direction: 'rtl'
+  }
+}
+
+const App = props => {
+  const pathName = window.location.pathname
+  const lang = pathName.split('/')[1]
+  let appLang = possibleLangs[lang] ? lang : 'fa'
+  const direction = possibleLangs[appLang].direction
   const { setLocale } = useLocale()
   const [layout, setLayout] = useState(
     process.env.REACT_APP_DEFAULT_LAYOUT || 'ltr'
   )
   useTheme('theme1')
-  useLayout(layout)
-  useEffect(() => {
-    setLayout('rtl')
-  }, [])
+  useLayout(direction)
 
   return (
     <StateProvider>
-      <LocaleProvider lang='fa'>
+      <LocaleProvider lang={appLang}>
         <BrowserRouter>
           <div>
             <Switch>
@@ -103,7 +113,7 @@ const App = () => {
               })}
               {/* <Route to="/not-found" render={props=><NoutFound/>}/> */}
               {/* اگه دقیقا / رو زد برو لاگین */}
-              <Redirect from='/' to='/panel' exact />
+              <Redirect from='/' to='/' exact />
               {/* اگه هیچی نزد یا چرت و پرت زد برو اون روتی که نات فاند هست */}
               {/* <Redirect to="/not-found"/> */}
             </Switch>
@@ -116,50 +126,3 @@ const App = () => {
 }
 
 export default App
-
-// function makeData(len = 10) {
-//   return range(len).map(d => {
-//     return {
-//       ...newProduct(),
-//       children: range(10).map(newProduct)
-//     };
-//   });
-// }
-
-// function newProduct() {
-//   return {
-//     thumbnail:
-//       "https://myresources1195.blob.core.windows.net/images/banana.jpg",
-//     name: "موز ممتاز",
-//     description: "محصولات وارداتی از افریقا",
-//     price: "2500 $",
-//     brand: "Banana"
-//   };
-// }
-// function range(len) {
-//   const arr = [];
-//   for (let i = 0; i < len; i++) {
-//     arr.push(i);
-//   }
-//   return arr;
-// }
-//   function createTree(list) {
-//     var map = {},
-//       node,
-//       roots = [],
-//       i;
-//     for (i = 0; i < list.length; i += 1) {
-//       map[list[i].id] = i; // initialize the map
-//       list[i].children = []; // initis
-//     }
-//     for (i = 0; i < list.length; i += 1) {
-//       node = list[i];
-//       if (node.parentId) {
-//         // if you have dangling branches check that map[node.parentId] exists
-//         list[map[node.parentId]].children.push(node);
-//       } else {
-//         roots.push(node);
-//       }
-//     }
-//     return roots;
-//   }

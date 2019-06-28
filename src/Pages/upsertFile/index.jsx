@@ -69,7 +69,7 @@ const fields = [
 
 const UpsertFile = props => {
   const [{ spaceInfo }, dispatch] = useGlobalState();
-  const { appLocale, t, currentLang } = useLocale();
+  const { appLocale, t, currentLang, direction } = useLocale();
 
   // variables
   const [viewMode] = useState(props.match.url.includes("view") ? true : false);
@@ -301,7 +301,7 @@ const UpsertFile = props => {
     }
   }
   function backToAssets() {
-    props.history.push("/panel/assets");
+    props.history.push(`/${currentLang}/assets`);
   }
 
   function upsertItem(closePage) {
@@ -488,7 +488,11 @@ const UpsertFile = props => {
     <div className="up-file-wrapper">
       <div className="up-file-header">
         <button className="btn btn-light" onClick={backToAssets}>
-          <i className="icon-arrow-left2" />
+          <i
+            className={
+              "icon-arrow-" + (direction === "ltr" ? "left2" : "right2")
+            }
+          />
           {t("BACK")}
         </button>
         <div className="tabItems">
@@ -521,7 +525,7 @@ const UpsertFile = props => {
                         disabled={!isFormValid}
                       >
                         <CircleSpinner show={spinner} size="small" />
-                        <span>Save & New</span>
+                        <span>{t("SAVE_AND_NEW")}</span>
                       </button>
                     )}
                     <button
@@ -531,7 +535,9 @@ const UpsertFile = props => {
                     >
                       <CircleSpinner show={closeSpinner} size="small" />
                       <span>
-                        {updateMode ? "Update & Close" : "Save & Close"}
+                        {updateMode
+                          ? t("UPDATE_AND_CLOSE")
+                          : t("SAVE_AND_CLOSE")}
                       </span>
                     </button>
                   </div>

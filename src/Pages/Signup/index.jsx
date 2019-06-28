@@ -227,7 +227,9 @@ const Signup = props => {
             {t("SIGNUP_LOGIN_LINK_TITLE")}
             &nbsp;
           </span>
-          <Link to="/login">{t("SIGNUP_LOGIN_LINK")}</Link>
+          <Link to={"/" + currentLang + "/login"}>
+            {t("SIGNUP_LOGIN_LINK")}
+          </Link>
         </div>
       )}
     </div>

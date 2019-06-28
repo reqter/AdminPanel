@@ -3,10 +3,19 @@ import en from './locales/en'
 import fa from './locales/fa'
 const LocaleContext = React.createContext([{}, () => {}])
 const LocaleProvider = props => {
-  const { lang } = props
-  const [state, setState] = useState({
-    appLocale: lang === 'fa' ? fa : en,
-    currentLang: lang
+  const fa_lang = {
+    appLocale: fa,
+    currentLang: 'fa',
+    direction: 'rtl'
+  }
+  const en_lang = {
+    appLocale: en,
+    currentLang: 'en',
+    direction: 'ltr'
+  }
+
+  const [state, setState] = useState(() => {
+    return props.lang === 'fa' ? fa_lang : en_lang
   })
   return (
     <LocaleContext.Provider value={[state, setState]}>
