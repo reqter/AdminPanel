@@ -213,6 +213,8 @@ const UpsertProduct = props => {
   const [closeSpinner, toggleCloseSpinner] = useState(false);
   const [requestResult, setRequestResult] = useState();
   const [formType, setSelectedFormType] = useState();
+  const [partner, setPartner] = useState();
+  const [contentTypeSearch, setContentTypeSearch] = useState();
 
   useEffect(() => {
     if (updateMode || viewMode) {
@@ -532,13 +534,22 @@ const UpsertProduct = props => {
   }
   function changeTabContent(t) {
     if (t === 2) {
-      if (formType) changeTab(t);
+      if (formType && (formType.id === 2 || formType.id === 4)) changeTab(t);
     } else if (t === 3) {
-      changeTab(t);
+      if (formType) {
+        if (formType.id === 2 || formType.id === 4) {
+          if (partner) {
+            changeTab(t);
+          }
+        } else {
+          changeTab(t);
+        }
+      }
     } else if (t === 4) {
       changeTab(t);
-    } else if (t === 5) changeTab(t);
-    else {
+    } else if (t === 5) {
+      if (contentType) changeTab(t);
+    } else {
       changeTab(t);
     }
 
@@ -814,9 +825,20 @@ const UpsertProduct = props => {
   function handleSelectFormType(type) {
     setSelectedFormType(type);
     if (type.id === 1 || type.id === 3) {
+      setPartner();
       changeTab(3);
     } else {
       changeTab(2);
+    }
+  }
+  function handleSelectPartner(p) {
+    setPartner(p);
+    changeTab(3);
+  }
+  function handleContentTypesSearch(e) {
+    const key = e.which || e.key;
+    if (key === 13 || e.target.value.length === 0) {
+      setContentTypeSearch(e.target.value);
     }
   }
   function copyRequestLink() {
@@ -847,6 +869,7 @@ const UpsertProduct = props => {
               {contentType && contentType.title[currentLang]}
             </div>
           ) : (
+            headerTabs &&
             headerTabs.map(h => (
               <div
                 className={["item", tab === h.id ? "active" : ""].join(" ")}
@@ -882,7 +905,12 @@ const UpsertProduct = props => {
               onSelectType={handleSelectFormType}
             />
           )}
-          {tab === 2 && <Partners />}
+          {tab === 2 && (
+            <Partners
+              onSelectPartner={handleSelectPartner}
+              selectedPartner={partner}
+            />
+          )}
           {tab === 3 && (
             <>
               <h5>{t("UPSERT_FORM_TEMPLATES_TITLE")}</h5>
@@ -892,12 +920,14 @@ const UpsertProduct = props => {
               <input
                 type="text"
                 className="form-control contentTypeSearch"
-                placeholder="جستحوی قالب با نام"
+                placeholder={t("UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER")}
+                onKeyUp={handleContentTypesSearch}
               />
               <div className="up-content-itemTypes animated fadeIn">
                 <ContentTypesList
                   onSelectContentType={handleSelectContentType}
                   onEndLoading={handleLoadedContentTypes}
+                  searchText={contentTypeSearch}
                 />
               </div>
             </>
@@ -920,7 +950,7 @@ const UpsertProduct = props => {
                 {category ? (
                   category.image !== undefined ? (
                     <div className="selectedCategory-img">
-                      <Image url={category.image[currentLang]}/>
+                      <Image url={category.image[currentLang]} />
                     </div>
                   ) : (
                     <div className="selectedCategory-icon">

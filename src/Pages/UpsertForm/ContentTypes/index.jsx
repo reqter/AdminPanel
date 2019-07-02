@@ -5,8 +5,10 @@ import { CircleSpinner, Image } from "../../../components";
 
 const ContentTypes = props => {
   const { appLocale, t, currentLang } = useLocale();
-  const [{ contentTypes, spaceInfo }, dispatch] = useGlobalState();
+  const [{ spaceInfo }, dispatch] = useGlobalState();
   const [spinner, togglepinner] = useState(true);
+  const [allData, setAllData] = useState();
+  const [contentTypes, setContentTypes] = useState();
   function handleSelectContentType(contentType) {
     props.onSelectContentType(contentType);
   }
@@ -21,6 +23,8 @@ const ContentTypes = props => {
           type: "SET_CONTENT_TYPES",
           value: result,
         });
+        setAllData(result);
+        setContentTypes(result);
         props.onEndLoading(true);
       })
       .onServerError(result => {
@@ -52,7 +56,18 @@ const ContentTypes = props => {
       })
       .call(spaceInfo.id);
   }, []);
-
+  useEffect(() => {
+    if (props.searchText && props.searchText.length > 0) {
+      const s = allData.filter(item =>
+        item.title[currentLang].includes(props.searchText)
+      );
+      setContentTypes(s);
+    } else {
+      if (!spinner) {
+        setContentTypes(allData);
+      }
+    }
+  }, [props.searchText]);
   return spinner ? (
     <div className="contentTypesSpinner">
       <CircleSpinner show={spinner} size="large" />
@@ -82,7 +97,7 @@ const ContentTypes = props => {
             </div>
           ) : (
             <div className="treeItem-img">
-              <Image url={c.media[0][currentLang]}/>
+              <Image url={c.media[0][currentLang]} />
             </div>
           )}
           <div className="treeItem-text">

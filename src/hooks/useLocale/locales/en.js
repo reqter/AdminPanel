@@ -589,6 +589,9 @@ export default {
   UPSERT_FORM_DESIGN_TITLE: 'Design Your Form',
   UPSERT_FORM_DESIGN_DESC:
     'Hear you can design your form,fields order,background color,...',
+    UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER:"Search partners by name",
+UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER:"Search in form templates by name",
+
 
   ASSET_GET_ON_SERVER_ERROR:
     'Internal server error.please report that to administrtor',

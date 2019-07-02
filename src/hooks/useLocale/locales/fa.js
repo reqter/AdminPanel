@@ -578,6 +578,8 @@ export default {
   UPSERT_FORM_DESIGN_TITLE: 'طراحی فرم',
   UPSERT_FORM_DESIGN_DESC:
     'شما اینجا می توانید ترتیب سوال های را مشخص کنید،پس زمینه فرم و...',
+  UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER: 'جستجوی همکار با نام',
+  UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER:"جستجوی قالب فرم با نام",
 
   ASSET_DELETE_ON_OK: 'فایل شما با موفقیت حذف شد.',
   ASSET_DELETE_ON_SERVER_ERROR:
