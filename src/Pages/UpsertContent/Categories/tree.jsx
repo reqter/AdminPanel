@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { ListGroup, ListGroupItem, Collapse } from "reactstrap";
+import { Image } from "../../../components";
 
 class Tree extends Component {
   state = {
@@ -64,10 +65,7 @@ class Tree extends Component {
                       </div>
                       {node.image !== undefined ? (
                         <div className="treeItem-img">
-                          <img
-                            src={node.image[this.state.currentLang]}
-                            alt=""
-                          />
+                          <Image url={node.image[this.state.currentLang]} />
                         </div>
                       ) : (
                         <div className="treeItem-icon">
@@ -83,7 +81,7 @@ class Tree extends Component {
                         <i className="icon-circle-o" />
                       </button>
                       <div className="treeItem-img">
-                        <img src={node.image[this.state.currentLang]} alt="" />
+                        <Image url={node.image[this.state.currentLang]} />
                       </div>
                     </>
                   ) : (

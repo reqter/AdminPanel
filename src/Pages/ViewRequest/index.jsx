@@ -29,6 +29,7 @@ import {
   FileUploader,
   AdvanceUploader,
   DateFormater,
+  Image,
 } from "./../../components";
 
 const userDetailFields = [
@@ -538,7 +539,7 @@ const ViewRequest = props => {
                 {userInfo.profile.avatar &&
                 userInfo.profile.avatar.length > 0 ? (
                   <div onClick={showProfile}>
-                    <img src={userInfo.profile.avatar} alt="" />
+                    <Image url={userInfo.profile.avatar}/>
                   </div>
                 ) : (
                   <div className="empty-avatar">?</div>

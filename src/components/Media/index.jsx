@@ -3,6 +3,7 @@ import "./styles.scss";
 import { utility } from "../../services";
 import { useLocale } from "./../../hooks";
 import AssetBrowser from "./../AssetBrowser";
+import Image from "./../Image";
 
 const MediaInput = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -103,7 +104,7 @@ const MediaInput = props => {
                 )}
                 <div className="updatedFileType">
                   {field.mediaType === "image" ? (
-                    <img src={file.url[currentLang]} alt="" />
+                    <Image url={file.url[currentLang]} />
                   ) : field.mediaType === "video" ? (
                     <i className="icon-video" />
                   ) : field.mediaType === "audio" ? (

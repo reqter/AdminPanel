@@ -8,6 +8,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 import { useGlobalState, useLocale, useCookie } from "../../../../../../hooks";
+import { Image } from "../../../../../../components";
 const ProfileWidget = props => {
   const [token, setToken] = useCookie("reqter_token");
   const { match, location, history } = props;
@@ -42,7 +43,7 @@ const ProfileWidget = props => {
     <div className="profile-widget">
       {userInfo && userInfo.profile && userInfo.profile.avatar ? (
         <div className="userImage">
-          <img src={userInfo.profile.avatar} alt="" />
+          <Image url={userInfo.profile.avatar} alt="" />
         </div>
       ) : (
         <div className="left">

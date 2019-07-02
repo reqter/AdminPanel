@@ -47,7 +47,7 @@ const List = props => {
                 : ""}
             </span>
             <span className="treeItem-desc">
-              {listItem.description[currentLang]}
+              {listItem.description[currentLang] || ""}
             </span>
           </div>
           {listItem.template !== "generic" && (

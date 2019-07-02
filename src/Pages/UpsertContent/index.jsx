@@ -26,6 +26,7 @@ import {
   Reference,
   CircleSpinner,
   JsonObject,
+  Image,
 } from "./../../components";
 
 const requestFields = [
@@ -1007,7 +1008,7 @@ const UpsertProduct = props => {
                 {category ? (
                   category.image !== undefined ? (
                     <div className="selectedCategory-img">
-                      <img src={category.image[currentLang]} alt="" />
+                      <Image url={category.image[currentLang]}/>
                     </div>
                   ) : (
                     <div className="selectedCategory-icon">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 import { getCategories } from "./../../../../Api/content-api";
+import Image from "../../../Image";
 
 const Tree = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -101,7 +101,7 @@ const Tree = props => {
                   )}
                   {node.image !== undefined ? (
                     <div className="treeItem-img">
-                      <img src={node.image[currentLang]} alt="" />
+                      <Image url={node.image[currentLang]}/>
                     </div>
                   ) : (
                     <div className="treeItem-icon">
@@ -125,7 +125,7 @@ const Tree = props => {
                 <i className="icon-circle-o circleIcon" />
                 {node.image !== undefined ? (
                   <div className="treeItem-img">
-                    <img src={node.image[currentLang]} alt="" />
+                    <Image url={node.image[currentLang]}/>
                   </div>
                 ) : (
                   <div className="treeItem-icon">

@@ -21,8 +21,10 @@ import AdvanceUploaderView from './AdvanceUploaderView'
 import AssetUploaderView from './AssetUploaderView'
 import DateFormater from './DateFormater'
 import ProgressiveSpinner from './ProgressiveSpinner'
+import Image from './Image'
 
 export {
+  Image,
   AssetUploaderView,
   ProgressiveSpinner,
   DateFormater,

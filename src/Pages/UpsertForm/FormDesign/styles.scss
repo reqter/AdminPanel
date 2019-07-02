@@ -1,0 +1,15 @@
+.designForm {
+  display: flex;
+  flex-direction: column;
+  &__title {
+  }
+  &__desc {
+    font-size: 13px;
+  }
+  &__content{
+    background: white;
+    min-height: 250px;
+    margin-top: 20px;
+    box-shadow: 0 0 2px lightgray;
+  }
+}

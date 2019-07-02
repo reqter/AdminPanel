@@ -19,7 +19,7 @@ import {
 } from "../../Api/content-api";
 import "./styles.scss";
 
-import { Alert, CircleSpinner, DateFormater } from "../../components";
+import { Alert, CircleSpinner, DateFormater, Image } from "../../components";
 import {
   CategoriesFilter,
   ContentTypesFilter,
@@ -364,7 +364,7 @@ const Products = props => {
       .split(".")
       .pop();
     if (imgs.indexOf(ext.toLowerCase()) !== -1)
-      return <img className="p-image-value" src={url} alt="" />;
+      return <Image className="p-image-value" url={url}/>;
     else if (videos.indexOf(ext.toLowerCase()) !== -1)
       return (
         <div className="p-thumbnail-file">

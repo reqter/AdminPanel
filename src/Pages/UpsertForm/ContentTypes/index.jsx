@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useGlobalState, useLocale } from "../../../hooks";
 import { getContentTypes } from "../../../Api/content-api";
-import { CircleSpinner } from "../../../components";
-
+import { CircleSpinner, Image } from "../../../components";
 
 const ContentTypes = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -57,18 +56,18 @@ const ContentTypes = props => {
   return spinner ? (
     <div className="contentTypesSpinner">
       <CircleSpinner show={spinner} size="large" />
-      <span>Loading Content Types ...</span>
+      <span>{t("UPSERT_FORM_TEMPLATES_LOADING")}.</span>
     </div>
   ) : !contentTypes || contentTypes.length === 0 ? (
     <div className="emptyContenType">
       <i className="icon-empty-box-open icon" />
-      <span className="title">Empty List!</span>
-      <span className="info">You have not created any content types yet.</span>
+      <span className="title">{t("UPSERT_FORM_TEMPLATES_EMPTY_TITLE")}</span>
+      <span className="info">{t("UPSERT_FORM_TEMPLATES_EMPTY_DESC")}</span>
       <button
         className="btn btn-sm btn-primary"
         onClick={navigateToContentTypes}
       >
-        New Content Type
+        {t("UPSERT_FORM_TEMPLATES_EMPTY_BTN")}
       </button>
     </div>
   ) : (
@@ -83,14 +82,15 @@ const ContentTypes = props => {
             </div>
           ) : (
             <div className="treeItem-img">
-              <img src={c.media[0][currentLang]} alt="" />
+              <Image url={c.media[0][currentLang]}/>
             </div>
           )}
           <div className="treeItem-text">
             <span className="treeItem-name">{c.title[currentLang]}</span>
             <span className="treeItem-desc">
-              {c.description[currentLang] ||
-                "Lorem ipsum dolor sit amet, consectetur"}
+              {c.description &&
+                c.description[currentLang] &&
+                c.description[currentLang]}
             </span>
           </div>
           <button
@@ -98,9 +98,7 @@ const ContentTypes = props => {
             size="xs"
             onClick={() => handleSelectContentType(c)}
           >
-            <span style={{ fontSize: 12 }}>
-              {t("Choose")}
-            </span>
+            <span style={{ fontSize: 12 }}>{t("CHOOSE")}</span>
           </button>
         </div>
       </div>

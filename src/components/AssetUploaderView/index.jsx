@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocale } from "./../../hooks";
+import { Image } from "./../../components";
 import "./styles.scss";
 import SVGIcon from "./svg";
 
@@ -39,7 +40,7 @@ const UploaderView = props => {
         );
       } else {
         if (imgs.indexOf(ext.toLowerCase()) !== -1) {
-          return <img src={url} alt="" />;
+          return <Image src={url} alt="" />;
         } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
           return (
             <video controls>

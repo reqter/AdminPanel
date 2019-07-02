@@ -131,7 +131,7 @@ const AddNewField = props => {
   function handleChooseField(field) {
     changeTab(2);
     setField(field);
-    const title = t("CONTENT_TYPE_ADD_FIELD_CHOOSEN") + " " + field.title;
+    const title = t("CONTENT_TYPE_ADD_FIELD_CHOOSEN") + " " + t(field.title);
     setAddFieldHeaderTitle(title);
     //nameInput.current.focus(); // focus after changing tab on first input
   }
@@ -313,11 +313,32 @@ const AddNewField = props => {
                   </small>
                 </FormGroup>
                 {translatableFields.indexOf(selectedField.name) > -1 && (
-                  <CheckBox
-                    title={t("TRANSLATION")}
-                    value={translation}
-                    onChange={e => toggleTranslation(e.target.checked)}
-                  />
+                  <div className="custom_checkbox">
+                    <div className="left">
+                      <label className="checkBox">
+                        <input
+                          type="checkbox"
+                          id="translate"
+                          checked={translation}
+                          onChange={toggleTranslation}
+                        />
+                        <span className="checkmark" />
+                      </label>
+                    </div>
+                    <div className="right">
+                      <label htmlFor="translate">
+                        {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION")}
+                      </label>
+                      <label htmlFor="translate">
+                        {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION_INFO")}
+                      </label>
+                    </div>
+                  </div>
+                  // <CheckBox
+                  //   title={t("TRANSLATION")}
+                  //   value={translation}
+                  //   onChange={e => toggleTranslation(e.target.checked)}
+                  // />
                 )}
               </div>
             </Form>

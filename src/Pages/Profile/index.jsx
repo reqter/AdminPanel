@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import "./styles.scss";
 import { useGlobalState, useLocale } from "./../../hooks";
-import { AssetBrowser, CircleSpinner, Alert } from "../../components";
+import { AssetBrowser, CircleSpinner, Alert, Image } from "../../components";
 import { uploadAssetFile, addAsset } from "./../../Api/asset-api";
 import {
   updateProfile,
@@ -193,8 +193,7 @@ const Profile = props => {
             title: file.originalname,
             description: "",
             url: {
-              [currentLang]:
-                process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+              [currentLang]: file.url,
             },
             fileType: file.mimetype,
           };
@@ -463,7 +462,7 @@ const Profile = props => {
                       </div>
                     )}
                     <div className="avatarImage">
-                      <img src={avatar} alt="" />
+                      <Image url={avatar} alt="" />
                     </div>
                   </div>
                   <div

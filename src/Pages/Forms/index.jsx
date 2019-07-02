@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import ReactTable from "react-table";
-import "react-table/react-table.css";
 import { useGlobalState, useLocale } from "../../hooks";
 import {
   getRequests,
@@ -13,12 +11,9 @@ import {
 } from "../../Api/request-api";
 import "./styles.scss";
 
-import { Alert, CircleSpinner, DateFormater } from "../../components";
-import {
-  CategoriesFilter,
-  ContentTypesFilter,
-  StatusFilter,
-} from "../../components/Commons";
+import { Alert, CircleSpinner, DateFormater, Image } from "../../components";
+import ItemSkeleton from "./ItemSkeleton";
+import EmptySvg from "./EmptySVG";
 
 const Requests = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -224,31 +219,18 @@ const Requests = props => {
     },
   ];
   const { name: pageTitle, desc: pageDescription } = props.component;
-
-  // variables
-  const [
-    { requests, categories, contentTypes, spaceInfo },
-    dispatch,
-  ] = useGlobalState();
-
-  const tableBox = useRef(null);
+  const [{ spaceInfo }, dispatch] = useGlobalState();
 
   const [spinner, toggleSpinner] = useState(true);
-  const [leftContent, toggleLeftContent] = useState(false);
+  const [forms, setForms] = useState();
   const [alertData, setAlertData] = useState();
-
-  const [searchText, setSearchText] = useState("");
-  const [selectedContentType, setSelectedContentType] = useState({});
-  const [selectedNode, setSelectedNode] = useState({});
-  const [selectedStatus, setSelectedStatus] = useState({});
-  const [columnsVisibility, toggleColumns] = useState(false);
-
-  const [columns, setColumns] = useState(baseFieldColumnsConfig.slice());
-  const [dataFilters, setFilters] = useState([]);
-  const [dataStatus, toggleDataStatus] = useState(false);
+  const [searchText, setSearchText] = useState();
 
   useEffect(() => {
-    loadRequests();
+    //loadRequests();
+    setTimeout(() => {
+      toggleSpinner(false);
+    }, 1000);
     return () => {
       didCancel = true;
     };
@@ -327,7 +309,7 @@ const Requests = props => {
             .pop()
         : "";
     if (imgs.indexOf(ext.toLowerCase()) !== -1)
-      return <img className="p-image-value" src={url} alt="" />;
+      return <Image className="p-image-value" url={url}/>;
     else if (videos.indexOf(ext.toLowerCase()) !== -1)
       return (
         <div className="p-thumbnail-file">
@@ -348,170 +330,11 @@ const Requests = props => {
         </div>
       );
   }
-  function initColumns() {
-    if (columnsVisibility) {
-      const cols = baseFieldColumnsConfig.map(col => {
-        let item = col;
-        item.headerStyle.display = "none";
-        return item;
-      });
-      setColumns(cols);
-      toggleColumns(true);
-    }
-  }
 
-  function toggleFilterBox() {
-    toggleLeftContent(prevState => !prevState);
-  }
   function openNewItemBox(contentType) {
     props.history.push({
       pathname: "/" + currentLang + "/form/new",
-      // search: "?sort=name",
-      //hash: "#the-hash",
-      //params: { isRequest: true },
     });
-  }
-  function makeTableFieldView(type, props) {
-    switch (type) {
-      case "string":
-        return <div className="p-string">{props.value}</div>;
-      default:
-        return <div className="p-string">{props.value}</div>;
-    }
-  }
-  function removeFilter(filter) {
-    let f = dataFilters.filter(item => item.sys.type !== filter.sys.type);
-    setFilters(f);
-    let text = searchText;
-    let contentTypeID = selectedContentType
-      ? selectedContentType._id
-      : undefined;
-    let categoryID = selectedNode ? selectedNode._id : undefined;
-    let status = selectedStatus.name;
-    if (filter.sys.type === "text") {
-      text = undefined;
-      setSearchText("");
-    } else if (filter.sys.type === "contentType") {
-      contentTypeID = undefined;
-      setSelectedContentType({});
-    } else if (filter.sys.type === "category") {
-      categoryID = undefined;
-      setSelectedNode({});
-    } else if (filter.sys.type === "status") {
-      status = undefined;
-      setSelectedStatus({});
-    }
-    filterData(text, contentTypeID, categoryID, status);
-  }
-  function handleSearchChanged() {
-    let f = [...dataFilters].filter(item => item.sys.type !== "text");
-    if (searchText.length !== 0)
-      f.push({
-        sys: {
-          type: "text",
-        },
-        title: searchText,
-      });
-    setFilters(f);
-
-    filterData(
-      searchText,
-      selectedContentType ? selectedContentType._id : undefined,
-      selectedNode ? selectedNode._id : undefined,
-      selectedStatus.name
-    );
-  }
-  function handleContentTypeSelect(selected) {
-    let f = dataFilters.filter(item => item.sys.type !== "contentType");
-    f.push(selected);
-    setFilters(f);
-    setSelectedContentType(selected);
-    filterData(
-      searchText,
-      selected._id,
-      selectedNode ? selectedNode._id : undefined,
-      selectedStatus.name
-    );
-  }
-
-  function handleClickCategory(selected) {
-    let f = dataFilters.filter(item => item.sys.type !== "category");
-    f.push(selected);
-    setFilters(f);
-    setSelectedNode(selected);
-
-    filterData(
-      searchText,
-      selectedContentType ? selectedContentType._id : undefined,
-      selected._id,
-      selectedStatus.name
-    );
-  }
-  function handleStatusSelected(selected) {
-    let f = dataFilters.filter(item => item.sys.type !== "status");
-    selected.sys = {
-      type: "status",
-    };
-    f.push(selected);
-    setFilters(f);
-    setSelectedStatus(selected);
-
-    filterData(
-      searchText,
-      selectedContentType ? selectedContentType._id : undefined,
-      selectedNode ? selectedNode._id : undefined,
-      selected.name
-    );
-  }
-
-  function filterData(text, contentTypeId, categoryId, status) {
-    toggleSpinner(true);
-    filterRequests()
-      .onOk(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "SET_REQUESTS",
-          value: result,
-        });
-        if (dataStatus) toggleDataStatus(false);
-      })
-      .onServerError(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: t("CONTENTS_ON_SERVER_ERROR"),
-          },
-        });
-      })
-      .onBadRequest(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "error",
-            message: t("CONTENTS_ON_BAD_REQUEST"),
-          },
-        });
-      })
-      .unAuthorized(result => {
-        toggleSpinner(false);
-        dispatch({
-          type: "ADD_NOTIFY",
-          value: {
-            type: "warning",
-            message: t("CONTENTS_UN_AUTHORIZED"),
-          },
-        });
-      })
-      .call(
-        spaceInfo.id,
-        text,
-        contentTypeId ? [contentTypeId] : undefined,
-        categoryId ? [categoryId] : undefined,
-        status ? [status] : undefined
-      );
   }
   function handleDeleteRow(row) {
     setAlertData({
@@ -594,17 +417,6 @@ const Requests = props => {
       viewMode: true,
     });
   }
-
-  useEffect(() => {
-    if (dataStatus) {
-      filterData(
-        searchText,
-        selectedContentType ? selectedContentType._id : undefined,
-        selectedNode ? selectedNode._id : undefined,
-        selectedStatus.name
-      );
-    }
-  }, [dataStatus]);
   function archiveContent(row) {
     archive()
       .onOk(result => {
@@ -615,7 +427,6 @@ const Requests = props => {
             message: t("The content is archived"),
           },
         });
-        toggleDataStatus(true);
       })
       .onServerError(result => {
         dispatch({
@@ -665,11 +476,6 @@ const Requests = props => {
             message: t("The content is unarchived"),
           },
         });
-        toggleDataStatus(true);
-        // dispatch({
-        //   type: "CHANGE_CONTENT_STATUS",
-        //   value: result,
-        // });
       })
       .onServerError(result => {
         dispatch({
@@ -719,7 +525,6 @@ const Requests = props => {
             message: t("The content is published"),
           },
         });
-        toggleDataStatus(true);
       })
       .onServerError(result => {
         dispatch({
@@ -769,11 +574,6 @@ const Requests = props => {
             message: t("The content is unpublished"),
           },
         });
-        toggleDataStatus(true);
-        // dispatch({
-        //   type: "CHANGE_CONTENT_STATUS",
-        //   value: result,
-        // });
       })
       .onServerError(result => {
         dispatch({
@@ -825,121 +625,40 @@ const Requests = props => {
           </div>
           <div className="p-header-right">
             <div className="input-group">
-              <div
-                className="input-group-prepend"
-                onClick={handleSearchChanged}
-              >
-                <span className="input-group-text searchBtn">Search</span>
-              </div>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search requests by title"
+                placeholder={t("FORMS_SEARCH_PLACEHOLDER")}
                 value={searchText}
                 onChange={e => setSearchText(e.target.value)}
               />
             </div>
-            {/* <button className="btn btn-primary">
-              <i className="icon-folder" />
-            </button>
-            <button className="btn btn-primary">
-              <i className="icon-list" />
-            </button> */}
-            <button className="btn btn-primary" onClick={toggleFilterBox}>
-              <i className="icon-filter" />
-            </button>
             <button className="btn btn-primary" onClick={openNewItemBox}>
-              New Form
+              {t("FORMS_BTN_NEW")}
             </button>
           </div>
         </div>
         <div className="p-content">
-          {leftContent && (
-            <div className="p-content-left animated fadeIn faster">
-              <div className="filterBox">
-                <div className="filter-header">Selected Filters</div>
-                <div className="filter-body">
-                  <div className="selectedFilters">
-                    {dataFilters.length === 0 && (
-                      <div className="empty-dataFilter">
-                        There is no selected filter
-                      </div>
-                    )}
-                    {dataFilters.map(filter => (
-                      <div key={filter.id} className="filterItem">
-                        <span className="filterText">
-                          {filter.sys.type === "status"
-                            ? t(filter.name)
-                            : filter.title !== undefined
-                            ? filter.title.en !== undefined
-                              ? filter.title[currentLang]
-                              : filter.title
-                            : filter.name[currentLang]}
-                        </span>
-                        <span
-                          className="icon-cross icon"
-                          onClick={() => removeFilter(filter)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <ContentTypesFilter
-                filters={dataFilters}
-                leftContent={leftContent}
-                data={contentTypes}
-                onContentTypeSelect={selected =>
-                  handleContentTypeSelect(selected)
-                }
-              />
-              <CategoriesFilter
-                filters={dataFilters}
-                leftContent={leftContent}
-                data={categories}
-                onCategorySelect={selected => handleClickCategory(selected)}
-              />
-              <StatusFilter
-                filters={dataFilters}
-                leftContent={leftContent}
-                onStatusSelected={selected => handleStatusSelected(selected)}
-              />
+          {spinner ? (
+            [1, 2, 3, 4, 5].map(sk => <ItemSkeleton />)
+          ) : !forms || forms.length === 0 ? (
+            <div className="forms__empty">
+              <EmptySvg />
+              <span className="forms__empty__title">
+                {t("لیست خالی می باشد")}
+              </span>
+              <span className="forms__empty__info">
+                {t(
+                  "شما هنوز هیچ فرمی ایجاد نکرده اید دکمه زیر کلیک کنید تا اولین فرم خود را ایجاد کنید"
+                )}
+              </span>
+              <button className="btn btn-primary btn-sm">
+                ایجاد اولین فرم
+              </button>
             </div>
+          ) : (
+            <div />
           )}
-          <div className="p-content-right" ref={tableBox}>
-            <div className="p-content-right-header">
-              <div className="p-content-header-title">
-                All Data &nbsp;
-                <CircleSpinner show={spinner} size="small" />
-              </div>
-            </div>
-            <div className="p-content-right-body">
-              <ReactTable
-                data={requests}
-                defaultPageSize={1000000}
-                minRows={2}
-                columns={columns}
-                showPaginationTop={false}
-                showPaginationBottom={false}
-                style={{
-                  border: "none",
-                  overflow: "auto",
-                  height: "100%", // This will force the table body to overflow and scroll, since there is not enough room
-                }}
-                getTdProps={(state, rowInfo, column, instance) => {
-                  return {
-                    onClick: (e, handleOriginal) => {
-                      if (handleOriginal) {
-                        if (column.clickable === undefined)
-                          viewContent(rowInfo.original);
-                      }
-                    },
-                  };
-                }}
-              />
-            </div>
-          </div>
         </div>
       </div>
       {alertData && <Alert data={alertData} />}

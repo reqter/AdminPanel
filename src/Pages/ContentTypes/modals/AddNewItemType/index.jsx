@@ -37,7 +37,7 @@ const UpsertTemplate = props => {
 
   const [tab, changeTab] = useState(updateMode ? 2 : 1);
   const [selectedTemplate, setTemplate] = useState(
-    updateMode ? props.selectedTemplate : {}
+    updateMode ? props.selectedTemplate : undefined
   );
   const [name, setName] = useState(
     selectedContentType ? selectedContentType.name : ""
@@ -107,9 +107,7 @@ const UpsertTemplate = props => {
     };
   }, []);
   useEffect(() => {
-    if (tab === 2) {
-      nameInput.current.focus();
-    }
+    if (tab == 2) nameInput.current.focus();
   }, [tab]);
 
   function closeModal() {
@@ -157,10 +155,6 @@ const UpsertTemplate = props => {
         obj["title"] = utility.applyeLangs(title);
         obj["description"] = utility.applyeLangs(description);
         obj["media"] = media;
-        obj["versioning"] = versioning;
-        obj["accessRight"] = accessRight;
-        obj["categorization"] = categorization;
-        if (!accessRight) delete obj["visibleTo"];
 
         updateContentType()
           .onOk(result => {
@@ -223,9 +217,6 @@ const UpsertTemplate = props => {
           fields: [...selectedTemplate.fields],
           template: selectedTemplate.name,
           allowCustomFields: selectedTemplate.allowCustomFields,
-          versioning: versioning,
-          accessRight: accessRight,
-          categorization: categorization,
         };
         addContentType()
           .onOk(result => {
@@ -289,107 +280,136 @@ const UpsertTemplate = props => {
       setMedia(imgs);
     }
   }
-  function handleChangeVersion(e) {
-    toggleVersioning(e.target.checked);
-  }
-  function handleAccessRightChanged(e) {
-    toggleAccessRight(e.target.checked);
-  }
-  function handleChangeCategorization(e) {
-    toggleCategorization(e.target.checked);
-  }
   return (
     <Modal isOpen={isOpen} toggle={closeModal} size="lg">
       <ModalHeader toggle={closeModal}>
-        {!updateMode
-          ? t("ADD_NEW") +
-            " " +
-            (selectedTemplate
-              ? selectedTemplate.title
-                ? selectedTemplate.title[currentLang]
-                : t("CONTENT_TYPE")
-              : t("CONTENT_TYPE"))
-          : t("EDIT") +
+        {updateMode &&
+          t("EDIT") +
             " " +
             (selectedContentType ? selectedContentType.title[currentLang] : "")}
+        {!updateMode && (
+          <>
+            <span>{t("CONTENT_TYPE_MODAL_HEADER_NEW")}</span>
+            {tab === 2 && (
+              <span style={{ fontSize: 13 ,margin: '0 5px',}}>
+                ({selectedTemplate.title[currentLang]})
+              </span>
+            )}
+          </>
+        )}
       </ModalHeader>
       <ModalBody>
         <div className="c-category-templates-body">
-          <div style={{ padding: "2%", paddingBottom: 0 }}>
-            <div className="row">
-              <div className="form-group col">
-                <label>{t("CONTENT_TYPE_MODAL_NAME")}</label>
-                <input
-                  ref={nameInput}
-                  type="text"
-                  className="form-control"
-                  placeholder={t("CONTENT_TYPE_MODAL_NAME_PLACEHOLDER")}
-                  value={name}
-                  required
-                  onChange={handleNameChanged}
-                />
-                <small className="form-text text-muted">
-                  {t("CONTENT_TYPE_MODAL_NAME_DESCRIPTION")}
-                </small>
-              </div>
-
-              <FormGroup className="col">
-                <Label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE")}</Label>
-                <Input
-                  type="string"
-                  value={title}
-                  placeholder={t(
-                    "CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_PLACEHOLDER"
-                  )}
-                  onChange={handleTitleChanged}
-                />
-                <small id="emailHelp" className="form-text text-muted">
-                  {t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_INFO")}
-                </small>
-              </FormGroup>
-            </div>
-
-            <FormGroup>
-              <Label>{t("CONTENT_TYPE_MODAL_DESCRIPTION")}</Label>
-              <Input
-                type="string"
-                placeholder={t("CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER")}
-                value={description}
-                onChange={handleDescriptionChanged}
-              />
-            </FormGroup>
-            <div className="up-uploader">
-              <span className="title">
-                {t("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
-              </span>
-              <span className="description">
-                {t("CONTENT_TYPE_MODAL_IMAGES_DESC")}
-              </span>
-
-              <div className="files">
-                {media.map((url, index) => (
-                  <div key={index} className="files-uploaded">
+          {tab === 1 ? (
+            <div className="fieldsTab">
+              {contentTypeTemlates &&
+                contentTypeTemlates.map(tmp => (
+                  <div
+                    key={tmp.id}
+                    className="add-field-types"
+                    onClick={() => handleChooseTemplate(tmp)}
+                  >
                     <div
-                      className="files-uploaded-icon"
-                      onClick={() => removeFile(url)}
+                      className="add-field-icon"
+                      style={{
+                        backgroundColor:
+                          selectedContentType &&
+                          selectedContentType.template === tmp.name
+                            ? "lightgray"
+                            : "whitesmoke",
+                      }}
                     >
-                      <i className="icon-bin" />
+                      <i className={tmp.icon ? tmp.icon : "icon-item-type"} />
                     </div>
-                    <div className="updatedFileType">
-                      {utility.getAssetIconByURL(url[currentLang])}
-                    </div>
+                    <span className="title">{tmp.title[currentLang]}</span>
+                    <span className="description">
+                      {tmp.description[currentLang]}
+                    </span>
                   </div>
                 ))}
-                <div className="files-input" onClick={openAssetBrowser}>
-                  <i className="icon-camera" />
+            </div>
+          ) : (
+            <div style={{ padding: "2%", paddingBottom: 0 }}>
+              <div className="row">
+                <div className="form-group col">
+                  <label>{t("CONTENT_TYPE_MODAL_NAME")}</label>
+                  <input
+                    ref={nameInput}
+                    type="text"
+                    className="form-control"
+                    placeholder={t("CONTENT_TYPE_MODAL_NAME_PLACEHOLDER")}
+                    value={name}
+                    required
+                    onChange={handleNameChanged}
+                  />
+                  <small className="form-text text-muted">
+                    {t("CONTENT_TYPE_MODAL_NAME_DESCRIPTION")}
+                  </small>
+                </div>
+
+                <FormGroup className="col">
+                  <Label>{t("CONTENT_TYPE_ADD_TITLE")}</Label>
+                  <Input
+                    type="string"
+                    value={title}
+                    placeholder={t("CONTENT_TYPE_ADD_TITLE_PLACEHOLDER")}
+                    onChange={handleTitleChanged}
+                  />
+                  <small id="emailHelp" className="form-text text-muted">
+                    {t("CONTENT_TYPE_ADD_TITLE_INFO")}
+                  </small>
+                </FormGroup>
+              </div>
+
+              <FormGroup>
+                <Label>{t("CONTENT_TYPE_MODAL_DESCRIPTION")}</Label>
+                <Input
+                  type="string"
+                  placeholder={t("CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER")}
+                  value={description}
+                  onChange={handleDescriptionChanged}
+                />
+              </FormGroup>
+              <div className="up-uploader">
+                <span className="title">
+                  {t("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
+                </span>
+                <span className="description">
+                  {t("CONTENT_TYPE_MODAL_IMAGES_DESC")}
+                </span>
+
+                <div className="files">
+                  {media.map((url, index) => (
+                    <div key={index} className="files-uploaded">
+                      <div
+                        className="files-uploaded-icon"
+                        onClick={() => removeFile(url)}
+                      >
+                        <i className="icon-bin" />
+                      </div>
+                      <div className="updatedFileType">
+                        {utility.getAssetIconByURL(url[currentLang])}
+                      </div>
+                    </div>
+                  ))}
+                  <div className="files-input" onClick={openAssetBrowser}>
+                    <i className="icon-camera" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </ModalBody>
-      {tab !== 1 ? (
+      {tab === 2 && (
         <ModalFooter>
+          <button
+            className="btn btn-secondary"
+            onClick={backToTemplates}
+            style={{ margin: "0 5px" }}
+          >
+            {t("CHANGE_TEMPLATE")}
+          </button>
           <button
             type="submit"
             className="btn btn-primary ajax-button"
@@ -401,18 +421,10 @@ const UpsertTemplate = props => {
             }
           >
             <CircleSpinner show={spinner} size="small" />
-            {submitBtnText}
+            {!spinner && submitBtnText}
           </button>
-          {!updateMode && (
-            <Button color="secondary" onClick={backToTemplates}>
-              {t("CONTENT_TYPE_MODAL_TEMPLATE_BTN")}
-            </Button>
-          )}
         </ModalFooter>
-      ) : (
-        undefined
       )}
-
       {assetBrowser && (
         <AssetBrowser
           isOpen={assetBrowser}

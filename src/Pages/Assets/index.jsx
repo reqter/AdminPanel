@@ -6,6 +6,7 @@ import {
   Alert,
   CircleSpinner,
   DateFormater,
+  Image,
 } from "../../components";
 import {
   getAssets,
@@ -596,7 +597,7 @@ const Assets = props => {
                       <td>
                         <div className="as-table-image">
                           {file.fileType.toLowerCase().includes("image") ? (
-                            <img src={file.url[currentLang]} alt="" />
+                            <Image url={file.url[currentLang]} />
                           ) : file.fileType.toLowerCase().includes("video") ? (
                             <i className="icon-video" />
                           ) : file.fileType.toLowerCase().includes("audio") ? (

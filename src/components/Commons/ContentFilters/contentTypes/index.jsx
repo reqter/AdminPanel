@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useGlobalState, utility } from "../../../../services";
+import { utility } from "../../../../services";
 import { getContentTypes } from "./../../../../Api/content-api";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState,useLocale } from "./../../../../hooks";
 
 const ContentTypeFilter = props => {
   const { appLocale, t, currentLang } = useLocale();

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "reactstrap/es/Modal";
 import String from "./../String";
 import FileUploader from "./../FileUploader";
-import { AssetFile, CircleSpinner } from "./../../components";
+import { AssetFile, CircleSpinner, Image } from "./../../components";
 import { useGlobalState, useLocale } from "./../../hooks";
 import "./styles.scss";
 
@@ -43,12 +43,12 @@ const fields = [
     id: "3",
     name: "url",
     title: {
-      fa: "Your File",
+      fa: "انتخاب فایل",
       en: "Your File",
     },
     description: {
-      fa: "",
-      en: "Click on file selector to choose your file",
+      fa: "انتخاب فایل برای مثال تصویر، ویدیو، صدا، پی دی اف",
+      en: "Choose your file for example image, video , voice, pdf",
     },
     type: "fileUploader",
     mediaType: "file",
@@ -297,7 +297,7 @@ const AssetBrowser = props => {
             }}
             onClick={() => changeTab(1)}
           >
-            Media
+            {t("ASSET_BROWSER_FIRST_TAB")}
           </div>
           <div
             className="tabItem"
@@ -306,7 +306,7 @@ const AssetBrowser = props => {
             }}
             onClick={() => changeTab(2)}
           >
-            Upload New File
+            {t("ASSET_BROWSER_SECOND_TAB")}
           </div>
         </div>
         <div className="right" onClick={closeModal}>
@@ -325,7 +325,7 @@ const AssetBrowser = props => {
               >
                 <div className="top">
                   {file.fileType.toLowerCase().includes("image") ? (
-                    <img src={file.url[currentLang]} alt="" />
+                    <Image url={file.url[currentLang]} />
                   ) : file.fileType.toLowerCase().includes("video") ? (
                     <i className="icon-video" />
                   ) : file.fileType.toLowerCase().includes("audio") ? (
@@ -339,7 +339,11 @@ const AssetBrowser = props => {
                   )}
                 </div>
                 <div className="bottom">
-                  <div>{file.title[currentLang]}</div>
+                  <div>
+                    {file.title &&
+                      file.title[currentLang] &&
+                      file.title[currentLang]}
+                  </div>
                 </div>
               </div>
             ))}
@@ -374,7 +378,7 @@ const AssetBrowser = props => {
                 disabled={!isValidForm}
               >
                 <CircleSpinner show={spinner} size="small" />
-                Save & New
+                {!spinner && t("SAVE_AND_NEW")}
               </button>
               <button
                 className="btn btn-primary ajax-button"
@@ -382,7 +386,7 @@ const AssetBrowser = props => {
                 disabled={!isValidForm}
               >
                 <CircleSpinner show={closeSpinner} size="small" />
-                Save & Back
+                {!closeSpinner && t("SAVE_AND_BACK")}
               </button>
             </div>
           </div>

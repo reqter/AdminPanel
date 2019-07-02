@@ -1,4 +1,5 @@
 import React from 'react'
+import { Image } from './../../components'
 
 const imgs = ['jpg', 'jpeg', 'gif', 'bmp', 'png']
 const videos = ['mp4', '3gp', 'ogg', 'wmv', 'flv', 'avi']
@@ -31,7 +32,7 @@ export default {
         )
       } else {
         if (imgs.indexOf(ext.toLowerCase()) !== -1) {
-          return <img src={url} alt='' />
+          return <Image url={url} />
         } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
           return <i className='icon-video' />
         } else if (audios.indexOf(ext.toLowerCase()) !== -1) {
@@ -65,7 +66,7 @@ export default {
         )
       } else {
         if (imgs.indexOf(ext.toLowerCase()) !== -1) {
-          return <img src={url} alt='' />
+          return <Image url={url} alt='' />
         } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
           return (
             <video controls>
@@ -107,7 +108,7 @@ export default {
         )
       } else {
         if (imgs.indexOf(ext.toLowerCase()) !== -1) {
-          return <img src={url} alt='' />
+          return <Image url={url} alt='' />
         } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
           return (
             <video>
@@ -128,7 +129,7 @@ export default {
     }
   },
   getMediaComponentByUrl (file, customClass) {
-    const url = file.url["en"]
+    const url = file.url['en']
     if (url) {
       const ext = url
         .split('/')
@@ -147,7 +148,7 @@ export default {
         )
       } else {
         if (imgs.indexOf(ext.toLowerCase()) !== -1) {
-          return <img src={url} alt='' />
+          return <Image url={url} alt='' />
         } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
           return (
             <video controls>
@@ -190,7 +191,7 @@ export default {
         )
       } else {
         if (imgs.indexOf(ext.toLowerCase()) !== -1) {
-          return <img src={url} alt='' />
+          return <Image url={url} />
         } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
           return (
             <div className='thumbnail-video'>
@@ -221,7 +222,7 @@ export default {
       const type = file.type
       const cls = 'unkownFileType ' + customClass
 
-      if (type.includes('image')) return <img src={result} alt='' />
+      if (type.includes('image')) return <Image url={result} />
       if (type.includes('video')) {
         return (
           <video>
@@ -245,7 +246,7 @@ export default {
       const type = file.type
       const cls = 'unkownFileType ' + customClass
 
-      if (type.includes('image')) return <img src={result} alt='' />
+      if (type.includes('image')) return <Image url={result} />
       if (type.includes('video')) {
         return (
           <video controls>

@@ -1,9 +1,10 @@
+@import "./../../styles/mixins.scss";
 body {
-  background: whitesmoke!important;
+  background: whitesmoke !important;
 }
 .up-wrapper {
   min-height: 100vh;
-    overflow: auto!important;
+  overflow: auto !important;
   .up-header {
     position: fixed;
     height: 60px;
@@ -16,9 +17,15 @@ body {
     padding: 0 3%;
     align-items: center;
     z-index: 100;
+
     .btn {
+      position: absolute;
+      @include variable(upsert-form-btn-left, left, 15px);
+      @include variable(upsert-form-btn-right, right, 15px);
+      display: flex;
+      align-items: center;
       i {
-        margin-right: 10px;
+        margin: 0 10px;
       }
     }
     .tabItems {
@@ -26,16 +33,44 @@ body {
       display: flex;
       justify-content: center;
       align-items: center;
+      .tabNumber {
+        background: lightgray;
+        color: black;
+        font-size: 12px;
+        width: 15px;
+        height: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px;
+        border-radius: 100%;
+        font-weight: bold;
+        &.active {
+          background: rgb(56, 132, 255);
+          color: white;
+        }
+      }
       .item {
         cursor: pointer;
         font-size: 14px;
-        margin: 0 10px;
         color: gray;
         width: auto;
+        border-radius: 0%;
+        margin: 0;
+        padding: 0 20px;
+        text-align: center;
+        border-right: 0.5px solid lightgray;
+        // border-left: 0.3px solid lightgray;
+        height: 40px;
+        transition-duration: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         &.active {
-          font-size: 15px;
+          transition-duration: 0.2s;
+          // font-size: 16px;
           color: black;
-          font-weight: 600;
+          font-weight: bold;
         }
       }
     }
@@ -46,12 +81,17 @@ body {
     main {
       width: 768px;
       margin: auto;
+      .contentTypeSearch {
+        margin-top: 10px;
+      }
       .up-content-itemTypes {
         background: white;
         min-height: 300px;
         padding: 20px;
         box-shadow: 0 0 3px lightgray;
         border-radius: 4px;
+        margin-top: 10px;
+
         .listGroupItem {
           border-bottom: 1px solid whitesmoke;
           padding: 10px 0;
@@ -79,7 +119,7 @@ body {
         display: flex;
         justify-content: flex-start !important;
         align-items: center;
-        padding: 0 5%;
+        padding: 0 2%;
         span {
           flex: 1;
           font-size: 20px;
@@ -88,7 +128,7 @@ body {
         .selectedCategory-img {
           width: 80px;
           height: 70px;
-          margin-right: 10px;
+          margin: 0 10px !important;
           border: 1px solid rgb(220, 220, 220);
           padding: 3px;
           img {
@@ -100,7 +140,7 @@ body {
         .selectedCategory-icon {
           width: 80px;
           height: 70px;
-          margin-right: 10px;
+          margin: 0 10px;
           padding: 3px;
           border: 1px solid rgb(220, 220, 220);
           .contentIcon {

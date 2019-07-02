@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import Select, { components } from "react-select";
 import { useGlobalState, useLocale } from "./../../../../hooks";
-import { CircleSpinner, AssetBrowser } from "../../../../components";
+import { CircleSpinner, AssetBrowser, Image } from "../../../../components";
 import { addApiKey, updateApiKey } from "./../../../../Api/apiKey-api";
 
 
@@ -343,7 +343,7 @@ const UpsertApiKey = props => {
                         >
                           <i className="icon-bin" />
                         </div>
-                        <img src={image[currentLang]} alt="" />
+                        <Image src={image[currentLang]}/>
                       </div>
                     )}
                     <div className="files-input" onClick={openAssetBrowser}>

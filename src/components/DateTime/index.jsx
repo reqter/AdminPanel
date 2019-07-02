@@ -92,7 +92,9 @@ const DateTimeInput = props => {
   };
   return (
     <div className="form-group">
-      <label>{field.title[currentLang]}</label>
+      <label>
+        {field.title && field.title[currentLang] && field.title[currentLang]}
+      </label>
       <Datetime
         key={cmpKey}
         viewMode={
@@ -104,7 +106,8 @@ const DateTimeInput = props => {
         }
         timeFormat={field.format && field.format === "date" ? false : "hh:mm A"}
         inputProps={{
-          placeholder: "Click to open picker",
+          placeholder:
+            field.title && field.title[currentLang] && field.title[currentLang],
           disabled: props.viewMode,
         }}
         dateFormat={

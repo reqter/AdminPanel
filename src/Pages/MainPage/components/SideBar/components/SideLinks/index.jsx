@@ -9,12 +9,12 @@ const NavLinks = props => {
     return t(key);
   }
   const links = [
-    {
-      name: translate("HOME_SIDE_NAV_HOME"),
-      icon: "home",
-      path: `/${currentLang}/home`,
-      desc: translate("HOME_SIDE_NAV_HOME_DESC"),
-    },
+    // {
+    //   name: translate("HOME_SIDE_NAV_HOME"),
+    //   icon: "home",
+    //   path: `/${currentLang}/home`,
+    //   desc: translate("HOME_SIDE_NAV_HOME_DESC"),
+    // },
     {
       name: translate("HOME_SIDE_NAV_QUESTION_TYPES"),
       icon: "item-type",
@@ -40,6 +40,18 @@ const NavLinks = props => {
       desc: translate("HOME_SIDE_NAV_QUOTES_DESC"),
     },
     {
+      name: translate("HOME_SIDE_NAV_PARTNERS"),
+      icon: "partner",
+      path: `/${currentLang}/partners`,
+      desc: translate("HOME_SIDE_NAV_PARTNERS_DESC"),
+    },
+    {
+      name: translate("HOME_SIDE_NAV_CUSTOMERS"),
+      icon: "customer",
+      path: `/${currentLang}/customers`,
+      desc: translate("HOME_SIDE_NAV_CUSTOMERS_DESC"),
+    },
+    {
       name: translate("HOME_SIDE_NAV_MANAGET_USERS"),
       icon: "users",
       path: `/${currentLang}/users`,
@@ -48,14 +60,11 @@ const NavLinks = props => {
   ];
 
   return (
-    <>
-      <div className="sideLinksTitle">{t("HOME_NAVS_TITLE")}</div>
-      <div className="sideLinks">
-        {links.map(link => (
-          <LinkItem link={link} key={link.path} />
-        ))}
-      </div>
-    </>
+    <div className="sideLinks">
+      {links.map(link => (
+        <LinkItem link={link} key={link.path} />
+      ))}
+    </div>
   );
 };
 

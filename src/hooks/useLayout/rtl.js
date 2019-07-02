@@ -17,5 +17,8 @@ export default {
   'users-filter-itemIcon-margin': '0 0px 0 15px',
   'notify-box-position-left': 0,
   'notify-box-position-right': null,
-  'media-uploaded-item-margin': '0 0 0 20px'
+  'media-uploaded-item-margin': '0 0 0 20px',
+  'upsert-form-btn-right': "15px",
+  'upsert-form-btn-left': null,
+  "forms-skeleton-margin":"0 0 20px 10px"
 }

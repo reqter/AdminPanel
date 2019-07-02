@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "cropperjs/dist/cropper.css";
 import "./styles.scss";
-import {  utility } from "../../services";
+import { utility } from "../../services";
 import { useGlobalState, useLocale } from "./../../hooks";
 import AssetFile from "./../AssetFile";
+import Image from "./../Image";
 import ImageEditorModal from "./ImageEditorModal";
 import { uploadAssetFile } from "./../../Api/asset-api";
 
@@ -106,7 +107,8 @@ const FileUploaderInput = props => {
   function addToList(file) {
     let obj = {
       id: Math.random().toString(),
-      url: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
+      url: file.url,
+      // displayUrl: process.env.REACT_APP_DOWNLOAD_FILE_BASE_URL + file.url,
       name: file.originalname,
       fileType: file.mimetype,
     };
@@ -136,9 +138,7 @@ const FileUploaderInput = props => {
   return (
     <>
       <div className="up-uploader">
-        <span className="title">
-          {field.title && field.title[currentLang]}
-        </span>
+        <span className="title">{field.title && field.title[currentLang]}</span>
         <span className="description">
           {field.description && field.description[currentLang]}
         </span>
@@ -154,7 +154,7 @@ const FileUploaderInput = props => {
               <div className="updatedFileType">
                 {file.fileType ? (
                   file.fileType.toLowerCase().includes("image") ? (
-                    <img src={file.url} alt="" />
+                    <Image src={file.url} alt="" />
                   ) : file.fileType.toLowerCase().includes("video") ? (
                     <i className="icon-video" />
                   ) : file.fileType.toLowerCase().includes("audio") ? (

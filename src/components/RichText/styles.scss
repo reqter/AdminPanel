@@ -1,10 +1,28 @@
 .wrapper-class {
+  direction: ltr !important;
 }
 .editor-class {
   min-height: 300px;
   border: 1px solid whitesmoke;
   margin-bottom: 20px;
-  padding: 5px
+  padding: 5px;
+  direction: ltr !important;
 }
 .toolbar-class {
+  direction: ltr !important;
+  & * {
+    direction: ltr !important;
+  }
+}
+.richtext {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin: 0;
+  }
+  &__desc {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
 }

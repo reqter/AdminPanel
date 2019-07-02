@@ -5,6 +5,7 @@ const widthResolver = WrappedComponent => {
   // const { cmp: Component } = props;
 
   return props => {
+    const { t, currentLang } = useLocale();
     const [token] = useCookie("reqter_token");
     const [{ userInfo }, dispatch] = useGlobalState();
     const [loading, toggleLoading] = useState(userInfo ? false : true);
@@ -84,7 +85,7 @@ const widthResolver = WrappedComponent => {
     ) : (
       <div className="loaderBox">
         <div className="loader" />
-        Loading ...
+        {t("LOADING")}...
       </div>
     );
   };

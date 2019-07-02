@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 
 const StatusFilter = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -39,8 +38,7 @@ const StatusFilter = props => {
             <div
               className="item-name"
               style={{
-                color:
-                  selected.id === listItem.id ? "rgb(56,132,255)" : "gray"
+                color: selected.id === listItem.id ? "rgb(56,132,255)" : "gray",
               }}
             >
               {t(listItem.name)}

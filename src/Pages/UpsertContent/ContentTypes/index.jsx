@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useGlobalState, useLocale } from "./../../../hooks";
 import { getContentTypes } from "./../../../Api/content-api";
-import { CircleSpinner } from "../../../components";
+import { CircleSpinner, Image } from "../../../components";
 
 
 const ContentTypes = props => {
@@ -83,7 +83,7 @@ const ContentTypes = props => {
             </div>
           ) : (
             <div className="treeItem-img">
-              <img src={c.media[0][currentLang]} alt="" />
+              <Image url={c.media[0][currentLang]}/>
             </div>
           )}
           <div className="treeItem-text">

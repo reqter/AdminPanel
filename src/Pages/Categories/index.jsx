@@ -27,6 +27,7 @@ import {
   Alert,
   RowSkeleton,
   CircleSpinner,
+  Image
 } from "./../../components";
 
 function useInput(defaultValue = "") {
@@ -716,7 +717,7 @@ const Categories = props => {
                     <div className="files-uploaded-icon" onClick={removeImage}>
                       <i className="icon-bin" />
                     </div>
-                    <img src={image[currentLang]} alt="" />
+                    <Image url={image[currentLang]}/>
                   </div>
                 )}
                 <div className="files-input" onClick={openAssetBrowser}>

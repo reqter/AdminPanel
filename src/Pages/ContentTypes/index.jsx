@@ -390,12 +390,7 @@ const ItemTypes = props => {
             )}
           </div>
           {rightContent && (
-            <div
-              className={
-                "ct-content-right animated faster " +
-                (direction === "ltr" ? "slideInRight" : "slideInLeft")
-              }
-            >
+            <div className="ct-content-right animated fadeIn faster">
               <div className="ct-content-right-header">
                 <span className="ct-right-header-title">
                   {t("CONTENT_TYPE_MODEL_HEADER_TITLE")}
@@ -473,7 +468,7 @@ const ItemTypes = props => {
                               size="xs"
                               onClick={() => showAdvanceConfig(field)}
                             >
-                              Settings
+                              {t("CONTENT_TYPE_MODEL_SETTINGS_BTN")}
                             </button>
                           )}
                           {field.isBase === undefined || !field.isBase ? (
@@ -497,10 +492,12 @@ const ItemTypes = props => {
                     ))}
                 </div>
                 <div className="btnNewFieldContent">
-                  {selectedContentType.allowCustomFields && (
+                  {selectedContentType.allowCustomFields ? (
                     <button className="btn btn-primary" onClick={addNewField}>
                       <i className="icon-plus" />
                     </button>
+                  ) : (
+                    t("FIELDS_CUSTOM_FIELD_AVOID")
                   )}
                 </div>
               </div>

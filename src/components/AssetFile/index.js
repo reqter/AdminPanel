@@ -1,5 +1,6 @@
 import React from 'react'
-import { useLocale } from "./../../hooks";
+import { useLocale } from './../../hooks'
+import { Image } from './../../components'
 
 const AssetFile = props => {
   const { appLocale, t, currentLang } = useLocale()
@@ -19,13 +20,12 @@ const AssetFile = props => {
   } else {
     if (imgs.indexOf(ext.toLowerCase()) !== -1) {
       return (
-        <img
-          src={
+        <Image
+          url={
             props.file.url[currentLang]
               ? props.file.url[currentLang]
               : props.file.url
           }
-          alt=''
         />
       )
     } else if (videos.indexOf(ext.toLowerCase()) !== -1) {

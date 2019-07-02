@@ -1,14 +1,23 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
+  LOADING: 'Loading',
+  CHOOSE: 'Choose',
+  SAVE: 'Save',
+  CLOSE: 'Close',
+  DESCRIPTION: 'Description',
+  DESCRIPTION_PLACEHOLDER: 'a short description',
+  DESCRIPTION_INFO: "it's optional",
   UPDATE: 'Update',
   DOWNLAOD: 'Download',
   ASSET: 'Asset',
   VIEW_MODE: 'View Mode',
+  ADD_NEW: 'Add new',
   EMPTY_LIST: 'Empty List',
   BACK: 'Back',
   SAVE_AND_NEW: 'Save & New',
   SAVE_AND_CLOSE: 'Save & Close',
+  SAVE_AND_BACK:"Save & Back",
   UPDATE_AND_CLOSE: 'Update & close',
   draft: 'Draft',
   archived: 'Archived',
@@ -46,6 +55,7 @@ export default {
   ALL: 'All',
   REMOVE: 'Remove',
   DONT_REMOVE: "Don't Remove",
+  CHANGE_TEMPLATE: 'Change Template',
   // login
   LOGIN_TITLE: 'SignIn Reqter',
   LOGIN_EMAIL_INPUT_TITLE: 'Email Address',
@@ -112,8 +122,8 @@ export default {
   HOME_SIDE_NAV_MANAGE_USERS_DESC: 'Manage users of your apps',
   HOME_SIDE_NAV_CATEGRIES: 'Categories',
   HOME_SIDE_NAV_CATEGORIES_DEC: 'Define your business categories',
-  HOME_SIDE_NAV_QUESTION_TYPES: 'Question Types',
-  HOME_SIDE_NAV_QUESTION_TYPES_DESC: 'Manage your question types',
+  HOME_SIDE_NAV_QUESTION_TYPES: 'Form Templates',
+  HOME_SIDE_NAV_QUESTION_TYPES_DESC: 'Manage your form templates',
   HOME_SIDE_NAV_REQUESTS: 'Requests',
   HOME_SIDE_NAV_REQUESTS_DESC: 'Manage requests',
   HOME_SIDE_NAV_QUOTES: 'Quotes',
@@ -134,6 +144,10 @@ export default {
   HOME_SIDEBAR_PROFILE_LIBRARY: 'Library',
   HOME_SIDEBAR_PROFILE_CATEGORIES: 'Categories',
   HOME_SIDEBAR_PROFILE_LOGOUT: 'Logout',
+  HOME_SIDE_NAV_PARTNERS: 'Partners',
+  HOME_SIDE_NAV_PARTNERS_DESC: 'Manage your partners',
+  HOME_SIDE_NAV_CUSTOMERS: 'Customers',
+  HOME_SIDE_NAV_CUSTOMERS_DESC: 'Manage your customers',
   // PROFILE
   PROFILE_FIRST_BOX_TITLE: 'Personal Info',
   PROFILE_AVATAR_TITLE: 'Avatar',
@@ -237,6 +251,8 @@ export default {
   CONTENT_TYPE_MODAL_FOOTER_UPSERT_BTN_EDIT: 'Edit',
   CONTENT_TYPE_MODEL_HEADER_TITLE: 'Manage Fields',
   CONTENT_TYPE_MODEL_HEADER_DESC: 'Lorem ipsum dolor sit amet, consectetur',
+  CONTENT_TYPE_MODEL_SETTINGS_BTN: 'Settings',
+  CONTENT_TYPE_MODAL_HEADER_NEW: 'Create New Form Template',
   CONTENT_TYPE_MODAL_NAME: 'Name',
   CONTENT_TYPE_MODAL_NAME_PLACEHOLDER: 'Enter name of your type',
   CONTENT_TYPE_MODAL_NAME_DESCRIPTION: 'try to enter meaningfull name',
@@ -267,28 +283,88 @@ export default {
   CONTENT_TYPE_REMOVE_ALERT_MESSAGE: 'Are you sure to remove content type?',
   CONTENT_TYPE_REMOVE_FIELD_ALERT_TITLE: 'Remove Field',
   CONTENT_TYPE_REMOVE_FIELD_ALERT_MESSAGE: 'Are you sure to remove the field ?',
-
+  CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION: 'Enable localization of this field',
+  CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION_INFO:
+    'All the content can be translated to languages',
+  CONTENT_TYPE_EDIT_FIELD_MODAL_FIRST_TAB: 'Settings',
+  CONTENT_TYPE_EDIT_FIELD_MODAL_SECOND_TAB: 'Validations',
+  CONTENT_TYPE_EDIT_FIELD_MODAL_THIRTH_TAB: 'Appearance',
   FIELD_TYPE_RICH_TEXT: 'Rich Text',
+  richText: 'RichText',
   FIELD_TYPE_RICH_TEXT_INFO: 'Descriptive content ,for example blog post',
   FIELD_TYPE_TEXT: 'Text',
+  string: 'Text',
   FIELD_TYPE_TEXT_INFO: 'Titles, names, paragraphs, list of names',
   FIELD_TYPE_NUMBER: 'Number',
+  number: 'Number',
   FIELD_TYPE_NUMBER_INFO: 'ID, order number, rating, quantity',
   FIELD_TYPE_DATE_TIME: 'Date and time',
+  dateTime: 'DateTime',
   FIELD_TYPE_DATE_TIME_INFO: 'Event date, opening hours',
   FIELD_TYPE_LOCATION: 'Location',
+  location: 'Location',
   FIELD_TYPE_LOCATION_INFO: 'Coordinates: latitude and longitude',
   FIELD_TYPE_MEDIA: 'Media',
+  media: 'Media',
   FIELD_TYPE_MEDIA_INFO: 'Images, videos, PDFs and other files',
   FIELD_TYPE_KEY_VALUE: 'Options',
+  keyValue: 'Options',
   FIELD_TYPE_KEY_VALUE_INFO: 'For example, Brand of a car',
   FIELD_TYPE_BOOLEAN: 'Boolean',
+  boolean: 'Boolean',
   FIELD_TYPE_BOOLEAN_INFO: 'Yes or no, 1 or 0, true or false',
   FIELD_TYPE_OBJECT: 'Json Object',
+  jsonObject: 'Json Object',
   FIELD_TYPE_OBJECT_INFO: 'Data in JSON format',
   FIELD_TYPE_REFERENCE: 'Reference',
+  reference: 'Reference',
   FIELD_TYPE_REFERENCE_INFO:
     'For example, a blog post can reference its author(s)',
+  FIELD_HELP_TEXT: 'Help Text',
+  FIELD_HELP_TEXT_INFO: 'This help text will show up below the field',
+  CHAR_255: 'Try to enter maximum 255 char',
+  FIELDS_UPDATE_APPEARANCE_TITLE: 'Chooes how this field should be displayed',
+  FIELDS_UPDATE_VALIDATION_REFERENCE_TITLE: 'Accept only specified entry type',
+  FIELDS_UPDATE_VALIDATION_REFERENCE_DESC:
+    'Make this field only accept entries from specified contenttype(s)',
+  FIELDS_UPDATE_VALIDATION_MEDIA_TITLE: 'Accept only specified file types',
+  FIELDS_UPDATE_VALIDATION_MEDIA_INFO:
+    'Make this field only accept specified file types',
+  FIELDS_UPDATE_VALIDATION_PATTERN_TITLE: 'Match a specific pattern',
+  FIELDS_UPDATE_VALIDATION_PATTERN_INFO:
+    'Make this field match a pattern: e-mail address, URI, or a custom regular expression',
+  FIELDS_UPDATE_VALIDATION_PATTERN_EXAMPLES: 'Examples',
+  FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_TITLE:
+    'Accept only specified number range',
+  FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_INFO:
+    'Specify a minimum and/or maximum allowed number for this field',
+  FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_BETWEEN: 'Between',
+  FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_GREAT_EQUAL: 'Greater or equal than',
+  FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_LESS_EQUAL: 'Less or equal than',
+  FIELDS_UPDATE_VALIDATION_TEXT_TITLE: 'Limit character count',
+  FIELDS_UPDATE_VALIDATION_TEXT_INFO:
+    'Specify a minimum and/or maximum allowed number of characters',
+  FIELDS_UPDATE_VALIDATION_TEXT_BETWEEN: 'Between',
+  FIELDS_UPDATE_VALIDATION_TEXT_AT_LEAST: 'At Least',
+  FIELDS_UPDATE_VALIDATION_TEXT_NO_MORE: 'No more than',
+  FIELDS_UPDATE_VALIDATION_REQUIRED: 'Required',
+  FIELDS_UPDATE_VALIDATION_REQUIRED_INFO:
+    "You won't be able to publish an entry if this field is empty",
+  FIELDS_UPDATE_MULTI_SELECT: 'Multi Select',
+  FIELDS_UPDATE_MULTI_SELECT_INFO:
+    'Select this if there are several things to be stored',
+  FIELDS_UPDATE_SINGLE_SELECT: 'Single Select',
+  FIELDS_UPDATE_SINGLE_SELECT_INFO:
+    'Select this if there is only one thing to store For',
+  FIELDS_UPDATE_MANY_FILES: 'Many Files',
+  FIELDS_UPDATE_MANY_FILES_INFO:
+    'Select this if there are several things to be stored For example, several photos or PDF files',
+  FIELDS_UPDATE_ONE_FILE: 'One File',
+  FIELDS_UPDATE_ONE_FILE_INFO:
+    'Select this if there is only one thing to store For example, a single photo or one PDF file',
+  FIELDS_CUSTOM_FIELD_AVOID: 'You can not add more field on this template',
+
+  AND: 'And',
   ITEM_TYPES_FIELDS: 'Fields',
   ITEM_TYPES_ACCESS_RIGHT: 'Visible To',
   CONTENT_TYPE_ROLE_MODAL_TITLE: 'Set Visbile To',
@@ -473,6 +549,47 @@ export default {
   UPSERT_ASSET_HEADER_EDIT_TITLE: 'Edit a file ',
   // ASSETS-API-GET
 
+  /// FORM
+  FORMS_BTN_NEW: 'New Form',
+  FORMS_SEARCH_PLACEHOLDER: 'Search form by name',
+  // UPSERT FORM
+  UPSERT_FORM_FIRST_TAB_TITLE: 'Form Type',
+  UPSERT_FORM_SECOND_TAB_TITLE: 'Select Partners',
+  UPSERT_FORM_THIRTH_TAB_TITLE: 'Choose Form Template',
+  UPSERT_FORM_FOURTH_TAB_TITLE: 'Design Form',
+  UPSERT_FORM_FIVTH_TAB_TITLE: 'Complete Form',
+  UPSERT_FORM_FORM_TYPES_TITLE: 'Choose Form Type',
+  UPSERT_FORM_FORM_TYPES_DESC: 'To continue please choose one of below types',
+  UPSERT_FORM_CUSTOMER_FORM_PUBLIC: 'Customer Public Form',
+  UPSERT_FORM_CUSTOMER_FORM_FOR_PARTNER: 'Customer Form For A Special Partner',
+  UPSERT_FORM_CUSTOMER_FORM_PUBLIC_DESC:
+    'Create a form for customers.all customers will see this form',
+  UPSERT_FORM_CUSTOMER_FORM_SPECIAL_DESC:
+    'Only selected partners will see this form',
+  UPSERT_FORM_PARTNER_FORM_PUBLIC: 'Partner Public Form',
+  UPSERT_FORM_PARTNER_FORM_FOR_PARTNER: 'Partner Form Special',
+  UPSERT_FORM_PARTNER_FORM_PUBLIC_DESC:
+    'Create a form for partners.All of them will see this form',
+  UPSERT_FORM_PARTNER_FORM_SPECIAL_DESC:
+    'Only selected partners in next tab will see this form',
+  UPSERT_FORM_PARTNERS_TITLE: 'Choose Partners',
+  UPSERT_FORM_PARTNERS_DESC:
+    'Receive only selected partners,you can also skip ',
+  UPSERT_FORM_TEMPLATES_TITLE: 'Choose a template form',
+  UPSERT_FORM_TEMPLATES_DESC: 'Choose your template form to create a form',
+  UPSERT_FORM_TEMPLATES_LOADING: 'Loading Content Types...',
+  UPSERT_FORM_TEMPLATES_EMPTY_TITLE: 'Empty List!',
+  UPSERT_FORM_TEMPLATES_EMPTY_DESC:
+    'You have not created any form template yet.',
+  UPSERT_FORM_TEMPLATES_EMPTY_BTN: 'Create new one',
+  UPSERT_FORM_CHANGE_CATEGORY: 'Change Category',
+  UPSERT_FORM_CHOOSE_CATEGORY: 'Choose a category',
+  UPSERT_FORM_NO_CATEGORY_HEADER: "This content dosen't have category",
+  CATEGORY: 'Category',
+  UPSERT_FORM_DESIGN_TITLE: 'Design Your Form',
+  UPSERT_FORM_DESIGN_DESC:
+    'Hear you can design your form,fields order,background color,...',
+
   ASSET_GET_ON_SERVER_ERROR:
     'Internal server error.please report that to administrtor',
   ASSET_GET_ON_BAD_REQUEST:
@@ -538,5 +655,8 @@ export default {
   BAD_REQUEST: 'Bad Request',
   NOT_FOUND: 'Not found',
   UNKNOWN_ERROR: 'uknown error',
-  ON_REQUEST_ERROR: 'Request error'
+  ON_REQUEST_ERROR: 'Request error',
+  ASSET_BROWSER_FIRST_TAB:"Media",
+  ASSET_BROWSER_SECOND_TAB:"Upload New",
+
 }

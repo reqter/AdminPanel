@@ -17,6 +17,7 @@ import "./styles.scss";
 import { utility } from "../../services";
 import { useLocale } from "./../../hooks";
 import AssetBrowser from "./../AssetBrowser";
+import Image from "../Image";
 
 const RichTextInput = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -104,7 +105,15 @@ const RichTextInput = props => {
   }
 
   return (
-    <>
+    <div className="richtext">
+      <label>
+        {field.title && field.title[currentLang] && field.title[currentLang]}
+      </label>
+      <span className="richtext__desc">
+        {field.description &&
+          field.description[currentLang] &&
+          field.description[currentLang]}
+      </span>
       <Editor
         readOnly={props.viewMode}
         toolbarHidden={props.viewMode}
@@ -149,7 +158,7 @@ const RichTextInput = props => {
           mediaType={"image"}
         />
       )}
-    </>
+    </div>
   );
 };
 
@@ -162,7 +171,7 @@ const Media = props => {
 
   let media;
   if (type === "IMAGE") {
-    media = <img src={src} alt="" style={{ width: "auto", height: "auto" }} />;
+    media = <Image url={src} style={{ width: "auto", height: "auto" }} />;
   }
 
   return media;

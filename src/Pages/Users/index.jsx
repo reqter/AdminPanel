@@ -10,7 +10,7 @@ import {
   assignRoles,
   deleteUser,
 } from "./../../Api/userManagement-api";
-import { AssignRole, Alert } from "./../../components";
+import { AssignRole, Alert, Image } from "./../../components";
 
 const Users = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -561,7 +561,7 @@ const Users = props => {
                       <td>
                         <div className="users-table-image">
                           {user.profile && user.profile.avatar ? (
-                            <img src={user.profile.avatar} alt="" />
+                            <Image url={user.profile.avatar}/>
                           ) : (
                             <div className="users-table-image-empty">
                               No Image

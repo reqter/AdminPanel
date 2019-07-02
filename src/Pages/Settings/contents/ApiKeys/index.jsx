@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getApiKeys, deleteApiKey } from "../../../../Api/apiKey-api";
-import { CircleSpinner, Alert } from "../../../../components";
+import { CircleSpinner, Alert, Image } from "../../../../components";
 import { useGlobalState, useLocale } from "./../../../../hooks";
 
 const ApiKeys = props => {
@@ -110,7 +110,7 @@ const ApiKeys = props => {
                     <td>
                       {apiKey.icon && apiKey.icon.length > 0 ? (
                         <div className="myTable-image">
-                          <img src={apiKey.icon} alt="" />
+                          <Image url={apiKey.icon} />
                         </div>
                       ) : (
                         <div className="myTable-image-empty">empty</div>

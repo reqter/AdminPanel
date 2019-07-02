@@ -5,7 +5,7 @@ import "./styles.scss";
 import { useGlobalState } from "../../services";
 import { useLocale } from "./../../hooks";
 import { filterContents } from "./../../Api/content-api";
-
+import Image from "../Image";
 
 const ReferenceInput = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -162,7 +162,7 @@ const SingleValue = props => {
         <div className="custome-select-selected">
           {data.fields["thumbnail"] && data.fields["thumbnail"].length > 0 && (
             <div className="selectedItemImage">
-              <img src={data.fields["thumbnail"][0][currentLang]} alt="" />
+              <Image url={data.fields["thumbnail"][0][currentLang]} />
             </div>
           )}
           <div className="selectedItemName">
@@ -181,7 +181,7 @@ const MultiValueLabel = props => {
       <div className="custome-select-selected" key={data.sys.id}>
         {data.fields["thumbnail"] && data.fields["thumbnail"].length > 0 && (
           <div className="selectedItemImage">
-            <img src={data.fields["thumbnail"][0][currentLang]} alt="" />
+            <Image url={data.fields["thumbnail"][0][currentLang]} />
           </div>
         )}
         <div className="selectedItemName">
@@ -199,7 +199,7 @@ const CustomOption = ({ innerProps, isDisabled, data }) => {
       <div {...innerProps} className="custom-select-item">
         <div className="imageItem">
           {data.fields["thumbnail"] && data.fields["thumbnail"].length > 0 ? (
-            <img src={data.fields["thumbnail"][0][currentLang]} alt="" />
+            <Image url={data.fields["thumbnail"][0][currentLang]} />
           ) : (
             <div className="imageItem-empty">No Image</div>
           )}
@@ -215,10 +215,7 @@ const CustomOption = ({ innerProps, isDisabled, data }) => {
           <span>{data.sys.issueDate && data.sys.issueDate}</span>
         </div>
         <div className="itemStatus">
-          <span>
-            {data.fields.status &&
-              t(data.fields.status)}
-          </span>
+          <span>{data.fields.status && t(data.fields.status)}</span>
         </div>
       </div>
     );

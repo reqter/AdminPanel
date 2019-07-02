@@ -14,6 +14,9 @@ import {
 } from "../../Api/request-api";
 import CategoriesModal from "./Categories";
 import ContentTypesList from "./ContentTypes";
+import FormTypes from "./FormTypes";
+import Partners from "./Partners";
+import FormDesign from "./FormDesign";
 import {
   String,
   Number,
@@ -26,6 +29,7 @@ import {
   Reference,
   CircleSpinner,
   JsonObject,
+  Image,
 } from "../../components";
 
 const requestFields = [
@@ -38,6 +42,7 @@ const requestFields = [
     },
     description: {
       en: "title is required",
+      fa: "عنوان فرم اجباری می باشد",
     },
     type: "string",
     isBase: true,
@@ -52,73 +57,24 @@ const requestFields = [
       fa: "توضیحات",
     },
     description: {
-      en: "Short description of your request",
-      fa: "توضیح کوتاه برای فایل",
+      en: "Short description of your form",
+      fa: "توضیح کوتاه برای فرم",
     },
     type: "string",
     isBase: true,
     isTranslate: true,
-  },
-  {
-    id: "3",
-    name: "receiver",
-    title: {
-      en: "Receiver",
-      fa: "عنوان",
-    },
-    description: {
-      en: "Receiver is required",
-    },
-    type: "string",
-    appearance: "email",
-  },
-  {
-    id: "4",
-    name: "showHeader",
-    title: {
-      en: "Show Header Info",
-      fa: "",
-    },
-    description: {
-      en: "If checked, request page will have a header at top of the page",
-    },
-    type: "boolean",
-    defaultValue: true,
-  },
-  {
-    id: "5",
-    name: "showRequestInfo",
-    title: {
-      en: "Show Requester Info",
-      fa: "عنوان",
-    },
-    description: {
-      en: "If checked, request page will show your info",
-    },
-    type: "boolean",
-    defaultValue: true,
-  },
-  {
-    id: "6",
-    name: "userDetail",
-    title: {
-      en: "Ask User Detial",
-    },
-    description: {
-      en: "If checked, request page will ask user detail",
-    },
-    type: "boolean",
-    defaultValue: true,
+    isMultiLine: true,
   },
   {
     id: "7",
     name: "thumbnail",
     title: {
       en: "Thumbnail",
+      fa: "تصویر نمایه فرم",
     },
     description: {
-      fa: "",
-      en: "Click on file selector to choose your file",
+      fa: "تصویر کوچک برای نمایش به عنوان نمایه فرم",
+      en: "a small image to show as form image",
     },
     type: "media",
     mediaType: ["image"],
@@ -129,10 +85,11 @@ const requestFields = [
     name: "attachments",
     title: {
       en: "Attachments",
+      fa: "فایل های ضمیمه",
     },
     description: {
-      fa: "",
-      en: "Click on file selector to choose your file",
+      fa: "فایل های ضمیمه شده همراه با فرم",
+      en: "Attachments files beside form",
     },
     type: "media",
     isTranslate: true,
@@ -140,41 +97,92 @@ const requestFields = [
   },
   {
     id: "9",
+    name: "startDate",
+    title: {
+      en: "Start Date",
+      fa: "تاریخ شروع",
+    },
+    description: {
+      fa: "تاریخ شروع درخواست یا پیشنهاد برای این فرم",
+      en: "Start date of request or quote of this form",
+    },
+    type: "dateTime",
+    format: "date",
+    disablePastDates: true,
+  },
+  {
+    id: "10",
+    name: "endDate",
+    title: {
+      en: "End Date",
+      fa: "تاریخ پایان",
+    },
+    description: {
+      fa: "تاریخ پایان درخواست یا پیشنهاد برای این فرم",
+      en: "End date of request or quote of this form",
+    },
+    type: "dateTime",
+    format: "date",
+    disablePastDates: true,
+  },
+  {
+    id: "11",
     name: "longDesc",
     title: {
       en: "More Info",
       fa: "اطلاعات بیشتر",
     },
     description: {
-      fa: "",
-      en: "",
+      fa: "اطلاعات بیشتر از جزئیات فرم",
+      en: "More detail of this form",
     },
     type: "richText",
     isTranslate: true,
   },
+  // {
+  //   id: "10",
+  //   name: "userFields",
+  //   title: {
+  //     en: "User Fields",
+  //     fa: "فیلدهای نمایشی",
+  //   },
+  //   description: {
+  //     fa: "فیلد های قایل نمایش برای کاربران",
+  //     en: "User can only the fields which you you select",
+  //   },
+  //   type: "keyValue",
+  //   isList: true,
+  // },
+];
+const headerTabs = [
   {
-    id: "10",
-    name: "userFields",
-    title: {
-      en: "User Fields",
-    },
-    description: {
-      fa: "",
-      en: "User can only the fields which you you select",
-    },
-    type: "keyValue",
-    isList: true,
+    id: 1,
+    name: "UPSERT_FORM_FIRST_TAB_TITLE",
+  },
+  {
+    id: 2,
+    name: "UPSERT_FORM_SECOND_TAB_TITLE",
+  },
+  {
+    id: 3,
+    name: "UPSERT_FORM_THIRTH_TAB_TITLE",
+  },
+  {
+    id: 4,
+    name: "UPSERT_FORM_FOURTH_TAB_TITLE",
+  },
+  {
+    id: 5,
+    name: "UPSERT_FORM_FIVTH_TAB_TITLE",
   },
 ];
-
 const UpsertProduct = props => {
-  const { appLocale, t, currentLang } = useLocale();
+  const { appLocale, t, currentLang, direction } = useLocale();
   const requestBaseLink = process.env.REACT_APP_REQUESTS_DELIVERY_URL;
   const [{ categories, spaceInfo }, dispatch] = useGlobalState();
 
   // variables
   const requestLinkInput = useRef(null);
-  const isRequest = true;
 
   const [updateMode, toggleUpdateMode] = useState(
     props.match.params.id
@@ -185,7 +193,7 @@ const UpsertProduct = props => {
   );
 
   const [viewMode] = useState(props.match.url.includes("view") ? true : false);
-  const [tab, toggleTab] = useState();
+  const [tab, changeTab] = useState();
   const [categoryModal, toggleCategoryModal] = useState(false);
   const [category, setCategory] = useState();
   const [contentType, setContentType] = useState();
@@ -204,39 +212,36 @@ const UpsertProduct = props => {
   const [spinner, toggleSpinner] = useState(false);
   const [closeSpinner, toggleCloseSpinner] = useState(false);
   const [requestResult, setRequestResult] = useState();
+  const [formType, setSelectedFormType] = useState();
 
   useEffect(() => {
     if (updateMode || viewMode) {
       if (props.match.params.id !== undefined) {
         if (props.match.params.id.length > 0) {
-          //toggleUpdateMode(true);
-          if (isRequest) getRequestContentById(props.match.params.id);
-          else getItemById(props.match.params.id);
+          getRequestContentById(props.match.params.id);
         } else {
-          toggleTab(3);
+          changeTab(5);
         }
       } else {
-        toggleTab(1);
+        changeTab(1);
       }
     } else {
       if (props.location.params && props.location.params.content) {
         getItemById(props.location.params.content._id);
         //_getContentTypeById(props.location.params.content._id);
       } else {
-        toggleTab(1);
+        changeTab(1);
       }
     }
   }, [props.match.params.id]);
 
   useEffect(() => {
-    changeTab(2);
+    if (contentType) changeTab(4);
   }, [contentType]);
+
   useEffect(() => {
-    if (Object.keys(form).length > 0 && checkFormValidation()) {
-      if (isRequest) {
-        if (category) toggleIsValidForm(true);
-        else toggleIsValidForm(false);
-      } else toggleIsValidForm(true);
+    if (Object.keys(form).length > 0 && category && checkFormValidation()) {
+      toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [formValidation, category]);
 
@@ -261,16 +266,16 @@ const UpsertProduct = props => {
               message: t("UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"),
             };
             setError(obj);
-            toggleTab(3);
+            changeTab(5);
           } else {
             initEditMode(result);
           }
         } else {
-          toggleTab(3);
+          changeTab(5);
         }
       })
       .onServerError(result => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -279,7 +284,7 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .onBadRequest(result => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -288,7 +293,7 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .unAuthorized(result => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -297,7 +302,7 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .notFound(() => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -320,16 +325,16 @@ const UpsertProduct = props => {
               message: t("UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"),
             };
             setError(obj);
-            toggleTab(3);
+            changeTab(5);
           } else {
             initEditMode(result);
           }
         } else {
-          toggleTab(3);
+          changeTab(5);
         }
       })
       .onServerError(result => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -338,7 +343,7 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .onBadRequest(result => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -347,7 +352,7 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .unAuthorized(result => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -356,7 +361,7 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .notFound(() => {
-        toggleTab(3);
+        changeTab(5);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -367,29 +372,21 @@ const UpsertProduct = props => {
       .call(spaceInfo.id, id);
   }
   function initEditMode(result) {
-    if (isRequest) {
-      let obj = {};
-      for (const key in result) {
-        if (key === "settings") {
-          obj = { ...obj, ...result[key] };
-        } else {
-          obj[key] = result[key];
-        }
+    let obj = {};
+    for (const key in result) {
+      if (key === "settings") {
+        obj = { ...obj, ...result[key] };
+      } else {
+        obj[key] = result[key];
       }
-      setFormData(obj);
-      setForm(obj);
-      setContentType(result.contentType);
-    } else {
-      setFormData(result.fields);
-      setForm(result.fields);
-      setContentType(result.contentType);
-      // const c_fields = result.contentType.fields;
-      // setFields(c_fields.sort((a, b) => a.index - b.index));
     }
+    setFormData(obj);
+    setForm(obj);
+    setContentType(result.contentType);
     if (result.contentType.categorization === true)
       setCategory(result.category);
 
-    if (tab !== 2) toggleTab(2);
+    if (tab !== 2) changeTab(4);
   }
   function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
@@ -533,31 +530,42 @@ const UpsertProduct = props => {
   function backToForms() {
     props.history.push(`/${currentLang}/forms`);
   }
-  function changeTab(tab) {
-    if (tab === 2) {
-      if (contentType !== undefined) {
-        toggleTab(2);
-        if (isRequest) {
-          const f = contentType.fields.reduce((preValue, currentValue) => {
-            preValue.push({ value: currentValue.name });
-            return preValue;
-          }, []);
-          const r_f = requestFields.map(rF => {
-            if (rF.name === "userFields") {
-              rF.options = f;
-            }
-            return rF;
-          });
-          setFields(r_f);
-        } else {
-          const f = contentType.fields;
-          setFields(f.sort((a, b) => a.index - b.index));
-        }
-      }
-    } else {
-      setContentType(undefined);
-      toggleTab(1);
+  function changeTabContent(t) {
+    if (t === 2) {
+      if (formType) changeTab(t);
+    } else if (t === 3) {
+      changeTab(t);
+    } else if (t === 4) {
+      changeTab(t);
+    } else if (t === 5) changeTab(t);
+    else {
+      changeTab(t);
     }
+
+    // if (tab === 2) {
+    //   if (contentType !== undefined) {
+    //     changeTab(2);
+    //     if (isRequest) {
+    //       const f = contentType.fields.reduce((preValue, currentValue) => {
+    //         preValue.push({ value: currentValue.name });
+    //         return preValue;
+    //       }, []);
+    //       const r_f = requestFields.map(rF => {
+    //         if (rF.name === "userFields") {
+    //           rF.options = f;
+    //         }
+    //         return rF;
+    //       });
+    //       setFields(r_f);
+    //     } else {
+    //       const f = contentType.fields;
+    //       setFields(f.sort((a, b) => a.index - b.index));
+    //     }
+    //   }
+    // } else {
+    //   setContentType(undefined);
+    //   changeTab(1);
+    // }
   }
   function handleLoadedContentTypes(success, error, sender) {
     if (sender === "choosingNewContentType") {
@@ -565,16 +573,25 @@ const UpsertProduct = props => {
         setError(error);
       }
     } else {
-      if (success) toggleTab(1);
-      else {
+      if (success) {
+        if (tab !== 3) changeTab(3);
+      } else {
         setError(error);
-        toggleTab(3);
+        changeTab(5);
       }
     }
   }
 
   function handleSelectContentType(contentType) {
     setContentType(contentType);
+    if (
+      !contentType.allowCustomFields ||
+      contentType.allowCustomFields === true
+    ) {
+      changeTab(4);
+    } else {
+      changeTab(5);
+    }
   }
   function handleSelectNewContentType(contentType) {
     selectedContent.contentType = contentType;
@@ -588,11 +605,7 @@ const UpsertProduct = props => {
     if (!spinner && !closeSpinner) {
       if (closePage) toggleCloseSpinner(true);
       else toggleSpinner(true);
-      if (isRequest) {
-        upsertRequestItem(true);
-      } else {
-        upsertContent(closePage);
-      }
+      upsertRequestItem(true);
     }
   }
   function upsertRequestItem(closePage) {
@@ -632,7 +645,7 @@ const UpsertProduct = props => {
             },
           });
           setRequestResult(result);
-          toggleTab(4);
+          changeTab(4);
         })
         .onServerError(result => {
           if (closePage) toggleCloseSpinner(false);
@@ -736,7 +749,7 @@ const UpsertProduct = props => {
             },
           });
           setRequestResult(result);
-          toggleTab(4);
+          changeTab(4);
           toggleSpinner(false);
           setFormData({});
           setForm({});
@@ -789,154 +802,21 @@ const UpsertProduct = props => {
         .call(spaceInfo.id, obj);
     }
   }
-  function upsertContent(closePage) {
-    if (updateMode) {
-      const obj = {
-        _id: props.match.params.id,
-        contentType: contentType._id,
-        category:
-          contentType.categorization === true
-            ? category
-              ? category._id
-              : null
-            : null,
-        fields: form,
-      };
-      updateContent()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: t("UPSERT_ITEM_UPDATE_ON_OK"),
-            },
-          });
-          backToForms();
-        })
-        .onServerError(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: t("UPSERT_ITEM_UPDATE_ON_SERVER_ERROR"),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: t("UPSERT_ITEM_UPDATE_ON_BAD_REQUEST"),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: t("UPSERT_ITEM_UPDATE_UN_AUTHORIZED"),
-            },
-          });
-        })
-        .notFound(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: t("UPSERT_ITEM_UPDATE_NOT_FOUND"),
-            },
-          });
-        })
-        .call(spaceInfo.id, obj);
+  // useEffect(() => {
+  //   if (formType) {
+  //     if (formType.id !== 2 && formType.id !== 4) {
+  //       changeTab(2);
+  //     } else {
+  //       changeTab(3);
+  //     }
+  //   }
+  // }, [formType]);
+  function handleSelectFormType(type) {
+    setSelectedFormType(type);
+    if (type.id === 1 || type.id === 3) {
+      changeTab(3);
     } else {
-      const obj = {
-        contentType: contentType._id,
-        category:
-          contentType.categorization === true
-            ? category
-              ? category._id
-              : null
-            : null,
-        fields: form,
-      };
-      addContent()
-        .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: t("UPSERT_ITEM_ADD_ON_OK"),
-            },
-          });
-          if (closePage) {
-            backToForms();
-          } else {
-            if (closePage) toggleCloseSpinner(false);
-            else toggleSpinner(false);
-            setFormData({});
-            setForm({});
-            // let n_obj = {};
-            // for (const key in formValidation) {
-            //   n_obj[key] = false;
-            // }
-            setFormValidation({});
-          }
-        })
-        .onServerError(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: t("UPSERT_ITEM_ADD_ON_SERVER_ERROR"),
-            },
-          });
-        })
-        .onBadRequest(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "error",
-              message: t("UPSERT_ITEM_ADD_ON_BAD_REQUEST"),
-            },
-          });
-        })
-        .unAuthorized(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: t("UPSERT_ITEM_ADD_UN_AUTHORIZED"),
-            },
-          });
-        })
-        .notFound(result => {
-          if (closePage) toggleCloseSpinner(false);
-          else toggleSpinner(false);
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "warning",
-              message: t("UPSERT_ITEM_ADD_NOT_FOUND"),
-            },
-          });
-        })
-        .call(spaceInfo.id, obj);
+      changeTab(2);
     }
   }
   function copyRequestLink() {
@@ -954,39 +834,66 @@ const UpsertProduct = props => {
     <div className="up-wrapper">
       <div className="up-header">
         <button className="btn btn-light" onClick={backToForms}>
-          <i className="icon-arrow-left2" />
-          Back
+          <i
+            className={
+              "icon-arrow-" + (direction === "ltr" ? "left2" : "right2")
+            }
+          />
+          {t("BACK")}
         </button>
-        {tab !== undefined && tab !== 3 && (
-          <div className="tabItems">
-            {updateMode || viewMode ? (
-              <div className="item active">
-                {contentType && contentType.title[currentLang]}
+        <div className="tabItems">
+          {updateMode || viewMode ? (
+            <div className="item active">
+              {contentType && contentType.title[currentLang]}
+            </div>
+          ) : (
+            headerTabs.map(h => (
+              <div
+                className={["item", tab === h.id ? "active" : ""].join(" ")}
+                onClick={() => changeTabContent(h.id)}
+                style={{
+                  display:
+                    h.id !== 4
+                      ? "flex"
+                      : contentType
+                      ? !contentType.allowCustomFields ||
+                        contentType.allowCustomFields === true
+                        ? "flex"
+                        : "none"
+                      : "none",
+                }}
+              >
+                <div
+                  className={["tabNumber ", tab === h.id ? "active" : ""].join(
+                    " "
+                  )}
+                />
+                {t(h.name)}
               </div>
-            ) : (
-              <>
-                <div
-                  className={["item", tab === 1 ? "active" : ""].join(" ")}
-                  onClick={() => changeTab(1)}
-                >
-                  1.Choosing Content Type
-                </div>
-                <div
-                  className={["item", tab === 2 ? "active" : ""].join(" ")}
-                  onClick={() => changeTab(2)}
-                >
-                  2.Complete Form
-                </div>
-              </>
-            )}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </div>
       <div className="up-content">
         <main>
           {tab === 1 && (
+            <FormTypes
+              selectedType={formType}
+              onSelectType={handleSelectFormType}
+            />
+          )}
+          {tab === 2 && <Partners />}
+          {tab === 3 && (
             <>
-              <div className="up-content-title">Choose a content type</div>
+              <h5>{t("UPSERT_FORM_TEMPLATES_TITLE")}</h5>
+              <span style={{ fontSize: 13 }}>
+                {t("UPSERT_FORM_TEMPLATES_DESC")}
+              </span>
+              <input
+                type="text"
+                className="form-control contentTypeSearch"
+                placeholder="جستحوی قالب با نام"
+              />
               <div className="up-content-itemTypes animated fadeIn">
                 <ContentTypesList
                   onSelectContentType={handleSelectContentType}
@@ -995,16 +902,25 @@ const UpsertProduct = props => {
               </div>
             </>
           )}
-          {tab === 2 && (
+          {tab === 4 && <FormDesign />}
+          {tab === 5 && (
             <>
               <div className="up-content-title">
-                {updateMode ? "Edit " : viewMode ? "View" : "Add New "}
+                {updateMode
+                  ? t("EDIT")
+                  : viewMode
+                  ? t("VIEW_MODE")
+                  : t("ADD_NEW") +
+                    " " +
+                    (contentType &&
+                      contentType.title &&
+                      contentType.title[currentLang])}
               </div>
               <div className="up-categoryBox animated fadeIn">
                 {category ? (
                   category.image !== undefined ? (
                     <div className="selectedCategory-img">
-                      <img src={category.image[currentLang]} alt="" />
+                      <Image url={category.image[currentLang]}/>
                     </div>
                   ) : (
                     <div className="selectedCategory-icon">
@@ -1021,30 +937,21 @@ const UpsertProduct = props => {
                   </div>
                 )}
                 <span>
-                  {contentType.categorization === true
-                    ? category
-                      ? category.name[currentLang]
-                      : viewMode
-                      ? "This content dosen't have category"
-                      : "Choose a category"
-                    : contentType.title[currentLang]}
+                  {category
+                    ? category.name[currentLang]
+                    : viewMode
+                    ? t("UPSERT_FORM_NO_CATEGORY_HEADER")
+                    : t("CATEGORY")}
                 </span>
-                {!viewMode ? (
-                  contentType.categorization === true ? (
-                    <button className="btn btn-link" onClick={showCatgoryModal}>
-                      {category ? "Change Category" : "Choose a category"}
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-link"
-                      onClick={() => changeTab(1)}
-                    >
-                      Change content type
-                    </button>
-                  )
-                ) : null}
+                {!viewMode && (
+                  <button className="btn btn-link" onClick={showCatgoryModal}>
+                    {category
+                      ? t("UPSERT_FORM_CHANGE_CATEGORY")
+                      : t("UPSERT_FORM_CHOOSE_CATEGORY")}
+                  </button>
+                )}
               </div>
-              {(updateMode || viewMode) && isRequest && (
+              {(updateMode || viewMode) && (
                 <div className="linkBox animated fadeIn">
                   <span className="linkmsg">
                     This link will be activated when you publish the request.
@@ -1071,14 +978,14 @@ const UpsertProduct = props => {
                   ))}
                 {!viewMode && (
                   <div className="form-submit-btns">
-                    {!updateMode && !isRequest && (
+                    {!updateMode && (
                       <button
                         className="btn btn-primary"
                         onClick={() => upsertItem(false)}
                         disabled={!isValidForm}
                       >
                         <CircleSpinner show={spinner} size="small" />
-                        {!spinner && "Save & New"}
+                        {!spinner && t("SAVE_AND_NEW")}
                       </button>
                     )}
                     <button
@@ -1088,14 +995,16 @@ const UpsertProduct = props => {
                     >
                       <CircleSpinner show={closeSpinner} size="small" />
                       {!closeSpinner &&
-                        (updateMode ? "Update & Close" : "Save & Close")}
+                        (updateMode
+                          ? t("UPDATE_AND_CLOSE")
+                          : t("SAVE_AND_CLOSE"))}
                     </button>
                   </div>
                 )}
               </div>
             </>
           )}
-          {tab === 3 && (
+          {tab === 6 && (
             <div className="up-formInputs animated fadeIn errorsBox">
               <div className="alert alert-danger">{error && error.message}</div>
               <div className="actions">
@@ -1138,7 +1047,7 @@ const UpsertProduct = props => {
               </div>
             </div>
           )}
-          {tab === 4 && (
+          {tab === 7 && (
             <div className="up-formInputs animated fadeIn errorsBox requestAlert">
               <div className="requestAlert-top">
                 <div className="requestSuccessIcon">
@@ -1189,7 +1098,7 @@ const UpsertProduct = props => {
               </div>
               <div className="requestLink-actions">
                 <button className="btn btn-light" onClick={backToForms}>
-                  {t("Close")}
+                  {t("CLOSE")}
                 </button>
               </div>
             </div>

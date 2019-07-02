@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Modal, ModalFooter } from "reactstrap";
-import { useGlobalState, utility } from "../../../../services";
-import { useLocale } from "../../../../hooks";
+import { utility } from "../../../../services";
+import { useGlobalState, useLocale } from "../../../../hooks";
 import { updateContentType } from "../../../../Api/contentType-api";
 import "./styles.scss";
 import { CircleSpinner } from "../../../../components";
@@ -41,17 +41,31 @@ const acceptedMediaTypes = [
 const translatableFields = ["string", "media", "richText"];
 const fieldsApearance = {
   string: [
-    { name: "text", title: { en: "Text" }, apearance: "", selected: true },
-    { name: "email", title: { en: "Email" }, apearance: "" },
-    { name: "password", title: { en: "Password" }, apearance: "" },
-    { name: "url", title: { en: "URL" }, apearance: "" },
-    { name: "phoneNumber", title: { en: "Phone Number" }, apearance: "" },
+    {
+      name: "text",
+      title: { en: "Text", fa: "رشته" },
+      apearance: "",
+      selected: true,
+    },
+    { name: "email", title: { en: "Email", fa: "ایمیل" }, apearance: "" },
+    { name: "password", title: { en: "Password", fa: "پسورد" }, apearance: "" },
+    { name: "url", title: { en: "URL", fa: "آدرس" }, apearance: "" },
+    {
+      name: "phoneNumber",
+      title: { en: "Phone Number", fa: "شماره تلفن" },
+      apearance: "",
+    },
   ],
   number: [
-    { name: "number", title: { en: "Number" }, apearance: "", selected: true },
+    {
+      name: "number",
+      title: { en: "Number", fa: "عدد" },
+      apearance: "",
+      selected: true,
+    },
     {
       name: "rangeSlider",
-      title: { en: "Range Slider", fa: "" },
+      title: { en: "Range Slider", fa: "بازه اعداد" },
       apearance: "",
     },
   ],
@@ -641,9 +655,7 @@ const FieldConfig = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "success",
-              message: t(
-                "CONTENT_TYPE_UPDATE_FIELD_ON_OK"
-              ),
+              message: t("CONTENT_TYPE_UPDATE_FIELD_ON_OK"),
             },
           });
           dispatch({
@@ -658,9 +670,7 @@ const FieldConfig = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST"
-              ),
+              message: t("CONTENT_TYPE_UPDATE_FIELD_ON_BAD_REQUEST"),
             },
           });
         })
@@ -670,9 +680,7 @@ const FieldConfig = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
-              ),
+              message: t("CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"),
             },
           });
         })
@@ -682,9 +690,7 @@ const FieldConfig = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"
-              ),
+              message: t("CONTENT_TYPE_UPDATE_FIELD_UN_AUTHORIZED"),
             },
           });
         })
@@ -694,9 +700,7 @@ const FieldConfig = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND"
-              ),
+              message: t("CONTENT_TYPE_UPDATE_FIELD_NOT_FOUND"),
             },
           });
         })
@@ -731,7 +735,7 @@ const FieldConfig = props => {
               }
             />
             <span className="fieldName">{selectedField.name}</span>
-            <span className="fieldType">{selectedField.type}</span>
+            <span className="fieldType">{t(selectedField.type)}</span>
           </div>
           <div className="right">
             <div
@@ -741,7 +745,7 @@ const FieldConfig = props => {
               }}
               onClick={() => changeTab(1)}
             >
-              Settings
+              {t("CONTENT_TYPE_EDIT_FIELD_MODAL_FIRST_TAB")}
             </div>
             <div
               className="tabItem"
@@ -750,7 +754,7 @@ const FieldConfig = props => {
               }}
               onClick={() => changeTab(2)}
             >
-              Validations
+              {t("CONTENT_TYPE_EDIT_FIELD_MODAL_SECOND_TAB")}
             </div>
             <div
               className="tabItem"
@@ -759,7 +763,7 @@ const FieldConfig = props => {
               }}
               onClick={() => changeTab(3)}
             >
-              Appearance
+              {t("CONTENT_TYPE_EDIT_FIELD_MODAL_THIRTH_TAB")}
             </div>
           </div>
         </div>
@@ -776,9 +780,7 @@ const FieldConfig = props => {
                     readOnly
                   />
                   <small className="form-text text-muted">
-                    {t(
-                      "CONTENT_TYPE_ADD_FIELD_MODAL_NAME_INFO"
-                    )}
+                    {t("CONTENT_TYPE_ADD_FIELD_MODAL_NAME_INFO")}
                   </small>
                 </div>
                 <div className="form-group col">
@@ -796,24 +798,23 @@ const FieldConfig = props => {
               </div>
               <div className="row">
                 <div className="form-group col">
-                  <label>{t("Description")}</label>
+                  <label>{t("DESCRIPTION")}</label>
                   <input
                     type="text"
                     className="form-control"
+                    placeholder={t("DESCRIPTION_PLACEHOLDER")}
                     value={description}
                     onChange={handleDescriptionChanged}
                   />
                   <small className="form-text text-muted">
-                    {t("field description")}
+                    {t("DESCRIPTION_INFO")}
                   </small>
                 </div>
               </div>
               {selectedField.type === "location" && (
                 <div className="row">
                   <div className="form-group col">
-                    <label>
-                      {t("FIELD_LOCATION_LATITUDE")}
-                    </label>
+                    <label>{t("FIELD_LOCATION_LATITUDE")}</label>
                     <input
                       type="number"
                       className="form-control"
@@ -821,15 +822,11 @@ const FieldConfig = props => {
                       onChange={handleLatitudeChange}
                     />
                     <small className="form-text text-muted">
-                      {t(
-                        "FIELD_LOCATION_LATITUDE_INFO"
-                      )}
+                      {t("FIELD_LOCATION_LATITUDE_INFO")}
                     </small>
                   </div>
                   <div className="form-group col">
-                    <label>
-                      {t("FIELD_LOCATION_LONGITUDE")}
-                    </label>
+                    <label>{t("FIELD_LOCATION_LONGITUDE")}</label>
                     <input
                       type="number"
                       className="form-control"
@@ -837,18 +834,14 @@ const FieldConfig = props => {
                       onChange={handleLongitudeChange}
                     />
                     <small className="form-text text-muted">
-                      {t(
-                        "FIELD_LOCATION_LONGITUDE_INFO"
-                      )}
+                      {t("FIELD_LOCATION_LONGITUDE_INFO")}
                     </small>
                   </div>
                 </div>
               )}
               {selectedField.type === "string" && (
                 <div className="form-group">
-                  <label>
-                    {t("DEFAULT_VALUE_TEXT")}
-                  </label>
+                  <label>{t("DEFAULT_VALUE_TEXT")}</label>
                   <input
                     type="text"
                     className="form-control"
@@ -862,9 +855,7 @@ const FieldConfig = props => {
               )}
               {selectedField.type === "number" && (
                 <div className="form-group">
-                  <label>
-                    {t("DEFAULT_VALUE_NUMBER")}
-                  </label>
+                  <label>{t("DEFAULT_VALUE_NUMBER")}</label>
                   <input
                     type="number"
                     className="form-control"
@@ -883,14 +874,8 @@ const FieldConfig = props => {
                     marginBottom: 20,
                   }}
                 >
-                  <span>
-                    {t("FIELD_BOOLEAN_DEFAULT_VALUE")}
-                  </span>
-                  <span>
-                    {t(
-                      "FIELD_BOOLEAN_DEFAULT_VALUE_INFO"
-                    )}
-                  </span>
+                  <span>{t("FIELD_BOOLEAN_DEFAULT_VALUE")}</span>
+                  <span>{t("FIELD_BOOLEAN_DEFAULT_VALUE_INFO")}</span>
                   <div className="inputSwitch-content">
                     <button
                       className={
@@ -928,9 +913,7 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label htmlFor="invisible">
-                        {t("FIELD_INVISIBLE")}
-                      </label>
+                      <label htmlFor="invisible">{t("FIELD_INVISIBLE")}</label>
                       <label htmlFor="invisible">
                         {t("FIELD_INVISIBLE_INFO")}
                       </label>
@@ -952,10 +935,10 @@ const FieldConfig = props => {
                   </div>
                   <div className="right">
                     <label htmlFor="localization">
-                      {t("TRANSLATION")}
+                      {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION")}
                     </label>
                     <label>
-                      {t("TRANSLATION_INFO")}
+                      {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION_INFO")}
                     </label>
                   </div>
                 </div>
@@ -978,11 +961,7 @@ const FieldConfig = props => {
                       <label htmlFor="dateShowCurrent">
                         {t("FIELD_DATE_SHOW_CURRENT")}
                       </label>
-                      <label>
-                        {t(
-                          "FIELD_DATE_SHOW_CURRENT_INFO"
-                        )}
-                      </label>
+                      <label>{t("FIELD_DATE_SHOW_CURRENT_INFO")}</label>
                     </div>
                   </div>
                   <div className="custom_checkbox">
@@ -1002,9 +981,7 @@ const FieldConfig = props => {
                         {t("FIELD_DATE_DISABLE_PAST")}
                       </label>
                       <label htmlFor="dateDisablePast">
-                        {t(
-                          "FIELD_DATE_DISABLE_PAST_INFO"
-                        )}
+                        {t("FIELD_DATE_DISABLE_PAST_INFO")}
                       </label>
                     </div>
                   </div>
@@ -1050,10 +1027,11 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label htmlFor="oneFileRadio">One File</label>
-                      <label>
-                        Select this if there is only one thing to store For
-                        example, a single photo or one PDF file
+                      <label htmlFor="oneFileRadio">
+                        {t("FIELDS_UPDATE_ONE_FILE")}
+                      </label>
+                      <label htmlFor="oneFileRadio">
+                        {t("FIELDS_UPDATE_ONE_FILE_INFO")}
                       </label>
                     </div>
                   </div>
@@ -1072,11 +1050,10 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label htmlFor="manyFileRadio">Many Files</label>
-                      <label>
-                        Select this if there are several things to be stored For
-                        example, several photos or PDF files
+                      <label htmlFor="manyFileRadio">
+                        {t("FIELDS_UPDATE_MANY_FILES")}
                       </label>
+                      <label>{t("FIELDS_UPDATE_MANY_FILES_INFO")}</label>
                     </div>
                   </div>
                 </>
@@ -1098,9 +1075,11 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label htmlFor="singleRadio">Single Select</label>
                       <label htmlFor="singleRadio">
-                        Select this if there is only one thing to store For
+                        {t("FIELDS_UPDATE_SINGLE_SELECT")}
+                      </label>
+                      <label htmlFor="singleRadio">
+                        {t("FIELDS_UPDATE_SINGLE_SELECT_INFO")}
                       </label>
                     </div>
                   </div>
@@ -1119,9 +1098,11 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label htmlFor="multiSelectRadio">Multi Select</label>
                       <label htmlFor="multiSelectRadio">
-                        Select this if there are several things to be stored
+                        {t("FIELDS_UPDATE_MULTI_SELECT")}
+                      </label>
+                      <label htmlFor="multiSelectRadio">
+                        {t("FIELDS_UPDATE_MULTI_SELECT_INFO")}
                       </label>
                     </div>
                   </div>
@@ -1144,9 +1125,11 @@ const FieldConfig = props => {
                       </label>
                     </div>
                     <div className="right">
-                      <label htmlFor="singlePickerRadio">Single Select</label>
                       <label htmlFor="singlePickerRadio">
-                        Select this if there is only one thing to store For
+                        {t("FIELDS_UPDATE_SINGLE_SELECT")}
+                      </label>
+                      <label htmlFor="singlePickerRadio">
+                        {t("FIELDS_UPDATE_SINGLE_SELECT_INFO")}
                       </label>
                     </div>
                   </div>
@@ -1166,10 +1149,10 @@ const FieldConfig = props => {
                     </div>
                     <div className="right">
                       <label htmlFor="multiSelectPickerRadio">
-                        Multi Select
+                        {t("FIELDS_UPDATE_MULTI_SELECT")}
                       </label>
                       <label htmlFor="multiSelectPickerRadio">
-                        Select this if there are several things to be stored
+                        {t("FIELDS_UPDATE_MULTI_SELECT_INFO")}
                       </label>
                     </div>
                   </div>
@@ -1192,9 +1175,11 @@ const FieldConfig = props => {
                   </label>
                 </div>
                 <div className="right">
-                  <label htmlFor="isRequired">Required</label>
-                  <label>
-                    You won't be able to publish an entry if this field is empty
+                  <label htmlFor="isRequired">
+                    {t("FIELDS_UPDATE_VALIDATION_REQUIRED")}
+                  </label>
+                  <label htmlFor="isRequired">
+                    {t("FIELDS_UPDATE_VALIDATION_REQUIRED_INFO")}
                   </label>
                 </div>
               </div>
@@ -1212,10 +1197,11 @@ const FieldConfig = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label htmlFor="textLimit">Limit character count</label>
                     <label htmlFor="textLimit">
-                      Specify a minimum and/or maximum allowed number of
-                      characters
+                      {t("FIELDS_UPDATE_VALIDATION_TEXT_TITLE")}
+                    </label>
+                    <label htmlFor="textLimit">
+                      {t("FIELDS_UPDATE_VALIDATION_TEXT_INFO")}
                     </label>
                     {textLimit.checked && (
                       <div className="validation-configs text-limit-validation">
@@ -1224,9 +1210,15 @@ const FieldConfig = props => {
                           onChange={handleTextLimitTypeChanged}
                           value={textLimit.type}
                         >
-                          <option value="between">Between</option>
-                          <option value="atLeast">At least</option>
-                          <option value="noMoreThan">No more than</option>
+                          <option value="between">
+                            {t("FIELDS_UPDATE_VALIDATION_TEXT_BETWEEN")}
+                          </option>
+                          <option value="atLeast">
+                            {t("FIELDS_UPDATE_VALIDATION_TEXT_AT_LEAST")}
+                          </option>
+                          <option value="noMoreThan">
+                            {t("FIELDS_UPDATE_VALIDATION_TEXT_NO_MORE")}
+                          </option>
                         </select>
                         {(textLimit.type === "between" ||
                           textLimit.type === "atLeast") && (
@@ -1238,7 +1230,9 @@ const FieldConfig = props => {
                             onChange={handleTextLimitMinimum}
                           />
                         )}
-                        {textLimit.type === "between" && <span>and</span>}
+                        {textLimit.type === "between" && (
+                          <span>{t("AND")}</span>
+                        )}
                         {(textLimit.type === "between" ||
                           textLimit.type === "noMoreThan") && (
                           <input
@@ -1270,11 +1264,10 @@ const FieldConfig = props => {
                   </div>
                   <div className="right">
                     <label htmlFor="numberLimitRange">
-                      Accept only specified number range
+                      {t("FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_TITLE")}
                     </label>
                     <label htmlFor="numberLimitRange">
-                      Specify a minimum and/or maximum allowed number for this
-                      field
+                      {t("FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_INFO")}
                     </label>
                     {numberLimitChecked && (
                       <div className="validation-configs text-limit-validation">
@@ -1283,11 +1276,19 @@ const FieldConfig = props => {
                           onChange={handleNumberLimitTypeChanged}
                           value={numberLimitType}
                         >
-                          <option value="between">Between</option>
-                          <option value="greatEqual">
-                            Greater or equal than
+                          <option value="between">
+                            {t("FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_BETWEEN")}
                           </option>
-                          <option value="lessEqual">Less or equal than</option>
+                          <option value="greatEqual">
+                            {t(
+                              "FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_GREAT_EQUAL"
+                            )}
+                          </option>
+                          <option value="lessEqual">
+                            {t(
+                              "FIELDS_UPDATE_VALIDATION_NUMBER_RANGE_LESS_EQUAL"
+                            )}
+                          </option>
                         </select>
                         {(numberLimitType === "between" ||
                           numberLimitType === "greatEqual") && (
@@ -1299,7 +1300,9 @@ const FieldConfig = props => {
                             onChange={handleNumberLimitMinimum}
                           />
                         )}
-                        {numberLimitType === "between" && <span>and</span>}
+                        {numberLimitType === "between" && (
+                          <span>{t("AND")}</span>
+                        )}
                         {(numberLimitType === "between" ||
                           numberLimitType === "lessEqual") && (
                           <input
@@ -1330,10 +1333,11 @@ const FieldConfig = props => {
                     </label>
                   </div>
                   <div className="right">
-                    <label htmlFor="matchRegex">Match a specific pattern</label>
                     <label htmlFor="matchRegex">
-                      Make this field match a pattern: e-mail address, URI, or a
-                      custom regular expression
+                      {t("FIELDS_UPDATE_VALIDATION_PATTERN_TITLE")}
+                    </label>
+                    <label htmlFor="matchRegex">
+                      {t("FIELDS_UPDATE_VALIDATION_PATTERN_INFO")}
                     </label>
                     {matchRegex && (
                       <div className="validation-configs">
@@ -1347,7 +1351,7 @@ const FieldConfig = props => {
                           href="https://projects.lukehaas.me/regexhub/"
                           target="_blank"
                         >
-                          Examples
+                          {t("FIELDS_UPDATE_VALIDATION_PATTERN_EXAMPLES")}
                         </a>
                       </div>
                     )}
@@ -1371,10 +1375,10 @@ const FieldConfig = props => {
                   </div>
                   <div className="right">
                     <label htmlFor="mediaType">
-                      Accept only specified file types
+                      {t("FIELDS_UPDATE_VALIDATION_MEDIA_TITLE")}
                     </label>
-                    <label>
-                      Make this field only accept specified file types
+                    <label htmlFor="mediaType">
+                      {t("FIELDS_UPDATE_VALIDATION_MEDIA_INFO")}
                     </label>
                     {mediaTypeVisibility && (
                       <div className="validation-configs">
@@ -1412,11 +1416,10 @@ const FieldConfig = props => {
                   </div>
                   <div className="right">
                     <label htmlFor="referenceChk">
-                      Accept only specified entry type
+                      {t("FIELDS_UPDATE_VALIDATION_REFERENCE_TITLE")}
                     </label>
                     <label htmlFor="referenceChk">
-                      Make this field only accept entries from specified content
-                      type(s)
+                      {t("FIELDS_UPDATE_VALIDATION_REFERENCE_DESC")}
                     </label>
                     {referenceContentTypeChk && (
                       <div className="validation-configs">
@@ -1442,7 +1445,7 @@ const FieldConfig = props => {
           {tab === 3 && (
             <div className="thirdTab">
               <span className="thirdTab-title">
-                Chooes how this field should be displayed
+                {t("FIELDS_UPDATE_APPEARANCE_TITLE")}
               </span>
               <div className="apearanceUiList">
                 {fieldsUI ? (
@@ -1463,7 +1466,7 @@ const FieldConfig = props => {
                   ))
                 ) : (
                   <div className="apearanceItem active">
-                    Default
+                    {t("DEFAULT_VALUE_TEXT")}
                     <div className="activeItem">
                       <i className="icon-checkmark" />
                     </div>
@@ -1472,32 +1475,22 @@ const FieldConfig = props => {
               </div>
               <div>
                 <div className="form-group">
-                  <label>{t("Help Text")}</label>
+                  <label>{t("FIELD_HELP_TEXT")}</label>
                   <input
                     type="text"
                     className="form-control"
                     value={helpText}
-                    placeholder={t(
-                      "Try to enter maximum 255 char"
-                    )}
+                    placeholder={t("CHAR_255")}
                     onChange={handleHelpTextchanged}
                   />
                   <small className="form-text text-muted">
-                    {t(
-                      "This help text will show up below the field"
-                    )}
+                    {t("FIELD_HELP_TEXT_INFO")}
                   </small>
                 </div>
                 {selectedField.type === "dateTime" && (
                   <div className="inputSwitch">
-                    <span>
-                      {t("FIELD_DATE_FORMAT_TITLE")}
-                    </span>
-                    <span>
-                      {t(
-                        "FIELD_DATE_FORMAT_TITLE_INFO"
-                      )}
-                    </span>
+                    <span>{t("FIELD_DATE_FORMAT_TITLE")}</span>
+                    <span>{t("FIELD_DATE_FORMAT_TITLE_INFO")}</span>
                     <div className="inputSwitch-content">
                       <button
                         className={
@@ -1508,9 +1501,7 @@ const FieldConfig = props => {
                         }
                         onClick={() => toggleDateFormat("dateTime")}
                       >
-                        {t(
-                          "FIELD_DATE_FORMAT_DATE_TIME"
-                        )}
+                        {t("FIELD_DATE_FORMAT_DATE_TIME")}
                       </button>
                       <button
                         className={
@@ -1539,18 +1530,14 @@ const FieldConfig = props => {
                 )}
                 {selectedField.type === "keyValue" && (
                   <>
-                    <span>
-                      {t("FIELD_OPTIONS_TITLE")}
-                    </span>
+                    <span>{t("FIELD_OPTIONS_TITLE")}</span>
                     {options.map((item, index) => (
                       <div className="options" key={index}>
                         <div className="leftInput">
                           <input
                             type="text"
                             className="form-control"
-                            placeholder={t(
-                              "FIELD_OPTIONS_VALUE"
-                            )}
+                            placeholder={t("FIELD_OPTIONS_VALUE")}
                             value={options[index].value}
                             onChange={e => handleOptionValueChanged(e, index)}
                           />
@@ -1589,12 +1576,16 @@ const FieldConfig = props => {
           )}
         </div>
         <ModalFooter>
-          <button className="btn btn-primary" onClick={update}>
+          <button
+            className="btn btn-primary"
+            onClick={update}
+            style={{ margin: "0 5px" }}
+          >
             <CircleSpinner show={spinner} size="small" />
-            {!spinner && "Save"}
+            {!spinner && t("SAVE")}
           </button>
           <button className="btn btn-secondary" onClick={closeModal}>
-            Close
+            {t("CLOSE")}
           </button>
         </ModalFooter>
       </div>
