@@ -6,10 +6,120 @@
   &__desc {
     font-size: 13px;
   }
-  &__content{
-    background: white;
-    min-height: 250px;
+  &__content {
     margin-top: 20px;
-    box-shadow: 0 0 2px lightgray;
+    .box {
+      background: white;
+      min-height: 150px;
+      box-shadow: 0 0 2px lightgray;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__fieldsOrder {
+    .designFormBox-header {
+      display: flex;
+      min-height: 60px;
+      align-items: center;
+      &__icon {
+        flex-shrink: 0;
+        width: 50px;
+        height: 50px;
+        background: rgb(56, 132, 255);
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+      &__info {
+        padding: 0 10px;
+        font-size: 13px;
+      }
+    }
+    .fieldsBox {
+      display: flex;
+      padding-top: 20px;
+      flex-direction: column;
+
+      &__top {
+        display: flex;
+        .select {
+          width: 100%;
+          margin-left: 5px;
+        }
+      }
+      &__bottom {
+        flex: 1;
+        min-height: 100px;
+        //  border: 0.5px solid lightgray;
+        background: whitesmoke;
+        margin-top: 10px;
+        border-radius: 3px;
+        padding: 10px;
+        padding-bottom: 0;
+        .emptyFields {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding-bottom: 10px;
+          .title {
+            font-size: 18px;
+            font-weight: bold;
+          }
+          .info {
+            font-size: 13px;
+          }
+        }
+
+        .selectedField {
+          background: white;
+          box-shadow: 0 0 1px lightgray;
+          min-height: 40px;
+          margin-bottom: 10px;
+          padding: 7px;
+          display: flex;
+          align-items: center;
+          .icon {
+            color: rgb(56, 132, 255);
+            font-size: 20px;
+          }
+          .title {
+            flex: 1;
+            padding: 0 10px;
+          }
+          button {
+            margin: 0 5px;
+          }
+        }
+      }
+    }
+  }
+}
+.selectValue {
+}
+.allFields-items {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  border-bottom: 1px solid whitesmoke;
+  .icon {
+    color: rgb(56, 132, 255);
+    font-size: 30px;
+  }
+  .title {
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    & span:last-child {
+      font-size: 13px;
+      padding: 0 5px;
+    }
+  }
+  .question {
+    flex: 1;
+    text-align: center;
   }
 }

@@ -17,7 +17,7 @@ export default {
   BACK: 'Back',
   SAVE_AND_NEW: 'Save & New',
   SAVE_AND_CLOSE: 'Save & Close',
-  SAVE_AND_BACK:"Save & Back",
+  SAVE_AND_BACK: 'Save & Back',
   UPDATE_AND_CLOSE: 'Update & close',
   draft: 'Draft',
   archived: 'Archived',
@@ -589,9 +589,15 @@ export default {
   UPSERT_FORM_DESIGN_TITLE: 'Design Your Form',
   UPSERT_FORM_DESIGN_DESC:
     'Hear you can design your form,fields order,background color,...',
-    UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER:"Search partners by name",
-UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER:"Search in form templates by name",
-
+  UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER: 'Search partners by name',
+  UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER:
+    'Search in form templates by name',
+  UPSERT_FORM_DESIGN_FIELDS_TITLE:
+    'Lorem ipsum can be a good template for empty design paragrph',
+  UPSERT_FORM_DESIGN_FIELDS_SELECT_PLACEHOLDER:
+    'Choose question to add in form from form template fields',
+  UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:
+    'Form will ask all of the questions if list is empty',
 
   ASSET_GET_ON_SERVER_ERROR:
     'Internal server error.please report that to administrtor',
@@ -659,7 +665,6 @@ UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER:"Search in form templates by name",
   NOT_FOUND: 'Not found',
   UNKNOWN_ERROR: 'uknown error',
   ON_REQUEST_ERROR: 'Request error',
-  ASSET_BROWSER_FIRST_TAB:"Media",
-  ASSET_BROWSER_SECOND_TAB:"Upload New",
-
+  ASSET_BROWSER_FIRST_TAB: 'Media',
+  ASSET_BROWSER_SECOND_TAB: 'Upload New'
 }

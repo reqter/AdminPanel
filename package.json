@@ -19,11 +19,13 @@
     "react-load-script": "0.0.6",
     "react-route-hook": "^1.2.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^3.0.1",
     "react-select": "^2.4.2",
+    "react-sortablejs": "^1.5.1",
     "react-table": "^6.9.2",
     "react-transition-group": "^2.9.0",
     "reactstrap": "^7.1.0",
+    "sortablejs": "^1.6.1",
     "source-map-explorer": "^1.8.0"
   },
   "scripts": {

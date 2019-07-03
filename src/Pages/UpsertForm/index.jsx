@@ -215,6 +215,7 @@ const UpsertProduct = props => {
   const [formType, setSelectedFormType] = useState();
   const [partner, setPartner] = useState();
   const [contentTypeSearch, setContentTypeSearch] = useState();
+  const [fieldsOrder, setFieldsOrder] = useState();
 
   useEffect(() => {
     if (updateMode || viewMode) {
@@ -422,113 +423,6 @@ const UpsertProduct = props => {
     }
     toggleCategoryModal(false);
   }
-  function getFieldItem(field) {
-    switch (field.type.toLowerCase()) {
-      case "string":
-        return (
-          <String
-            viewMode={viewMode}
-            updateMode={updateMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "number":
-        return (
-          <Number
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "datetime":
-        return (
-          <DateTime
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "location":
-        return (
-          <Location
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "media":
-        return (
-          <Media
-            viewMode={viewMode}
-            formData={formData}
-            field={field}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "boolean":
-        return (
-          <Boolean
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "keyvalue":
-        return (
-          <KeyValue
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "richtext":
-        return (
-          <RichText
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "reference":
-        return (
-          <Reference
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      case "jsonobject":
-        return (
-          <JsonObject
-            viewMode={viewMode}
-            field={field}
-            formData={formData}
-            init={setNameToFormValidation}
-            onChangeValue={handleOnChangeValue}
-          />
-        );
-      default:
-        break;
-    }
-  }
   function backToForms() {
     props.history.push(`/${currentLang}/forms`);
   }
@@ -595,6 +489,7 @@ const UpsertProduct = props => {
 
   function handleSelectContentType(contentType) {
     setContentType(contentType);
+    setFieldsOrder(contentType.fields);
     if (
       !contentType.allowCustomFields ||
       contentType.allowCustomFields === true
@@ -841,6 +736,9 @@ const UpsertProduct = props => {
       setContentTypeSearch(e.target.value);
     }
   }
+  function handleFieldsOrderChanged(fs) {
+    setFieldsOrder(fs);
+  }
   function copyRequestLink() {
     requestLinkInput.current.select();
     document.execCommand("copy");
@@ -932,7 +830,13 @@ const UpsertProduct = props => {
               </div>
             </>
           )}
-          {tab === 4 && <FormDesign />}
+          {tab === 4 && (
+            <FormDesign
+              contentType={contentType}
+              fieldsOrder={fieldsOrder}
+              orderChanged={handleFieldsOrderChanged}
+            />
+          )}
           {tab === 5 && (
             <>
               <div className="up-content-title">
@@ -1000,12 +904,80 @@ const UpsertProduct = props => {
                 </div>
               )}
               <div className="up-formInputs animated fadeIn">
-                {requestFields &&
-                  requestFields.map(field => (
-                    <div key={field.id} className="rowItem">
-                      {getFieldItem(field)}
-                    </div>
-                  ))}
+                <div className="rowItem">
+                  <String
+                    viewMode={viewMode}
+                    updateMode={updateMode}
+                    field={requestFields[0]}
+                    formData={formData}
+                    init={setNameToFormValidation}
+                    onChangeValue={handleOnChangeValue}
+                  />
+                </div>
+                <div className="rowItem">
+                  <String
+                    viewMode={viewMode}
+                    updateMode={updateMode}
+                    field={requestFields[1]}
+                    formData={formData}
+                    init={setNameToFormValidation}
+                    onChangeValue={handleOnChangeValue}
+                  />
+                </div>
+                <div className="rowItem">
+                  <div className="column">
+                    <DateTime
+                      viewMode={viewMode}
+                      updateMode={updateMode}
+                      field={requestFields[4]}
+                      formData={formData}
+                      init={setNameToFormValidation}
+                      onChangeValue={handleOnChangeValue}
+                    />
+                  </div>
+                  <div className="column">
+                    <DateTime
+                      viewMode={viewMode}
+                      updateMode={updateMode}
+                      field={requestFields[5]}
+                      formData={formData}
+                      init={setNameToFormValidation}
+                      onChangeValue={handleOnChangeValue}
+                    />
+                  </div>
+                </div>
+
+                <div className="rowItem">
+                  <Media
+                    viewMode={viewMode}
+                    updateMode={updateMode}
+                    field={requestFields[2]}
+                    formData={formData}
+                    init={setNameToFormValidation}
+                    onChangeValue={handleOnChangeValue}
+                  />
+                </div>
+                <div className="rowItem">
+                  <Media
+                    viewMode={viewMode}
+                    updateMode={updateMode}
+                    field={requestFields[3]}
+                    formData={formData}
+                    init={setNameToFormValidation}
+                    onChangeValue={handleOnChangeValue}
+                  />
+                </div>
+
+                <div className="rowItem">
+                  <RichText
+                    viewMode={viewMode}
+                    updateMode={updateMode}
+                    field={requestFields[6]}
+                    formData={formData}
+                    init={setNameToFormValidation}
+                    onChangeValue={handleOnChangeValue}
+                  />
+                </div>
                 {!viewMode && (
                   <div className="form-submit-btns">
                     {!updateMode && (

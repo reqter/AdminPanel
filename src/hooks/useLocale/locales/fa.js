@@ -579,7 +579,13 @@ export default {
   UPSERT_FORM_DESIGN_DESC:
     'شما اینجا می توانید ترتیب سوال های را مشخص کنید،پس زمینه فرم و...',
   UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER: 'جستجوی همکار با نام',
-  UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER:"جستجوی قالب فرم با نام",
+  UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER: 'جستجوی قالب فرم با نام',
+  UPSERT_FORM_DESIGN_FIELDS_TITLE:
+    ' لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.',
+  UPSERT_FORM_DESIGN_FIELDS_SELECT_PLACEHOLDER:
+    'انتخاب سوال برای افزودن به فرم از لیست فیلدهای قالب فرم',
+  UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:
+    'در صورتی که لیست خالی باشد تمامی فیلدها از کاربر پرسیده خواهد شد',
 
   ASSET_DELETE_ON_OK: 'فایل شما با موفقیت حذف شد.',
   ASSET_DELETE_ON_SERVER_ERROR:

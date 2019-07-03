@@ -12,8 +12,8 @@ import {
 import "./styles.scss";
 
 import { Alert, CircleSpinner, DateFormater, Image } from "../../components";
+import { Empty } from "../../components/Commons/ErrorsComponent";
 import ItemSkeleton from "./ItemSkeleton";
-import EmptySvg from "./EmptySVG";
 
 const Requests = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -309,7 +309,7 @@ const Requests = props => {
             .pop()
         : "";
     if (imgs.indexOf(ext.toLowerCase()) !== -1)
-      return <Image className="p-image-value" url={url}/>;
+      return <Image className="p-image-value" url={url} />;
     else if (videos.indexOf(ext.toLowerCase()) !== -1)
       return (
         <div className="p-thumbnail-file">
@@ -643,7 +643,7 @@ const Requests = props => {
             [1, 2, 3, 4, 5].map(sk => <ItemSkeleton />)
           ) : !forms || forms.length === 0 ? (
             <div className="forms__empty">
-              <EmptySvg />
+              <Empty />
               <span className="forms__empty__title">
                 {t("لیست خالی می باشد")}
               </span>

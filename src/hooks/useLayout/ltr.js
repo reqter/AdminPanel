@@ -20,5 +20,6 @@ export default {
   'media-uploaded-item-margin': '0 20px 0 0',
   'upsert-form-btn-right': null,
   'upsert-form-btn-left': '15px',
-  "forms-skeleton-margin":"0 10px 20px 0"
+  'forms-skeleton-margin': '0 10px 20px 0',
+  column: '0 10px 0 0'
 }

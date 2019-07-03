@@ -18,7 +18,8 @@ export default {
   'notify-box-position-left': 0,
   'notify-box-position-right': null,
   'media-uploaded-item-margin': '0 0 0 20px',
-  'upsert-form-btn-right': "15px",
+  'upsert-form-btn-right': '15px',
   'upsert-form-btn-left': null,
-  "forms-skeleton-margin":"0 0 20px 10px"
+  'forms-skeleton-margin': '0 0 20px 10px',
+  column: '0 0 0 10px'
 }
