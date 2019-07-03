@@ -2,6 +2,7 @@ import CheckBox from './CheckBox'
 import AssetFile from './AssetFile'
 import Boolean from './Boolean'
 import DateTime from './DateTime'
+import PersianDateTime from './PersianDateTime'
 import KeyValue from './KeyValue'
 import Location from './Location'
 import Media from './Media'
@@ -47,5 +48,6 @@ export {
   AssetBrowser,
   CircleSpinner,
   RowSkeleton,
-  JsonObject
+  JsonObject,
+  PersianDateTime
 }

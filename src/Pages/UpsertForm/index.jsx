@@ -19,17 +19,12 @@ import Partners from "./Partners";
 import FormDesign from "./FormDesign";
 import {
   String,
-  Number,
   DateTime,
-  Location,
   Media,
-  Boolean,
-  KeyValue,
   RichText,
-  Reference,
   CircleSpinner,
-  JsonObject,
   Image,
+  PersianDateTime,
 } from "../../components";
 
 const requestFields = [
@@ -926,7 +921,7 @@ const UpsertProduct = props => {
                 </div>
                 <div className="rowItem">
                   <div className="column">
-                    <DateTime
+                    <PersianDateTime
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[4]}
@@ -936,7 +931,7 @@ const UpsertProduct = props => {
                     />
                   </div>
                   <div className="column">
-                    <DateTime
+                    <PersianDateTime
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[5]}

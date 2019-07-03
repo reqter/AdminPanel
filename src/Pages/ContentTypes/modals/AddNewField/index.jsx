@@ -353,6 +353,7 @@ const AddNewField = props => {
             disabled={
               name.length > 0 &&
               title.length > 0 &&
+              description.length > 0 &&
               !name.includes(" ") &&
               !reservedWords.includes(name) &&
               !checkName()
@@ -369,6 +370,7 @@ const AddNewField = props => {
             disabled={
               name.length > 0 &&
               title.length > 0 &&
+              description.length > 0 &&
               !name.includes(" ") &&
               !reservedWords.includes(name) &&
               !checkName()

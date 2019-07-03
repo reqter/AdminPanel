@@ -798,16 +798,18 @@ const FieldConfig = props => {
               </div>
               <div className="row">
                 <div className="form-group col">
-                  <label>{t("DESCRIPTION")}</label>
+                  <label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION")}</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder={t("DESCRIPTION_PLACEHOLDER")}
+                    placeholder={t(
+                      "CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION_PLACEHOLDER"
+                    )}
                     value={description}
                     onChange={handleDescriptionChanged}
                   />
                   <small className="form-text text-muted">
-                    {t("DESCRIPTION_INFO")}
+                    {t("CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION_INFO")}
                   </small>
                 </div>
               </div>
@@ -1580,6 +1582,7 @@ const FieldConfig = props => {
             className="btn btn-primary"
             onClick={update}
             style={{ margin: "0 5px" }}
+            disabled={title.length > 0 && description.length > 0 ? false : true}
           >
             <CircleSpinner show={spinner} size="small" />
             {!spinner && t("SAVE")}

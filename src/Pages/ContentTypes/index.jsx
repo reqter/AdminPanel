@@ -456,7 +456,7 @@ const ItemTypes = props => {
                           />
                         </div>
                         <div className="fieldItem-name">
-                          {field.title[currentLang]}
+                          {field.title && field.title[currentLang]}
                         </div>
                         <div className="fieldItem-title">{field.name}</div>
 
