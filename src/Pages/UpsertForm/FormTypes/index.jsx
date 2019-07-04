@@ -5,6 +5,7 @@ import "./styles.scss";
 const types = [
   {
     id: 1,
+    type: "request",
     name: "customer",
     title: "UPSERT_FORM_CUSTOMER_FORM_PUBLIC",
     description: "UPSERT_FORM_CUSTOMER_FORM_PUBLIC_DESC",
@@ -12,6 +13,7 @@ const types = [
   },
   {
     id: 2,
+    type: "request",
     name: "customer",
     title: "UPSERT_FORM_CUSTOMER_FORM_FOR_PARTNER",
     description: "UPSERT_FORM_CUSTOMER_FORM_SPECIAL_DESC",
@@ -19,6 +21,7 @@ const types = [
   },
   {
     id: 3,
+    type: "quote",
     name: "partner",
     title: "UPSERT_FORM_PARTNER_FORM_PUBLIC",
     description: "UPSERT_FORM_PARTNER_FORM_PUBLIC_DESC",
@@ -27,6 +30,7 @@ const types = [
 
   {
     id: 4,
+    type: "quote",
     name: "partner",
     title: "UPSERT_FORM_PARTNER_FORM_FOR_PARTNER",
     description: "UPSERT_FORM_PARTNER_FORM_SPECIAL_DESC",

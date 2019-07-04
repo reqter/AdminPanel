@@ -1,6 +1,8 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
+  START_DATE: 'Start Date',
+  END_DATE: 'End Date',
   LOADING: 'Loading',
   CHOOSE: 'Choose',
   SAVE: 'Save',
@@ -558,7 +560,7 @@ export default {
   // UPSERT FORM
   UPSERT_FORM_FIRST_TAB_TITLE: 'Form Type',
   UPSERT_FORM_SECOND_TAB_TITLE: 'Select Partners',
-  UPSERT_FORM_THIRTH_TAB_TITLE: 'Choose Form Template',
+  UPSERT_FORM_THIRTH_TAB_TITLE: 'Choose Bank Questions',
   UPSERT_FORM_FOURTH_TAB_TITLE: 'Design Form',
   UPSERT_FORM_FIVTH_TAB_TITLE: 'Complete Form',
   UPSERT_FORM_FORM_TYPES_TITLE: 'Choose Form Type',

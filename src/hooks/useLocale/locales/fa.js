@@ -1,6 +1,8 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
+  START_DATE: 'تاریخ شروع',
+  END_DATE: 'تاریخ پایان',
   LOADING: 'در حال بارگذاری',
   CHOOSE: 'انتخاب',
   SAVE: 'ذخیره',
@@ -549,7 +551,7 @@ export default {
   // UPSERT FORM
   UPSERT_FORM_FIRST_TAB_TITLE: 'نوع فرم',
   UPSERT_FORM_SECOND_TAB_TITLE: 'انتخاب همکار',
-  UPSERT_FORM_THIRTH_TAB_TITLE: 'انتخاب قالب فرم',
+  UPSERT_FORM_THIRTH_TAB_TITLE: 'انتخاب  بانک سوالات',
   UPSERT_FORM_FOURTH_TAB_TITLE: 'طراحی فرم',
   UPSERT_FORM_FIVTH_TAB_TITLE: 'تکمیل فرم',
   UPSERT_FORM_FORM_TYPES_TITLE: 'انتخاب نوع فرم',
@@ -569,7 +571,7 @@ export default {
   UPSERT_FORM_PARTNERS_TITLE: 'انتخاب همکار',
   UPSERT_FORM_PARTNERS_DESC:
     'همکاران انتخاب شده این فرم را خواهند دید.در صورتی که می خواهید فرم عمومی باشد این مرحله را بگذرید',
-  UPSERT_FORM_TEMPLATES_TITLE: 'انتخاب قالب فرم',
+  UPSERT_FORM_TEMPLATES_TITLE: 'انتخاب بانک سوالات',
   UPSERT_FORM_TEMPLATES_DESC: 'قالب فرم خود را برای ایجاد فرم انتخاب نمایید',
   UPSERT_FORM_TEMPLATES_LOADING: 'در حال بارگذاری لیست قالب ها...',
   UPSERT_FORM_TEMPLATES_EMPTY_TITLE: 'لیست خالی!!',
@@ -580,8 +582,7 @@ export default {
   UPSERT_FORM_NO_CATEGORY_HEADER: 'دسته بندی انتخاب نشده است',
   CATEGORY: 'دسته بندی',
   UPSERT_FORM_DESIGN_TITLE: 'طراحی فرم',
-  UPSERT_FORM_DESIGN_DESC:
-    'شما اینجا می توانید ترتیب سوال های را مشخص کنید',
+  UPSERT_FORM_DESIGN_DESC: 'شما اینجا می توانید ترتیب سوال های را مشخص کنید',
   UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER: 'جستجوی همکار با نام',
   UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER: 'جستجوی قالب فرم با نام',
   UPSERT_FORM_DESIGN_FIELDS_TITLE:

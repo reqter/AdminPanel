@@ -24,7 +24,7 @@ import {
   RichText,
   CircleSpinner,
   Image,
-  PersianDateTime,
+  PersianDateTimeRange,
 } from "../../components";
 
 const requestFields = [
@@ -77,36 +77,20 @@ const requestFields = [
   },
   {
     id: "4",
-    name: "startDate",
+    name: "startEndDate",
     title: {
-      en: "Start Date",
-      fa: "تاریخ شروع",
+      en: "Start & End Date",
+      fa: "تاریخ شروع و اتمام فرم",
     },
     description: {
-      fa: "تاریخ شروع درخواست یا پیشنهاد برای این فرم",
-      en: "Start date of request or quote of this form",
+      fa: "",
+      en: "",
     },
     type: "dateTime",
     format: "date",
-    disablePastDates: true,
   },
   {
     id: "5",
-    name: "endDate",
-    title: {
-      en: "End Date",
-      fa: "تاریخ پایان",
-    },
-    description: {
-      fa: "تاریخ پایان درخواست یا پیشنهاد برای این فرم",
-      en: "End date of request or quote of this form",
-    },
-    type: "dateTime",
-    format: "date",
-    disablePastDates: true,
-  },
-  {
-    id: "6",
     name: "thumbnail",
     title: {
       en: "Thumbnail",
@@ -121,7 +105,7 @@ const requestFields = [
     isTranslate: true,
   },
   {
-    id: "7",
+    id: "6",
     name: "attachments",
     title: {
       en: "Attachments",
@@ -136,7 +120,7 @@ const requestFields = [
     isList: true,
   },
   {
-    id: "8",
+    id: "7",
     name: "longDesc",
     title: {
       en: "More Info",
@@ -239,7 +223,11 @@ const UpsertProduct = props => {
   }, [contentType]);
 
   useEffect(() => {
-    if (Object.keys(form).length > 0 && category && checkFormValidation()) {
+    if (
+      Object.keys(form).length > 0 &&
+      // && category
+      checkFormValidation()
+    ) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [formValidation, category]);
@@ -617,30 +605,30 @@ const UpsertProduct = props => {
         })
         .call(spaceInfo.id, obj);
     } else {
+      let fs = [];
+      for (let i = 0; i < fieldsOrder.length; i++) {
+        const item = fieldsOrder[i];
+        fs.push(item.name);
+      }
       let obj = {
         contentType: contentType._id,
-        category:
-          contentType.categorization === true
-            ? category
-              ? category._id
-              : null
-            : null,
-        title: form["title"],
-        description: form["description"] ? form["description"] : "",
-        receiver: form["receiver"] ? form["receiver"] : "",
+        category: category ? category._id : null,
+        title: form["title"] ? form["title"] : {},
+        shortDesc: form["shortDesc "] ? form["shortDesc "] : {},
+        description: form["description"] ? form["description"] : {},
+        longDesc: form["longDesc"] ? form["longDesc"] : {},
         thumbnail: form["thumbnail"],
         attachments: form["attachments"],
-        longDesc: form["longDesc"],
-        settings: {
-          showHeader: form["showHeader"],
-          showRequestInfo: form["showRequestInfo"],
-          userDetail: form["userDetail"],
-          userFields: form["userFields"],
-        },
+        partner: partner ? partner._id : "",
+        startDate: form["startEndDate"] ? form["startEndDate"].startDate : "",
+        endDate: form["startEndDate"] ? form["startEndDate"].endDate : "",
+        type: formType ? formType.type : "reuqest",
+        fields: fs,
+        settings: [],
       };
-      if (props.location.params && props.location.params.content) {
-        obj["settings"]["contentId"] = props.location.params.content._id;
-      }
+      // if (props.location.params && props.location.params.content) {
+      //   obj["settings"]["contentId"] = props.location.params.content._id;
+      // }
       addRequest()
         .onOk(result => {
           dispatch({
@@ -925,29 +913,27 @@ const UpsertProduct = props => {
                 </div>
                 <div className="box">
                   <div className="rowItem">
-                    <div className="column">
-                      <PersianDateTime
-                        viewMode={viewMode}
-                        updateMode={updateMode}
-                        field={requestFields[3]}
-                        formData={formData}
-                        init={setNameToFormValidation}
-                        onChangeValue={handleOnChangeValue}
-                      />
-                    </div>
-                    <div className="column">
-                      <PersianDateTime
-                        viewMode={viewMode}
-                        updateMode={updateMode}
-                        field={requestFields[4]}
-                        formData={formData}
-                        init={setNameToFormValidation}
-                        onChangeValue={handleOnChangeValue}
-                      />
-                    </div>
+                    <PersianDateTimeRange
+                      viewMode={viewMode}
+                      updateMode={updateMode}
+                      field={requestFields[3]}
+                      formData={formData}
+                      init={setNameToFormValidation}
+                      onChangeValue={handleOnChangeValue}
+                    />
                   </div>
                 </div>
                 <div className="box">
+                  <div className="rowItem">
+                    <Media
+                      viewMode={viewMode}
+                      updateMode={updateMode}
+                      field={requestFields[4]}
+                      formData={formData}
+                      init={setNameToFormValidation}
+                      onChangeValue={handleOnChangeValue}
+                    />
+                  </div>
                   <div className="rowItem">
                     <Media
                       viewMode={viewMode}
@@ -958,22 +944,12 @@ const UpsertProduct = props => {
                       onChangeValue={handleOnChangeValue}
                     />
                   </div>
-                  <div className="rowItem">
-                    <Media
-                      viewMode={viewMode}
-                      updateMode={updateMode}
-                      field={requestFields[6]}
-                      formData={formData}
-                      init={setNameToFormValidation}
-                      onChangeValue={handleOnChangeValue}
-                    />
-                  </div>
                 </div>
                 <div className="rowItem">
                   <RichText
                     viewMode={viewMode}
                     updateMode={updateMode}
-                    field={requestFields[7]}
+                    field={requestFields[6]}
                     formData={formData}
                     init={setNameToFormValidation}
                     onChangeValue={handleOnChangeValue}

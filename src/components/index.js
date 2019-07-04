@@ -3,6 +3,7 @@ import AssetFile from './AssetFile'
 import Boolean from './Boolean'
 import DateTime from './DateTime'
 import PersianDateTime from './PersianDateTime'
+import PersianDateTimeRange from './PersianDateTimeRange'
 import KeyValue from './KeyValue'
 import Location from './Location'
 import Media from './Media'
@@ -25,6 +26,7 @@ import ProgressiveSpinner from './ProgressiveSpinner'
 import Image from './Image'
 
 export {
+  PersianDateTimeRange,
   Image,
   AssetUploaderView,
   ProgressiveSpinner,

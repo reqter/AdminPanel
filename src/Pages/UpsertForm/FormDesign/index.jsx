@@ -11,7 +11,13 @@ export default function DesignForm(props) {
   const [allFields, setAllFeilds] = useState(() => {
     const f = fields.map(item => {
       return {
-        value: item.title[currentLang],
+        value: item.description
+          ? item.description[currentLang]
+          : item.title
+          ? item.title[currentLang]
+            ? item.title[currentLang]
+            : item.title
+          : item.name,
         item,
       };
     });

@@ -1,0 +1,20 @@
+.form-group {
+  div {
+    width: 100% !important;
+  }
+}
+.DatePicker {
+  z-index: 1000;
+  input {
+    //   width: 100%
+  }
+}
+.rangeDateInputs {
+  display: flex;
+  div:first-child {
+    margin: 0 2.5px;
+  }
+  input {
+    font-size: 15px;
+  }
+}

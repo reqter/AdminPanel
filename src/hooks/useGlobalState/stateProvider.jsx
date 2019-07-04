@@ -45,22 +45,10 @@ const Provider = props => {
       },
     ],
     notifies: [],
-    sysLocales: [
-      {
-        name: "en",
-        title: "English (United State) (en-US)",
-      },
+    locales: [
       {
         name: "fa",
         title: "فارسی (ایران) (fa)",
-      },
-      {
-        name: "de",
-        title: "German (Germany) (de-DE)",
-      },
-      {
-        name: "sv",
-        title: "Swedish (Sweden) (sw-SV)",
       },
     ],
     apiKeys: [],
