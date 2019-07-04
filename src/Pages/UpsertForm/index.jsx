@@ -46,10 +46,10 @@ const requestFields = [
   },
   {
     id: "2",
-    name: "description",
+    name: "shortDesc",
     title: {
-      en: "Description",
-      fa: "توضیحات",
+      en: "Short Description",
+      fa: "توضیح کوتاه",
     },
     description: {
       en: "Short description of your form",
@@ -58,40 +58,25 @@ const requestFields = [
     type: "string",
     isBase: true,
     isTranslate: true,
+  },
+  {
+    id: "3",
+    name: "description",
+    title: {
+      en: "Description",
+      fa: "شرح فرم",
+    },
+    description: {
+      en: "ِDescription of your form",
+      fa: "شرح کامل فرم",
+    },
+    type: "string",
+    isBase: true,
+    isTranslate: true,
     isMultiLine: true,
   },
   {
-    id: "7",
-    name: "thumbnail",
-    title: {
-      en: "Thumbnail",
-      fa: "تصویر نمایه فرم",
-    },
-    description: {
-      fa: "تصویر کوچک برای نمایش به عنوان نمایه فرم",
-      en: "a small image to show as form image",
-    },
-    type: "media",
-    mediaType: ["image"],
-    isTranslate: true,
-  },
-  {
-    id: "8",
-    name: "attachments",
-    title: {
-      en: "Attachments",
-      fa: "فایل های ضمیمه",
-    },
-    description: {
-      fa: "فایل های ضمیمه شده همراه با فرم",
-      en: "Attachments files beside form",
-    },
-    type: "media",
-    isTranslate: true,
-    isList: true,
-  },
-  {
-    id: "9",
+    id: "4",
     name: "startDate",
     title: {
       en: "Start Date",
@@ -106,7 +91,7 @@ const requestFields = [
     disablePastDates: true,
   },
   {
-    id: "10",
+    id: "5",
     name: "endDate",
     title: {
       en: "End Date",
@@ -121,7 +106,37 @@ const requestFields = [
     disablePastDates: true,
   },
   {
-    id: "11",
+    id: "6",
+    name: "thumbnail",
+    title: {
+      en: "Thumbnail",
+      fa: "تصویر نمایه فرم",
+    },
+    description: {
+      fa: "تصویر کوچک برای نمایش به عنوان نمایه فرم",
+      en: "a small image to show as form image",
+    },
+    type: "media",
+    mediaType: ["image"],
+    isTranslate: true,
+  },
+  {
+    id: "7",
+    name: "attachments",
+    title: {
+      en: "Attachments",
+      fa: "فایل های ضمیمه",
+    },
+    description: {
+      fa: "فایل های ضمیمه شده همراه با فرم",
+      en: "Attachments files beside form",
+    },
+    type: "media",
+    isTranslate: true,
+    isList: true,
+  },
+  {
+    id: "8",
     name: "longDesc",
     title: {
       en: "More Info",
@@ -134,20 +149,6 @@ const requestFields = [
     type: "richText",
     isTranslate: true,
   },
-  // {
-  //   id: "10",
-  //   name: "userFields",
-  //   title: {
-  //     en: "User Fields",
-  //     fa: "فیلدهای نمایشی",
-  //   },
-  //   description: {
-  //     fa: "فیلد های قایل نمایش برای کاربران",
-  //     en: "User can only the fields which you you select",
-  //   },
-  //   type: "keyValue",
-  //   isList: true,
-  // },
 ];
 const headerTabs = [
   {
@@ -703,15 +704,6 @@ const UpsertProduct = props => {
         .call(spaceInfo.id, obj);
     }
   }
-  // useEffect(() => {
-  //   if (formType) {
-  //     if (formType.id !== 2 && formType.id !== 4) {
-  //       changeTab(2);
-  //     } else {
-  //       changeTab(3);
-  //     }
-  //   }
-  // }, [formType]);
   function handleSelectFormType(type) {
     setSelectedFormType(type);
     if (type.id === 1 || type.id === 3) {
@@ -899,39 +891,65 @@ const UpsertProduct = props => {
                 </div>
               )}
               <div className="up-formInputs animated fadeIn">
-                <div className="rowItem">
-                  <String
-                    viewMode={viewMode}
-                    updateMode={updateMode}
-                    field={requestFields[0]}
-                    formData={formData}
-                    init={setNameToFormValidation}
-                    onChangeValue={handleOnChangeValue}
-                  />
-                </div>
-                <div className="rowItem">
-                  <String
-                    viewMode={viewMode}
-                    updateMode={updateMode}
-                    field={requestFields[1]}
-                    formData={formData}
-                    init={setNameToFormValidation}
-                    onChangeValue={handleOnChangeValue}
-                  />
-                </div>
-                <div className="rowItem">
-                  <div className="column">
-                    <PersianDateTime
+                <div className="box">
+                  <div className="rowItem">
+                    <String
                       viewMode={viewMode}
                       updateMode={updateMode}
-                      field={requestFields[4]}
+                      field={requestFields[0]}
                       formData={formData}
                       init={setNameToFormValidation}
                       onChangeValue={handleOnChangeValue}
                     />
                   </div>
-                  <div className="column">
-                    <PersianDateTime
+                  <div className="rowItem">
+                    <String
+                      viewMode={viewMode}
+                      updateMode={updateMode}
+                      field={requestFields[1]}
+                      formData={formData}
+                      init={setNameToFormValidation}
+                      onChangeValue={handleOnChangeValue}
+                    />
+                  </div>
+                  <div className="rowItem">
+                    <String
+                      viewMode={viewMode}
+                      updateMode={updateMode}
+                      field={requestFields[2]}
+                      formData={formData}
+                      init={setNameToFormValidation}
+                      onChangeValue={handleOnChangeValue}
+                    />
+                  </div>
+                </div>
+                <div className="box">
+                  <div className="rowItem">
+                    <div className="column">
+                      <PersianDateTime
+                        viewMode={viewMode}
+                        updateMode={updateMode}
+                        field={requestFields[3]}
+                        formData={formData}
+                        init={setNameToFormValidation}
+                        onChangeValue={handleOnChangeValue}
+                      />
+                    </div>
+                    <div className="column">
+                      <PersianDateTime
+                        viewMode={viewMode}
+                        updateMode={updateMode}
+                        field={requestFields[4]}
+                        formData={formData}
+                        init={setNameToFormValidation}
+                        onChangeValue={handleOnChangeValue}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="box">
+                  <div className="rowItem">
+                    <Media
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[5]}
@@ -940,34 +958,22 @@ const UpsertProduct = props => {
                       onChangeValue={handleOnChangeValue}
                     />
                   </div>
+                  <div className="rowItem">
+                    <Media
+                      viewMode={viewMode}
+                      updateMode={updateMode}
+                      field={requestFields[6]}
+                      formData={formData}
+                      init={setNameToFormValidation}
+                      onChangeValue={handleOnChangeValue}
+                    />
+                  </div>
                 </div>
-
-                <div className="rowItem">
-                  <Media
-                    viewMode={viewMode}
-                    updateMode={updateMode}
-                    field={requestFields[2]}
-                    formData={formData}
-                    init={setNameToFormValidation}
-                    onChangeValue={handleOnChangeValue}
-                  />
-                </div>
-                <div className="rowItem">
-                  <Media
-                    viewMode={viewMode}
-                    updateMode={updateMode}
-                    field={requestFields[3]}
-                    formData={formData}
-                    init={setNameToFormValidation}
-                    onChangeValue={handleOnChangeValue}
-                  />
-                </div>
-
                 <div className="rowItem">
                   <RichText
                     viewMode={viewMode}
                     updateMode={updateMode}
-                    field={requestFields[6]}
+                    field={requestFields[7]}
                     formData={formData}
                     init={setNameToFormValidation}
                     onChangeValue={handleOnChangeValue}

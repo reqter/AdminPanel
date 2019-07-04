@@ -78,16 +78,19 @@ const DateTimeInput = props => {
     }
   }
   function handleOnChange(e) {
-    if (e["_d"]) {
-      const val = moment(e["_d"]).format(
-        !field.format || field.format === "dateTime"
-          ? "YYYY-MM-DD hh:mm A"
-          : field.format === "date"
-          ? "YYYY-MM-DD"
-          : "hh:mm A"
-      );
-      setValueToParentForm(val);
-    } else setValueToParentForm("");
+    setSelectedDay(e);
+    const d = e.year + "/" + e.month + "-" + e.day;
+    setValueToParentForm(d);
+    // if (e["_d"]) {
+    //   const val = moment(e["_d"]).format(
+    //     !field.format || field.format === "dateTime"
+    //       ? "YYYY-MM-DD hh:mm A"
+    //       : field.format === "date"
+    //       ? "YYYY-MM-DD"
+    //       : "hh:mm A"
+    //   );
+    //   setValueToParentForm(val);
+    // } else setValueToParentForm("");
   }
   // var yesterday = Datetime.moment().subtract(1, "day");
   // var valid = function(current) {
@@ -101,7 +104,7 @@ const DateTimeInput = props => {
       <div className="">
         <DatePicker
           selectedDay={selectedDay}
-          onChange={setSelectedDay}
+          onChange={handleOnChange}
           inputPlaceholder="انتخاب روز"
           inputClassName="form-control"
         />

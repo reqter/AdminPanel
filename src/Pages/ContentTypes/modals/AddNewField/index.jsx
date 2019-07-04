@@ -87,7 +87,6 @@ const fields = [
     appearance: "default",
   },
 ];
-const translatableFields = ["string", "media", "richText"];
 const reservedWords = [
   "guid",
   "sys",
@@ -111,7 +110,6 @@ const AddNewField = props => {
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [translation, toggleTranslation] = useState(false);
   const [spinner, toggleSpinner] = useState(false);
   const [configSpinner, toggleConfigSpinner] = useState(false);
 
@@ -164,7 +162,6 @@ const AddNewField = props => {
         title: utility.applyeLangs(title),
         description: utility.applyeLangs(description),
         type: selectedField.name,
-        isTranslate: translation,
         appearance: selectedField.appearance,
       };
       const newContentType = { ...selectedContentType };
@@ -312,34 +309,6 @@ const AddNewField = props => {
                     {t("CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION_INFO")}
                   </small>
                 </FormGroup>
-                {translatableFields.indexOf(selectedField.name) > -1 && (
-                  <div className="custom_checkbox">
-                    <div className="left">
-                      <label className="checkBox">
-                        <input
-                          type="checkbox"
-                          id="translate"
-                          checked={translation}
-                          onChange={toggleTranslation}
-                        />
-                        <span className="checkmark" />
-                      </label>
-                    </div>
-                    <div className="right">
-                      <label htmlFor="translate">
-                        {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION")}
-                      </label>
-                      <label htmlFor="translate">
-                        {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION_INFO")}
-                      </label>
-                    </div>
-                  </div>
-                  // <CheckBox
-                  //   title={t("TRANSLATION")}
-                  //   value={translation}
-                  //   onChange={e => toggleTranslation(e.target.checked)}
-                  // />
-                )}
               </div>
             </Form>
           )}

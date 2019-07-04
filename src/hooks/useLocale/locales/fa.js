@@ -373,6 +373,10 @@ export default {
   FIELD_DATE_FORMAT_TITLE_INFO: 'انتخاب همزمان تاریخ و زمان',
   FIELD_DATE_FORMAT_DATE: 'فقط تاریخ',
   FIELD_DATE_FORMAT_TIME: 'زمان',
+  FIELD_DATE_CALANDER_TITLE: 'نوع تقویم',
+  FIELD_DATE_CALANDER_INFO: 'نوع تقویم را مشخص کنید',
+  FIELD_DATE_CALANDER_PERSIAN: 'شمسی',
+  FIELD_DATE_CALANDER_GREGORIAN: 'میلادی',
   FIELD_INVISIBLE: 'پنهان کردن این مشخصه',
   FIELD_INVISIBLE_INFO: 'این مشخصه در فرم پنهان خواهد بود',
   FIELD_LOCATION_LATITUDE: 'عرض',
@@ -577,15 +581,15 @@ export default {
   CATEGORY: 'دسته بندی',
   UPSERT_FORM_DESIGN_TITLE: 'طراحی فرم',
   UPSERT_FORM_DESIGN_DESC:
-    'شما اینجا می توانید ترتیب سوال های را مشخص کنید،پس زمینه فرم و...',
+    'شما اینجا می توانید ترتیب سوال های را مشخص کنید',
   UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER: 'جستجوی همکار با نام',
   UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER: 'جستجوی قالب فرم با نام',
   UPSERT_FORM_DESIGN_FIELDS_TITLE:
-    ' لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.',
+    'فیلدهای نمایشی در فرم خود را از بین فیلدهای قالب فرم انتخاب کنید و در صورت نیاز مرتب سازی نمایید',
   UPSERT_FORM_DESIGN_FIELDS_SELECT_PLACEHOLDER:
     'انتخاب سوال برای افزودن به فرم از لیست فیلدهای قالب فرم',
   UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:
-    'در صورتی که لیست خالی باشد تمامی فیلدها از کاربر پرسیده خواهد شد',
+    'در صورتی که فیلدی انتخاب نشود، تمامی فیلدها در فرم نمایش داده خواهد شد',
 
   ASSET_DELETE_ON_OK: 'فایل شما با موفقیت حذف شد.',
   ASSET_DELETE_ON_SERVER_ERROR:

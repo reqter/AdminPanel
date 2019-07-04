@@ -104,7 +104,8 @@
   display: flex;
   padding: 10px;
   align-items: center;
-  border-bottom: 1px solid whitesmoke;
+  background: whitesmoke;
+  border-bottom: 5px solid white;
   .icon {
     color: rgb(56, 132, 255);
     font-size: 30px;

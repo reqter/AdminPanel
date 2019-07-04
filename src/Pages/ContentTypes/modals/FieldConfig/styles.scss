@@ -12,7 +12,7 @@
       .icon {
         color: rgb(56, 132, 255);
         font-size: 30px;
-        margin:0 5px;
+        margin: 0 5px;
       }
       .fieldName {
         font-weight: 500;
@@ -137,5 +137,12 @@
     button {
       margin-left: 5px;
     }
+  }
+}
+
+.dateTimeFormats {
+  display: flex;
+  .inputSwitch {
+    flex: 1;
   }
 }

@@ -109,9 +109,12 @@
               font-weight: 500;
               font-size: 14px;
               width: 100%;
+              white-space: nowrap;
+              overflow: hidden !important;
+              text-overflow: ellipsis;
+              padding: 0 5px;
             }
             .fieldItem-title {
-              flex: 1;
               font-size: 13px;
               color: gray;
               text-align: center;
@@ -128,7 +131,7 @@
               font-size: 20px;
             }
             .fieldItem-actions {
-              flex: 1.5;
+              flex: 1;
               display: flex;
               flex-direction: row-reverse;
             }

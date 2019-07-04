@@ -185,10 +185,12 @@ body {
         select[disabled] {
           background: white;
         }
+        .box {
+          border-bottom: 5px solid whitesmoke;
+        }
         .rowItem {
           margin: 20px 0;
           display: flex;
-          // border-bottom: 5px solid rgb(56,132,255) ;
           & > * {
             width: 100%;
           }

@@ -102,7 +102,7 @@ const FieldConfig = props => {
   const [description, setDescription] = useState(
     selectedField.description ? selectedField.description[currentLang] : ""
   );
-  const [translation, toggleTranslation] = useState(selectedField.isTranslate);
+
 
   const [isRequired, toggleRequired] = useState(
     selectedField.isRequired === true ? true : false
@@ -256,6 +256,13 @@ const FieldConfig = props => {
         : "dateTime"
       : "dateTime"
   );
+  const [dateTimeCalander, toggleCalanderType] = useState(
+    selectedField.type === "dateTime"
+      ? selectedField.calanderType
+        ? selectedField.calanderType
+        : "persian"
+      : "persian"
+  );
   const [latitude, setLatitude] = useState(
     selectedField.type === "location"
       ? selectedField.defaultValue
@@ -324,9 +331,6 @@ const FieldConfig = props => {
   }
   function handleLongitudeChange(e) {
     setLongitude(e.target.value);
-  }
-  function handleChangeTranslation(e) {
-    toggleTranslation(e.target.checked);
   }
   function handleRequireCheckBox(e) {
     toggleRequired(e.target.checked);
@@ -522,7 +526,6 @@ const FieldConfig = props => {
       };
       obj["title"] = utility.applyeLangs(title);
       obj["description"] = utility.applyeLangs(description);
-      obj["isTranslate"] = translation;
       obj["isRequired"] = isRequired;
       obj["appearance"] = !fieldsUI
         ? selectedField.appearance
@@ -601,6 +604,7 @@ const FieldConfig = props => {
       if (selectedField.type === "dateTime") {
         obj["showCurrent"] = dateDefaultValue;
         obj["format"] = dateTimeFormat;
+        obj["calanderType"] = dateTimeCalander;
         obj["disablePastDates"] = dateDisablePast;
       }
       if (selectedField.type === "location") {
@@ -922,29 +926,6 @@ const FieldConfig = props => {
                     </div>
                   </div>
                 )}
-              {translatableFields.indexOf(selectedField.type) > -1 && (
-                <div className="custom_checkbox">
-                  <div className="left">
-                    <label className="checkBox">
-                      <input
-                        type="checkbox"
-                        id="localization"
-                        checked={translation}
-                        onChange={handleChangeTranslation}
-                      />
-                      <span className="checkmark" />
-                    </label>
-                  </div>
-                  <div className="right">
-                    <label htmlFor="localization">
-                      {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION")}
-                    </label>
-                    <label>
-                      {t("CONTENT_TYPE_ADD_FIELD_MODAL_TRANSATION_INFO")}
-                    </label>
-                  </div>
-                </div>
-              )}
               {selectedField.type === "dateTime" && (
                 <>
                   <div className="custom_checkbox">
@@ -1490,43 +1471,73 @@ const FieldConfig = props => {
                   </small>
                 </div>
                 {selectedField.type === "dateTime" && (
-                  <div className="inputSwitch">
-                    <span>{t("FIELD_DATE_FORMAT_TITLE")}</span>
-                    <span>{t("FIELD_DATE_FORMAT_TITLE_INFO")}</span>
-                    <div className="inputSwitch-content">
-                      <button
-                        className={
-                          "btn btn-sm " +
-                          (dateTimeFormat === "dateTime"
-                            ? "btn-primary"
-                            : "btn-light")
-                        }
-                        onClick={() => toggleDateFormat("dateTime")}
-                      >
-                        {t("FIELD_DATE_FORMAT_DATE_TIME")}
-                      </button>
-                      <button
-                        className={
-                          "btn btn-sm " +
-                          (dateTimeFormat === "date"
-                            ? "btn-primary"
-                            : "btn-light")
-                        }
-                        onClick={() => toggleDateFormat("date")}
-                      >
-                        {t("FIELD_DATE_FORMAT_DATE")}
-                      </button>
-                      <button
-                        className={
-                          "btn btn-sm " +
-                          (dateTimeFormat === "time"
-                            ? "btn-primary"
-                            : "btn-light")
-                        }
-                        onClick={() => toggleDateFormat("time")}
-                      >
-                        {t("FIELD_DATE_FORMAT_TIME")}
-                      </button>
+                  <div className="dateTimeFormats">
+                    <div className="inputSwitch">
+                      <span>{t("FIELD_DATE_FORMAT_TITLE")}</span>
+                      <span>{t("FIELD_DATE_FORMAT_TITLE_INFO")}</span>
+                      <div className="inputSwitch-content">
+                        <button
+                          className={
+                            "btn btn-sm " +
+                            (dateTimeFormat === "dateTime"
+                              ? "btn-primary"
+                              : "btn-light")
+                          }
+                          onClick={() => toggleDateFormat("dateTime")}
+                        >
+                          {t("FIELD_DATE_FORMAT_DATE_TIME")}
+                        </button>
+                        <button
+                          className={
+                            "btn btn-sm " +
+                            (dateTimeFormat === "date"
+                              ? "btn-primary"
+                              : "btn-light")
+                          }
+                          onClick={() => toggleDateFormat("date")}
+                        >
+                          {t("FIELD_DATE_FORMAT_DATE")}
+                        </button>
+                        <button
+                          className={
+                            "btn btn-sm " +
+                            (dateTimeFormat === "time"
+                              ? "btn-primary"
+                              : "btn-light")
+                          }
+                          onClick={() => toggleDateFormat("time")}
+                        >
+                          {t("FIELD_DATE_FORMAT_TIME")}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="inputSwitch">
+                      <span>{t("FIELD_DATE_CALANDER_TITLE")}</span>
+                      <span>{t("FIELD_DATE_CALANDER_INFO")}</span>
+                      <div className="inputSwitch-content">
+                        <button
+                          className={
+                            "btn btn-sm " +
+                            (dateTimeCalander === "persian"
+                              ? "btn-primary"
+                              : "btn-light")
+                          }
+                          onClick={() => toggleCalanderType("persian")}
+                        >
+                          {t("FIELD_DATE_CALANDER_PERSIAN")}
+                        </button>
+                        <button
+                          className={
+                            "btn btn-sm " +
+                            (dateTimeCalander === "gregorian"
+                              ? "btn-primary"
+                              : "btn-light")
+                          }
+                          onClick={() => toggleCalanderType("gregorian")}
+                        >
+                          {t("FIELD_DATE_CALANDER_GREGORIAN")}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}

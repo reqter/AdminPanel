@@ -428,6 +428,10 @@ export default {
   FIELD_DATE_FORMAT_TITLE_INFO: 'You can have only date or both date and time',
   FIELD_DATE_FORMAT_DATE: 'Date Only',
   FIELD_DATE_FORMAT_TIME: 'Time',
+  FIELD_DATE_CALANDER_TITLE: 'Calander Type',
+  FIELD_DATE_CALANDER_INFO: 'Choose the type of calander',
+  FIELD_DATE_CALANDER_PERSIAN: 'Persian',
+  FIELD_DATE_CALANDER_GREGORIAN: 'Gregorian',
   FIELD_INVISIBLE: 'Invisible this field',
   FIELD_INVISIBLE_INFO: 'This field will be invisbile on content entry',
   FIELD_LOCATION_LATITUDE: 'Latitude',
@@ -592,7 +596,7 @@ export default {
   UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER:
     'Search in form templates by name',
   UPSERT_FORM_DESIGN_FIELDS_TITLE:
-    'Lorem ipsum can be a good template for empty design paragrph',
+    'Choose display fields from template fields.Sort the fields as you need',
   UPSERT_FORM_DESIGN_FIELDS_SELECT_PLACEHOLDER:
     'Choose question to add in form from form template fields',
   UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:

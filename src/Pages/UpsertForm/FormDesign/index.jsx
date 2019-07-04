@@ -39,11 +39,11 @@ export default function DesignForm(props) {
           const r = selectedFields.filter(f => f.name === item.name);
           if (!r || r.length === 0) {
             newFields = [...selectedFields];
+            newFields.push(item);
+            setSelelectedFields(newFields);
+            callParentFieldsOrder(newFields);
           }
         }
-        newFields.push(item);
-        setSelelectedFields(newFields);
-        callParentFieldsOrder(newFields);
       }
     }
   }
@@ -88,6 +88,7 @@ export default function DesignForm(props) {
           <div className="fieldsBox">
             <div className="fieldsBox__top">
               <Select
+                key={selectedField}
                 menuPlacement="bottom"
                 closeMenuOnScroll={true}
                 closeMenuOnSelect={true}
@@ -128,8 +129,16 @@ export default function DesignForm(props) {
                       {f.description
                         ? f.description[currentLang]
                           ? f.description[currentLang]
-                          : "میزان تحصیلات خود را وارد کنید: "
-                        : "میزان تحصیلات خود را وارد کنید: "}
+                          : f.title
+                          ? f.title[currentLang]
+                            ? f.title[currentLang]
+                            : f.name
+                          : f.name
+                        : f.title
+                        ? f.title[currentLang]
+                          ? f.title[currentLang]
+                          : f.name
+                        : f.name}
                     </span>
                     <div className="actions">
                       {index !== 0 && (
@@ -199,7 +208,11 @@ const SingleValue = props => {
       <div className="selectValue">
         {data.item.description && data.item.description[currentLang]
           ? data.item.description[currentLang]
-          : "سوال ندارد"}
+          : data.item.title
+          ? data.item.title[currentLang]
+            ? data.item.title[currentLang]
+            : data.item.name
+          : data.item.name}
       </div>
     </components.SingleValue>
   );
@@ -238,7 +251,6 @@ const CustomOption = ({ innerProps, isDisabled, data }) => {
               data.item.title[currentLang] &&
               data.item.title[currentLang]}
           </span>
-          <span>{data.name && data.name}</span>
         </div>
         <span className="question">
           {data.item.description &&
