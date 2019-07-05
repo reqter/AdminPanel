@@ -88,6 +88,16 @@ const requestFields = [
     },
     type: "dateTime",
     format: "date",
+    label: {
+      endDate: {
+        en: "End Date of View",
+        fa: "تاریخ اتمام نمایش",
+      },
+      startDate: {
+        en: "Start Date of View",
+        fa: "تاریخ شروع نمایش",
+      },
+    },
   },
   {
     id: "5",

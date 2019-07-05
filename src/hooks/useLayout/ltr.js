@@ -21,5 +21,7 @@ export default {
   'upsert-form-btn-right': null,
   'upsert-form-btn-left': '15px',
   'forms-skeleton-margin': '0 10px 20px 0',
-  column: '0 10px 0 0'
+  column: '0 10px 0 0',
+  'upsert-form-design-select-margin': '0 5px 0 0',
+  'datetime-range-margin': '0 20px 0 0'
 }

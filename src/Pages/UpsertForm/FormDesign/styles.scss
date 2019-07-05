@@ -1,3 +1,4 @@
+@import "./../../../styles/mixins.scss";
 .designForm {
   display: flex;
   flex-direction: column;
@@ -47,7 +48,7 @@
         display: flex;
         .select {
           width: 100%;
-          margin-left: 5px;
+          @include variable(upsert-form-design-select-margin, margin, 0 5px);
         }
       }
       &__bottom {
@@ -114,14 +115,14 @@
   .title {
     padding: 0 10px;
     display: flex;
-    align-items: center;
+    flex: 1;
+    .question {
+      flex: 2;
+    }
     & span:last-child {
+      flex: 1;
       font-size: 13px;
       padding: 0 5px;
     }
-  }
-  .question {
-    flex: 1;
-    text-align: center;
   }
 }

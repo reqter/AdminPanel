@@ -165,39 +165,57 @@ const DateTimeInput = props => {
   }
 
   return (
-    <div className="form-group">
-      <label>
-        {field.title
-          ? field.title[currentLang]
-            ? field.title[currentLang]
+    <div className="rangeDate">
+      <div className="rangeDate__left">
+        <label>
+          {field.label
+            ? field.label.startDate[currentLang]
+              ? field.label.startDate[currentLang]
+              : field.name
             : field.title
-          : field.name}
-      </label>
-      <div className="rangeDateInputs">
-        <div>
-          <DatePicker
-            selectedDay={startDate}
-            onChange={handleStartDateChanged}
-            inputPlaceholder={t("START_DATE")}
-            inputClassName="form-control"
-            disabledDays={disableDaysStartDate}
-          />
-        </div>
-        <div>
-          <DatePicker
-            selectedDay={endDate}
-            onChange={handleEndDateChanged}
-            inputPlaceholder={t("END_DATE")}
-            inputClassName="form-control"
-            disabledDays={disableDaysEndDate}
-          />
-        </div>
+            ? field.title[currentLang]
+              ? field.title[currentLang]
+              : field.title
+            : field.name}
+        </label>
+        <DatePicker
+          selectedDay={startDate}
+          onChange={handleStartDateChanged}
+          inputPlaceholder={t("START_DATE")}
+          inputClassName="form-control"
+          disabledDays={disableDaysStartDate}
+        />
+        <small className="form-text text-muted">
+          {field.description &&
+            field.description[currentLang] &&
+            field.description[currentLang]}
+        </small>
       </div>
-      <small className="form-text text-muted">
-        {field.description &&
-          field.description[currentLang] &&
-          field.description[currentLang]}
-      </small>
+      <div className="rangeDate__right">
+        <label>
+          {field.label
+            ? field.label.endDate[currentLang]
+              ? field.label.endDate[currentLang]
+              : field.name
+            : field.title
+            ? field.title[currentLang]
+              ? field.title[currentLang]
+              : field.title
+            : field.name}
+        </label>
+        <DatePicker
+          selectedDay={endDate}
+          onChange={handleEndDateChanged}
+          inputPlaceholder={t("END_DATE")}
+          inputClassName="form-control"
+          disabledDays={disableDaysEndDate}
+        />
+        <small className="form-text text-muted">
+          {field.description &&
+            field.description[currentLang] &&
+            field.description[currentLang]}
+        </small>
+      </div>
     </div>
   );
 };

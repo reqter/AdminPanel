@@ -13,22 +13,39 @@ export default function DesignForm(props) {
       return {
         value: item.description
           ? item.description[currentLang]
+            ? item.description[currentLang].length > 0
+              ? item.description[currentLang]
+              : item.title
+              ? item.title[currentLang]
+                ? item.title[currentLang]
+                : item.name
+              : item.name
+            : item.title
+            ? item.title[currentLang]
+              ? item.title[currentLang]
+              : item.name
+            : item.name
           : item.title
           ? item.title[currentLang]
             ? item.title[currentLang]
-            : item.title
+            : item.name
           : item.name,
+        // : item.title
+        // ? item.title[currentLang]
+        //   ? item.title[currentLang]
+        //   : item.title
+        // : item.name,
         item,
       };
     });
     return f;
   });
   const [selectedField, setSelected] = useState();
-  const [selectedFields, setSelelectedFields] = useState();
+  const [selectedFields, setSelectedFields] = useState();
 
   useEffect(() => {
     if (props.fieldsOrder && props.fieldsOrder.length > 0) {
-      setSelelectedFields(props.fieldsOrder);
+      setSelectedFields(props.fieldsOrder);
     }
   }, [props.fieldsOrder]);
 
@@ -46,7 +63,7 @@ export default function DesignForm(props) {
           if (!r || r.length === 0) {
             newFields = [...selectedFields];
             newFields.push(item);
-            setSelelectedFields(newFields);
+            setSelectedFields(newFields);
             callParentFieldsOrder(newFields);
           }
         }
@@ -56,19 +73,19 @@ export default function DesignForm(props) {
   function handleUpClicked(item, index) {
     let b = selectedFields.filter(f => f.name !== item.name);
     b.splice(index - 1, 0, item);
-    setSelelectedFields(b);
+    setSelectedFields(b);
     callParentFieldsOrder(b);
   }
   function handleDownClicked(item, index) {
     let b = selectedFields.filter(f => f.name !== item.name);
     b.splice(index + 1, 0, item);
-    setSelelectedFields(b);
+    setSelectedFields(b);
     callParentFieldsOrder(b);
   }
 
   function handleDeleteClicked(item) {
     const r = selectedFields.filter(f => f.name !== item.name);
-    setSelelectedFields(r);
+    setSelectedFields(r);
     callParentFieldsOrder(r);
   }
   function callParentFieldsOrder(fs) {
@@ -252,17 +269,27 @@ const CustomOption = ({ innerProps, isDisabled, data }) => {
       <div {...innerProps} className="allFields-items">
         <i className={"icon " + getFieldIcon(data.item.type)} />
         <div className="title">
+          <span className="question">
+            {data.item.description
+              ? data.item.description[currentLang]
+                ? data.item.description[currentLang]
+                : data.item.title
+                ? data.item.title[currentLang]
+                  ? data.item.title[currentLang]
+                  : data.item.name
+                : data.item.name
+              : data.item.title
+              ? data.item.title[currentLang]
+                ? data.item.title[currentLang]
+                : data.item.name
+              : data.item.name}
+          </span>
           <span>
             {data.item.title &&
               data.item.title[currentLang] &&
               data.item.title[currentLang]}
           </span>
         </div>
-        <span className="question">
-          {data.item.description &&
-            data.item.description[currentLang] &&
-            data.item.description[currentLang]}
-        </span>
       </div>
     );
   } else return null;
