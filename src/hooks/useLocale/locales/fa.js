@@ -591,6 +591,12 @@ export default {
     'انتخاب سوال برای افزودن به فرم از لیست فیلدهای قالب فرم',
   UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:
     'در صورتی که فیلدی انتخاب نشود، تمامی فیلدها در فرم نمایش داده خواهد شد',
+  UPSERT_FORM_PARTNERS_EMPTY_TITLE: 'لیست خالی می باشد!',
+  UPSERT_FORM_PARTNERS_EMPTY_MESSAGE:
+    'همکاری تعریف نشده است. برای ادامه نیاز به انتخاب همکار است یا با انتخاب فرم های عمومی ادامه دهید',
+  UPSERT_FORM_PARTNERS_ERROR_MESSAGE:
+    'خطا در بارگذاری لیست همکاران. دوباره امتحان کنید',
+  UPSERT_FORM_PARTNERS_LOADING: 'در حال بارگذاری لیست همکاران...',
 
   ASSET_DELETE_ON_OK: 'فایل شما با موفقیت حذف شد.',
   ASSET_DELETE_ON_SERVER_ERROR:

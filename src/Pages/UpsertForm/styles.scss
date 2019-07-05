@@ -242,12 +242,13 @@ body {
   color: gray;
   cursor: pointer;
 }
-.contentTypesSpinner {
+.tabsSpinner{
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   height: 200px;
+  width: 100%;
   span {
     margin-top: 10px;
   }

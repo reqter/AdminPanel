@@ -603,6 +603,12 @@ export default {
     'Choose question to add in form from form template fields',
   UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:
     'Form will ask all of the questions if list is empty',
+  UPSERT_FORM_PARTNERS_EMPTY_TITLE: 'Empty List!',
+  UPSERT_FORM_PARTNERS_EMPTY_MESSAGE:
+    'There are not any partner.to go next tab you have to choose a partner or back and select public forms',
+  UPSERT_FORM_PARTNERS_ERROR_MESSAGE:
+    'There is an error to load partners.try again',
+  UPSERT_FORM_PARTNERS_LOADING: 'Loading Partners...',
 
   ASSET_GET_ON_SERVER_ERROR:
     'Internal server error.please report that to administrator',

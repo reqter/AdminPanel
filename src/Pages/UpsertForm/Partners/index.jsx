@@ -1,91 +1,88 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useLocale } from "../../../hooks";
-
+import { getPartners } from "./../../../Api/request-api";
+import CircleSpinner from "./../../../components/CircleSpinner";
+import { Empty, Wrong } from "./../../../components/Commons/ErrorsComponent";
 import "./styles.scss";
-const allData = [
-  {
-    _id: 1,
-    first_name: "سعید",
-    last_name: "پادیاب",
-    phoneNumber: "0090",
-    email: "padyabsaeed@gmail.com",
-    avatar:
-      "https://cdn.kickcharge.com/wp-content/uploads/2017/03/28090959/miracle-vet-logo-1024x626.jpeg",
-    company_name: "بنیان سیستم",
-  },
-  {
-    _id: 2,
-    first_name: "سعید",
-    last_name: "پادیاب",
-    phoneNumber: "0090",
-    email: "padyabsaeed@gmail.com",
-    avatar:
-      "https://cdn.kickcharge.com/wp-content/uploads/2018/04/24093540/airprofessionals-logo-1024x625.jpg",
-    company_name: "بانک ملی ایران",
-  },
-  {
-    _id: 3,
-    first_name: "سعید",
-    last_name: "پادیاب",
-    phoneNumber: "0090",
-    email: "padyabsaeed@gmail.com",
-    avatar:
-      "https://s3.amazonaws.com/logos.brandpa.com/uploads/7e927cff248a747852c9ed1bae960d6f/bionamic.png",
-    company_name: "رهن و اقتصاد وام بین بانکی",
-  },
-  {
-    _id: 4,
-    first_name: "سعید",
-    last_name: "پادیاب",
-    phoneNumber: "0090",
-    email: "padyabsaeed@gmail.com",
-    avatar:
-      "https://amp.businessinsider.com/images/58486129ba6eb604688b6f51-750-500.jpg",
-    company_name: "فضای کار اشتراکی پارادایس",
-  },
-  {
-    _id: 5,
-    first_name: "سعید",
-    last_name: "پادیاب",
-    phoneNumber: "0090",
-    email: "padyabsaeed@gmail.com",
-    avatar:
-      "http://www.tertia.lu/wp-content/uploads/2017/01/Photo-page-entreprise.png",
-    company_name: "بازرگانی اسلامی",
-  },
-  {
-    _id: 6,
-    first_name: "سعید",
-    last_name: "پادیاب",
-    phoneNumber: "0090",
-    email: "padyabsaeed@gmail.com",
-    avatar:
-      "http://officemoversofflorida.com/wp-content/uploads/2016/02/modular-furniture-installers-tampa-florida.png",
-    company_name: "لپ تاپ برند اپل",
-  },
-];
+
 export default function Partners(props) {
   const { t, currentLang } = useLocale();
-  const [partners, setPartners] = useState(allData);
+  const [spinner, toggleSpinner] = useState(true);
+  const [allData, setAllData] = useState();
+  const [partners, setPartners] = useState();
   const [selectedPartner, setPartner] = useState();
+  const [error, setError] = useState();
 
   useEffect(() => {
-    if (props.selectedPartner) {
-      for (let i = 0; i < partners.length; i++) {
-        const p = partners[i];
-        if (p._id === props.selectedPartner._id) {
-          setPartner(p);
-          break;
+    getPartners()
+      .onOk(result => {
+        if (result && result.length > 0) {
+          setAllData(result || []);
+          setPartners(result);
+          if (props.selectedPartner) {
+            for (let i = 0; i < result.length; i++) {
+              const p = result[i];
+              if (p._id === props.selectedPartner._id) {
+                setPartner(p);
+                break;
+              }
+            }
+          }
+        } else {
+          setError({
+            type: "length",
+            title: t("UPSERT_FORM_PARTNERS_EMPTY_TITLE"),
+            message: t("UPSERT_FORM_PARTNERS_EMPTY_MESSAGE"),
+          });
         }
-      }
-    }
-  }, [props.selectedPartner]);
+        toggleSpinner(false);
+      })
+      .onServerError(result => {
+        toggleSpinner(false);
+        setError({
+          type: "error",
+          title: t("INTERNAL_SERVER_ERROR"),
+          message: t("UPSERT_FORM_PARTNERS_ERROR_MESSAGE"),
+        });
+      })
+      .onBadRequest(result => {
+        toggleSpinner(false);
+        setError({
+          type: "error",
+          title: t("BAD_REQUEST"),
+          message: t("UPSERT_FORM_PARTNERS_ERROR_MESSAGE"),
+        });
+      })
+      .unAuthorized(result => {
+        toggleSpinner(false);
+      })
+      .notFound(result => {
+        toggleSpinner(false);
+        setError({
+          type: "error",
+          title: t("NOT_FOUND"),
+          message: t("UPSERT_FORM_PARTNERS_ERROR_MESSAGE"),
+        });
+      })
+      .unKnownError(result => {
+        toggleSpinner(false);
+        setError({
+          type: "error",
+          title: t("UNKNOWN_ERROR"),
+          message: t("UPSERT_FORM_PARTNERS_ERROR_MESSAGE"),
+        });
+      })
+      .onRequestError(result => {
+        toggleSpinner(false);
+        setError({
+          type: "error",
+          title: t("ON_REQUEST_ERROR"),
+          message: t("UPSERT_FORM_PARTNERS_ERROR_MESSAGE"),
+        });
+      })
+      .call();
+  }, []);
 
-  function handleClickType(type) {
-    if (props.onSelectType) {
-      props.onSelectType(type);
-    }
-  }
   function handleSearchChanged(e) {
     const key = e.which || e.key;
     if (key === 13) {
@@ -114,32 +111,46 @@ export default function Partners(props) {
         onKeyUp={handleSearchChanged}
       />
       <div className="partners__items">
-        {partners &&
-          partners.map(p => {
-            return (
-              <div
-                className={
-                  "user " +
-                  (selectedPartner && selectedPartner._id === p._id
-                    ? "active"
-                    : "")
-                }
-                key={p._id}
-                onClick={() => handlePartnerClicked(p)}
-              >
-                <div className="user__top">
-                  <div className="user__avatar">
-                    <img src={p.avatar} alt="" />
-                  </div>
-                </div>
-                <div className="user__bottom">
-                  {p.company_name
-                    ? p.company_name
-                    : p.first_name + " " + p.last_name}
+        {spinner ? (
+          <div className="tabsSpinner">
+            <CircleSpinner show={spinner} size="large" />
+            <span>{t("UPSERT_FORM_PARTNERS_LOADING")}</span>
+          </div>
+        ) : partners ? (
+          partners.map(p => (
+            <div
+              className={
+                "user " +
+                (selectedPartner && selectedPartner._id === p._id
+                  ? "active"
+                  : "")
+              }
+              key={p._id}
+              onClick={() => handlePartnerClicked(p)}
+            >
+              <div className="user__top">
+                <div className="user__avatar">
+                  <img src={p.avatar} alt="" />
                 </div>
               </div>
-            );
-          })}
+              <div className="user__bottom">
+                {p.company_name
+                  ? p.company_name
+                  : p.first_name + " " + p.last_name}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="partner-errors">
+            {error && error.type === "length" ? (
+              <Empty />
+            ) : (
+              <Wrong width="200" height="200" />
+            )}
+            {error && <span className="title">{error.title}</span>}
+            {error && <span className="message">{error.message}</span>}
+          </div>
+        )}
       </div>
     </div>
   );

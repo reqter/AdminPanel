@@ -55,7 +55,7 @@ const ContentTypes = props => {
   }, []);
 
   return spinner ? (
-    <div className="contentTypesSpinner">
+    <div className="tabsSpinner">
       <CircleSpinner show={spinner} size="large" />
       <span>Loading Content Types ...</span>
     </div>
@@ -63,7 +63,9 @@ const ContentTypes = props => {
     <div className="emptyContenType">
       <i className="icon-empty-box-open icon" />
       <span className="title">Empty List!</span>
-      <span className="info">You have not created any content types yet.</span>
+      <span className="info">
+        You have not created any content types yet.
+      </span>
       <button
         className="btn btn-sm btn-primary"
         onClick={navigateToContentTypes}
@@ -83,7 +85,7 @@ const ContentTypes = props => {
             </div>
           ) : (
             <div className="treeItem-img">
-              <Image url={c.media[0][currentLang]}/>
+              <Image url={c.media[0][currentLang]} />
             </div>
           )}
           <div className="treeItem-text">
@@ -98,9 +100,7 @@ const ContentTypes = props => {
             size="xs"
             onClick={() => handleSelectContentType(c)}
           >
-            <span style={{ fontSize: 12 }}>
-              {t("Choose")}
-            </span>
+            <span style={{ fontSize: 12 }}>{t("Choose")}</span>
           </button>
         </div>
       </div>

@@ -251,6 +251,184 @@ export function getByContentTypes () {
     }
   }
 }
+export function getPartners () {
+  let _onOkCallBack
+  function _onOk (result) {
+    if (_onOkCallBack) {
+      _onOkCallBack(result)
+    }
+  }
+  let _onServerErrorCallBack
+  function _onServerError (result) {
+    if (_onServerErrorCallBack) {
+      _onServerErrorCallBack(result)
+    }
+  }
+  let _onBadRequestCallBack
+  function _onBadRequest (result) {
+    if (_onBadRequestCallBack) {
+      _onBadRequestCallBack(result)
+    }
+  }
+  let _unAuthorizedCallBack
+  function _unAuthorized (result) {
+    if (_unAuthorizedCallBack) {
+      _unAuthorizedCallBack(result)
+    }
+  }
+  let _notFoundCallBack
+  function _notFound (result) {
+    if (_notFoundCallBack) {
+      _notFoundCallBack(result)
+    }
+  }
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
+    }
+  }
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
+
+  const _call = async token => {
+    try {
+      // const url = ''
+      // var rawResponse = await fetch(url, {
+      //   method: 'GET',
+      //   headers: {
+      //     authorization: 'Bearer ' + token,
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // const status = rawResponse.status
+      // const result = await rawResponse.json()
+      const status = 200
+      const result = [
+        {
+          _id: 1,
+          first_name: 'سعید',
+          last_name: 'پادیاب',
+          phoneNumber: '0090',
+          email: 'padyabsaeed@gmail.com',
+          avatar:
+            'https://cdn.kickcharge.com/wp-content/uploads/2017/03/28090959/miracle-vet-logo-1024x626.jpeg',
+          company_name: 'بنیان سیستم'
+        },
+        {
+          _id: 2,
+          first_name: 'سعید',
+          last_name: 'پادیاب',
+          phoneNumber: '0090',
+          email: 'padyabsaeed@gmail.com',
+          avatar:
+            'https://cdn.kickcharge.com/wp-content/uploads/2018/04/24093540/airprofessionals-logo-1024x625.jpg',
+          company_name: 'بانک ملی ایران'
+        },
+        {
+          _id: 3,
+          first_name: 'سعید',
+          last_name: 'پادیاب',
+          phoneNumber: '0090',
+          email: 'padyabsaeed@gmail.com',
+          avatar:
+            'https://s3.amazonaws.com/logos.brandpa.com/uploads/7e927cff248a747852c9ed1bae960d6f/bionamic.png',
+          company_name: 'رهن و اقتصاد وام بین بانکی'
+        },
+        {
+          _id: 4,
+          first_name: 'سعید',
+          last_name: 'پادیاب',
+          phoneNumber: '0090',
+          email: 'padyabsaeed@gmail.com',
+          avatar:
+            'https://amp.businessinsider.com/images/58486129ba6eb604688b6f51-750-500.jpg',
+          company_name: 'فضای کار اشتراکی پارادایس'
+        },
+        {
+          _id: 5,
+          first_name: 'سعید',
+          last_name: 'پادیاب',
+          phoneNumber: '0090',
+          email: 'padyabsaeed@gmail.com',
+          avatar:
+            'http://www.tertia.lu/wp-content/uploads/2017/01/Photo-page-entreprise.png',
+          company_name: 'بازرگانی اسلامی'
+        },
+        {
+          _id: 6,
+          first_name: 'سعید',
+          last_name: 'پادیاب',
+          phoneNumber: '0090',
+          email: 'padyabsaeed@gmail.com',
+          avatar:
+            'http://officemoversofflorida.com/wp-content/uploads/2016/02/modular-furniture-installers-tampa-florida.png',
+          company_name: 'لپ تاپ برند اپل'
+        }
+      ]
+
+      switch (status) {
+        case 200:
+          _onOk(result)
+          break
+        case 400:
+          _onBadRequest()
+          break
+        case 401:
+          _unAuthorized()
+          break
+        case 404:
+          _notFound()
+          break
+        case 500:
+          _onServerError()
+          break
+        default:
+          _unKnownError()
+          break
+      }
+    } catch (error) {
+      _onRequestError(error)
+    }
+  }
+
+  return {
+    call: _call,
+    onOk: function (callback) {
+      _onOkCallBack = callback
+      return this
+    },
+    onServerError: function (callback) {
+      _onServerErrorCallBack = callback
+      return this
+    },
+    onBadRequest: function (callback) {
+      _onBadRequestCallBack = callback
+      return this
+    },
+    notFound: function (callback) {
+      _notFoundCallBack = callback
+      return this
+    },
+    unAuthorized: function (callback) {
+      _unAuthorizedCallBack = callback
+      return this
+    },
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
+      return this
+    }
+  }
+}
+
 export function getRequests () {
   let _onOkCallBack
   function _onOk (result) {

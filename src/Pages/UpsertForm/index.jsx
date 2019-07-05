@@ -408,7 +408,7 @@ const UpsertProduct = props => {
       [key]: isValid,
     }));
   }
-  function showCatgoryModal() {
+  function showCategoryModal() {
     toggleCategoryModal(true);
   }
   function onCloseModel(selected) {
@@ -863,7 +863,7 @@ const UpsertProduct = props => {
                     : t("CATEGORY")}
                 </span>
                 {!viewMode && (
-                  <button className="btn btn-link" onClick={showCatgoryModal}>
+                  <button className="btn btn-link" onClick={showCategoryModal}>
                     {category
                       ? t("UPSERT_FORM_CHANGE_CATEGORY")
                       : t("UPSERT_FORM_CHOOSE_CATEGORY")}

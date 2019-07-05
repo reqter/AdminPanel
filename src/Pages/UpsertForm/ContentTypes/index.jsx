@@ -69,9 +69,9 @@ const ContentTypes = props => {
     }
   }, [props.searchText]);
   return spinner ? (
-    <div className="contentTypesSpinner">
+    <div className="tabsSpinner">
       <CircleSpinner show={spinner} size="large" />
-      <span>{t("UPSERT_FORM_TEMPLATES_LOADING")}.</span>
+      <span>{t("UPSERT_FORM_TEMPLATES_LOADING")}</span>
     </div>
   ) : !contentTypes || contentTypes.length === 0 ? (
     <div className="emptyContenType">
