@@ -87,7 +87,7 @@ const List = props => {
               props.handleShowFields(listItem);
             }}
           >
-            <span style={{ fontSize: 12 }}>{t("ITEM_TYPES_FIELDS")}</span>
+            <span style={{ fontSize: 12 }}>{t("CONTENT_TYPES_FIELDS")}</span>
           </button>
         </div>
       </div>

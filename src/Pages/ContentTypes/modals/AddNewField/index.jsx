@@ -1,15 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalFooter,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
+import Modal from "reactstrap/lib/Modal";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalFooter from "reactstrap/lib/ModalFooter";
 import { utility } from "../../../../services";
 import { useGlobalState, useLocale } from "../../../../hooks";
 import { CheckBox, CircleSpinner } from "../../../../components";
@@ -258,7 +251,7 @@ const AddNewField = props => {
             </div>
           )}
           {tab === 2 && (
-            <Form className="formTab">
+            <form className="formTab">
               <div className="row">
                 <div className="form-group col">
                   <label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_NAME")}</label>
@@ -278,11 +271,12 @@ const AddNewField = props => {
                   </small>
                 </div>
 
-                <FormGroup className="col">
-                  <Label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE")}</Label>
-                  <Input
+                <div className="form-group col">
+                  <label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE")}</label>
+                  <input
                     type="string"
                     value={title}
+                    className="form-control"
                     placeholder={t(
                       "CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_PLACEHOLDER"
                     )}
@@ -291,14 +285,17 @@ const AddNewField = props => {
                   <small id="emailHelp" className="form-text text-muted">
                     {t("CONTENT_TYPE_ADD_FIELD_MODAL_TITLE_INFO")}
                   </small>
-                </FormGroup>
+                </div>
               </div>
 
               <div className="formTab-row">
-                <FormGroup>
-                  <Label>{t("CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION")}</Label>
-                  <Input
+                <div className="form-group">
+                  <label>
+                    {t("CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION")}
+                  </label>
+                  <input
                     type="string"
+                    className="form-control"
                     value={description}
                     placeholder={t(
                       "CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION_PLACEHOLDER"
@@ -308,16 +305,16 @@ const AddNewField = props => {
                   <small className="form-text text-muted">
                     {t("CONTENT_TYPE_ADD_FIELD_MODAL_DESCRIPTION_INFO")}
                   </small>
-                </FormGroup>
+                </div>
               </div>
-            </Form>
+            </form>
           )}
         </div>
       </ModalBody>
       {tab !== 1 ? (
         <ModalFooter>
-          <Button
-            color="primary"
+          <button
+            className="btn btn-primary"
             onClick={addField}
             disabled={
               name.length > 0 &&
@@ -332,9 +329,9 @@ const AddNewField = props => {
           >
             <CircleSpinner show={spinner} size="small" />
             {!spinner && t("CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_BTN")}
-          </Button>
-          <Button
-            color="primary"
+          </button>
+          <button
+            className="btn btn-primary"
             onClick={addField_configure}
             disabled={
               name.length > 0 &&
@@ -350,10 +347,10 @@ const AddNewField = props => {
             <CircleSpinner show={configSpinner} size="small" />
             {!configSpinner &&
               t("CONTENT_TYPE_ADD_FIELD_MODAL_CREATE_CONFIG_BTN")}
-          </Button>
-          <Button color="secondary" onClick={backToFields}>
-            {t("CONTENT_TYPE_ADD_FIELD_MODAL_CHNAGE_FIELD_BTN")}
-          </Button>
+          </button>
+          <button className="btn btn-secondary" onClick={backToFields}>
+            {t("CONTENT_TYPE_ADD_FIELD_MODAL_CHANGE_FIELD_BTN")}
+          </button>
         </ModalFooter>
       ) : (
         undefined

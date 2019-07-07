@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Modal, ModalFooter } from "reactstrap";
+import Modal from "reactstrap/lib/Modal";
+import ModalFooter from "reactstrap/lib/ModalFooter";
+
 import { utility } from "../../../../services";
 import { useGlobalState, useLocale } from "../../../../hooks";
 import { updateContentType } from "../../../../Api/contentType-api";

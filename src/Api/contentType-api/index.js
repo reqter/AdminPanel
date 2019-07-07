@@ -1,3 +1,4 @@
+import { Redirect } from 'react-router-dom'
 import { storageManager } from '../../services'
 const config = process.env
 const getAllURL =
@@ -13,6 +14,7 @@ const getByIdURL =
   config.REACT_APP_CONTENT_TYPE_GET_BY_ID
 
 const data = require('./../data.json')
+
 export function getTemplates () {
   let _onOkCallBack
   function _onOk (result) {
@@ -162,6 +164,7 @@ export function getContentTypes () {
           _onBadRequest()
           break
         case 401:
+          //  window.location.href="/fa/login"
           _unAuthorized()
           break
         case 404:

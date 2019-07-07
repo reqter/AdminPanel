@@ -1,4 +1,102 @@
 .c-category-templates-body {
+  .templateTypes {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    padding-top: 0px;
+    &__header {
+      font-size: 15px;
+      margin: 10px;
+      text-align: justify;
+    }
+    &__content {
+      display: flex;
+      .box {
+        border-radius: 3px;
+        flex: 1;
+        margin: 20px 10px;
+        min-height: 200px;
+        box-shadow: 0 0 1px gray;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 10px;
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 0 5px lightgray;
+        }
+        &__header {
+          height: 130px;
+          background: whitesmoke;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 50px;
+          color: rgb(56, 132, 255);
+        }
+        &__title {
+          padding: 10px 0;
+          text-align: center;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        &__desc {
+          font-size: 13px;
+          text-align: center;
+        }
+      }
+    }
+  }
+  .partners {
+    &__items {
+      display: flex;
+      flex-wrap: wrap;
+      .user {
+        transition-duration: 0.3s;
+        width: calc(25% - 10px);
+        margin: 5px;
+        margin-bottom: 10px;
+        min-height: 190px;
+        background: white;
+        // box-shadow: 0 0 5px lightgray;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid lightgray;
+        cursor: pointer;
+        &:hover {
+          box-shadow: 0 0 10px lightgray;
+        }
+        &.active {
+          background: lightgray;
+          border: 5px solid lightgray;
+        }
+        &__top {
+          height: 140px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        &__avatar {
+          width: 100%;
+          height: 100%;
+          background: white;
+          padding: 4px;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+        &__bottom {
+          flex: 1;
+          padding: 5px;
+          text-align: center;
+          font-size: 14px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
   .files-uploaded {
     .un-icon {
       font-size: 25px;
@@ -10,14 +108,14 @@
       overflow: hidden;
       font-weight: 500;
       padding-top: 10px;
-      width: 100px
+      width: 100px;
     }
   }
   .fieldsTab {
     display: flex;
     flex-wrap: wrap;
     min-height: 300px;
-    justify-content: center;
+    justify-content: flex-start;
     .add-field-types {
       margin: 20px 10px;
       width: calc(25% - 20px);

@@ -152,6 +152,7 @@ export default function Partners(props) {
           </div>
         )}
       </div>
+   
     </div>
   );
 }
