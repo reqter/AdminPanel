@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import Modal from "reactstrap/lib/Modal";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+//
 import "./styles.scss";
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import Tree from "./tree";
 import { useGlobalState, useLocale } from "../../../hooks";
 import { getCategories } from "../../../Api/content-api";
@@ -55,8 +58,11 @@ const Categories = props => {
   }
   return (
     <Modal isOpen={true} toggle={closeModal} size="lg">
-      <ModalHeader toggle={closeModal}>Choose a category</ModalHeader>
+      <ModalHeader toggle={closeModal}>
+        {t("UPSERT_FORM_CATEGORY_MODAL_TITLE")}
+      </ModalHeader>
       <ModalBody className="up-categories">
+        
         {categories.length > 0 && (
           <Tree
             data={categories}

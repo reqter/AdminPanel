@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router";
 import "./styles.scss";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
+import Dropdown from "reactstrap/lib/Dropdown";
+import DropdownToggle from "reactstrap/lib/DropdownToggle";
+import DropdownMenu from "reactstrap/lib/DropdownMenu";
+import DropdownItem from "reactstrap/lib/DropdownItem";
+
 import { useGlobalState, useLocale, useCookie } from "../../../../../../hooks";
 import { Image } from "../../../../../../components";
 const ProfileWidget = props => {

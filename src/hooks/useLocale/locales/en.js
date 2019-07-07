@@ -1,6 +1,7 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
+  SELECT:"Select",
   START_DATE: 'Start Date',
   END_DATE: 'End Date',
   LOADING: 'Loading',
@@ -593,7 +594,7 @@ export default {
   UPSERT_FORM_PARTNERS_DESC:
     'Receive only selected partners,you can also skip ',
   UPSERT_FORM_TEMPLATES_TITLE: 'Choose a template form',
-  UPSERT_FORM_TEMPLATES_DESC: 'Choose your template form to create a form',
+  UPSERT_FORM_TEMPLATES_DESC: 'Choose your question bank to create a form',
   UPSERT_FORM_TEMPLATES_LOADING: 'Loading Content Types...',
   UPSERT_FORM_TEMPLATES_EMPTY_TITLE: 'Empty List!',
   UPSERT_FORM_TEMPLATES_EMPTY_DESC:
@@ -603,6 +604,7 @@ export default {
   UPSERT_FORM_CHOOSE_CATEGORY: 'Choose a category',
   UPSERT_FORM_NO_CATEGORY_HEADER: "This content doesn't have category",
   CATEGORY: 'Category',
+  UPSERT_FORM_CATEGORY_MODAL_TITLE: 'Choose A Catgory',
   UPSERT_FORM_DESIGN_TITLE: 'Design Your Form',
   UPSERT_FORM_DESIGN_DESC:
     'Here you can design your form,fields order,background color,...',
@@ -611,6 +613,7 @@ export default {
     'Search in question banks by name',
   UPSERT_FORM_DESIGN_FIELDS_TITLE:
     'Choose display fields from template fields.Sort the fields as you need',
+  UPSERT_FORM_DESIGN_HEADER_NEXT_BTN: 'Complete Form',
   UPSERT_FORM_DESIGN_FIELDS_SELECT_PLACEHOLDER:
     'Choose question to add in form from question bank fields',
   UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:

@@ -1,130 +1,110 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { ListGroup, ListGroupItem, Collapse } from "reactstrap";
 import { Image } from "../../../components";
+import { useLocale } from "./../../../hooks";
 
-class Tree extends Component {
-  state = {
-    selected: {},
-    hasContentType: false,
-    currentLang: "en",
-  };
+export default function Tree(props) {
+  const { t, currentLang, direction } = useLocale();
+  const [state, setState] = useState({});
 
-  static getDerivedStateFromProps(props, current_state) {
-    if (!props.leftContent) {
-      return {
-        selected: {},
-      };
-    }
-    return null;
-  }
-  toggle = event => {
+  function toggle(event) {
     const id = event.target.getAttribute("id");
-    this.setState(state => ({ [id]: !state[id] }));
-  };
-  mapper = (nodes, parentId, lvl) => {
+    setState(state => ({ [id]: !state[id] }));
+  }
+  function mapper(nodes, parentId, lvl) {
     return nodes.map((node, index) => {
       if (node.sys.type === "category") {
-        const id = `${node._id}-${parentId ? parentId : "top"}`.replace(
-          /[^a-zA-Z0-9-_]/g,
-          ""
-        );
+        const id = node._id;
         return (
           <>
-            <ListGroupItem
-              key={index}
-              style={{
-                zIndex: 0,
-                padding: 10,
-                background:
-                  this.state.selected._id === node._id ? "lightgray" : "white",
-              }}
-              className={`treeItemParent ${
-                parentId ? `rounded-0 ${lvl ? "border-bottom-0" : ""}` : ""
-              }`}
-            >
-              {
-                <div
-                  className="treeItem"
-                  style={{
-                    paddingLeft: `${15 * lvl}px`,
-                  }}
-                >
-                  {node.items && node.items.length > 0 ? (
-                    <>
-                      <div
-                        className="btnCategoryCollapse"
-                        id={id}
-                        color="primary"
-                        onClick={this.toggle}
-                      >
-                        {this.state[id] ? (
-                          <span className="icon-caret-down" id={id} />
-                        ) : (
-                          <span className="icon-caret-right" id={id} />
-                        )}
-                      </div>
-                      {node.image !== undefined ? (
-                        <div className="treeItem-img">
-                          <Image url={node.image[this.state.currentLang]} />
-                        </div>
+            <div key={index} className="categorylistItem">
+              <div
+                className="categorylistItem__body"
+                style={{
+                  paddingLeft: direction === "ltr" ? `${20 * lvl}px` : 0,
+                  paddingRight: direction === "ltr" ? 0 : `${20 * lvl}px`,
+                }}
+              >
+                {node.items && node.items.length > 0 ? (
+                  <>
+                    <div
+                      className="categorylistItem__toggleBtn btn btn-link"
+                      id={id}
+                      onClick={toggle}
+                    >
+                      {state[id] ? (
+                        <span className="icon-caret-down" id={id} />
                       ) : (
-                        <div className="treeItem-icon">
-                          <div className="contentIcon">
-                            <i className="icon-item-type" />
-                          </div>
-                        </div>
+                        <span className="icon-caret-right" id={id} />
                       )}
-                    </>
-                  ) : node.image !== undefined ? (
-                    <>
-                      <button className="btnCategoryLeaf btn btn-link btn-sm">
-                        <i className="icon-circle-o" />
-                      </button>
-                      <div className="treeItem-img">
-                        <Image url={node.image[this.state.currentLang]} />
+                    </div>
+
+                    {node.image !== undefined ? (
+                      <div className="categorylistItem__image">
+                        <Image url={node.image[currentLang]} />
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <button className="btnCategoryLeaf btn btn-link btn-sm">
-                        <i className="icon-circle-o" />
-                      </button>
-                      <div className="treeItem-icon">
-                        <div className="contentIcon">
+                    ) : (
+                      <div className="categorylistItem__emptyImg">
+                        <div className="">
                           <i className="icon-item-type" />
                         </div>
                       </div>
-                    </>
-                  )}
-                  <div className="treeItem-text">
-                    <span className="treeItem-name">
-                      {node.name[this.state.currentLang]}
-                    </span>
-                    <span className="treeItem-desc">
-                      {node.description
-                        ? node.description[this.state.currentLang]
-                        : "Lorem ipsum dolor sit amet, consectetur"}
-                    </span>
-                  </div>
-                  {(node.items === undefined || node.items.length === 0) && (
-                    <button
-                      className="btn btn-light treeItem-action"
-                      size="xs"
-                      onClick={() => {
-                        this.setState(state => ({ selected: node }));
-                        this.props.onRowSelect(node);
-                      }}
-                    >
-                      <span style={{ fontSize: 12 }}>{"Select"}</span>
+                    )}
+                  </>
+                ) : node.image !== undefined ? (
+                  <>
+                    <button className="categorylistItem__circleBtn btn btn-link btn-sm">
+                      <i className="icon-circle-o" />
                     </button>
-                  )}
+                    <div className="categorylistItem__image">
+                      <Image url={node.image[currentLang]} />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <button className="categorylistItem__circleBtn btn btn-link btn-sm">
+                      <i className="icon-circle-o" />
+                    </button>
+                    <div className="categorylistItem__emptyImg">
+                      <div className="">
+                        <i className="icon-item-type" />
+                      </div>
+                    </div>
+                  </>
+                )}
+                <div className="categorylistItem__texts">
+                  <span className="categorylistItem__name">
+                    {node.name && node.name[currentLang]}
+                  </span>
+                  <span className="categorylistItem__desc">
+                    {node.description && node.description[currentLang]
+                      ? node.description[currentLang]
+                      : "بدون توضیحات برای این دسته بندی"}
+                  </span>
                 </div>
-              }
-            </ListGroupItem>
+                {(node.items === undefined || node.items.length === 0) && (
+                  <button
+                    className="btn btn-light categorylistItem__btnSelect"
+                    size="xs"
+                    onClick={() => {
+                      props.onRowSelect(node);
+                    }}
+                  >
+                    <span style={{ fontSize: 12 }}>{t("SELECT")}</span>
+                  </button>
+                )}
+              </div>
+            </div>
             {node.items && (
-              <Collapse isOpen={this.state[id]}>
-                {this.mapper(node.items, id, (lvl || 0) + 1)}
-              </Collapse>
+              <div
+                style={{
+                  display: state[id] ? "flex" : "none",
+                  flexDirection: "column",
+                }}
+                className="listGroup"
+              >
+                {mapper(node.items, id, (lvl || 0) + 1)}
+              </div>
             )}
           </>
         );
@@ -132,12 +112,7 @@ class Tree extends Component {
         return <></>;
       }
     });
-  };
-
-  render() {
-    const { data } = this.props;
-    return data ? <ListGroup>{this.mapper(this.props.data)}</ListGroup> : null;
   }
+  const { data } = props;
+  return data ? <div className="listGroup">{mapper(props.data)}</div> : null;
 }
-
-export default Tree;

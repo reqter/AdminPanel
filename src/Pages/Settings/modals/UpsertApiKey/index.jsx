@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Modal from "reactstrap/lib/Modal";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalFooter from "reactstrap/lib/ModalFooter";
+
 import Select, { components } from "react-select";
 import { useGlobalState, useLocale } from "./../../../../hooks";
 import { CircleSpinner, AssetBrowser, Image } from "../../../../components";

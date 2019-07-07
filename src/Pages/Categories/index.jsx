@@ -1,15 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalFooter,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
+import Modal from "reactstrap/lib/Modal";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalFooter from "reactstrap/lib/ModalFooter";
 import "./styles.scss";
 import Tree from "./tree";
 import AddNewItemType from "./modals/AddItemType";
@@ -27,7 +20,7 @@ import {
   Alert,
   RowSkeleton,
   CircleSpinner,
-  Image
+  Image,
 } from "./../../components";
 
 function useInput(defaultValue = "") {
@@ -672,7 +665,7 @@ const Categories = props => {
         </ModalHeader>
         <ModalBody>
           <div className="c-category-modal-body">
-            <Form>
+            <form>
               <div className="form-group">
                 <label>{t("CATEGORIES_MODAL_NAME")}</label>
                 <input
@@ -688,11 +681,12 @@ const Categories = props => {
                   {t("CATEGORIES_MODAL_NAME_DESCRIPTION")}
                 </small>
               </div>
-              <FormGroup>
+              <div className="form-group">
                 <label>{t("CATEGORIES_MODAL_DESCRIPTION")}</label>
-                <Input
+                <input
                   type="string"
                   placeholder={t("CATEGORIES_MODAL_DESCRIPTION_PLACEHOLDER")}
+                  className="form-control"
                   value={description}
                   onChange={e => handleDesciptionChanged(e.target.value)}
                 />
@@ -701,8 +695,8 @@ const Categories = props => {
                     "CATEGORIES_MODAL_DESCRIPTION_DESC"
                   )}
                 </small> */}
-              </FormGroup>
-            </Form>
+              </div>
+            </form>
             <div className="up-uploader">
               <span className="title">
                 {t("CONTENT_TYPE_MODAL_IMAGES_TITLE")}
@@ -717,7 +711,7 @@ const Categories = props => {
                     <div className="files-uploaded-icon" onClick={removeImage}>
                       <i className="icon-bin" />
                     </div>
-                    <Image url={image[currentLang]}/>
+                    <Image url={image[currentLang]} />
                   </div>
                 )}
                 <div className="files-input" onClick={openAssetBrowser}>
@@ -728,18 +722,18 @@ const Categories = props => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button
+          <button
             type="submit"
-            color="primary"
+            className="btn btn-primary"
             onClick={() => upsertCategory(selectedCategory)}
             disabled={name.length > 0 ? false : true}
           >
             <CircleSpinner show={upsertSpinner} size="small" />
             {!upsertSpinner && modalUpsertBtn}
-          </Button>
-          <Button color="secondary" onClick={closeAddCategoryModal}>
+          </button>
+          <button className="btn btn-secondary" onClick={closeAddCategoryModal}>
             {t("CANCEL")}
-          </Button>
+          </button>
         </ModalFooter>
       </Modal>
       {upsertItemTypeModal && (

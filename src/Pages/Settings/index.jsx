@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-} from "reactstrap";
+import Dropdown from "reactstrap/lib/Dropdown";
+import DropdownItem from "reactstrap/lib/DropdownItem";
+import DropdownMenu from "reactstrap/lib/DropdownMenu";
+import DropdownToggle from "reactstrap/lib/DropdownToggle";
+//
 import "./styles.scss";
 import { useGlobalState, useLocale } from "./../../hooks";
 import { Locales, Roles, ApiKeys, Webhooks } from "./contents";

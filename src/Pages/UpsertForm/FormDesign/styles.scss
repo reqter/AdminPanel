@@ -2,6 +2,23 @@
 .designForm {
   display: flex;
   flex-direction: column;
+  &__header {
+    display: flex;
+    &__left {
+      flex: 1;
+    }
+    &__right {
+      display: flex;
+      align-items: flex-end;
+      button {
+        display: flex;
+        align-items: center;
+        i {
+          padding: 0 5px;
+        }
+      }
+    }
+  }
   &__title {
   }
   &__desc {

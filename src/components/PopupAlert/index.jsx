@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Modal, ModalBody } from "reactstrap";
+import Modal from "reactstrap/lib/Modal";
+import ModalBody from "reactstrap/lib/ModalBody";
 import CircleSpinner from "./../CircleSpinner";
 import "./styles.scss";
 import { useLocale } from "./../../hooks";

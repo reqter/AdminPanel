@@ -6,7 +6,7 @@ import "./styles.scss";
 import { Empty } from "./../../../components/Commons/ErrorsComponent";
 //
 export default function DesignForm(props) {
-  const { t, currentLang } = useLocale();
+  const { t, currentLang, direction } = useLocale();
   const { fields } = props.contentType;
   const [allFields, setAllFeilds] = useState(() => {
     const f = fields.map(item => {
@@ -30,11 +30,6 @@ export default function DesignForm(props) {
             ? item.title[currentLang]
             : item.name
           : item.name,
-        // : item.title
-        // ? item.title[currentLang]
-        //   ? item.title[currentLang]
-        //   : item.title
-        // : item.name,
         item,
       };
     });
@@ -93,11 +88,31 @@ export default function DesignForm(props) {
       props.orderChanged(fs);
     }
   }
-
+  function changeTab() {
+    if (props.onNextBtnClicked) {
+      props.onNextBtnClicked();
+    }
+  }
   return (
     <div className="designForm">
-      <h5 className="designForm__title">{t("UPSERT_FORM_DESIGN_TITLE")}</h5>
-      <span className="designForm__desc">{t("UPSERT_FORM_DESIGN_DESC")}</span>
+      <div className="designForm__header">
+        <div className="designForm__header__left">
+          <h5 className="designForm__title">{t("UPSERT_FORM_DESIGN_TITLE")}</h5>
+          <span className="designForm__desc">
+            {t("UPSERT_FORM_DESIGN_DESC")}
+          </span>
+        </div>
+        <div className="designForm__header__right">
+          <button className="btn btn-primary btn-sm" onClick={changeTab}>
+            {t("UPSERT_FORM_DESIGN_HEADER_NEXT_BTN")}
+            <i
+              className={
+                "icon-arrow-" + (direction === "ltr" ? "right2" : "left2")
+              }
+            />
+          </button>
+        </div>
+      </div>
       <div className="designForm__content">
         <div className="box designForm__fieldsOrder">
           <div className="designFormBox-header">

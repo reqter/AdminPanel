@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import Modal from "reactstrap/lib/Modal";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+
 import { useGlobalState, useLocale } from "./../../../../hooks";
 import "./styles.scss";
 import { Gitlab } from "./templates";

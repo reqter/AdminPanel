@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./styles.scss";
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import Modal from "reactstrap/lib/Modal";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+//
 import Tree from "./tree";
 import { useGlobalState, useLocale } from "./../../../hooks";
 import { getCategories } from "./../../../Api/content-api";

@@ -1,6 +1,7 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
+  SELECT:"انتخاب",
   START_DATE: 'تاریخ شروع',
   END_DATE: 'تاریخ پایان',
   LOADING: 'در حال بارگذاری',
@@ -248,7 +249,8 @@ export default {
   CONTENT_TYPE_MODAL_NAME_PLACEHOLDER: 'نام بانک سوال را وارد کنید',
   CONTENT_TYPE_MODAL_NAME_DESCRIPTION: 'سعی کنید اسم مربوط وارد کنید',
   CONTENT_TYPE_MODAL_DESCRIPTION: 'توضیحات',
-  CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER: 'توضیح کوتاه برای بانک سوال وارد کنید',
+  CONTENT_TYPE_MODAL_DESCRIPTION_PLACEHOLDER:
+    'توضیح کوتاه برای بانک سوال وارد کنید',
   CONTENT_TYPE_MODAL_IMAGES_TITLE: 'تصویر',
   CONTENT_TYPE_MODAL_IMAGES_DESC: 'برای بانک سوال خود یک نمایه انتخاب کنید',
   CONTENT_TYPE_MODAL_TEMPLATE_BTN: 'Templates',
@@ -582,11 +584,11 @@ export default {
   UPSERT_FORM_PARTNERS_DESC:
     'همکاران انتخاب شده این فرم را خواهند دید.در صورتی که می خواهید فرم عمومی باشد این مرحله را بگذرید',
   UPSERT_FORM_TEMPLATES_TITLE: 'انتخاب بانک سوالات',
-  UPSERT_FORM_TEMPLATES_DESC: 'قالب فرم خود را برای ایجاد فرم انتخاب نمایید',
-  UPSERT_FORM_TEMPLATES_LOADING: 'در حال بارگذاری لیست قالب ها...',
+  UPSERT_FORM_TEMPLATES_DESC: 'برای ایجاد یک فرم باید بانک سوال را انتخاب کنید',
+  UPSERT_FORM_TEMPLATES_LOADING: 'در حال بارگذاری بانک های سوال...',
   UPSERT_FORM_TEMPLATES_EMPTY_TITLE: 'لیست خالی!!',
-  UPSERT_FORM_TEMPLATES_EMPTY_DESC: 'شما هنوز قالبی ایجاد نکرده اید.',
-  UPSERT_FORM_TEMPLATES_EMPTY_BTN: 'ایجاد قالب جدید',
+  UPSERT_FORM_TEMPLATES_EMPTY_DESC: 'شما بانک سوالی ایجاد نکرده اید.',
+  UPSERT_FORM_TEMPLATES_EMPTY_BTN: 'ایجاد بانک سوال جدید',
   UPSERT_FORM_CHANGE_CATEGORY: 'تغییر دسته بندی',
   UPSERT_FORM_CHOOSE_CATEGORY: 'انتخاب دسته بندی',
   UPSERT_FORM_NO_CATEGORY_HEADER: 'دسته بندی انتخاب نشده است',
@@ -594,9 +596,10 @@ export default {
   UPSERT_FORM_DESIGN_TITLE: 'طراحی فرم',
   UPSERT_FORM_DESIGN_DESC: 'شما اینجا می توانید ترتیب سوال های را مشخص کنید',
   UPSERT_FORM_PARTNERS_SEARCH_PLACEHOLDER: 'جستجوی همکار با نام',
-  UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER: 'جستجوی قالب فرم با نام',
+  UPSERT_FORM_CONTENT_TYPES_SEARCH_PLACEHOLDER: 'جستجوی بانک سوال  با نام',
   UPSERT_FORM_DESIGN_FIELDS_TITLE:
     'فیلدهای نمایشی در فرم خود را از بین فیلدهای قالب فرم انتخاب کنید و در صورت نیاز مرتب سازی نمایید',
+  UPSERT_FORM_DESIGN_HEADER_NEXT_BTN: 'تکمیل فرم',
   UPSERT_FORM_DESIGN_FIELDS_SELECT_PLACEHOLDER:
     'انتخاب سوال برای افزودن به فرم از لیست فیلدهای قالب فرم',
   UPSERT_FORM_DESIGN_FIELDS_EMPTY_LIST_INFO:
@@ -607,7 +610,7 @@ export default {
   UPSERT_FORM_PARTNERS_ERROR_MESSAGE:
     'خطا در بارگذاری لیست همکاران. دوباره امتحان کنید',
   UPSERT_FORM_PARTNERS_LOADING: 'در حال بارگذاری لیست همکاران...',
-
+  UPSERT_FORM_CATEGORY_MODAL_TITLE: 'انتخاب دسته بندی',
   ASSET_DELETE_ON_OK: 'فایل شما با موفقیت حذف شد.',
   ASSET_DELETE_ON_SERVER_ERROR:
     'Internal server error.please report that to administrtor',

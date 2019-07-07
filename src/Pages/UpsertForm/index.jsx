@@ -233,11 +233,7 @@ const UpsertProduct = props => {
   }, [contentType]);
 
   useEffect(() => {
-    if (
-      Object.keys(form).length > 0 &&
-      // && category
-      checkFormValidation()
-    ) {
+    if (Object.keys(form).length > 0 && category && checkFormValidation()) {
       toggleIsValidForm(true);
     } else toggleIsValidForm(false);
   }, [formValidation, category]);
@@ -724,6 +720,9 @@ const UpsertProduct = props => {
   function handleFieldsOrderChanged(fs) {
     setFieldsOrder(fs);
   }
+  function handleDesignFormNextBtn() {
+    changeTabContent(5);
+  }
   function copyRequestLink() {
     requestLinkInput.current.select();
     document.execCommand("copy");
@@ -820,6 +819,7 @@ const UpsertProduct = props => {
               contentType={contentType}
               fieldsOrder={fieldsOrder}
               orderChanged={handleFieldsOrderChanged}
+              onNextBtnClicked={handleDesignFormNextBtn}
             />
           )}
           {tab === 5 && (
