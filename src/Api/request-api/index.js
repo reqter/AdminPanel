@@ -307,6 +307,7 @@ export function getPartners () {
       // })
       // const status = rawResponse.status
       // const result = await rawResponse.json()
+
       const status = 200
       const result = [
         {
@@ -429,7 +430,7 @@ export function getPartners () {
   }
 }
 
-export function getRequests () {
+export function getForms () {
   let _onOkCallBack
   function _onOk (result) {
     if (_onOkCallBack) {
@@ -757,7 +758,7 @@ export function getCategories () {
     }
   }
 }
-export function addRequest () {
+export function addForm () {
   let _onOkCallBack
   function _onOk (result) {
     if (_onOkCallBack) {
@@ -794,9 +795,21 @@ export function addRequest () {
       _onConnectionErrorCallBack(result)
     }
   }
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
+    }
+  }
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
+
   const _call = async (spaceId, content) => {
     try {
-      console.log(content)
       const url = addURL
       const token = storageManager.getItem('reqter_token')
       var rawResponse = await fetch(url, {
@@ -827,9 +840,12 @@ export function addRequest () {
           _onServerError()
           break
         default:
+          _unKnownError()
           break
       }
-    } catch (error) {}
+    } catch (error) {
+      _onRequestError(error)
+    }
   }
 
   return {
@@ -856,6 +872,14 @@ export function addRequest () {
     },
     onConnectionError: function (callback) {
       _onConnectionErrorCallBack = callback
+      return this
+    },
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
       return this
     }
   }
@@ -987,7 +1011,8 @@ export function updateRequest () {
     }
   }
 }
-export function deleteRequest () {
+
+export function deleteForm () {
   let _onOkCallBack
   function _onOk (result) {
     if (_onOkCallBack) {
@@ -1024,6 +1049,19 @@ export function deleteRequest () {
       _onConnectionErrorCallBack(result)
     }
   }
+  let _onRequestErrorCallBack
+  function _onRequestError (result) {
+    if (_onRequestErrorCallBack) {
+      _onRequestErrorCallBack(result)
+    }
+  }
+  let _unKnownErrorCallBack
+  function _unKnownError (result) {
+    if (_unKnownErrorCallBack) {
+      _unKnownErrorCallBack(result)
+    }
+  }
+
   const _call = async (spaceId, contentId) => {
     try {
       const url = deleteURL
@@ -1059,10 +1097,11 @@ export function deleteRequest () {
           _onServerError()
           break
         default:
+          _unKnownError()
           break
       }
     } catch (error) {
-      debugger
+      _onRequestError()
     }
   }
 
@@ -1091,9 +1130,18 @@ export function deleteRequest () {
     onConnectionError: function (callback) {
       _onConnectionErrorCallBack = callback
       return this
+    },
+    onRequestError: function (callback) {
+      _onRequestErrorCallBack = callback
+      return this
+    },
+    unKnownError: function (callback) {
+      _unKnownErrorCallBack = callback
+      return this
     }
   }
 }
+
 export function getRequestById () {
   let _onOkCallBack
   function _onOk (result) {

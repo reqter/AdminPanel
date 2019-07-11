@@ -73,79 +73,6 @@ const Provider = props => {
           webhooks: [],
         };
         return logout;
-      case "TOGGLE_SPINNER":
-        const spinner = {
-          ...state,
-          spinner: action.value,
-        };
-        return spinner;
-      case "SET_REQUESTS_CATEGORIES":
-        const rc = {
-          ...state,
-          spinner: false,
-          mp_categories: action.value.data
-            ? action.value.data.categories
-              ? action.value.data.categories
-              : []
-            : [],
-          mp_requests: action.value.data
-            ? action.value.data.requestlist
-              ? action.value.data.requestlist
-              : []
-            : [],
-        };
-        return rc;
-      case "SET_REQUEST_LIST":
-        const rmp = {
-          ...state,
-          spinner: false,
-          mp_requests: action.value.data
-            ? action.value.data.requests
-              ? action.value.data.requests
-              : []
-            : [],
-          mp_categories: action.value.data
-            ? action.value.data.categories
-              ? action.value.data.categories
-              : state.mp_categories
-            : state.mp_categories,
-        };
-        return rmp;
-      case "CLEAN_REQUEST_LIST":
-        const CRmp = {
-          ...state,
-          mp_requests: [],
-        };
-        return CRmp;
-      case "SET_REQUEST_DETAIL":
-        let newR = {
-          mp_requestDetail: action.value.data
-            ? action.value.data.request
-              ? action.value.data.request
-              : {}
-            : {},
-        };
-        if (
-          action.value.data &&
-          action.value.data.categories &&
-          action.value.data.categories
-        ) {
-          newR["mp_categories"] = action.value.data.categories;
-        } else {
-          newR["mp_categories"] = state.mp_categories;
-        }
-        const rdmp = {
-          ...state,
-          spinner: false,
-          ...newR,
-        };
-        return rdmp;
-      case "SET_LOCALE":
-        const locale = {
-          ...state,
-          t: action.value,
-        };
-        return locale;
       case "SET_AUTHENTICATED":
         const auth = {
           ...state,
@@ -171,7 +98,6 @@ const Provider = props => {
         };
         return s_info;
       case "SET_LOCALES":
-        debugger;
         let s_l_info = { ...state.spaceInfo };
         s_l_info["locales"] = action.value;
         const s_locales = {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useGlobalState, useLocale } from "../../hooks";
 import {
-  getRequests,
+  getForms,
   filterRequests,
-  deleteRequest,
+  deleteForm,
   publish,
   unPublish,
   archive,
@@ -11,240 +11,39 @@ import {
 } from "../../Api/request-api";
 import "./styles.scss";
 
-import { Alert, CircleSpinner, DateFormater, Image } from "../../components";
+import { Alert, CircleSpinner, DateFormatter, Image } from "../../components";
 import { Empty } from "../../components/Commons/ErrorsComponent";
 import ItemSkeleton from "./ItemSkeleton";
+import FormItem from "./FormItem";
 
 const Requests = props => {
   const { appLocale, t, currentLang } = useLocale();
 
   let didCancel = false;
+  const dataLanguage = "en";
   //#region controller
-
-  let baseFieldColumnsConfig = [
-    {
-      Header: "#",
-      //show: false,
-      width: 70,
-      headerStyle: {
-        display: "none",
-      },
-      Cell: props => {
-        return (
-          <div className="p-number">
-            <div className="p-number-value">{props.index + 1}</div>
-          </div>
-        );
-      },
-    },
-    {
-      width: 100,
-      Header: () => <div className="p-header-td">Thumbnail</div>,
-      // show: false,
-      headerStyle: {
-        display: "none",
-      },
-      accessor: "thumbnail",
-      Cell: props => {
-        return (
-          <div className="p-image">
-            {props.value && props.value.length > 0 ? (
-              getAssetUi(props.value[0][currentLang])
-            ) : (
-              <div className="p-thumbnail-file empty">
-                {/* <i className="file-text" /> */}
-                empty
-              </div>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      Header: () => <div className="p-header-td">Title</div>,
-      show: false,
-      headerStyle: {
-        display: "block",
-      },
-      //accessor: "title",
-      Cell: props => {
-        const { title, description } = props.row._original;
-        return (
-          <div className="p-name">
-            <span>{title && title[currentLang]}</span>
-            <span>{description && description[currentLang]}</span>
-          </div>
-        );
-      },
-    },
-    {
-      Header: () => <div className="p-header-td">Issuer</div>,
-      width: 130,
-      //show: false,
-      headerStyle: {
-        display: "none",
-      },
-      accessor: "sys",
-      Cell: props => (
-        <div className="p-issuer">
-          <span>{props.value.issuer.fullName}</span>
-          <span>
-            <DateFormater date={props.value.issueDate} />
-          </span>
-        </div>
-      ),
-    },
-    {
-      Header: () => <div className="p-header-td">Content Type</div>,
-      width: 110,
-      //show: false,
-      headerStyle: {
-        display: "none",
-      },
-      accessor: "contentType",
-      Cell: props => {
-        return (
-          <div className="p-contentType">
-            <span className="badge badge-light">
-              {props.value ? props.value.title[currentLang] : ""}
-            </span>
-          </div>
-        );
-      },
-    },
-    // {
-    //   Header: () => <div className="p-header-td">Category</div>,
-    //   //show: false,
-    //   headerStyle: {
-    //     display: "block",
-    //   },
-    //   accessor: "category",
-    //   Cell: props => (
-    //     <div className="p-contentType">
-    //       <span className="badge badge-light">
-    //         {props.value ? props.value.name[currentLang] : ""}
-    //       </span>
-    //     </div>
-    //   ),
-    // },
-    {
-      Header: () => <div className="p-header-td">Status</div>,
-      width: 110,
-      //show: false,
-      headerStyle: {
-        display: "none",
-      },
-      accessor: "status",
-      Cell: props => (
-        <div className="p-contentType">
-          <span className="badge badge-primary">{t(props.value)}</span>
-        </div>
-      ),
-    },
-    {
-      Header: "Actions",
-      //show: false,
-      headerStyle: {
-        display: "none",
-      },
-      clickable: false,
-      Cell: props => {
-        const { status } = props.original;
-        return (
-          <div className="p-actions">
-            <button
-              className="btn btn-light btn-sm"
-              onClick={() => handleEditRow(props)}
-            >
-              Edit
-            </button>
-            {status !== "published" && status !== "archived" && (
-              <button
-                className="btn btn-light btn-sm"
-                onClick={() => handleDeleteRow(props)}
-              >
-                <i className="icon-bin" />
-              </button>
-            )}
-            {status === "draft" ? (
-              <>
-                <button
-                  className="btn btn-light btn-sm"
-                  onClick={() => publishContent(props)}
-                >
-                  {t("PUBLISH")}
-                </button>
-                <button
-                  className="btn btn-light btn-sm"
-                  onClick={() => archiveContent(props)}
-                >
-                  {t("ARCHIVE")}
-                </button>
-              </>
-            ) : status === "changed" ? (
-              <>
-                <button
-                  className="btn btn-light btn-sm"
-                  onClick={() => publishContent(props)}
-                >
-                  {t("PUBLISH")}
-                </button>
-                <button
-                  className="btn btn-light btn-sm"
-                  onClick={() => archiveContent(props)}
-                >
-                  {t("ARCHIVE")}
-                </button>
-              </>
-            ) : status === "archived" ? (
-              <button
-                className="btn btn-light btn-sm"
-                onClick={() => unArchiveContent(props)}
-              >
-                {t("UN_ARCHIVE")}
-              </button>
-            ) : status === "published" ? (
-              <button
-                className="btn btn-light btn-sm"
-                onClick={() => unPublishContent(props)}
-              >
-                {t("UN_PUBLISH")}
-              </button>
-            ) : (
-              ""
-            )}
-          </div>
-        );
-      },
-    },
-  ];
   const { name: pageTitle, desc: pageDescription } = props.component;
   const [{ spaceInfo }, dispatch] = useGlobalState();
 
   const [spinner, toggleSpinner] = useState(true);
   const [forms, setForms] = useState();
+  const [error, setError] = useState();
   const [alertData, setAlertData] = useState();
   const [searchText, setSearchText] = useState();
 
   useEffect(() => {
-    //loadRequests();
-    setTimeout(() => {
-      toggleSpinner(false);
-    }, 1000);
+    loadRequests();
     return () => {
       didCancel = true;
     };
   }, []);
 
   function loadRequests() {
-    getRequests()
+    getForms()
       .onOk(result => {
         if (!didCancel) {
           toggleSpinner(false);
-          dispatch({
-            type: "SET_REQUESTS",
-            value: result,
-          });
+          setForms(result);
         }
       })
       .onServerError(result => {
@@ -286,11 +85,25 @@ const Requests = props => {
       .unKnownError(result => {
         if (!didCancel) {
           toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: t("UNKNOWN_ERROR"),
+            },
+          });
         }
       })
       .onRequestError(result => {
         if (!didCancel) {
           toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "warning",
+              message: t("ON_REQUEST_ERROR"),
+            },
+          });
         }
       })
       .call(spaceInfo.id);
@@ -331,22 +144,21 @@ const Requests = props => {
       );
   }
 
-  function openNewItemBox(contentType) {
+  function openFormPage(contentType) {
     props.history.push({
       pathname: "/" + currentLang + "/form/new",
     });
   }
-  function handleDeleteRow(row) {
+  function handleDeleteForm(row) {
     setAlertData({
       type: "error",
-      title: "Remove request",
-      message: "Are you sure to remove?",
+      title: t("FORMS_DELETE_ALERT_TITLE"),
+      message: t("FORMS_DELETE_ALERT_DESC"),
       isAjaxCall: true,
-      okTitle: "Remove",
-      cancelTitle: "Don't remove",
+      okTitle: t("REMOVE"),
+      cancelTitle: t("DONT_REMOVE"),
       onOk: () => {
-        const deleted = row.original;
-        deleteRequest()
+        deleteForm()
           .onOk(result => {
             loadRequests();
             setAlertData();
@@ -354,7 +166,7 @@ const Requests = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "success",
-                message: t("CONTENTS_DELETE_ON_OK"),
+                message: t("FORMS_DELETE_ON_OK"),
               },
             });
           })
@@ -364,7 +176,7 @@ const Requests = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t("CONTENTS_DELETE_ON_SERVER_ERROR"),
+                message: t("INTERNAL_SERVER_ERROR"),
               },
             });
           })
@@ -374,19 +186,12 @@ const Requests = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t("CONTENTS_DELETE_ON_BAD_REQUEST"),
+                message: t("BAD_REQUEST"),
               },
             });
           })
           .unAuthorized(result => {
             setAlertData();
-            dispatch({
-              type: "ADD_NOTIFY",
-              value: {
-                type: "warning",
-                message: t("CONTENTS_DELETE_UN_AUTHORIZED"),
-              },
-            });
           })
           .notFound(result => {
             setAlertData();
@@ -394,11 +199,11 @@ const Requests = props => {
               type: "ADD_NOTIFY",
               value: {
                 type: "error",
-                message: t("CONTENTS_DELETE_NOT_FOUND"),
+                message: t("NOT_FOUND"),
               },
             });
           })
-          .call(spaceInfo.id, row.original._id);
+          .call(spaceInfo.id, row._id);
       },
       onCancel: () => {
         setAlertData();
@@ -406,9 +211,9 @@ const Requests = props => {
     });
   }
 
-  function handleEditRow(row) {
+  function handleEditForm(row) {
     props.history.push({
-      pathname: `/${currentLang}/form/edit/${row.original._id}`,
+      pathname: `/${currentLang}/form/edit/${row._id}`,
     });
   }
   function viewContent(row) {
@@ -417,7 +222,7 @@ const Requests = props => {
       viewMode: true,
     });
   }
-  function archiveContent(row) {
+  function handleArchiveForm(row) {
     archive()
       .onOk(result => {
         dispatch({
@@ -464,9 +269,9 @@ const Requests = props => {
           },
         });
       })
-      .call(spaceInfo.id, row.original._id);
+      .call(spaceInfo.id, row._id);
   }
-  function unArchiveContent(row) {
+  function handleUnArchiveForm(row) {
     unArchive()
       .onOk(result => {
         dispatch({
@@ -513,9 +318,9 @@ const Requests = props => {
           },
         });
       })
-      .call(spaceInfo.id, row.original._id);
+      .call(spaceInfo.id, row._id);
   }
-  function publishContent(row) {
+  function handlePublishForm(row) {
     publish()
       .onOk(result => {
         dispatch({
@@ -562,9 +367,9 @@ const Requests = props => {
           },
         });
       })
-      .call(spaceInfo.id, row.original._id);
+      .call(spaceInfo.id, row._id);
   }
-  function unPublishContent(row) {
+  function handleUnPublishForm(row) {
     unPublish()
       .onOk(result => {
         dispatch({
@@ -611,7 +416,7 @@ const Requests = props => {
           },
         });
       })
-      .call(spaceInfo.id, row.original._id);
+      .call(spaceInfo.id, row._id);
   }
   //#endregion controller
 
@@ -633,28 +438,39 @@ const Requests = props => {
                 onChange={e => setSearchText(e.target.value)}
               />
             </div>
-            <button className="btn btn-primary" onClick={openNewItemBox}>
+            <button className="btn btn-primary" onClick={openFormPage}>
               {t("FORMS_BTN_NEW")}
             </button>
           </div>
         </div>
         <div className="p-content">
           {spinner ? (
-            [1, 2, 3, 4, 5].map(sk => <ItemSkeleton />)
+            [1, 2, 3, 4, 5].map(sk => <ItemSkeleton key={sk} />)
           ) : !forms || forms.length === 0 ? (
             <div className="forms__empty">
               <Empty />
-              <span className="forms__empty__title">
-                {t("لیست خالی می باشد")}
-              </span>
+              <span className="forms__empty__title">{t("EMPTY_LIST")}</span>
               <span className="forms__empty__info">
-                {t(
-                  "شما هنوز هیچ فرمی ایجاد نکرده اید دکمه زیر کلیک کنید تا اولین فرم خود را ایجاد کنید"
-                )}
+                {t("FORMS_EMPTY_LIST_INFO")}
               </span>
-              <button className="btn btn-primary btn-sm">
-                ایجاد اولین فرم
+              <button className="btn btn-primary btn-sm" onClick={openFormPage}>
+                {t("FORMS_EMPTY_LIST_BTN")}
               </button>
+            </div>
+          ) : !error ? (
+            <div className="forms">
+              {forms.map(f => (
+                <FormItem
+                  key={f._id}
+                  data={f}
+                  onDeleteForm={handleDeleteForm}
+                  onEditForm={handleEditForm}
+                  onPublishForm={handlePublishForm}
+                  onUnPublishForm={handleUnPublishForm}
+                  onArchiveForm={handleArchiveForm}
+                  onUnArchiveForm={handleUnArchiveForm}
+                />
+              ))}
             </div>
           ) : (
             <div />

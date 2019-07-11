@@ -1,6 +1,10 @@
 var moment = require("moment");
-const DateFormater = props => {
+require('moment/locale/fa')
+moment.locale("fa")
+
+
+const DateFormatter = props => {
   const { date, format } = props;
   return format ? moment(date).fromNow() : moment(date).fromNow();
 };
-export default DateFormater;
+export default DateFormatter;

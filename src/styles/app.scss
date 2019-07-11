@@ -32,6 +32,8 @@ body {
 }
 .dropdown-item {
   @include variable(text-align, text-align, left);
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 *::-webkit-scrollbar,
 div::-webkit-scrollbar,

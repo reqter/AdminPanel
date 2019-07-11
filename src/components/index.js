@@ -21,7 +21,7 @@ import JsonObject from './JsonObject'
 import AdvanceUploader from './AdvanceUploader'
 import AdvanceUploaderView from './AdvanceUploaderView'
 import AssetUploaderView from './AssetUploaderView'
-import DateFormater from './DateFormater'
+import DateFormatter from './DateFormatter'
 import ProgressiveSpinner from './ProgressiveSpinner'
 import Image from './Image'
 
@@ -30,7 +30,7 @@ export {
   Image,
   AssetUploaderView,
   ProgressiveSpinner,
-  DateFormater,
+  DateFormatter,
   AdvanceUploaderView,
   AdvanceUploader,
   Alert,

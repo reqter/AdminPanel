@@ -8,7 +8,7 @@ import {
   getContentTypes,
 } from "./../../Api/content-api";
 import {
-  addRequest,
+  addForm,
   updateRequest,
   getRequestById,
 } from "../../Api/request-api";
@@ -730,7 +730,7 @@ const UpsertProduct = props => {
       if (props.location.params && props.location.params.content) {
         obj["settings"]["contentId"] = props.location.params.content._id;
       }
-      addRequest()
+      addForm()
         .onOk(result => {
           dispatch({
             type: "ADD_NOTIFY",

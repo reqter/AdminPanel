@@ -31,9 +31,22 @@ const MediaInput = props => {
     }
   }, [formData]);
 
-  useEffect(() => {
-    // send value to form after updateing
-    let result = files.map(item => item.url);
+  // useEffect(() => {
+  //   // send value to form after updateing
+  //   let result = files.map(item => item.url);
+  //   if (result.length === 0) result = [];
+  //   if (field.isRequired === true) {
+  //     if (result === undefined || result.length === 0)
+  //       if (props.onChangeValue) props.onChangeValue(field, result, false);
+  //       else {
+  //         if (props.onChangeValue) props.onChangeValue(field, result, true);
+  //       }
+  //   } else {
+  //     if (props.onChangeValue) props.onChangeValue(field, result, true);
+  //   }
+  // }, [files]);
+  function addToParentForm(fs) {
+    let result = fs.map(item => item.url);
     if (result.length === 0) result = [];
     if (field.isRequired === true) {
       if (result === undefined || result.length === 0)
@@ -44,7 +57,7 @@ const MediaInput = props => {
     } else {
       if (props.onChangeValue) props.onChangeValue(field, result, true);
     }
-  }, [files]);
+  }
 
   function handleChooseAsset(asset) {
     toggleAssetBrowser(false);
@@ -60,10 +73,12 @@ const MediaInput = props => {
       if (field.isList !== undefined && field.isList) {
         const newFiles = [...files, obj];
         setFiles(newFiles);
+        addToParentForm(newFiles);
       } else {
         let fs = [];
         fs[0] = obj;
         setFiles(fs);
+        addToParentForm(fs);
       }
     }
   }

@@ -28,7 +28,7 @@ import {
   JsonObject,
   FileUploader,
   AdvanceUploader,
-  DateFormater,
+  DateFormatter,
   Image,
 } from "./../../components";
 
@@ -617,7 +617,7 @@ const ViewRequest = props => {
                           <span>{item.title && item.title[currentLang]}</span>
                         </div>
                         <div className="requestDate">
-                          <DateFormater date={item.sys.issueDate} />
+                          <DateFormatter date={item.sys.issueDate} />
                         </div>
                       </div>
                     )}

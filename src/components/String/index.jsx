@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./styles.scss";
 import { utility } from "../../services";
 import { useLocale } from "./../../hooks";
@@ -7,6 +7,8 @@ var url_pattern = /^(http[s]?|ftp|torrent|image|irc):\/\/(-\.)?([^\s\/?\.#-]+\.?
 
 const StringInput = props => {
   const { appLocale, t, currentLang } = useLocale();
+
+  const stringInput = useRef(null);
 
   const { field, formData } = props;
   const [error, setError] = useState();
@@ -30,6 +32,13 @@ const StringInput = props => {
       } else setInput("");
     }
   }, [formData]);
+  useEffect(() => {
+    if (field.isFocus === true) {
+      if (!props.viewMode) {
+        stringInput.current.focus();
+      }
+    }
+  }, []);
 
   function setValueToParentForm(inputValue) {
     if (props.onChangeValue) {
@@ -97,6 +106,7 @@ const StringInput = props => {
       <label>{field.title && field.title[currentLang]}</label>
       {field.isMultiLine !== undefined && field.isMultiLine ? (
         <textarea
+          ref={stringInput}
           className="form-control up-form-stringInput-textArea"
           placeholder={field.title[currentLang]}
           value={input}
@@ -105,6 +115,7 @@ const StringInput = props => {
         />
       ) : (
         <input
+          ref={stringInput}
           type={field.appearance ? field.appearance : "text"}
           className="form-control"
           placeholder={field.title && field.title[currentLang]}

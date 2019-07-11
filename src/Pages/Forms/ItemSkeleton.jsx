@@ -3,10 +3,10 @@ import React from "react";
 export default function ItemSkeleton(props) {
   return (
     <div id="card">
-      <div class="card-image">
-        <div class="block pulsate" />
+      <div className="card-image">
+        <div className="block pulsate" />
         <svg
-          class="fpo "
+          className="fpo "
           width="84px"
           height="63px"
           x="50%"
@@ -18,11 +18,11 @@ export default function ItemSkeleton(props) {
           <defs />
           <g
             stroke="none"
-            stroke-width="1"
+            strokeWidth="1"
             fill="none"
-            fill-rule="evenodd"
+            fillRule="evenodd"
             transform="translate(-964.000000, -1012.000000)"
-            fill-opacity="0.06"
+            fillOpacity="0.06"
           >
             <g
               id="16---Workpaper-Loading-Copy"
@@ -44,10 +44,10 @@ export default function ItemSkeleton(props) {
           </g>
         </svg>
       </div>
-      <div class="card-content">
-        <div class="block2 pulsate" />
-        <div class="block3 pulsate" />
-        <div class="circle pulsate" />
+      <div className="card-content">
+        <div className="block2 pulsate" />
+        <div className="block3 pulsate" />
+        <div className="circle pulsate" />
         <div style={{ clear: "both" }} />
       </div>
     </div>

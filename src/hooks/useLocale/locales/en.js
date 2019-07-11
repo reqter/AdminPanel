@@ -1,7 +1,11 @@
 export default {
   REQTER: 'REQTER',
   // COMMON
-  SELECT:"Select",
+  COPY: 'Copy',
+  UPDATED: 'Updated',
+  SUBMITTED: 'Submitted',
+  CANCEL: 'Cancel',
+  SELECT: 'Select',
   START_DATE: 'Start Date',
   END_DATE: 'End Date',
   LOADING: 'Loading',
@@ -41,7 +45,6 @@ export default {
   LATITUDE: 'Latitude',
   LONGITUDE: 'Longitude',
   ADD_NEW: 'Add New',
-  EDIT: 'Edit',
   CONTENT_TYPE: 'Content Type',
   all: 'All assets',
   image: 'Image',
@@ -61,6 +64,8 @@ export default {
   CHANGE_TEMPLATE: 'Change Template',
   CHANGE_TYPE: 'Change Type',
   CHANGE_PARTNER: 'Change Partner',
+  DELETE: 'Delete',
+  EDIT: 'Edit',
   // login
   LOGIN_TITLE: 'SignIn Reqter',
   LOGIN_EMAIL_INPUT_TITLE: 'Email Address',
@@ -570,7 +575,15 @@ export default {
   /// FORM
   FORMS_BTN_NEW: 'New Form',
   FORMS_SEARCH_PLACEHOLDER: 'Search form by name',
+  FORMS_EMPTY_LIST_INFO:
+    'You have not created any forms yet.make your first form',
+  FORMS_EMPTY_LIST_BTN: 'New Form',
+  FORMS_DELETE_ALERT_TITLE: 'Remove Form',
+  FORMS_DELETE_ALERT_DESC: 'Are you sure to remove?',
+  FORMS_DELETE_ON_OK: 'Form is deleted successfully.',
+
   // UPSERT FORM
+  UPSERT_FORM_LOADING_TEXT: 'Loading item,please wait...',
   UPSERT_FORM_FIRST_TAB_TITLE: 'Form Type',
   UPSERT_FORM_SECOND_TAB_TITLE: 'Select Partners',
   UPSERT_FORM_THIRTH_TAB_TITLE: 'Choose Bank Questions',
@@ -624,7 +637,13 @@ export default {
   UPSERT_FORM_PARTNERS_ERROR_MESSAGE:
     'There is an error to load partners.try again',
   UPSERT_FORM_PARTNERS_LOADING: 'Loading Partners...',
-
+  UPSERT_FORM_SUCCESS_INSERT: 'Your form is created successfully.',
+  UPSERT_FORM_SUCCESS_UPDATE: 'Your form is updated successfully.',
+  UPSERT_FORM_SUCCESS_INFO:
+    'This link will be activated when you publish the form.',
+  FORM_LINK: 'Form Link',
+  COPY_LINK: 'Copy Link',
+  FORM_LINK_COPIED: 'Form link was copied',
   ASSET_GET_ON_SERVER_ERROR:
     'Internal server error.please report that to administrator',
   ASSET_GET_ON_BAD_REQUEST:

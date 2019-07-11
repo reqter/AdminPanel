@@ -1,17 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import "./styles.scss";
 import { useGlobalState, useLocale } from "../../hooks";
-import {
-  addContent,
-  updateContent,
-  getContentById,
-  getContentTypes,
-} from "../../Api/content-api";
-import {
-  addRequest,
-  updateRequest,
-  getRequestById,
-} from "../../Api/request-api";
+import { addForm, updateRequest, getRequestById } from "../../Api/request-api";
 import CategoriesModal from "./Categories";
 import ContentTypesList from "./ContentTypes";
 import FormTypes from "./FormTypes";
@@ -43,6 +33,7 @@ const requestFields = [
     isBase: true,
     isTranslate: true,
     isRequired: true,
+    isFocus: true,
   },
   {
     id: "2",
@@ -168,7 +159,10 @@ const headerTabs = [
 ];
 const UpsertProduct = props => {
   const { appLocale, t, currentLang, direction } = useLocale();
-  const requestBaseLink = process.env.REACT_APP_REQUESTS_DELIVERY_URL;
+  const requestBaseLink = useMemo(() => {
+    console.log(process.env.REACT_APP_REQUESTS_DELIVERY_URL);
+    return process.env.REACT_APP_REQUESTS_DELIVERY_URL;
+  }, []);
   const [{ categories, spaceInfo }, dispatch] = useGlobalState();
 
   // variables
@@ -183,6 +177,7 @@ const UpsertProduct = props => {
   );
 
   const [viewMode] = useState(props.match.url.includes("view") ? true : false);
+  const [maiSpinner, toggleMainSpinner] = useState(true);
   const [tab, changeTab] = useState();
   const [categoryModal, toggleCategoryModal] = useState(false);
   const [category, setCategory] = useState();
@@ -201,7 +196,7 @@ const UpsertProduct = props => {
   const [newContentTypeBox, toggleNewContentTypeBox] = useState(false);
   const [spinner, toggleSpinner] = useState(false);
   const [closeSpinner, toggleCloseSpinner] = useState(false);
-  const [requestResult, setRequestResult] = useState();
+  const [requestResult, setRequestResult] = useState({});
   const [formType, setSelectedFormType] = useState();
   const [partner, setPartner] = useState();
   const [contentTypeSearch, setContentTypeSearch] = useState();
@@ -213,18 +208,13 @@ const UpsertProduct = props => {
         if (props.match.params.id.length > 0) {
           getRequestContentById(props.match.params.id);
         } else {
-          changeTab(5);
+          changeTab(6);
         }
       } else {
         changeTab(1);
       }
     } else {
-      if (props.location.params && props.location.params.content) {
-        getItemById(props.location.params.content._id);
-        //_getContentTypeById(props.location.params.content._id);
-      } else {
-        changeTab(1);
-      }
+      changeTab(7);
     }
   }, [props.match.params.id]);
 
@@ -245,70 +235,11 @@ const UpsertProduct = props => {
     }
     return true;
   }
-
-  function getItemById(id) {
-    getContentById()
-      .onOk(result => {
-        if (result) {
-          setSelectedContent(result);
-          if (!result.contentType) {
-            const obj = {
-              type: "CONTEN_TYPE_UNDEFINED",
-              sender: "getItemById",
-              errorType: "contentType",
-              message: t("UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"),
-            };
-            setError(obj);
-            changeTab(5);
-          } else {
-            initEditMode(result);
-          }
-        } else {
-          changeTab(5);
-        }
-      })
-      .onServerError(result => {
-        changeTab(5);
-        const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: t("UPSERT_ITEM_GET_BY_ID_ON_SERER_ERROR"),
-        };
-        setError(obj);
-      })
-      .onBadRequest(result => {
-        changeTab(5);
-        const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: t("UPSERT_ITEM_GET_BY_ID_BAD_REQUEST"),
-        };
-        setError(obj);
-      })
-      .unAuthorized(result => {
-        changeTab(5);
-        const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: t("UPSERT_ITEM_GET_BY_ID_UN_AUTHORIZED"),
-        };
-        setError(obj);
-      })
-      .notFound(() => {
-        changeTab(5);
-        const obj = {
-          type: "ON_SERVER_ERROR",
-          sender: "getItemById",
-          message: t("UPSERT_ITEM_GET_BY_ID_NOT_FOUND"),
-        };
-        setError(obj);
-      })
-      .call(spaceInfo.id, id);
-  }
   function getRequestContentById(id) {
     getRequestById()
       .onOk(result => {
         if (result) {
+          toggleMainSpinner(false);
           setSelectedContent(result);
           if (!result.contentType) {
             const obj = {
@@ -318,16 +249,17 @@ const UpsertProduct = props => {
               message: t("UPSERT_ITEM_GET_BY_ID_CONTENT_TYPE_UNDEFINED"),
             };
             setError(obj);
-            changeTab(5);
+            changeTab(6);
           } else {
             initEditMode(result);
           }
         } else {
-          changeTab(5);
+          changeTab(6);
         }
       })
       .onServerError(result => {
-        changeTab(5);
+        toggleMainSpinner(false);
+        changeTab(6);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -336,7 +268,8 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .onBadRequest(result => {
-        changeTab(5);
+        toggleMainSpinner(false);
+        changeTab(6);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -345,7 +278,8 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .unAuthorized(result => {
-        changeTab(5);
+        toggleMainSpinner(false);
+        changeTab(6);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -354,7 +288,8 @@ const UpsertProduct = props => {
         setError(obj);
       })
       .notFound(() => {
-        changeTab(5);
+        toggleMainSpinner(false);
+        changeTab(6);
         const obj = {
           type: "ON_SERVER_ERROR",
           sender: "getItemById",
@@ -365,21 +300,20 @@ const UpsertProduct = props => {
       .call(spaceInfo.id, id);
   }
   function initEditMode(result) {
-    let obj = {};
-    for (const key in result) {
-      if (key === "settings") {
-        obj = { ...obj, ...result[key] };
-      } else {
-        obj[key] = result[key];
-      }
-    }
-    setFormData(obj);
-    setForm(obj);
+    // let obj = {};
+    // for (const key in result) {
+    //   if (key === "settings") {
+    //     obj = { ...obj, ...result[key] };
+    //   } else {
+    //     obj[key] = result[key];
+    //   }
+    // }
+    setFormData(result);
+    setForm(result);
     setContentType(result.contentType);
-    if (result.contentType.categorization === true)
-      setCategory(result.category);
-
-    if (tab !== 2) changeTab(4);
+    setCategory(result.category);
+    if (result.contentType.allowCustomFields === true) changeTab(4);
+    else changeTab(5);
   }
   function setNameToFormValidation(name, value) {
     if (!formValidation || formValidation[name] !== null) {
@@ -392,8 +326,6 @@ const UpsertProduct = props => {
   function handleOnChangeValue(field, value, isValid) {
     const { name: key } = field;
     // add value to form
-    //const f = { ...form, [key]: value };
-    //form[key] = value;
     setForm(prevForm => {
       const obj = { ...prevForm, [key]: value };
       return obj;
@@ -436,31 +368,6 @@ const UpsertProduct = props => {
     } else {
       changeTab(t);
     }
-
-    // if (tab === 2) {
-    //   if (contentType !== undefined) {
-    //     changeTab(2);
-    //     if (isRequest) {
-    //       const f = contentType.fields.reduce((preValue, currentValue) => {
-    //         preValue.push({ value: currentValue.name });
-    //         return preValue;
-    //       }, []);
-    //       const r_f = requestFields.map(rF => {
-    //         if (rF.name === "userFields") {
-    //           rF.options = f;
-    //         }
-    //         return rF;
-    //       });
-    //       setFields(r_f);
-    //     } else {
-    //       const f = contentType.fields;
-    //       setFields(f.sort((a, b) => a.index - b.index));
-    //     }
-    //   }
-    // } else {
-    //   setContentType(undefined);
-    //   changeTab(1);
-    // }
   }
   function handleLoadedContentTypes(success, error, sender) {
     if (sender === "choosingNewContentType") {
@@ -533,15 +440,15 @@ const UpsertProduct = props => {
       }
       updateRequest()
         .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: t("UPSERT_ITEM_UPDATE_ON_OK"),
-            },
-          });
+          // dispatch({
+          //   type: "ADD_NOTIFY",
+          //   value: {
+          //     type: "success",
+          //     message: t("UPSERT_ITEM_UPDATE_ON_OK"),
+          //   },
+          // });
           setRequestResult(result);
-          changeTab(4);
+          changeTab(7);
         })
         .onServerError(result => {
           if (closePage) toggleCloseSpinner(false);
@@ -594,7 +501,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t("error occured."),
+              message: t("UNKNOWN_ERROR"),
             },
           });
         })
@@ -605,7 +512,7 @@ const UpsertProduct = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t("request error"),
+              message: t("ON_REQUEST_ERROR"),
             },
           });
         })
@@ -618,34 +525,28 @@ const UpsertProduct = props => {
       }
       let obj = {
         contentType: contentType._id,
-        category: category ? category._id : null,
-        title: form["title"] ? form["title"] : {},
-        shortDesc: form["shortDesc "] ? form["shortDesc "] : {},
-        description: form["description"] ? form["description"] : {},
-        longDesc: form["longDesc"] ? form["longDesc"] : {},
+        category: category ? category._id : undefined,
+        title: form["title"] ? form["title"] : undefined,
+        shortDesc: form["shortDesc "] ? form["shortDesc "] : undefined,
+        description: form["description"] ? form["description"] : undefined,
+        longDesc: form["longDesc"] ? form["longDesc"] : undefined,
         thumbnail: form["thumbnail"],
         attachments: form["attachments"],
-        partner: partner ? partner._id : "",
-        startDate: form["startEndDate"] ? form["startEndDate"].startDate : "",
-        endDate: form["startEndDate"] ? form["startEndDate"].endDate : "",
-        type: formType ? formType.type : "reuqest",
+        partner: partner ? partner._id : undefined,
+        startDate: form["startEndDate"]
+          ? form["startEndDate"].startDate
+          : undefined,
+        endDate: form["startEndDate"]
+          ? form["startEndDate"].endDate
+          : undefined,
+        type: formType ? formType.type : "request",
         fields: fs,
         settings: [],
       };
-      // if (props.location.params && props.location.params.content) {
-      //   obj["settings"]["contentId"] = props.location.params.content._id;
-      // }
-      addRequest()
+      addForm()
         .onOk(result => {
-          dispatch({
-            type: "ADD_NOTIFY",
-            value: {
-              type: "success",
-              message: t("UPSERT_ITEM_ADD_ON_OK"),
-            },
-          });
           setRequestResult(result);
-          changeTab(4);
+          changeTab(7);
           toggleSpinner(false);
           setFormData({});
           setForm({});
@@ -695,6 +596,28 @@ const UpsertProduct = props => {
             },
           });
         })
+        .onRequestError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: t("ON_REQUEST_ERROR"),
+            },
+          });
+        })
+        .unKnownError(result => {
+          if (closePage) toggleCloseSpinner(false);
+          else toggleSpinner(false);
+          dispatch({
+            type: "ADD_NOTIFY",
+            value: {
+              type: "error",
+              message: t("UNKNOWN_ERROR"),
+            },
+          });
+        })
         .call(spaceInfo.id, obj);
     }
   }
@@ -730,7 +653,7 @@ const UpsertProduct = props => {
       type: "ADD_NOTIFY",
       value: {
         type: "success",
-        message: t("Request link copied"),
+        message: t("FORM_LINK_COPIED"),
       },
     });
   }
@@ -743,7 +666,7 @@ const UpsertProduct = props => {
               "icon-arrow-" + (direction === "ltr" ? "left2" : "right2")
             }
           />
-          {t("BACK")}
+          {t("CANCEL")}
         </button>
         <div className="tabItems">
           {updateMode || viewMode ? (
@@ -781,19 +704,27 @@ const UpsertProduct = props => {
       </div>
       <div className="up-content">
         <main>
-          {tab === 1 && (
+          {(updateMode || viewMode) && maiSpinner ? (
+            <div className="upsert__loading">
+              <div className="loading">
+                <div className="square square-a state1a" />
+                <div className="square square-a state2a" />
+                <div className="square square-a state3a" />
+                <div className="square square-a state4a" />
+              </div>
+              <h4>{t("UPSERT_FORM_LOADING_TEXT")}</h4>
+            </div>
+          ) : tab === 1 ? (
             <FormTypes
               selectedType={formType}
               onSelectType={handleSelectFormType}
             />
-          )}
-          {tab === 2 && (
+          ) : tab === 2 ? (
             <Partners
               onSelectPartner={handleSelectPartner}
               selectedPartner={partner}
             />
-          )}
-          {tab === 3 && (
+          ) : tab === 3 ? (
             <>
               <h5>{t("UPSERT_FORM_TEMPLATES_TITLE")}</h5>
               <span style={{ fontSize: 13 }}>
@@ -813,16 +744,14 @@ const UpsertProduct = props => {
                 />
               </div>
             </>
-          )}
-          {tab === 4 && (
+          ) : tab === 4 ? (
             <FormDesign
               contentType={contentType}
               fieldsOrder={fieldsOrder}
               orderChanged={handleFieldsOrderChanged}
               onNextBtnClicked={handleDesignFormNextBtn}
             />
-          )}
-          {tab === 5 && (
+          ) : tab === 5 ? (
             <>
               <div className="up-content-title">
                 {updateMode
@@ -870,7 +799,7 @@ const UpsertProduct = props => {
                   </button>
                 )}
               </div>
-              {(updateMode || viewMode) && (
+              {/* {(updateMode || viewMode) && (
                 <div className="linkBox animated fadeIn">
                   <span className="linkmsg">
                     This link will be activated when you publish the request.
@@ -887,16 +816,16 @@ const UpsertProduct = props => {
                     </a>
                   </div>
                 </div>
-              )}
+              )} */}
               <div className="up-formInputs animated fadeIn">
                 <div className="box">
                   <div className="rowItem">
                     <String
+                      init={setNameToFormValidation}
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[0]}
-                      formData={formData}
-                      init={setNameToFormValidation}
+                      formData={form}
                       onChangeValue={handleOnChangeValue}
                     />
                   </div>
@@ -905,7 +834,7 @@ const UpsertProduct = props => {
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[1]}
-                      formData={formData}
+                      formData={form}
                       init={setNameToFormValidation}
                       onChangeValue={handleOnChangeValue}
                     />
@@ -915,7 +844,7 @@ const UpsertProduct = props => {
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[2]}
-                      formData={formData}
+                      formData={form}
                       init={setNameToFormValidation}
                       onChangeValue={handleOnChangeValue}
                     />
@@ -927,7 +856,7 @@ const UpsertProduct = props => {
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[3]}
-                      formData={formData}
+                      formData={form}
                       init={setNameToFormValidation}
                       onChangeValue={handleOnChangeValue}
                     />
@@ -939,7 +868,7 @@ const UpsertProduct = props => {
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[4]}
-                      formData={formData}
+                      formData={form}
                       init={setNameToFormValidation}
                       onChangeValue={handleOnChangeValue}
                     />
@@ -949,7 +878,7 @@ const UpsertProduct = props => {
                       viewMode={viewMode}
                       updateMode={updateMode}
                       field={requestFields[5]}
-                      formData={formData}
+                      formData={form}
                       init={setNameToFormValidation}
                       onChangeValue={handleOnChangeValue}
                     />
@@ -960,7 +889,7 @@ const UpsertProduct = props => {
                     viewMode={viewMode}
                     updateMode={updateMode}
                     field={requestFields[6]}
-                    formData={formData}
+                    formData={form}
                     init={setNameToFormValidation}
                     onChangeValue={handleOnChangeValue}
                   />
@@ -992,8 +921,7 @@ const UpsertProduct = props => {
                 )}
               </div>
             </>
-          )}
-          {tab === 6 && (
+          ) : tab === 6 ? (
             <div className="up-formInputs animated fadeIn errorsBox">
               <div className="alert alert-danger">{error && error.message}</div>
               <div className="actions">
@@ -1035,33 +963,48 @@ const UpsertProduct = props => {
                 )}
               </div>
             </div>
-          )}
-          {tab === 7 && (
+          ) : tab === 7 ? (
             <div className="up-formInputs animated fadeIn errorsBox requestAlert">
               <div className="requestAlert-top">
                 <div className="requestSuccessIcon">
                   <i className="icon-checkmark" />
                 </div>
                 <h4 className="alert-heading">
-                  {updateMode ? "Updated!" : "Submitted!"}
+                  {updateMode ? t("UPDATED") : t("SUBMITTED")}
+                  {"!"}
                 </h4>
               </div>
               <p>
-                Your request is created successfully.Use this link to send to
-                your audience.
+                {updateMode
+                  ? t("UPSERT_FORM_SUCCESS_INSERT")
+                  : t("UPSERT_FORM_SUCCESS_UPDATE")}
               </p>
               <hr />
               <p className="mb-0">
-                This link will be activated when you publish the request.
+                {t("UPSERT_FORM_SUCCESS_INFO")}
                 <br />
-                Request link :
+                {t("FORM_LINK")} :
                 <a
-                  href={requestBaseLink + "/" + requestResult.sys.link}
+                  href={
+                    requestBaseLink +
+                    "/" +
+                    (requestResult
+                      ? requestResult.sys
+                        ? requestResult.sys.link
+                        : ""
+                      : "")
+                  }
                   class="alert-link"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {requestBaseLink + "/" + requestResult.sys.link}
+                  {requestBaseLink +
+                    "/" +
+                    (requestResult
+                      ? requestResult.sys
+                        ? requestResult.sys.link
+                        : ""
+                      : "")}
                 </a>
               </p>
 
@@ -1072,26 +1015,32 @@ const UpsertProduct = props => {
                     type="text"
                     className="form-control"
                     defaultValue={
-                      requestBaseLink + "/" + requestResult.sys.link
+                      requestBaseLink +
+                      "/" +
+                      (requestResult
+                        ? requestResult.sys
+                          ? requestResult.sys.link
+                          : ""
+                        : "")
                     }
                     readOnly
                   />
-                  <div
-                    className="input-group-append"
-                    onClick={copyRequestLink}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <span className="input-group-text">Copy</span>
-                  </div>
                 </div>
               </div>
               <div className="requestLink-actions">
                 <button className="btn btn-light" onClick={backToForms}>
                   {t("CLOSE")}
                 </button>
+                <button
+                  className="btn btn-light"
+                  onClick={copyRequestLink}
+                  style={{ margin: "0 5px" }}
+                >
+                  {t("COPY_LINK")}
+                </button>
               </div>
             </div>
-          )}
+          ) : null}
         </main>
       </div>
       {categoryModal && (

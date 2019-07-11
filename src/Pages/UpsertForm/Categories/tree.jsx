@@ -35,7 +35,13 @@ export default function Tree(props) {
                       {state[id] ? (
                         <span className="icon-caret-down" id={id} />
                       ) : (
-                        <span className="icon-caret-right" id={id} />
+                        <span
+                          className={
+                            "icon-caret-" +
+                            (direction === "ltr" ? "right" : "left")
+                          }
+                          id={id}
+                        />
                       )}
                     </div>
 

@@ -18,7 +18,7 @@ import {
 } from "../../Api/content-api";
 import "./styles.scss";
 
-import { Alert, CircleSpinner, DateFormater, Image } from "../../components";
+import { Alert, CircleSpinner, DateFormatter, Image } from "../../components";
 import {
   CategoriesFilter,
   ContentTypesFilter,
@@ -105,7 +105,7 @@ const Products = props => {
         <div className="p-issuer">
           <span>{props.value.issuer.fullName}</span>
           <span>
-            <DateFormater date={props.value.issueDate} />
+            <DateFormatter date={props.value.issueDate} />
           </span>
         </div>
       ),

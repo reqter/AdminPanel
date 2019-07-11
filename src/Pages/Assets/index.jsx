@@ -5,7 +5,7 @@ import {
   AssetFile,
   Alert,
   CircleSpinner,
-  DateFormater,
+  DateFormatter,
   Image,
 } from "../../components";
 import {
@@ -630,7 +630,7 @@ const Assets = props => {
                           <span>
                             {file.sys.issuer && file.sys.issuer.fullName}
                           </span>
-                          <DateFormater date={file.sys.issueDate} />
+                          <DateFormatter date={file.sys.issueDate} />
                         </div>
                       </td>
                       <td>

@@ -154,12 +154,6 @@ const Provider = props => {
           ...newR,
         };
         return rdmp;
-      case "SET_LOCALE":
-        const locale = {
-          ...state,
-          t: action.value,
-        };
-        return locale;
       case "SET_AUTHENTICATED":
         const auth = {
           ...state,

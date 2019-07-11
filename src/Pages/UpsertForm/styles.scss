@@ -242,7 +242,7 @@ body {
   color: gray;
   cursor: pointer;
 }
-.tabsSpinner{
+.tabsSpinner {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -256,13 +256,17 @@ body {
 .requestAlert {
   a {
     font-size: 14px;
-    padding-left: 5px;
+    padding: 0 5px;
   }
+
   .requestAlert-top {
     display: flex;
     align-items: center;
-    .requestSuccessIcon {
+    .alert-heading {
+      margin-left: 10px;
       margin-right: 10px;
+    }
+    .requestSuccessIcon {
       width: 60px;
       height: 60px;
       border-radius: 100%;
@@ -272,10 +276,257 @@ body {
       align-items: center;
       justify-content: center;
       font-size: 27px;
+      margin: 0;
       margin-bottom: 10px;
     }
   }
   .form-group {
     margin-top: 20px;
+  }
+}
+
+// spinner
+
+.upsert__loading {
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  .loading {
+    position: relative;
+    height: 90px;
+    width: 90px;
+    margin: 20px auto;
+    border: none;
+  }
+
+  .square {
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    background: rgb(56, 132, 255);
+    opacity: 0.2;
+  }
+
+  .square-a {
+    -webkit-animation: fadeIn 2s infinite;
+    -moz-animation: fadeIn 2s infinite;
+    animation: fadeIn 2s infinite;
+  }
+
+  .state1a {
+    top: 0;
+    left: 0;
+  }
+
+  .state2a {
+    top: 0;
+    left: 50px;
+    -webkit-animation-delay: 500ms;
+    -moz-animation-delay: 500ms;
+    animation-delay: 500ms;
+  }
+
+  .state3a {
+    top: 50px;
+    left: 50px;
+    -webkit-animation-delay: 1000ms;
+    -moz-animation-delay: 1000ms;
+    animation-delay: 1000ms;
+  }
+
+  .state4a {
+    top: 50px;
+    left: 0;
+    -webkit-animation-delay: 1500ms;
+    -moz-animation-delay: 1500ms;
+    animation-delay: 1500ms;
+  }
+
+  /*Square a blink blink*/
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity: 0.2;
+    }
+    10% {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity: 0.2;
+    }
+    10% {
+      opacity: 1;
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0.2;
+    }
+    10% {
+      opacity: 1;
+    }
+  }
+
+  @-webkit-keyframes state1-animation {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @-moz-keyframes state1-animation {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes state1-animation {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @-webkit-keyframes state2-animation {
+    0% {
+      opacity: 0;
+    }
+    10% {
+      opacity: 0;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @-moz-keyframes state2-animation {
+    0% {
+      opacity: 0;
+    }
+    10% {
+      opacity: 0;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes state2-animation {
+    0% {
+      opacity: 0;
+    }
+    10% {
+      opacity: 0;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @-webkit-keyframes state3-animation {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 0;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @-moz-keyframes state3-animation {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 0;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes state3-animation {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 0;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @-webkit-keyframes state4-animation {
+    0% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 0;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @-moz-keyframes state4-animation {
+    0% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 0;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes state4-animation {
+    0% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 0;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 }
