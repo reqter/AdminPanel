@@ -14,21 +14,22 @@ const Notifies = props => {
   return (
     <div className="notifies">
       <TransitionGroup>
-        {notifies &&
-          notifies.map(notify => {
-            if (notify.type === "success") {
-              notify.icon = "icon-checkmark";
-            } else if (notify.type === "error") {
-              notify.icon = "icon-shield";
-            } else {
-              notify.icon = "icon-warning";
-            }
-            return (
-              <CSSTransition key={notify.id} timeout={500} classNames="item">
-                <NotifyItem notify={notify} onRemove={remove} />
-              </CSSTransition>
-            );
-          })}
+        {notifies
+          ? notifies.map(notify => {
+              if (notify.type === "success") {
+                notify.icon = "icon-checkmark";
+              } else if (notify.type === "error") {
+                notify.icon = "icon-shield";
+              } else {
+                notify.icon = "icon-warning";
+              }
+              return (
+                <CSSTransition key={notify.id} timeout={500} classNames="item">
+                  <NotifyItem notify={notify} onRemove={remove} />
+                </CSSTransition>
+              );
+            })
+          : null}
       </TransitionGroup>
     </div>
   );

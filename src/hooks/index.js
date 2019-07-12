@@ -5,11 +5,9 @@ import useLocale from './useLocale'
 import useGlobalState from './useGlobalState'
 import useCookie from './useCookie'
 import useNotification from './useNotification'
-import useThunk from './useThunk'
 
 export {
   useNotification,
-  useThunk,
   useGlobalState,
   useCookie,
   useTheme,

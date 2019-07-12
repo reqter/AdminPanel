@@ -4,8 +4,7 @@ import ModalBody from "reactstrap/lib/ModalBody";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalFooter from "reactstrap/lib/ModalFooter";
 //
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState,useLocale } from "./../../../../hooks";
 import { changePassword } from "./../../../../Api/account-api";
 import { CircleSpinner } from "../../../../components";
 const UpdatePassword = props => {

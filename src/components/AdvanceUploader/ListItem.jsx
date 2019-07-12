@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProgressiveSpinner from "./../ProgressiveSpinner";
-import { storageManager, utility, useGlobalState } from "../../services";
-
+import { storageManager, utility } from "../../services";
+import { useGlobalState } from "./../../hooks";
 let xhr;
 const ListItem = props => {
   const [{ spaceInfo }, dispatch] = useGlobalState();

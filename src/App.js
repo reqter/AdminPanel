@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+//
 import 'bootstrap/dist/css/bootstrap.css'
 import StateProvider from './hooks/useGlobalState/stateProvider'
 import { LocaleProvider } from './hooks/useLocale/localeContext'
 import { useTheme, useLocale, useLayout } from './hooks'
+//
 import './styles/app.scss'
 import 'animate.css'
+//
 import Notifies from './components/Notifies'
-
 import Routes from './routes'
 import PrivateRoute from './PrivateRoute'
 
@@ -36,7 +38,7 @@ const App = props => {
     <StateProvider>
       <LocaleProvider lang={appLang}>
         <BrowserRouter>
-          <div>
+          <>
             <Switch>
               {Routes.map(route => {
                 if (route.isPublic) {
@@ -117,7 +119,7 @@ const App = props => {
               {/* اگه هیچی نزد یا چرت و پرت زد برو اون روتی که نات فاند هست */}
               {/* <Redirect to="/not-found"/> */}
             </Switch>
-          </div>
+          </>
         </BrowserRouter>
       </LocaleProvider>
       <Notifies />

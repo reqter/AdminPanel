@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
+//
 import { login } from "./../../Api/account-api";
+//
 import { CircleSpinner } from "./../../components";
 import "./styles.scss";
-import { useGlobalState, useCookie, useLocale } from "./../../hooks";
+import { useGlobalState,useCookie, useLocale } from "./../../hooks";
 
 const Login = props => {
-  const [{}, dispatch] = useGlobalState();
+  const [{},dispatch]=useGlobalState()
   const { appLocale, t, currentLang } = useLocale();
   const [token, setToken] = useCookie("reqter_token");
   const [spinner, toggleSpinner] = useState(false);
@@ -21,13 +23,13 @@ const Login = props => {
     setPassword(e.target.value);
   }
 
-  function loginUser(e) {
+  function handleLoginUser(e) {
     e.preventDefault();
     if (!spinner) {
       toggleSpinner(true);
       login()
         .onOk(result => {
-          //toggleSpinner(false);
+          toggleSpinner(false);
           try {
             setToken(result.access_token);
             dispatch({
@@ -38,7 +40,6 @@ const Login = props => {
           } catch (error) {
             console.log(error);
           }
-          //localStorage.setItem("token", result.access_token);
         })
         .onServerError(result => {
           toggleSpinner(false);
@@ -103,7 +104,7 @@ const Login = props => {
           <span className="header-title">{t("LOGIN_TITLE")}</span>
         </div>
         <div className="formBody">
-          <form id="loginForm" onSubmit={loginUser}>
+          <form id="loginForm" onSubmit={handleLoginUser}>
             <div className="form-group">
               <label>{t("LOGIN_EMAIL_INPUT_TITLE")}</label>
               <input
@@ -160,4 +161,4 @@ const Login = props => {
     </div>
   );
 };
-export default Login;
+export default Login

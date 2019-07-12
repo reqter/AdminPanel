@@ -3,12 +3,11 @@ import Modal from "reactstrap/lib/Modal";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 
-import { useGlobalState } from "../../../../services";
-import { useLocale } from "./../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../hooks";
 import {
   addContentTypeToCategory,
   removeContentTypeFromCategory,
-  getContentTypes
+  getContentTypes,
 } from "./../../../../Api/category-api";
 import "./styles.scss";
 
@@ -39,8 +38,8 @@ const AddContentType = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("CONTENT_TYPE_ON_SERVER_ERROR")
-          }
+            message: t("CONTENT_TYPE_ON_SERVER_ERROR"),
+          },
         });
       })
       .onBadRequest(result => {
@@ -48,8 +47,8 @@ const AddContentType = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "error",
-            message: t("CONTENT_TYPE_ON_BAD_REQUEST")
-          }
+            message: t("CONTENT_TYPE_ON_BAD_REQUEST"),
+          },
         });
       })
       .unAuthorized(result => {
@@ -57,8 +56,8 @@ const AddContentType = props => {
           type: "ADD_NOTIFY",
           value: {
             type: "warning",
-            message: t("CONTENT_TYPE_UN_AUTHORIZED")
-          }
+            message: t("CONTENT_TYPE_UN_AUTHORIZED"),
+          },
         });
       })
       .call();
@@ -82,10 +81,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CATEGORY_ADD_CONTENT_TYPE_ON_SERVER_ERROR"
-              )
-            }
+              message: t("CATEGORY_ADD_CONTENT_TYPE_ON_SERVER_ERROR"),
+            },
           });
         })
         .onBadRequest(result => {
@@ -93,10 +90,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CATEGORY_ADD_CONTENT_TYPE_ON_BAD_REQUEST"
-              )
-            }
+              message: t("CATEGORY_ADD_CONTENT_TYPE_ON_BAD_REQUEST"),
+            },
           });
         })
         .unAuthorized(result => {
@@ -104,10 +99,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "CATEGORY_ADD_CONTENT_TYPE_UN_AUTHORIZED"
-              )
-            }
+              message: t("CATEGORY_ADD_CONTENT_TYPE_UN_AUTHORIZED"),
+            },
           });
         })
         .notFound(result => {
@@ -115,10 +108,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CATEGORY_ADD_CONTENT_TYPE_NOT_FOUND"
-              )
-            }
+              message: t("CATEGORY_ADD_CONTENT_TYPE_NOT_FOUND"),
+            },
           });
         })
         .call(selectedCategory.sys.id, item);
@@ -132,10 +123,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"
-              )
-            }
+              message: t("CATEGORY_REMOVE_CONTENT_TYPE_ON_SERVER_ERROR"),
+            },
           });
         })
         .onBadRequest(result => {
@@ -143,10 +132,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"
-              )
-            }
+              message: t("CATEGORY_REMOVE_CONTENT_TYPE_ON_BAD_REQUEST"),
+            },
           });
         })
         .unAuthorized(result => {
@@ -154,10 +141,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "warning",
-              message: t(
-                "CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"
-              )
-            }
+              message: t("CATEGORY_REMOVE_CONTENT_TYPE_UN_AUTHORIZED"),
+            },
           });
         })
         .notFound(result => {
@@ -165,10 +150,8 @@ const AddContentType = props => {
             type: "ADD_NOTIFY",
             value: {
               type: "error",
-              message: t(
-                "CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"
-              )
-            }
+              message: t("CATEGORY_REMOVE_CONTENT_TYPE_NOT_FOUND"),
+            },
           });
         })
         .call(selectedCategory.sys.id, item.sys.id);
@@ -214,8 +197,7 @@ const AddContentType = props => {
               /> */}
             </div>
           </label>
-       
-       ))}
+        ))}
       </ModalBody>
     </Modal>
   );

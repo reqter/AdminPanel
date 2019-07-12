@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useGlobalState } from "./../../../../../../services";
-import { useLocale } from "./../../../../../../hooks";
+import { useGlobalState, useLocale } from "./../../../../../../hooks";
 import { setWebhooks } from "./../../../../../../Api/webhook-api";
 import { CircleSpinner } from "../../../../../../components";
-
 
 const GitLabUpsert = props => {
   const { appLocale, t, currentLang } = useLocale();
@@ -67,10 +65,7 @@ const GitLabUpsert = props => {
       } else w.push(obj);
       setWebhooks()
         .onOk(result => {
-          showNotify(
-            "success",
-            t("Gitlab webhook created successfully")
-          );
+          showNotify("success", t("Gitlab webhook created successfully"));
           const w = [...webhooks];
           w.push(result);
           dispatch({
@@ -80,31 +75,19 @@ const GitLabUpsert = props => {
         })
         .onServerError(result => {
           toggleSpinner(false);
-          showNotify(
-            "error",
-            t("PROFILE_CHANGE_PASS_ON_SERVER_ERROR")
-          );
+          showNotify("error", t("PROFILE_CHANGE_PASS_ON_SERVER_ERROR"));
         })
         .onBadRequest(result => {
           toggleSpinner(false);
-          showNotify(
-            "error",
-            t("PROFILE_CHANGE_PASS_ON_BAD_REQUEST")
-          );
+          showNotify("error", t("PROFILE_CHANGE_PASS_ON_BAD_REQUEST"));
         })
         .unAuthorized(result => {
           toggleSpinner(false);
-          showNotify(
-            "error",
-            t("PROFILE_CHANGE_PASS_UN_AUTHORIZED")
-          );
+          showNotify("error", t("PROFILE_CHANGE_PASS_UN_AUTHORIZED"));
         })
         .notFound(result => {
           toggleSpinner(false);
-          showNotify(
-            "error",
-            t("PROFILE_CHANGE_PASS_NOT_FOUND")
-          );
+          showNotify("error", t("PROFILE_CHANGE_PASS_NOT_FOUND"));
         })
         .call(spaceInfo.id, w);
     }
@@ -153,11 +136,7 @@ const GitLabUpsert = props => {
           </div>
           <div className="row">
             <div className="form-group col">
-              <label>
-                {t(
-                  "GitLab organization or user (required)"
-                )}
-              </label>
+              <label>{t("GitLab organization or user (required)")}</label>
               <input
                 type="text"
                 className="form-control"
@@ -168,15 +147,11 @@ const GitLabUpsert = props => {
                 }}
               />
               <small className="form-text text-muted">
-                {t(
-                  "The GitLab organization or user repository belongs to."
-                )}
+                {t("The GitLab organization or user repository belongs to.")}
               </small>
             </div>
             <div className="form-group col">
-              <label>
-                {t("GitLab repository (required)")}
-              </label>
+              <label>{t("GitLab repository (required)")}</label>
               <input
                 type="text"
                 className="form-control"
@@ -187,9 +162,7 @@ const GitLabUpsert = props => {
                 }}
               />
               <small className="form-text text-muted">
-                {t(
-                  "The name of the repository you want to trigger."
-                )}
+                {t("The name of the repository you want to trigger.")}
               </small>
             </div>
           </div>
@@ -206,15 +179,11 @@ const GitLabUpsert = props => {
                 }}
               />
               <small className="form-text text-muted">
-                {t(
-                  "The source code branch, for example master"
-                )}
+                {t("The source code branch, for example master")}
               </small>
             </div>
             <div className="form-group col">
-              <label>
-                {t("Personal API token (required)")}
-              </label>
+              <label>{t("Personal API token (required)")}</label>
               <input
                 type="text"
                 className="form-control"
@@ -249,7 +218,7 @@ const GitLabUpsert = props => {
           }
         >
           <CircleSpinner show={spinner} size="small" />
-          {!spinner ? updateMode ? "Edit" : "Create" : null}
+          {!spinner ? (updateMode ? "Edit" : "Create") : null}
         </button>
         {!updateMode && (
           <button className="btn btn-secondary" onClick={backToTemplates}>

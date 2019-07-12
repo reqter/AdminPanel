@@ -73,7 +73,7 @@ const widthResolver = WrappedComponent => {
       error ? (
         <div className="rosolverError animated fadeIn">
           <i className="icon-empty-box-open icon" />
-          <span className="title">Error has occured!</span>
+          <span className="title">Error has occurred!</span>
           <span className="info">{error}</span>
           <button className="btn btn-primary" onClick={refresh}>
             Refresh

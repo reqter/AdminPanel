@@ -16,7 +16,7 @@ import { Empty } from "../../components/Commons/ErrorsComponent";
 import ItemSkeleton from "./ItemSkeleton";
 import FormItem from "./FormItem";
 
-const Requests = props => {
+const Forms = props => {
   const { appLocale, t, currentLang } = useLocale();
 
   let didCancel = false;
@@ -482,4 +482,5 @@ const Requests = props => {
   );
 };
 
-export default Requests;
+
+export default Forms

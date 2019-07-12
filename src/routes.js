@@ -1,5 +1,4 @@
 import withResolver from './hoc/withResolver'
-
 import Login from './Pages/Login'
 import Signup from './Pages/Signup'
 import ForgotPassword from './Pages/ForgotPassword'
@@ -18,6 +17,7 @@ import Settings from './Pages/Settings'
 import UpsertUser from './Pages/upsertUser'
 import Requests from './Pages/Requests'
 import Quotes from './Pages/Quotes'
+
 
 const Main = withResolver(MainPage)
 const AddAsset = withResolver(UpdateFile)

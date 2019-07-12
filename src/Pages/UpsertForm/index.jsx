@@ -214,7 +214,7 @@ const UpsertProduct = props => {
         changeTab(1);
       }
     } else {
-      changeTab(7);
+      changeTab(1);
     }
   }, [props.match.params.id]);
 

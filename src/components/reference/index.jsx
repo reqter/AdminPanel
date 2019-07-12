@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import AsyncCreatableSelect from "react-select/lib/AsyncCreatable";
 import "./styles.scss";
-import { useGlobalState } from "../../services";
-import { useLocale } from "./../../hooks";
+import { useGlobalState,useLocale } from "./../../hooks";
 import { filterContents } from "./../../Api/content-api";
 import Image from "../Image";
 
